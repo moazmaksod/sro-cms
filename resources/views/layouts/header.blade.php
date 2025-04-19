@@ -111,7 +111,7 @@
                                 <li><a class="dropdown-item" href="{{ route('profile.donate.history') }}">{{ __('Donate History') }}</a></li>
                                 @admin
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url('/admin2') }}">{{ __('Admin panel') }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('admin2') }}">{{ __('Admin panel') }}</a></li>
                                 @endadmin
                                 <li><hr class="dropdown-divider"></li>
                                 <li>

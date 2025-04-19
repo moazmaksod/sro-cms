@@ -28,8 +28,8 @@ iSRO Portal is A free and open-source project for the MMORPG SilkroadR Online (i
 ## Quick Installation
 
 -First be sure you have already installed iSRO-R Databases
-- Install Laragon Full [https://laragon.org](https://github.com/leokhoa/laragon/releases/download/6.0.0/laragon-wamp.exe)
-- Add PHP ^8.1 or latter [https://php.net](https://windows.php.net/download)
+- Install Laragon Full [https://laragon.org](https://laragon.org)
+- Add PHP ^8.2 or higher [https://php.net](https://windows.php.net/download)
 - Add PHP Sql Server Drivers [https://microsoft.com](https://learn.microsoft.com/en-us/sql/connect/php/download-drivers-php-sql-server)
 - And Sometimes you should install ODBC Driver 17 [https://microsoft.com](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
 
@@ -49,14 +49,14 @@ composer install
             'port' => '1433',
             'user' => 'sa',
             'password' => '123456',
-            'db_website' => 'SRO_Portal',
+            'db_website' => 'ISRO_CMS',
             'db_portal' => 'GB_JoymaxPortal',
             'db_account' => 'SILKROAD_R_ACCOUNT',
             'db_shard' => 'SILKROAD_R_SHARD',
             'db_log' => 'SILKROAD_R_SHARD_LOG',
         ],
    ```
-4. Create new database `SRO_Portal` and run Laravel commands for migrate website tables
+4. Create new database `ISRO_CMS` and run Laravel commands for migrate website tables
 ```sh
 php artisan migrate
 php artisan db:seed
@@ -69,7 +69,7 @@ npm install
 npm run build
 ```
 
-6. Change document root of laragon to public folder `isro-portal/public`
+6. Change document root of laragon to public folder `isro-cms/public`
 
 Finally, Congratulation!
 

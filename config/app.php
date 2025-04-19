@@ -135,17 +135,4 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
-
-    'providers' => ServiceProvider::defaultProviders()->merge([
-        /*
-         * Package Service Providers...
-         */
-
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\HelperServiceProvider::class,
-        App\Providers\ViewServiceProvider::class,
-    ])->toArray(),
 ];
