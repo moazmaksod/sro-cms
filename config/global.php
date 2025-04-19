@@ -38,15 +38,13 @@ return [
             'encryption' => 'tls',
         ],
         'captcha' => [
-            'enable' => true, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
+            'enable' => false, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
             'sitekey' => '',
             'secret' => '',
         ],
         'cache' => [
-            'config' => false,
             'sql' => true,
             'data' => [
-                'global_config' => 1, //1 minute
                 'news' => 1440, //1 day
                 'download' => 10080, //1 week
                 'pages' => 10080, //1 weeek
