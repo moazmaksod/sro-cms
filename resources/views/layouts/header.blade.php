@@ -85,6 +85,7 @@
                 </div>
                 @endif
 
+                {{--
                 <div class="dropdown d-none">
                     <a href="#" class="nav-link px-2 py-2 me-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ language()->getName($code = 'default') }}
@@ -95,6 +96,7 @@
                         @endforeach
                     </ul>
                 </div>
+                --}}
 
                 @if (Route::has('login'))
                     @auth

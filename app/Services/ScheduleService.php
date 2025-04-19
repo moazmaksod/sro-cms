@@ -16,7 +16,7 @@ class ScheduleService
             switch ($item->MainInterval_Type) {
                 case 1:
                     $dateStart = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute);
-                    $dateEnd = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds($item->SubInterval_DurationSecond);
+                    $dateEnd = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds((int) $item->SubInterval_DurationSecond);
                     if ($dateStart < $now && $dateEnd < $now) {
                         $dateStart->addDay(1);
                         $dateEnd->addDay(1);
@@ -28,13 +28,13 @@ class ScheduleService
                     break;
                 case 3:
                     $dateStart = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute);
-                    $dateEnd = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds($item->SubInterval_DurationSecond);
+                    $dateEnd = Carbon::createFromTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds((int) $item->SubInterval_DurationSecond);
                     if ($now->dayOfWeek != $item->SubInterval_DayOfWeek - 1 || $now->dayOfWeek == $item->SubInterval_DayOfWeek - 1 && $dateEnd < $now) {
-                        $dateStart->next($item->SubInterval_DayOfWeek - 1);
-                        $dateEnd->next($item->SubInterval_DayOfWeek - 1);
+                        $dateStart->next((int) $item->SubInterval_DayOfWeek - 1);
+                        $dateEnd->next((int) $item->SubInterval_DayOfWeek - 1);
                     }
                     $dateStart->setTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute);
-                    $dateEnd->setTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds($item->SubInterval_DurationSecond);
+                    $dateEnd->setTime($item->SubInterval_StartTimeHour, $item->SubInterval_StartTimeMinute)->addSeconds((int) $item->SubInterval_DurationSecond);
                     if (in_array($item->ScheduleDefineIdx, array(6, 9, 10, 11))) {
                         $dateStart->addMinutes(30);
                     }
