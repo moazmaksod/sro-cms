@@ -14,7 +14,7 @@ return [
             'max_level' => 140,
             'free_silk' => 0,
             'free_premium_silk' => 0,
-            'debug' => true,
+            'debugbar' => false,
             'register_disable' => false,
             'register_confirmation' => false,
         ],
