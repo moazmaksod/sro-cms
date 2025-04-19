@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SRO\Account\TbUser;
+use App\Models\SRO\Portal\MuUser;
 use App\Models\User;
+use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
@@ -33,7 +38,7 @@ class NewPasswordController extends Controller
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:6', 'max:32', 'confirmed'],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -42,6 +47,19 @@ class NewPasswordController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user) use ($request) {
+
+                $user = User::where('email', $request->email)->first();
+
+                DB::beginTransaction();
+                try {
+                    MuUser::where('JID', $user->jid)->update(['UserPwd' => md5($request->password)]);
+                    TbUser::where('PortalJID', $user->jid)->update(['password' => md5($request->password)]);
+
+                } catch (Exception $e) {
+                    DB::rollBack();
+                }
+                DB::commit();
+
                 $user->forceFill([
                     'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
@@ -57,6 +75,6 @@ class NewPasswordController extends Controller
         return $status == Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+                            ->withErrors(['email' => __($status)]);
     }
 }
