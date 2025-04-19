@@ -40,6 +40,21 @@
                 </div>
             </div>
 
+            @if (config('settings.general.captcha.enable'))
+                <!-- google recaptch -->
+                <div class="row mb-3">
+                    <div class="col-md-8 offset-md-4">
+                        {!! NoCaptcha::renderJs() !!}
+                        {!! NoCaptcha::display() !!}
+                        @error('g-recaptcha-response')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+
             <div class="row mb-3">
                 <div class="col-md-6 offset-md-4">
                     <div class="form-check">

@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -24,6 +25,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+            'g-recaptcha-response' => [
+                Rule::requiredIf(function () {
+                    return config('settings.general.captcha.enable');
+                }),
+                'captcha'
+            ],
+        ]);
+
         $request->authenticate();
 
         $request->session()->regenerate();

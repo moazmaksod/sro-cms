@@ -60,13 +60,15 @@
             @if (config('settings.general.captcha.enable'))
                 <!-- google recaptch -->
                 <div class="row mb-3">
-                    {!! NoCaptcha::renderJs() !!}
-                    {!! NoCaptcha::display() !!}
-                    @if ($errors->has('g-recaptcha-response'))
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @endif
+                    <div class="col-md-8 offset-md-4">
+                        {!! NoCaptcha::renderJs() !!}
+                        {!! NoCaptcha::display() !!}
+                        @error('g-recaptcha-response')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
             @endif
 
