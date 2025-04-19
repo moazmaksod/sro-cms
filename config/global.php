@@ -38,7 +38,7 @@ return [
             'encryption' => 'tls',
         ],
         'captcha' => [
-            'enable' => false, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
+            'enable' => true, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
             'sitekey' => '',
             'secret' => '',
         ],

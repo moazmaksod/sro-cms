@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            @if (config('settings.captcha.enable'))
+            @if (config('settings.general.captcha.enable'))
                 <!-- google recaptch -->
                 <div class="row mb-3">
                     {!! NoCaptcha::renderJs() !!}

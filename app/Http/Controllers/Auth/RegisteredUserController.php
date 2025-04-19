@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', 'min:6', 'max:32'],
             'g-recaptcha-response' => [
                 Rule::requiredIf(function () {
-                    return config('settings.captcha.enable');
+                    return config('settings.general.captcha.enable');
                 }),
                 'captcha'
             ],
