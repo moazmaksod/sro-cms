@@ -24,8 +24,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //Databases
+        //Default
         Config::set('database.default', 'sqlsrv');
+        Config::set('cache.default', 'file');
+        Config::set('session.driver', 'file');
+        Config::set('maintenance.store', 'file');
+        Config::set('queue.default', 'null');
+
+        //Databases
         Config::set('database.connections.sqlsrv.host', config('global.general.connection.host'));
         Config::set('database.connections.sqlsrv.port', config('global.general.connection.port'));
         Config::set('database.connections.sqlsrv.username', config('global.general.connection.user'));
