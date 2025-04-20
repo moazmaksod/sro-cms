@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         //
         Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
         Config::set('settings', array_merge(config('global'), Setting::pluck('value', 'key')->toArray()));
-        View::getFinder()->prependLocation(resource_path("views/themes/".config('global.general.options.theme')));
+        View::getFinder()->prependLocation(resource_path("themes/".config('global.general.options.theme').'/views'));
 
         if (!app()->runningInConsole()) {
             try {
