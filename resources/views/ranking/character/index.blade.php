@@ -141,7 +141,8 @@
         }
         .table.table-inventory td, .table.table-inventory th {
             padding: 6px;
-            background: none;
+            background: none !important;
+            border: none !important;
         }
         .table.table-inventory td:last-child {
             float: right;

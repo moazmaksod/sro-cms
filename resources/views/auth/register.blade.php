@@ -4,7 +4,17 @@
 @section('content')
     <div class="container my-5">
         @if (!config('settings.disable_register'))
-        <form method="POST" action="{{ route('register') }}">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('register') }}">
             @csrf
 
             <div class="row mb-3">
