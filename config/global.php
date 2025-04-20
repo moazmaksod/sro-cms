@@ -9,7 +9,7 @@ return [
             'favicon' => 'images/favicon.ico',
             'logo' => 'images/logo.png',
             'timezone' => 'Africa/Cairo',
-            'theme' => 'default',
+            'theme' => 'gamegami',
             'theme_color_mode' => 'dark', //switch, light, dark
             'max_level' => 140,
             'free_silk' => 0,
@@ -38,7 +38,7 @@ return [
             'encryption' => 'tls',
         ],
         'captcha' => [
-            'enable' => true, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
+            'enable' => false, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
             'sitekey' => '',
             'secret' => '',
         ],
