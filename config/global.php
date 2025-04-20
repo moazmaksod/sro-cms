@@ -9,7 +9,7 @@ return [
             'favicon' => 'images/favicon.ico',
             'logo' => 'images/logo.png',
             'timezone' => 'Africa/Cairo',
-            'theme' => 'gamegami',
+            'theme' => 'default',
             'theme_color_mode' => 'dark', //switch, light, dark
             'max_level' => 140,
             'free_silk' => 0,
