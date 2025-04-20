@@ -44,15 +44,15 @@ class AppServiceProvider extends ServiceProvider
         Config::set('database.connections.shard.database', config('global.general.connection.db_shard'));
         Config::set('database.connections.log.database', config('global.general.connection.db_log'));
 
-        //Timezone
-        date_default_timezone_set(config('global.general.options.timezone'));
-        //
-        Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
-        Config::set('settings', array_merge(config('global'), Setting::pluck('value', 'key')->toArray()));
-        View::getFinder()->prependLocation(resource_path("themes/".config('global.general.options.theme').'/views'));
-
         if (!app()->runningInConsole()) {
             try {
+                //Timezone
+                date_default_timezone_set(config('global.general.options.timezone'));
+                //
+                Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
+                Config::set('settings', array_merge(config('global'), Setting::pluck('value', 'key')->toArray()));
+                View::getFinder()->prependLocation(resource_path("themes/".config('global.general.options.theme').'/views'));
+
                 //General
                 Config::set('debugbar.enabled', config('global.general.options.debugbar'));
                 Config::set('mail.default', config('global.general.smtp.enable') ? 'smtp' : 'log');
