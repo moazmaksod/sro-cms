@@ -143,17 +143,17 @@ return [
                 1 => [
                     'name' => 'Elitepvpers',
                     'url' => 'https://www.elitepvpers.com/forum/sro-pserver-advertising/',
-                    'image' => '',
+                    'image' => 'https://www.elitepvpers.com/images/logo.png',
                 ],
                 2 => [
                     'name' => 'SIlkroad4arab',
                     'url' => 'https://www.silkroad4arab.com/vb/forumdisplay.php?f=85',
-                    'image' => '',
+                    'image' => 'https://www.silkroad4arab.com/vb/sawaweb/images/logo.png',
                 ],
                 3 => [
                     'name' => 'SroCave',
                     'url' => 'https://srocave.com/forum/sro-private-server-advertising.34/',
-                    'image' => '',
+                    'image' => 'https://srocave.com/data/assets/logo/SCLogo.png',
                 ],
             ],
         ],
