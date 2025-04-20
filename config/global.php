@@ -55,6 +55,7 @@ return [
                 'unique_history' => 5, //5 minutes
                 'globals_history' => 5, //5 minutes
                 'character' => 1440, //1 day
+                'character_items' => 10080, //1 day
                 'guild' => 1440, //1 day
                 'ranking_player' => 60, //1 Hours
                 'ranking_guild' => 60, //1 Hours
