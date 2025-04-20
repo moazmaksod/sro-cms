@@ -55,7 +55,7 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
             //Pages
-            View::composer(['layouts.header'], function ($view) {
+            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
                 $view->with('pages', Pages::get());
             });
 
