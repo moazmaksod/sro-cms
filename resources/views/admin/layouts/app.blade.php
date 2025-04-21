@@ -20,7 +20,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+        <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary" style="min-height: 1200px">
             @include('admin.layouts.sidebar')
         </div>
 
