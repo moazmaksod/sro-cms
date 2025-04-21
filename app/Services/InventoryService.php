@@ -318,7 +318,8 @@ class InventoryService
      */
     protected function getBluesStats($aItem, &$aSpecialInfo): array
     {
-        $_aMagOptLevel = MagOptDesc::getBlues($aItem,$aSpecialInfo);
+        //$_aMagOptLevel = MagOptDesc::getBlues($aItem,$aSpecialInfo);
+        $_aMagOptLevel = config('magic_options');
 
         $aBlues = [];
         $aWheel = ($aItem['MagParam1'] >= 4611686018427387904) ? 2 : 1;
