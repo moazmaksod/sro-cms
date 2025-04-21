@@ -50,6 +50,6 @@
 
 <form method="GET" action="{{ route('ranking') }}" class="mb-4">
     <input type="hidden" name="type" value="player">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..." class="form-control d-inline w-auto">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search player..." class="form-control d-inline w-auto">
     <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
 </form>
