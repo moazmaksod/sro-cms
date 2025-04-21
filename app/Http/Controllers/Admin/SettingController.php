@@ -20,7 +20,7 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        $checkboxes = ['disable_register'];
+        $checkboxes = ['disable_register', 'register_confirm'];
         foreach ($checkboxes as $checkbox) {
             if (!$request->has($checkbox)) {
                 Setting::updateOrCreate(['key' => $checkbox], ['value' => 0]);

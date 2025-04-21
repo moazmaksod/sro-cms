@@ -17,7 +17,7 @@ class EmailVerificationNotificationController extends Controller
             return redirect()->intended(route('profile', absolute: false));
         }
 
-        if (!config('global.general.options.register_confirmation')) {
+        if (!config('settings.register_confirm')) {
             return redirect()->intended(route('profile', absolute: false));
         }
 

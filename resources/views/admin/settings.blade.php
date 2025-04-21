@@ -98,16 +98,108 @@
             </div>
 
             <div class="row mb-3">
+                <label for="max_player" class="col-md-2 col-form-label text-md-end">{{ __('Max Online Player') }}</label>
+
+                <div class="col-md-10">
+                    <input id="max_player" type="text" class="form-control @error('max_player') is-invalid @enderror" name="max_player" value="{{ $settings['max_player'] ?? '' }}" placeholder="" required>
+
+                    @error('max_player')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="fake_player" class="col-md-2 col-form-label text-md-end">{{ __('Add Fake Player') }}</label>
+
+                <div class="col-md-10">
+                    <input id="fake_player" type="text" class="form-control @error('fake_player') is-invalid @enderror" name="fake_player" value="{{ $settings['fake_player'] ?? '' }}" placeholder="" required>
+
+                    @error('fake_player')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="max_level" class="col-md-2 col-form-label text-md-end">{{ __('Max Character Level') }}</label>
+
+                <div class="col-md-10">
+                    <input id="max_level" type="text" class="form-control @error('max_level') is-invalid @enderror" name="max_level" value="{{ $settings['max_level'] ?? '' }}" placeholder="" required>
+
+                    @error('max_level')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label for="dark_mode" class="col-md-2 col-form-label text-md-end">{{ __('Dark Mode') }}</label>
 
                 <div class="col-md-10">
                     <select class="form-select" name="dark_mode" aria-label="Default select example">
-                        <option value="switch" {{ config('global.dark_mode') == 'switch' ? 'selected' : '' }}>Switch</option>
-                        <option value="light" {{ config('global.dark_mode') == 'light' ? 'selected' : '' }}>Light</option>
-                        <option value="dark" {{ config('global.dark_mode') == 'dark' ? 'selected' : '' }}>Dark</option>
+                        <option value="switch" {{ config('settings.dark_mode') == 'switch' ? 'selected' : '' }}>Switch</option>
+                        <option value="light" {{ config('settings.dark_mode') == 'light' ? 'selected' : '' }}>Light</option>
+                        <option value="dark" {{ config('settings.dark_mode') == 'dark' ? 'selected' : '' }}>Dark</option>
                     </select>
 
                     @error('dark_mode')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="theme" class="col-md-2 col-form-label text-md-end">{{ __('Theme') }}</label>
+
+                <div class="col-md-10">
+                    <select class="form-select" name="theme" aria-label="Default select example">
+                        <option value="default" {{ config('settings.theme') == 'default' ? 'selected' : '' }}>Default</option>
+                        @php
+                            if (is_dir(resource_path('themes'))) {
+                                foreach (scandir(resource_path('themes')) as $dir) {
+                                    if ($dir !== '.' && $dir !== '..' && is_dir(resource_path('themes') . '/' . $dir)) {
+                                        $themes[] = $dir;
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        @foreach($themes as $theme)
+                            <option value="{{ $theme }}" {{ config('settings.theme') === $theme ? 'selected' : '' }}>
+                                {{ ucfirst($theme) }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    @error('theme')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="timezone" class="col-md-2 col-form-label text-md-end">{{ __('Timezone') }}</label>
+
+                <div class="col-md-10">
+                    <select class="form-select" name="timezone" aria-label="Default select example">
+                        @foreach(\DateTimeZone::listIdentifiers() as $tz)
+                            <option value="{{ $tz }}" {{ config('settings.timezone') === $tz ? 'selected' : '' }}>
+                                {{ $tz }}
+                            </option>
+                        @endforeach
+
+                    @error('timezone')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -120,13 +212,32 @@
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('global.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('global.disable_register') == 1 ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('settings.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('settings.disable_register') == 1 ? 'checked' : '' }}>
                         <label class="form-check-label" for="disable_register">
                             Disable
                         </label>
                     </div>
 
                     @error('disable_register')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="register_confirm" class="col-md-2 col-form-label text-md-end">{{ __('Register Confirmation') }}</label>
+
+                <div class="col-md-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="register_confirm" value="{{ old('register_confirm', config('settings.register_confirm') == 1) ? '1' : '0' }}" id="register_confirm" {{ config('settings.register_confirm') == 1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="register_confirm">
+                            Disable
+                        </label>
+                    </div>
+
+                    @error('register_confirm')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -150,10 +261,17 @@
 @endpush
 @push('scripts')
     <script>
-        const checkbox = document.getElementById('disable_register');
+        const disable_register_checkbox = document.getElementById('disable_register');
 
-        checkbox.addEventListener('change', function () {
-            checkbox.value = this.checked ? '1' : '0';
+        disable_register_checkbox.addEventListener('change', function () {
+            disable_register_checkbox.value = this.checked ? '1' : '0';
+        });
+    </script>
+    <script>
+        const register_confirm_checkbox = document.getElementById('register_confirm');
+
+        register_confirm_checkbox.addEventListener('change', function () {
+            register_confirm_checkbox.value = this.checked ? '1' : '0';
         });
     </script>
 @endpush

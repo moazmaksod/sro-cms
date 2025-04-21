@@ -25,17 +25,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (!app()->runningInConsole()) {
-            try {
-                //Timezone
-                date_default_timezone_set(config('global.general.options.timezone'));
-                //
-                Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
-                View::getFinder()->prependLocation(resource_path("themes/".config('global.general.options.theme').'/views'));
-                Config::set('settings', Setting::pluck('value', 'key')->toArray());
-
-            } catch (QueryException $e) {
-                // Error: Something Error.
-            }
+            Config::set('settings', Setting::pluck('value', 'key')->toArray());
         }
+
+        Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
+        date_default_timezone_set(config('settings.timezone', config('app.timezone')));
+        View::getFinder()->prependLocation(resource_path("themes/".config('settings.theme').'/views'));
     }
 }

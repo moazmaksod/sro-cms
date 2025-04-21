@@ -46,13 +46,49 @@ class SettingSeeder extends Seeder
         );
         DB::table('settings')->updateOrInsert(
             [
+                'key' => 'max_level',
+                'value' => 140,
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
+                'key' => 'max_player',
+                'value' => 1000,
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
+                'key' => 'fake_player',
+                'value' => 250,
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
                 'key' => 'dark_mode',
                 'value' => 'dark',
             ]
         );
         DB::table('settings')->updateOrInsert(
             [
+                'key' => 'theme',
+                'value' => 'default',
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
+                'key' => 'timezone',
+                'value' => 'Africa/Cairo',
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
                 'key' => 'disable_register',
+                'value' => 0,
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
+                'key' => 'register_confirm',
                 'value' => 0,
             ]
         );

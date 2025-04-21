@@ -65,11 +65,9 @@ class RegisteredUserController extends Controller
             MuJoiningInfo::setJoiningInfo($portalUser->JID, $userBinIP);
             MuVIPInfo::setVIPInfo($portalUser->JID);
 
-            $free_silk = config('global.general.options.free_silk');
-            $free_premium_silk = config('global.general.options.free_premium_silk');
             //type 1 = silk, type 3 = premium silk
-            AphChangedSilk::setChangedSilk($portalUser->JID, 1, $free_silk);
-            AphChangedSilk::setChangedSilk($portalUser->JID, 3, $free_premium_silk);
+            //AphChangedSilk::setChangedSilk($portalUser->JID, 1, 0);
+            //AphChangedSilk::setChangedSilk($portalUser->JID, 3, 0);
             TbUser::setGameAccount($portalUser->JID, $request->username, $request->password, $request->ip());
 
             $user = User::create([

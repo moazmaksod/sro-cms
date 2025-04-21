@@ -2,21 +2,6 @@
 
 return [
     'general' => [
-        'options' => [
-            'server_name' => 'Silkroad Online',
-            'server_desc' => "Silkroad Online is a World's first blockbuster Free to play MMORPG. Silkroad Olnine puts players deep into ancient Chinese, Islamic, and European civilization. Enjoy Silkroad's hardcore PvP, personal dungeon system, never ending fortress war and be the top of the highest heroes!",
-            'server_url' => 'https://isro-cms/',
-            'favicon' => 'images/favicon.ico',
-            'logo' => 'images/logo.png',
-            'timezone' => 'Africa/Cairo',
-            'theme' => 'default',
-            'theme_color_mode' => 'dark', //switch, light, dark
-            'max_level' => 140,
-            'free_silk' => 0,
-            'free_premium_silk' => 0,
-            'register_disable' => false,
-            'register_confirmation' => false,
-        ],
         'cache' => [
             'sql' => true,
             'data' => [
@@ -134,111 +119,6 @@ return [
             ],
         ],
     ],
-    'donation' => [
-        'paypal' => [
-            'enable' => true,
-            'name' => 'Paypal',
-            'method' => 'paypal',
-            'currency' => 'USD',
-            'image' => 'images/donations/paypal.png',
-            'api' => [
-                'mode' => 'sandbox',
-                'sandbox' => [
-                    'clientId' => '',
-                    'secret' => '',
-                ],
-                'live' => [
-                    'clientId' => '',
-                    'secret' => '',
-                ],
-            ],
-            'prices' => [
-                5 => [
-                    'name' => '5 Silk',
-                    'description' => 'Pay 5 USD for 500 Silk',
-                    'currency' => 'USD',
-                    'price' => 5,
-                    'silk' => 500,
-                ],
-                10 => [
-                    'name' => '10 Silk',
-                    'description' => 'Pay 10 USD for 1000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 10,
-                    'value' => 1000,
-                ],
-                25 => [
-                    'name' => '25 Silk',
-                    'description' => 'Pay 25 USD for 2500 Silk',
-                    'currency' => 'USD',
-                    'amount' => 25,
-                    'value' => 2500,
-                ],
-                50 => [
-                    'name' => '50 Silk',
-                    'description' => 'Pay 50 USD for 5000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 50,
-                    'value' => 5000,
-                ],
-                100 => [
-                    'name' => '100 Silk',
-                    'description' => 'Pay 100 USD for 10000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 100,
-                    'value' => 10000,
-                ],
-            ],
-        ],
-        'maxicard' => [
-            'enable' => false,
-            'name' => 'MaxiCard',
-            'method' => 'maxicard',
-            'currency' => 'TL',
-            'image' => 'images/donations/maxicard.png',
-            'api' => [
-                'key' => '',
-                'password' => '',
-            ],
-            'prices' => [
-                5 => [
-                    'name' => '5 Silk',
-                    'description' => 'Pay 5 USD for 500 Silk',
-                    'currency' => 'USD',
-                    'price' => 5,
-                    'silk' => 500,
-                ],
-                10 => [
-                    'name' => '10 Silk',
-                    'description' => 'Pay 10 USD for 1000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 10,
-                    'value' => 1000,
-                ],
-                25 => [
-                    'name' => '25 Silk',
-                    'description' => 'Pay 25 USD for 2500 Silk',
-                    'currency' => 'USD',
-                    'amount' => 25,
-                    'value' => 2500,
-                ],
-                50 => [
-                    'name' => '50 Silk',
-                    'description' => 'Pay 50 USD for 5000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 50,
-                    'value' => 5000,
-                ],
-                100 => [
-                    'name' => '100 Silk',
-                    'description' => 'Pay 100 USD for 10000 Silk',
-                    'currency' => 'USD',
-                    'amount' => 100,
-                    'value' => 10000,
-                ],
-            ],
-        ],
-    ],
     'widgets' => [
         'globals_history' => [
             'enable' => false,
@@ -259,11 +139,7 @@ return [
         'discord' => [
             'enable' => true,
             'server_id' => '1004443821570019338',
-        ],
-        'online_counter' => [
-            'enable' => true,
-            'max_player' => 1000,
-            'fake_player' => 250,
+            'theme' => 'dark', //dark, light
         ],
         'server_info' => [
             'enable' => true,
@@ -567,12 +443,6 @@ return [
             4 => 'images/com_honor_level_4.png',
             5 => 'images/com_honor_level_5.png',
         ],
-        'job_type' => [
-            0 => 'None',
-            1 => 'Trader',
-            2 => 'Thief',
-            3 => 'Hunter',
-        ],
         'job_type_icons' => [
             1 => [
                 'name' => 'Thief',
@@ -630,23 +500,13 @@ return [
                 4 => "Free"
             ]
         ],
-        'guild' => [
-            'permission' => [
-                -1 => 'All',
-                1 => 'Join',
-                2 => 'Withdraw',
-                4 => 'Union',
-                8 => 'Storage',
-                16 => 'Notice',
-            ],
-            'authority' => [
-                1 => 'Leader',
-                2 => 'Deputy Commander',
-                4 => 'Fortress War Administrator',
-                8 => 'Production Administrator',
-                16 => 'Training Administrator',
-                32 => 'Military Engineer',
-            ],
+        'guild_authority' => [
+            1 => 'Leader',
+            2 => 'Deputy Commander',
+            4 => 'Fortress War Administrator',
+            8 => 'Production Administrator',
+            16 => 'Training Administrator',
+            32 => 'Military Engineer',
         ],
         'race' => [
             0 => [
@@ -717,22 +577,20 @@ return [
         ],
     ],
     'item' => [
-        'inventory' => [
-            'slots' => [
-                0 => 'helm',
-                1 => 'chest' ,
-                2 => 'shoulders',
-                3 => 'gauntlet',
-                4 => 'pants',
-                5 => 'boots',
-                6 => 'weapon',
-                7 => 'shield',
-                8 => 'job',
-                9 => 'earring',
-                10 => 'necklace',
-                11 => 'lring',
-                12 => 'rring',
-            ],
+        'slots' => [
+            0 => 'helm',
+            1 => 'chest' ,
+            2 => 'shoulders',
+            3 => 'gauntlet',
+            4 => 'pants',
+            5 => 'boots',
+            6 => 'weapon',
+            7 => 'shield',
+            8 => 'job',
+            9 => 'earring',
+            10 => 'necklace',
+            11 => 'lring',
+            12 => 'rring',
         ],
         'sox_type' => [
             3 => 'Seal of Heavy Storm',
