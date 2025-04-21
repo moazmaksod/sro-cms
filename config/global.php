@@ -102,17 +102,17 @@ return [
                 1 => [
                     'name' => 'Facebook',
                     'url' => 'https://www.facebook.com/',
-                    'image' => '',
+                    'icon' => '<i class="fab fa-facebook-f"></i>',
                 ],
                 2 => [
                     'name' => 'Discord',
                     'url' => 'https://discord.com/',
-                    'image' => '',
+                    'icon' => '<i class="fab fa-discord"></i>',
                 ],
                 3 => [
                     'name' => 'Youtube',
                     'url' => 'https://www.youtube.com/',
-                    'image' => '',
+                    'icon' => '<i class="fab fa-youtube"></i>',
                 ],
             ],
             'backlink' => [

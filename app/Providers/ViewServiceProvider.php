@@ -19,6 +19,20 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
+            if (config('global.widgets.online_counter.enable')) {
+                View::composer('*', function ($view) {
+                    $view->with([
+                        'online_counter' => ShardCurrentUser::getOnlineCounter(),
+                        'max_player' => config('global.widgets.online_counter.max_player'),
+                        'fake_player' => config('global.widgets.online_counter.fake_player'),
+                    ]);
+                });
+            }
+
+            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
+                $view->with('pages', Pages::get());
+            });
+
             if(config('global.widgets.event_schedule.enable')) {
                 View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
                     $view->with('event_schedule', ScheduleService::getEventSchedules());
@@ -39,11 +53,6 @@ class ViewServiceProvider extends ServiceProvider
                     $view->with('unique_history', LogInstanceWorldInfo::getUniques($limit = 5));
                 });
             }
-            if(config('global.widgets.online_counter.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
-                    $view->with('online_counter', ShardCurrentUser::getOnlineCounter());
-                });
-            }
             if(config('global.widgets.top_player.enable')) {
                 View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
                     $view->with('top_player', Char::getPlayerRanking(5, 0));
@@ -54,10 +63,6 @@ class ViewServiceProvider extends ServiceProvider
                     $view->with('top_player', Guild::getGuildRanking(5, 0));
                 });
             }
-            //Pages
-            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
-                $view->with('pages', Pages::get());
-            });
 
         } catch (QueryException $e) {
             // Error: Something Wrong.
