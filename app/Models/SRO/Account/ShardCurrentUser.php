@@ -45,7 +45,7 @@ class ShardCurrentUser extends Model
                 ->orderBy("nID", "desc")
                 ->take(1)
                 ->get()
-                ->value("nUserCount");
+                ->value("nUserCount") ?? 0;
         });
     }
 }
