@@ -198,6 +198,7 @@
                                 {{ $tz }}
                             </option>
                         @endforeach
+                    </select>
 
                     @error('timezone')
                     <span class="invalid-feedback" role="alert">
