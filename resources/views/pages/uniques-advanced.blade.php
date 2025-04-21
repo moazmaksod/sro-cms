@@ -9,7 +9,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <h3>
-                                <img src="{{ asset(config('settings.ranking.unique_icons')[1]) }}" alt=""/>
+                                <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
                                 {{ $unique_list[$key]['name'] }}
                             </h3>
                             <small>Last 3 Killers</small>

@@ -24,52 +24,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //Default
-        Config::set('database.default', 'sqlsrv');
-        Config::set('cache.default', 'file');
-        Config::set('session.driver', 'file');
-        Config::set('maintenance.store', 'file');
-        Config::set('queue.default', 'null');
-
-        //Databases
-        Config::set('database.connections.sqlsrv.host', config('global.general.connection.host'));
-        Config::set('database.connections.sqlsrv.port', config('global.general.connection.port'));
-        Config::set('database.connections.sqlsrv.username', config('global.general.connection.user'));
-        Config::set('database.connections.sqlsrv.password', config('global.general.connection.password'));
-        Config::set('database.connections.sqlsrv.database', config('global.general.connection.db_website'));
-        //SRO
-        Config::set('database.connections.web.database', config('global.general.connection.db_website'));
-        Config::set('database.connections.portal.database', config('global.general.connection.db_portal'));
-        Config::set('database.connections.account.database', config('global.general.connection.db_account'));
-        Config::set('database.connections.shard.database', config('global.general.connection.db_shard'));
-        Config::set('database.connections.log.database', config('global.general.connection.db_log'));
-
         if (!app()->runningInConsole()) {
             try {
                 //Timezone
                 date_default_timezone_set(config('global.general.options.timezone'));
                 //
                 Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
-                Config::set('settings', array_merge(config('global'), Setting::pluck('value', 'key')->toArray()));
                 View::getFinder()->prependLocation(resource_path("themes/".config('global.general.options.theme').'/views'));
-
-                //General
-                Config::set('debugbar.enabled', config('global.general.options.debugbar'));
-                Config::set('mail.default', config('global.general.smtp.enable') ? 'smtp' : 'log');
-
-                //Captcha
-                Config::set('captcha.sitekey', config('settings.general.captcha.sitekey'));
-                Config::set('captcha.secret', config('settings.general.captcha.secret'));
-
-                //Paypal
-                Config::set('paypal.mode', config('settings.donation.paypal.api.mode'));
-                Config::set('paypal.sandbox.clientId', config('settings.donation.paypal.api.sandbox.clientId'));
-                Config::set('paypal.sandbox.secret', config('settings.donation.paypal.api.sandbox.secret'));
-                Config::set('paypal.live.clientId', config('settings.donation.paypal.api.live.clientId'));
-                Config::set('paypal.live.secret', config('settings.donation.paypal.api.live.secret'));
-                //MaxiCard
-                Config::set('maxicard.key', config('settings.donation.maxicard.api.key'));
-                Config::set('maxicard.password', config('settings.donation.maxicard.api.password'));
+                Config::set('settings', Setting::pluck('value', 'key')->toArray());
 
             } catch (QueryException $e) {
                 // Error: Something Error.

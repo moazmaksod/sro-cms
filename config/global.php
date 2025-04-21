@@ -14,33 +14,8 @@ return [
             'max_level' => 140,
             'free_silk' => 0,
             'free_premium_silk' => 0,
-            'debugbar' => false,
             'register_disable' => false,
             'register_confirmation' => false,
-        ],
-        'connection' => [
-            'host' => '192.168.1.101',
-            'port' => '1433',
-            'user' => 'sa',
-            'password' => '123456',
-            'db_website' => 'ISRO_CMS',
-            'db_portal' => 'GB_JoymaxPortal',
-            'db_account' => 'SILKROAD_R_ACCOUNT',
-            'db_shard' => 'SILKROAD_R_SHARD',
-            'db_log' => 'SILKROAD_R_SHARD_LOG',
-        ],
-        'smtp' => [
-            'enable' => false,
-            'host' => 'smtp.mailtrap.io',
-            'port' => 2525,
-            'username' => '',
-            'password' => '',
-            'encryption' => 'tls',
-        ],
-        'captcha' => [
-            'enable' => false, # Obtaining reCAPTCHA Keys, Go to the Google reCAPTCHA website (https://www.google.com/recaptcha)
-            'sitekey' => '',
-            'secret' => '',
         ],
         'cache' => [
             'sql' => true,

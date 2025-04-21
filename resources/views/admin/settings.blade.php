@@ -102,9 +102,9 @@
 
                 <div class="col-md-10">
                     <select class="form-select" name="dark_mode" aria-label="Default select example">
-                        <option value="switch" {{ config('settings.dark_mode') == 'switch' ? 'selected' : '' }}>Switch</option>
-                        <option value="light" {{ config('settings.dark_mode') == 'light' ? 'selected' : '' }}>Light</option>
-                        <option value="dark" {{ config('settings.dark_mode') == 'dark' ? 'selected' : '' }}>Dark</option>
+                        <option value="switch" {{ config('global.dark_mode') == 'switch' ? 'selected' : '' }}>Switch</option>
+                        <option value="light" {{ config('global.dark_mode') == 'light' ? 'selected' : '' }}>Light</option>
+                        <option value="dark" {{ config('global.dark_mode') == 'dark' ? 'selected' : '' }}>Dark</option>
                     </select>
 
                     @error('dark_mode')
@@ -120,7 +120,7 @@
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('settings.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('settings.disable_register') == 1 ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('global.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('global.disable_register') == 1 ? 'checked' : '' }}>
                         <label class="form-check-label" for="disable_register">
                             Disable
                         </label>

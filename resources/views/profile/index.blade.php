@@ -37,8 +37,8 @@
                             <th scope="row">{{ __('VIP') }}</th>
                             <td>
                                 @if(Auth::user()->getVipLevel() !== null && Auth::user()->getVipLevel()->VIPUserType > 0)
-                                    <img src="{{ asset(config('settings.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['icon']) }}" width="24" height="24" alt="">
-                                    <span>{{ config('settings.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['name'] }}</span>
+                                    <img src="{{ asset(config('global.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['icon']) }}" width="24" height="24" alt="">
+                                    <span>{{ config('global.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['name'] }}</span>
                                 @else
                                     <span>{{ __('None') }}</span>
                                 @endif

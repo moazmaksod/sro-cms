@@ -27,9 +27,9 @@
 <main>
     @section('hero')
         <div class="mb-5">
-            <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ config('settings.general.hero.hero_background') }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
+            <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ config('global.general.hero.hero_background') }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
                 <div class="container py-5">
-                    <h1 class="display-5 fw-bold text-body-emphasis" style="color: {{ config('settings.general.hero.hero_label_color') }} !important;">@yield('title')</h1>
+                    <h1 class="display-5 fw-bold text-body-emphasis" style="color: {{ config('global.general.hero.hero_label_color') }} !important;">@yield('title')</h1>
                     <p class="col-lg-8 mx-auto lead"></p>
                 </div>
             </div>

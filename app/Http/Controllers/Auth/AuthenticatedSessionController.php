@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required'],
             'g-recaptcha-response' => [
                 Rule::requiredIf(function () {
-                    return config('settings.general.captcha.enable');
+                    return env('NOCAPTCHA_ENABLE', false);
                 }),
                 'captcha'
             ],

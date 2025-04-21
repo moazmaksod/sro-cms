@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            @if (config('settings.general.captcha.enable'))
+            @if (env('NOCAPTCHA_ENABLE', false))
                 <!-- google recaptch -->
                 <div class="row mb-3">
                     <div class="col-md-8 offset-md-4">

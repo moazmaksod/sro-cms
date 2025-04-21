@@ -55,7 +55,7 @@ class ItemNameDesc extends Model
 
     public static function getItemRealName($CodeName128): string
     {
-        return Cache::remember('ItemNameDesc_'.$CodeName128, now()->addMinutes(config('settings.general.cache.data.character_items')), static function () use ($CodeName128) {
+        return Cache::remember('ItemNameDesc_'.$CodeName128, now()->addMinutes(config('global.general.cache.data.character_items')), static function () use ($CodeName128) {
             return self::select('ENG')->where('StrID', $CodeName128)->first()->ENG ?? $CodeName128;
         });
     }

@@ -37,7 +37,7 @@
             </ul>
 
             <div class="d-flex text-end">
-                @if(config('settings.general.options.theme_color_mode') == 'switch')
+                @if(config('settings.dark_mode') == 'switch')
                 <div class="dropdown bd-mode-toggle">
                     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
                         <symbol id="check2" viewBox="0 0 16 16">
