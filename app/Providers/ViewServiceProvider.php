@@ -26,8 +26,8 @@ class ViewServiceProvider extends ServiceProvider
             View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
                 $view->with([
                     'online_counter' => ShardCurrentUser::getOnlineCounter(),
-                    'max_player' => config('settings.max_player'),
-                    'fake_player' => config('settings.fake_player'),
+                    'max_player' => config('settings.max_player', 1000),
+                    'fake_player' => config('settings.fake_player', 0),
                 ]);
             });
 
