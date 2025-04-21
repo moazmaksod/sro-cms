@@ -17,7 +17,11 @@
 
                 <div class="col-md-12">
                     <div id="content-replace">
-                        @include('ranking.ranking.player')
+                        @if($type == 'guild')
+                            @include('ranking.ranking.guild')
+                        @else
+                            @include('ranking.ranking.player')
+                        @endif
                     </div>
                 </div>
             </div>

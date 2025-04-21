@@ -113,7 +113,7 @@ class Char extends Model
                 ->when($CharID > 0, function ($query) use ($CharID) {
                     $query->where('_Char.CharID', '=', $CharID);
                 })
-                ->when(!empty($CharName), function ($query) use ($CharName, $CharID) {
+                ->when(!empty($CharName), function ($query) use ($CharName) {
                     $query->where('_Char.CharName16', 'like', "%{$CharName}%");
                 })
                 ->groupBy(

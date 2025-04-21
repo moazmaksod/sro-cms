@@ -18,15 +18,15 @@ class RankingController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $data = Char::getPlayerRanking(25, 0, $search);
+        if ($request->input('type') == 'player' && $request->filled('search')) {
+            $data = Char::getPlayerRanking(25, 0, $request->search);
+        }elseif ($request->input('type') == 'guild' && $request->filled('search')) {
+            $data = Guild::getGuildRanking(25, 0, $request->search);
         }else {
             $data = Char::getPlayerRanking();
         }
 
-        return view('ranking.index', compact('data'));
+        return view('ranking.index', ['data' => $data, 'type' => $request->input('type')]);
     }
 
     public function player()

@@ -27,9 +27,9 @@ class Guild extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
-    public static function getGuildRanking($limit = 25, $GuildID = 0)
+    public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
-        return Cache::remember('ranking_guild_'.$limit.'_'.$GuildID, config('global.general.cache.data.ranking-guild'), function () use ($GuildID, $limit) {
+        return Cache::remember('ranking_guild_'.$limit.'_'.$GuildID.'_'.$Name, config('global.general.cache.data.ranking-guild'), function () use ($Name, $GuildID, $limit) {
             return self::select(
                 '_Guild.ID',
                 '_Guild.Name',
@@ -67,6 +67,9 @@ class Guild extends Model
                 ->where('_Inventory.ItemID', '>', 0)
                 ->when($GuildID > 0, function ($query) use ($GuildID) {
                     $query->where('_Guild.ID', '=', $GuildID);
+                })
+                ->when(!empty($Name), function ($query) use ($Name) {
+                    $query->where('_Guild.Name', 'like', "%{$Name}%");
                 })
                 ->groupBy(
                     '_Guild.ID',
