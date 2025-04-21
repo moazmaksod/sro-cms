@@ -19,16 +19,16 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            View::composer(['layouts.*', 'partials.*'], function ($view) {
+            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
+                $view->with('pages', Pages::get());
+            });
+
+            View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
                 $view->with([
                     'online_counter' => ShardCurrentUser::getOnlineCounter(),
                     'max_player' => config('settings.max_player'),
                     'fake_player' => config('settings.fake_player'),
                 ]);
-            });
-
-            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
-                $view->with('pages', Pages::get());
             });
 
             if(config('global.widgets.event_schedule.enable')) {
