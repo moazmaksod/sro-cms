@@ -25,7 +25,9 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
+                                    @if($value->CharName16)
+                                        <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
+                                    @endif
                                 </td>
                                 <td>{{ $value->ItemPoints }}</td>
                             </tr>

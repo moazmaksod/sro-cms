@@ -25,7 +25,9 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if($value->Name)
                                     <a href="{{ route('ranking.guild.view', ['name' => $value->Name]) }}" class="text-decoration-none">{{ $value->Name }}</a>
+                                    @endif
                                 </td>
                                 <td>{{ $value->ItemPoints }}</td>
                             </tr>

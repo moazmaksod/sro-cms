@@ -53,12 +53,12 @@ class ViewServiceProvider extends ServiceProvider
             }
             if(config('global.widgets.top_player.enable')) {
                 View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
-                    $view->with('top_player', Char::getPlayerRanking(config('global.widgets.top_player.limit'), 0));
+                    $view->with('top_player', Char::getPlayerRanking(config('global.widgets.top_player.limit'), 0, ''));
                 });
             }
             if(config('global.widgets.top_guild.enable')) {
                 View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
-                    $view->with('top_player', Guild::getGuildRanking(config('global.widgets.top_guild.limit'), 0));
+                    $view->with('top_guild', Guild::getGuildRanking(config('global.widgets.top_guild.limit'), 0, ''));
                 });
             }
 
