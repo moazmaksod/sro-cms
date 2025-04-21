@@ -173,11 +173,13 @@
                             }
                         @endphp
 
-                        @foreach($themes as $theme)
-                            <option value="{{ $theme }}" {{ config('settings.theme') === $theme ? 'selected' : '' }}>
-                                {{ ucfirst($theme) }}
-                            </option>
-                        @endforeach
+                        @isset($themes)
+                            @foreach($themes as $theme)
+                                <option value="{{ $theme }}" {{ config('settings.theme') === $theme ? 'selected' : '' }}>
+                                    {{ ucfirst($theme) }}
+                                </option>
+                            @endforeach
+                        @endisset
                     </select>
 
                     @error('theme')
