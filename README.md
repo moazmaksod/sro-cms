@@ -42,19 +42,18 @@ git clone https://github.com/m1xawy/isro-cms.git
 ```sh
 composer install
 ```
-3. Rename `.env.example` to `.env` and fill it with your website URL and go in `config/global.php` and fill it with Silkroad database info
+3. Rename `.env.example` to `.env` and fill it with Silkroad database info
    ```ini
-        'connection' => [
-            'host' => '192.168.1.101',
-            'port' => '1433',
-            'user' => 'sa',
-            'password' => '123456',
-            'db_website' => 'ISRO_CMS',
-            'db_portal' => 'GB_JoymaxPortal',
-            'db_account' => 'SILKROAD_R_ACCOUNT',
-            'db_shard' => 'SILKROAD_R_SHARD',
-            'db_log' => 'SILKROAD_R_SHARD_LOG',
-        ],
+    DB_CONNECTION=sqlsrv
+    DB_HOST=192.168.1.101
+    DB_PORT=1433
+    DB_DATABASE=ISRO_CMS
+    DB_DATABASE_PORTAL=GB_JoymaxPortal
+    DB_DATABASE_ACCOUNT=SILKROAD_R_ACCOUNT
+    DB_DATABASE_SHARD=SILKROAD_R_SHARD
+    DB_DATABASE_LOG=SILKROAD_R_SHARD_LOG
+    DB_USERNAME=sa
+    DB_PASSWORD=123456
    ```
 4. Create new database `ISRO_CMS` and run Laravel commands for migrate website tables
 ```sh
