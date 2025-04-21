@@ -1,4 +1,10 @@
 <div class="table-responsive">
+
+    <form method="GET" action="{{ route('ranking') }}" class="mb-4">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..." class="form-control d-inline w-auto">
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
+    </form>
+
     <table class="table table-striped">
         <thead class="table-dark">
             <tr>

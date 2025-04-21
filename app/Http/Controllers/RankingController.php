@@ -12,12 +12,20 @@ use App\Models\SRO\Shard\GuildMember;
 use App\Models\SRO\Shard\TrainingCampHonorRank;
 use App\Services\CrestService;
 use App\Services\InventoryService;
+use Illuminate\Http\Request;
 
 class RankingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Char::getPlayerRanking();
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $data = Char::getPlayerRanking(25, 0, $search);
+        }else {
+            $data = Char::getPlayerRanking();
+        }
+
         return view('ranking.index', compact('data'));
     }
 

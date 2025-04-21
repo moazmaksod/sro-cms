@@ -11,7 +11,6 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
-        //$data = User::get();
         $query = User::query();
 
         if ($request->filled('search')) {

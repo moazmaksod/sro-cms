@@ -60,9 +60,9 @@ class Char extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
-    public static function getPlayerRanking($limit = 25, $CharID = 0)
+    public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')
     {
-        return Cache::remember('ranking_player_'.$limit.'_'.$CharID, config('global.general.cache.data.ranking-player'), function () use ($CharID, $limit) {
+        return Cache::remember('ranking_player_'.$limit.'_'.$CharID.'_'.$CharName, config('global.general.cache.data.ranking-player'), function () use ($CharName, $CharID, $limit) {
             return self::select(
                 '_Char.CharID',
                 '_Char.CharName16',
@@ -112,6 +112,9 @@ class Char extends Model
                 ->where('_Char.deleted', '=', 0)
                 ->when($CharID > 0, function ($query) use ($CharID) {
                     $query->where('_Char.CharID', '=', $CharID);
+                })
+                ->when(!empty($CharName), function ($query) use ($CharName, $CharID) {
+                    $query->where('_Char.CharName16', 'like', "%{$CharName}%");
                 })
                 ->groupBy(
                     '_Char.CharID',

@@ -52,7 +52,6 @@
                 </tbody>
             </table>
 
-            <!-- Pagination links -->
             {{ $data->appends(['search' => request('search')])->links() }}
         </div>
     </div>
