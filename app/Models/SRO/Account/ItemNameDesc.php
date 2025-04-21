@@ -55,23 +55,8 @@ class ItemNameDesc extends Model
 
     public static function getItemRealName($CodeName128): string
     {
-        $mappingList = Cache::remember('ItemNameDesc_'.$CodeName128, now()->addMinutes(config('settings.general.cache.data.character_items')), static function () {
-            $q = self::all();
-
-            $aList = [];
-            foreach ($q as $iKey => $aCurData) {
-                $aList[$aCurData['StrID']] = [
-                    'realName' => $aCurData['ENG'],
-                    'codeName' => $aCurData['StrID']
-                ];
-            }
-            return $aList;
+        return Cache::remember('ItemNameDesc_'.$CodeName128, now()->addMinutes(config('settings.general.cache.data.character_items')), static function () use ($CodeName128) {
+            return self::select('ENG')->where('StrID', $CodeName128)->first()->ENG ?? $CodeName128;
         });
-
-        if (array_key_exists($CodeName128, $mappingList)) {
-            return $mappingList[$CodeName128]['realName'];
-        }
-
-        return $CodeName128;
     }
 }
