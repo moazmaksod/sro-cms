@@ -6,6 +6,7 @@
                 <th scope="col">{{ __('NickName') }}</th>
                 <th scope="col">{{ __('Job') }}</th>
                 <th scope="col">{{ __('JobLevel') }}</th>
+                <th scope="col">{{ __('Kills') }}</th>
                 <th scope="col">{{ __('Points') }}</th>
             </tr>
         </thead>
@@ -33,12 +34,13 @@
                         {{ config('global.ranking.job_type_icons')[$value->JobType]['name'] }}
                     </td>
                     <td>{{ $value->JobLevel }}</td>
-                    <td>{{ $value->JobExp }}</td>
+                    <td>{{ $value->KillCount }}</td>
+                    <td>{{ $value->ReputationPoint }}</td>
                 </tr>
                 @php $i++ @endphp
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">{{ __('No Records Found!') }}</td>
+                    <td colspan="6" class="text-center">{{ __('No Records Found!') }}</td>
                 </tr>
             @endforelse
         </tbody>

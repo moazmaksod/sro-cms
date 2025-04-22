@@ -216,9 +216,6 @@
                 <div class="col-md-10">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('settings.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('settings.disable_register') == 1 ? 'checked' : '' }}>
-                        <label class="form-check-label" for="disable_register">
-                            Disable
-                        </label>
                     </div>
 
                     @error('disable_register')
@@ -235,9 +232,6 @@
                 <div class="col-md-10">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="register_confirm" value="{{ old('register_confirm', config('settings.register_confirm') == 1) ? '1' : '0' }}" id="register_confirm" {{ config('settings.register_confirm') == 1 ? 'checked' : '' }}>
-                        <label class="form-check-label" for="register_confirm">
-                            Disable
-                        </label>
                     </div>
 
                     @error('register_confirm')

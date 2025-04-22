@@ -44,7 +44,11 @@ class CharTradeConflictJob extends Model
                     '_Char.RefObjID',
                     '_UserTradeConflictJob.JobType',
                     '_CharTradeConflictJob.JobLevel',
-                    '_CharTradeConflictJob.JobExp'
+                    '_CharTradeConflictJob.JobExp',
+                    '_CharTradeConflictJob.ReputationPoint',
+                    '_CharTradeConflictJob.KillCount',
+                    '_CharTradeConflictJob.Class',
+                    '_CharTradeConflictJob.Rank',
                 )
                 ->where('_Char.deleted', 0)
                 ->where('_Char.CharID', '>', 0)
@@ -54,6 +58,9 @@ class CharTradeConflictJob extends Model
                 })
                 ->orderByDesc('_CharTradeConflictJob.JobLevel')
                 ->orderByDesc('_CharTradeConflictJob.JobExp')
+                ->orderByDesc('_CharTradeConflictJob.ReputationPoint')
+                ->orderByDesc('_CharTradeConflictJob.KillCount')
+                ->orderByDesc('_CharTradeConflictJob.Rank')
                 ->limit($limit)
                 ->get();
         });
