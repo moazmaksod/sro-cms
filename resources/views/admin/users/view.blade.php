@@ -28,31 +28,31 @@
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->getMuUser->getEmailUser->EmailAddr }}</td>
+                                <td>{{ $user->muUser->muEmail->EmailAddr }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
-                                <td>{{ $user->getMuUser->getJCash()->Silk }}</td>
+                                <td>{{ $user->muUser->getJCash()->Silk }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Premium Silk') }}</th>
-                                <td>{{ $user->getMuUser->getJCash()->PremiumSilk }}</td>
+                                <td>{{ $user->muUser->getJCash()->PremiumSilk }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Month Usage') }}</th>
-                                <td>{{ $user->getMuUser->getJCash()->MonthUsage }}</td>
+                                <td>{{ $user->muUser->getJCash()->MonthUsage }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('3Month Usage') }}</th>
-                                <td>{{ $user->getMuUser->getJCash()->ThreeMonthUsage }}</td>
+                                <td>{{ $user->muUser->getJCash()->ThreeMonthUsage }}</td>
                             </tr>
 
                             <tr>
                                 <th scope="row">VIP</th>
                                 <td>
-                                    @isset($user->getMuUser->getVipLevel->VIPUserType)
-                                        <img src="{{ asset(config('global.ranking.vip_level.level')[$user->getMuUser->getVipLevel->VIPLv]['icon']) }}" width="24" height="24" alt="">
-                                        <span>{{ config('global.ranking.vip_level.level')[$user->getMuUser->getVipLevel->VIPLv]['name'] }}</span>
+                                    @isset($user->muUser->muVIPInfo->VIPUserType)
+                                        <img src="{{ asset(config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['icon']) }}" width="24" height="24" alt="">
+                                        <span>{{ config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
                                     @else
                                         <span>{{ __('None') }}</span>
                                     @endisset

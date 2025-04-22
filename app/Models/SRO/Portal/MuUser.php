@@ -104,27 +104,27 @@ class MuUser extends Model
         });
     }
 
-    public function getEmailUser()
+    public function muEmail()
     {
         return $this->hasOne(MuEmail::class, 'JID', 'JID');
     }
 
-    public function getVipLevel()
+    public function muVIPInfo()
     {
         return $this->hasOne(MuVIPInfo::class, 'JID', 'JID');
     }
 
-    public function getChangedSilk()
+    public function aphChangedSilk()
     {
         return $this->hasMany(AphChangedSilk::class, 'JID', 'JID');
     }
 
-    public function getTbUser()
+    public function tbUser()
     {
         return $this->belongsTo(TbUser::class, 'PortalJID', 'JID');
     }
 
-    public function getWebUser()
+    public function user()
     {
         return $this->belongsTo(User::class, 'jid', 'JID');
     }

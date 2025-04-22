@@ -62,8 +62,8 @@ class MuVIPInfo extends Model
         ]);
     }
 
-    public function MuUser()
+    public function muUser()
     {
-        return $this->belongsTo(MuUser::class);
+        return $this->belongsTo(MuUser::class, 'JID', 'JID');
     }
 }

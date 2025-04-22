@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\SRO\Account\TbUser;
+use App\Models\SRO\Portal\AphChangedSilk;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Portal\MuVIPInfo;
@@ -59,14 +60,14 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    public function getMuUser()
+    public function muUser()
     {
-        return $this->hasOne(MuUser::class, 'jid', 'JID');
+        return $this->hasOne(MuUser::class, 'JID', 'jid');
     }
 
-    public function getTbUser()
+    public function tbUser()
     {
-        return $this->hasOne(TbUser::class, 'jid', 'PortalJID');
+        return $this->hasOne(TbUser::class, 'PortalJID', 'jid');
     }
 
     public function news()

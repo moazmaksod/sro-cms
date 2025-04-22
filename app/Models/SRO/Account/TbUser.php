@@ -95,12 +95,12 @@ class TbUser extends Model
         return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
     }
 
-    public function getMuUser()
+    public function muUser()
     {
         return $this->hasOne(MuUser::class, 'JID', 'PortalJID');
     }
 
-    public function getWebUser()
+    public function user()
     {
         return $this->belongsTo(User::class, 'jid', 'PortalJID');
     }

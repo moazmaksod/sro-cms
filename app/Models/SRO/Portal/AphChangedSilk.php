@@ -82,12 +82,12 @@ class AphChangedSilk extends Model
     public static function getSilkSum()
     {
         return Cache::remember('silk_sum', config('global.general.cache.data.account'), function () {
-            return self::all()->sum('ChangedSilk');
+            return self::all()->sum('RemainedSilk');
         });
     }
 
-    public function MuUser()
+    public function muUser()
     {
-        return $this->belongsTo(MuUser::class);
+        return $this->belongsTo(MuUser::class, 'JID', 'JID');
     }
 }
