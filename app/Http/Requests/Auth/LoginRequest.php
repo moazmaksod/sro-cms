@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
@@ -47,12 +48,12 @@ class LoginRequest extends FormRequest
 
         if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
 
-            $mu_user = MuUser::where('UserID', $this->get('username'))->where('UserPwd', md5($this->get('password')))->first();
-            if ($mu_user) {
+            $tb_user = TbUser::where('StrUserID', $this->get('username'))->where('password', md5($this->get('password')))->first();
+            if ($tb_user) {
                 $user = User::create([
-                    'jid' => $mu_user->JID,
+                    'jid' => $tb_user->PortalJID,
                     'username' => $this->get('username'),
-                    'email' => $mu_user->getEmailUser->EmailAddr,
+                    'email' => $tb_user->getMuUser->getEmailUser->EmailAddr,
                     'password' => Hash::make($this->get('password')),
                 ]);
 

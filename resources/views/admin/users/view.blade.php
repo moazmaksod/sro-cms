@@ -67,7 +67,7 @@
                 <div class="card p-3">
                     <div class="card-body">
                         <h4 class="text-center">Add Silk</h4>
-                        <form method="POST" action="{{ route('admin.users.update', $user->PortalJID) }}">
+                        <form method="POST" action="{{ route('admin.users.update', $user->JID) }}">
                             @csrf
                             @method('PUT')
 

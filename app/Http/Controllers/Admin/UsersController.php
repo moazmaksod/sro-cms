@@ -38,7 +38,7 @@ class UsersController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
+        AphChangedSilk::setChangedSilk($user->getMuUser->JID, $validated['type'], $validated['amount']);
 
         return back()->with('success', 'Silk have been Sent!');
     }
