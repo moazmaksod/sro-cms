@@ -56,11 +56,8 @@ class CharTradeConflictJob extends Model
                 ->when($type > 0, function ($query) use ($type) {
                     $query->where('_UserTradeConflictJob.JobType', '=', $type);
                 })
-                ->orderByDesc('_CharTradeConflictJob.JobLevel')
-                ->orderByDesc('_CharTradeConflictJob.JobExp')
                 ->orderByDesc('_CharTradeConflictJob.ReputationPoint')
-                ->orderByDesc('_CharTradeConflictJob.KillCount')
-                ->orderByDesc('_CharTradeConflictJob.Rank')
+                ->orderByDesc('_CharTradeConflictJob.JobExp')
                 ->limit($limit)
                 ->get();
         });
