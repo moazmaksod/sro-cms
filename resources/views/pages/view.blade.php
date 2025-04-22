@@ -3,6 +3,13 @@
 
 @section('content')
     <div class="container">
-        {!! $data->content !!}
+        <div class="card mb-4 p-0">
+            <div class="card-header">
+                {{ $data->title }}
+            </div>
+            <div class="card-body">
+                {!! $data->content !!}
+            </div>
+        </div>
     </div>
 @endsection
