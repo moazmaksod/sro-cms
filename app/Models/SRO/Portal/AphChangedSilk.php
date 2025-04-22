@@ -5,6 +5,7 @@ namespace App\Models\SRO\Portal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class AphChangedSilk extends Model
 {
@@ -58,10 +59,31 @@ class AphChangedSilk extends Model
 
     public static function setChangedSilk($jid, $type, $amount)
     {
+        /*
+        DB::connection('portal')->table('APH_CPItemSaleDetails')->insert([
+            'PTInvoiceID' => "DASHBOARD".date('YmdHis').rand(111111,999999),
+            'CPJCIInvoiceID' => rand(1111111111,2147483647),
+            'ServiceCode' => 11,
+            'CPItemCount' => 1,
+            'Price' => $amount,
+            'SilkType' => $type,
+            'JCISCode' => 10000,
+            'JID' => $jid,
+            'UserIP' => ip2long('127.0.0.1'),
+            'CountryCode' => 'ZZ',
+            'CPPaymentDate' => now(),
+            'CPItemID' => 6019,
+            'ServerName' => config('settings.site_title'),
+            'CharName' => null,
+            'CharID' => null,
+        ]);
+        */
+
         return self::create([
             'JID' => $jid,
-            'RemainedSilk' => 0,
-            'ChangedSilk' => $amount,
+            'PTInvoiceID' => null,
+            'RemainedSilk' => $amount,
+            'ChangedSilk' => 0,
             'SilkType' => $type,
             'SellingTypeID' => 2,
             'ChangeDate' => now(),

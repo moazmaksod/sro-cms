@@ -90,7 +90,7 @@
 
                                 <div class="col-md-10">
                                     <select class="form-select" name="type" aria-label="Default select example">
-                                        <option value="1">Normal</option>
+                                        <option value="0">Normal</option>
                                         <option value="3">Premium</option>
                                     </select>
 
