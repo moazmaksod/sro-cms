@@ -61,4 +61,9 @@ class MuVIPInfo extends Model
             'ExpireDate' => now()->addMonths(1),
         ]);
     }
+
+    public function MuUser()
+    {
+        return $this->belongsTo(MuUser::class);
+    }
 }

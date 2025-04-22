@@ -83,4 +83,9 @@ class AphChangedSilk extends Model
             return self::all()->sum('ChangedSilk');
         });
     }
+
+    public function MuUser()
+    {
+        return $this->belongsTo(MuUser::class);
+    }
 }

@@ -9,6 +9,7 @@ return [
                 'download' => 10080, //1 week
                 'pages' => 10080, //1 weeek
                 'account' => 5, //5 minutes
+                'silk' => 0, //5 minutes
                 'online_counter' => 1, //1 minute
                 'event_schedule' => 10080, //1 weeek
                 'fortress_war' => 10080, //1 weeek

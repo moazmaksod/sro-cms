@@ -26,7 +26,6 @@
             <table class="table table-striped table-sm">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Portal JID</th>
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
@@ -36,12 +35,11 @@
                 <tbody>
                     @forelse($data as $value)
                         <tr>
-                            <td>{{ $value->id }}</td>
-                            <td>{{ $value->jid }}</td>
-                            <td>{{ $value->username }}</td>
-                            <td>{{ $value->email }}</td>
+                            <td>{{ $value->PortalJID }}</td>
+                            <td>{{ $value->StrUserID }}</td>
+                            <td>{{ $value->getMuUser->getEmailUser->EmailAddr }}</td>
                             <td>
-                                <a href="{{ route('admin.users.view', $value->id) }}" class="btn btn-secondary btn-sm">View</a>
+                                <a href="{{ route('admin.users.view', $value->PortalJID) }}" class="btn btn-secondary btn-sm">View</a>
                             </td>
                         </tr>
                     @empty

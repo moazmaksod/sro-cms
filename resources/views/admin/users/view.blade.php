@@ -19,63 +19,97 @@
                     <table class="table table-striped">
                         <tbody>
                             <tr>
-                                <th scope="row">JID</th>
-                                <td>{{ $user->jid }}</td>
+                                <th scope="row">Portal JID</th>
+                                <td>{{ $user->PortalJID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
-                                <td>{{ $user->username }}</td>
+                                <td>{{ $user->StrUserID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->getMuUser->getEmailUser->EmailAddr }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Silk') }}</th>
+                                <td>{{ $user->getMuUser->getJCash()->Silk }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Premium Silk') }}</th>
+                                <td>{{ $user->getMuUser->getJCash()->PremiumSilk }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Month Usage') }}</th>
+                                <td>{{ $user->getMuUser->getJCash()->MonthUsage }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('3Month Usage') }}</th>
+                                <td>{{ $user->getMuUser->getJCash()->ThreeMonthUsage }}</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">VIP</th>
+                                <td>
+                                    @isset($user->getMuUser->getVipLevel->VIPUserType)
+                                        <img src="{{ asset(config('global.ranking.vip_level.level')[$user->getMuUser->getVipLevel->VIPLv]['icon']) }}" width="24" height="24" alt="">
+                                        <span>{{ config('global.ranking.vip_level.level')[$user->getMuUser->getVipLevel->VIPLv]['name'] }}</span>
+                                    @else
+                                        <span>{{ __('None') }}</span>
+                                    @endisset
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <div class="col-md-6">
-                <form method="POST" action="{{ route('admin.users.update', $user->id) }}">
-                    @csrf
-                    @method('PUT')
+                <div class="card p-3">
+                    <div class="card-body">
+                        <h4 class="text-center">Add Silk</h4>
+                        <form method="POST" action="{{ route('admin.users.update', $user->PortalJID) }}">
+                            @csrf
+                            @method('PUT')
 
-                    <div class="row mb-3">
-                        <label for="amount" class="col-md-2 col-form-label text-md-end">{{ __('Silk Amount') }}</label>
+                            <div class="row mb-3">
+                                <label for="amount" class="col-md-2 col-form-label text-md-end">{{ __('Silk Amount') }}</label>
 
-                        <div class="col-md-10">
-                            <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required>
+                                <div class="col-md-10">
+                                    <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required>
 
-                            @error('amount')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
+                                    @error('amount')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="type" class="col-md-2 col-form-label text-md-end">{{ __('Type') }}</label>
+
+                                <div class="col-md-10">
+                                    <select class="form-select" name="type" aria-label="Default select example">
+                                        <option value="1">Normal</option>
+                                        <option value="3">Premium</option>
+                                    </select>
+
+                                    @error('category')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-0">
+                                <div class="col-md-10 offset-md-2">
+                                    <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="row mb-3">
-                        <label for="type" class="col-md-2 col-form-label text-md-end">{{ __('Type') }}</label>
-
-                        <div class="col-md-10">
-                            <select class="form-select" name="type" aria-label="Default select example">
-                                <option value="1">Normal</option>
-                                <option value="3">Premium</option>
-                            </select>
-
-                            @error('category')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-0">
-                        <div class="col-md-10 offset-md-2">
-                            <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

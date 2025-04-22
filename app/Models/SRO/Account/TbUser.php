@@ -4,8 +4,10 @@ namespace App\Models\SRO\Account;
 
 use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Shard\Char;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class TbUser extends Model
 {
@@ -81,13 +83,25 @@ class TbUser extends Model
         ]);
     }
 
-    public function getShardUser(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public static function getTbUserCount()
+    {
+        return Cache::remember('game_account_count', config('global.general.cache.data.account'), function () {
+            return self::count();
+        });
+    }
+
+    public function getShardUser()
     {
         return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
     }
 
-    public function getPortalUser(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function getMuUser()
     {
         return $this->hasOne(MuUser::class, 'JID', 'PortalJID');
+    }
+
+    public function getWebUser()
+    {
+        return $this->belongsTo(User::class, 'jid', 'PortalJID');
     }
 }

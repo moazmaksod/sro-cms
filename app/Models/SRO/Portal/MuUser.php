@@ -2,6 +2,7 @@
 
 namespace App\Models\SRO\Portal;
 
+use App\Models\SRO\Account\TbUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,23 +73,59 @@ class MuUser extends Model
         ]);
     }
 
-    public function getEmailUser(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function getJCash()
+    {
+        return Cache::remember('account_j_cash_'.$this->JID, config('global.general.cache.data.silk'), function () {
+            return collect(DB::select("
+            Declare @ReturnValue Int
+            Declare @PremiumSilk Int
+            Declare @Silk Int;
+            Declare @VipLevel Int
+            Declare @UsageMonth Int
+            Declare @Usage3Month Int;
+            SET NOCOUNT ON;
+
+            Execute @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash]
+                ".$this->JID.",
+                @PremiumSilk Output,
+                @Silk Output,
+                @VipLevel Output,
+                @UsageMonth Output,
+                @Usage3Month Output;
+
+            Select
+                @ReturnValue AS 'ErrorCode',
+                @PremiumSilk AS 'PremiumSilk',
+                @Silk AS 'Silk',
+                @UsageMonth AS 'MonthUsage',
+                @Usage3Month AS 'ThreeMonthUsage'
+            "
+            ))->first();
+        });
+    }
+
+    public function getEmailUser()
     {
         return $this->hasOne(MuEmail::class, 'JID', 'JID');
     }
 
-    public function getVipLevel(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function getVipLevel()
     {
-        return $this->hasMany(MuVIPInfo::class, 'JID', 'JID');
+        return $this->hasOne(MuVIPInfo::class, 'JID', 'JID');
     }
 
-    public function getChangedSilk(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function getChangedSilk()
     {
-        return $this->belongsTo(AphChangedSilk::class, 'JID', 'JID');
+        return $this->hasMany(AphChangedSilk::class, 'JID', 'JID');
     }
 
-    public function getWebUser(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function getTbUser()
     {
-        return $this->hasOne(User::class, 'jid', 'JID');
+        return $this->belongsTo(TbUser::class, 'PortalJID', 'JID');
+    }
+
+    public function getWebUser()
+    {
+        return $this->belongsTo(User::class, 'jid', 'JID');
     }
 }

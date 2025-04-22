@@ -54,4 +54,9 @@ class MuEmail extends Model
             'EmailAddr' => $email,
         ]);
     }
+
+    public function MuUser()
+    {
+        return $this->belongsTo(MuUser::class);
+    }
 }

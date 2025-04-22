@@ -17,31 +17,30 @@
                             <td>{{ Auth::user()->email }}</td>
                         </tr>
                         <tr>
+                            <th scope="row">{{ __('Silk') }}</th>
+                            <td>{{ Auth::user()->getMuUser->getJCash->Silk ?? 0 }}</td>
+                        </tr>
+                        <tr>
                             <th scope="row">{{ __('Premium Silk') }}</th>
-                            <td>{{ Auth::user()->getJCash()->PremiumSilk }}</td>
+                            <td>{{ Auth::user()->getMuUser->getJCash->PremiumSilk ?? 0 }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('Month Usage') }}</th>
-                            <td>{{ Auth::user()->getJCash()->MonthUsage }}</td>
+                            <td>{{ Auth::user()->getMuUser->getJCash->MonthUsage ?? 0 }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('3Month Usage') }}</th>
-                            <td>{{ Auth::user()->getJCash()->ThreeMonthUsage }}</td>
+                            <td>{{ Auth::user()->getMuUser->getJCash->ThreeMonthUsage ?? 0 }}</td>
                         </tr>
-                        <tr>
-                            <th scope="row">{{ __('Silk') }}</th>
-                            <td>{{ Auth::user()->getJCash()->Silk }}</td>
-                        </tr>
-
                         <tr>
                             <th scope="row">{{ __('VIP') }}</th>
                             <td>
-                                @if(Auth::user()->getVipLevel() !== null && Auth::user()->getVipLevel()->VIPUserType > 0)
-                                    <img src="{{ asset(config('global.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['icon']) }}" width="24" height="24" alt="">
-                                    <span>{{ config('global.ranking.vip_level.level')[Auth::user()->getVipLevel()->VIPLv]['name'] }}</span>
+                                @isset(Auth::user()->getMuUser->getVipLevel->VIPUserType)
+                                    <img src="{{ asset(config('global.ranking.vip_level.level')[Auth::user()->getMuUser->getVipLevel->VIPLv]['icon']) }}" width="24" height="24" alt="">
+                                    <span>{{ config('global.ranking.vip_level.level')[Auth::user()->getMuUser->getVipLevel->VIPLv]['name'] }}</span>
                                 @else
                                     <span>{{ __('None') }}</span>
-                                @endif
+                                @endisset
                             </td>
                         </tr>
                         </tbody>

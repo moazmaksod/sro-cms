@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\SRO\Account\TbUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Portal\MuVIPInfo;
@@ -51,47 +52,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function getJCash()
-    {
-        return Cache::remember('account_j_cash_'.$this->jid, config('global.general.cache.data.account'), function () {
-            return collect(DB::select("
-            Declare @ReturnValue Int
-            Declare @PremiumSilk Int
-            Declare @Silk Int;
-            Declare @VipLevel Int
-            Declare @UsageMonth Int
-            Declare @Usage3Month Int;
-            SET NOCOUNT ON;
-
-            Execute @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash]
-                ".$this->jid.",
-                @PremiumSilk Output,
-                @Silk Output,
-                @VipLevel Output,
-                @UsageMonth Output,
-                @Usage3Month Output;
-
-            Select
-                @ReturnValue AS 'ErrorCode',
-                @PremiumSilk AS 'PremiumSilk',
-                @Silk AS 'Silk',
-                @UsageMonth AS 'MonthUsage',
-                @Usage3Month AS 'ThreeMonthUsage'
-            "
-            ))->first();
-        });
-    }
-
-    public function getVipLevel()
-    {
-        return Cache::remember('account_vip_level_'.$this->jid, config('global.general.cache.data.account'), function () {
-            return DB::connection('portal')
-            ->table('MU_VIP_Info')
-                ->where('JID', $this->jid)
-                ->first();
-        });
-    }
-
     public static function getUserCount()
     {
         return Cache::remember('account_count', config('global.general.cache.data.account'), function () {
@@ -101,7 +61,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getMuUser()
     {
-        return $this->hasMany(MuUser::class, 'jid', 'JID');
+        return $this->hasOne(MuUser::class, 'jid', 'JID');
+    }
+
+    public function getTbUser()
+    {
+        return $this->hasOne(TbUser::class, 'jid', 'PortalJID');
     }
 
     public function news()

@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = TbUser::query();
 
         if ($request->filled('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
-                $q->where('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $q->where('StrUserID', 'like', "%{$search}%");
             });
         }
 
@@ -27,19 +26,19 @@ class UsersController extends Controller
         return view('admin.users.index', compact('data'));
     }
 
-    public function view(User $user)
+    public function view(TbUser $user)
     {
         return view('admin.users.view', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, TbUser $user)
     {
         $validated = $request->validate([
             'type' => 'required',
             'amount' => 'required|numeric',
         ]);
 
-        AphChangedSilk::setChangedSilk($user->jid, $validated['type'], $validated['amount']);
+        AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
 
         return back()->with('success', 'Silk have been Sent!');
     }

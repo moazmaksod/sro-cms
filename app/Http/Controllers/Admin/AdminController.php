@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Shard\Char;
 use App\Models\User;
@@ -12,7 +13,7 @@ class AdminController extends Controller
     public function index()
     {
         $data = "Test from admin controller";
-        $userCount = User::getUserCount();
+        $userCount = TbUser::getTbUserCount();
         $charCount = Char::getCharCount();
         $totalGold = Char::getGoldSum();
         //$totalSilk = AphChangedSilk::getSilkSum();
