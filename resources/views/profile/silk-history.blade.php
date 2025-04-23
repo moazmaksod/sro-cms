@@ -24,8 +24,10 @@
                                     @if($value->PTInvoiceID)
                                         <img src="{{ asset('https://raw.githubusercontent.com/Komiks8457/iSROWebApps/refs/heads/main/webmall/webmall_php/dist/images/itemlist_pac/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class="">
                                         {{ $value->CPItemName }}
+                                    @elseif($value->ChangedSilk == 0 && $value->RemainedSilk > 0)
+                                        <span class="text-success">{{ __('Add Silk') }}</span>
                                     @else
-                                        {{ __('NoName') }}
+                                        <span class="text-white">{{ __('NoName') }}</span>
                                     @endif
                                 </td>
                                 <td style="color: orange">{{ $value->RemainedSilk }}</td>
