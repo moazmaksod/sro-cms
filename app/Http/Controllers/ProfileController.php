@@ -24,13 +24,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function characters(Request $request): View
-    {
-        return view('profile.characters', [
-            'user' => $request->user(),
-        ]);
-    }
-
     public function donate(Request $request): View
     {
         return view('profile.donate', [

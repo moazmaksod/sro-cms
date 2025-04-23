@@ -102,7 +102,6 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account') }}</a></li>
-                                <li><a class="dropdown-item" href="{{ route('profile.characters') }}">{{ __('Characters') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Settings') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.donate') }}">{{ __('Donate') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.silk-history') }}">{{ __('Silk History') }}</a></li>

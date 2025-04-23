@@ -35,7 +35,6 @@ Route::any('/ranking/guild-crest/{hex}', [RankingController::class, 'guild_crest
 
 Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 'throttle'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile/characters', [ProfileController::class, 'characters'])->name('profile.characters');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/edit', [ProfileController::class, 'destroy'])->name('profile.destroy');
