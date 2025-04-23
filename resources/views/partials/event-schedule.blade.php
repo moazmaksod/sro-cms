@@ -4,8 +4,8 @@
             {{ __('Event Schedule') }}
         </div>
         <div class="card-body">
-            @php $i = 0; @endphp
             <ul class="list-unstyled">
+                @php $i = 0; @endphp
                 @foreach($event_schedule as $key => $value)
                     @if(is_null($value)) @continue @endif
                     <li>
