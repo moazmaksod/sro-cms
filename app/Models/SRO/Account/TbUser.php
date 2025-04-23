@@ -90,7 +90,7 @@ class TbUser extends Model
         });
     }
 
-    public function getShardUser()
+    public function shardUser()
     {
         return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
     }

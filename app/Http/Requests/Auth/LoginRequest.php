@@ -53,7 +53,7 @@ class LoginRequest extends FormRequest
                 $user = User::create([
                     'jid' => $tb_user->PortalJID,
                     'username' => $this->get('username'),
-                    'email' => $tb_user->getMuUser->getEmailUser->EmailAddr,
+                    'email' => $tb_user->muUser->muEmail->EmailAddr,
                     'password' => Hash::make($this->get('password')),
                 ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\SRO\Shard;
 
+use App\Models\SRO\Account\TbUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -173,7 +174,7 @@ class Char extends Model
         return $query;
     }
 
-    public function getAccountUser()
+    public function User()
     {
         return $this->belongsTo(User::class, 'CharID', 'CharID');
     }

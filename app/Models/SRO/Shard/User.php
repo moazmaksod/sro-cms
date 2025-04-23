@@ -48,13 +48,8 @@ class User extends Model
         'UserJID', 'CharID'
     ];
 
-    public function getTbUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function tbUser()
     {
         return $this->belongsTo(TbUser::class, 'UserJID', 'JID');
-    }
-
-    public function getChangedSilk(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(AphChangedSilk::class, 'UserJID', 'JID');
     }
 }
