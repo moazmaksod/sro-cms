@@ -20,8 +20,14 @@
                         <tbody>
                         @forelse($data as $value)
                             <tr>
-                                <td><img src="{{ asset('https://raw.githubusercontent.com/Komiks8457/iSROWebApps/refs/heads/main/webmall/webmall_php/dist/images/itemlist_pac/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class=""></td>
-                                <td>{{ $value->CPItemName }}</td>
+                                <td>
+                                    @if($value->PTInvoiceID)
+                                        <img src="{{ asset('https://raw.githubusercontent.com/Komiks8457/iSROWebApps/refs/heads/main/webmall/webmall_php/dist/images/itemlist_pac/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class="">
+                                        {{ $value->CPItemName }}
+                                    @else
+                                        {{ __('NoName') }}
+                                    @endif
+                                </td>
                                 <td style="color: orange">{{ $value->RemainedSilk }}</td>
                                 <td style="color: orangered">{{ $value->ChangedSilk }}</td>
                                 <td>{{ ($value->SilkType == 3) ? 'premium' : 'Normal' }}</td>
