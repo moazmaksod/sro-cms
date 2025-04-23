@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('settings.site_title') }} - @yield('title')</title>
-    <meta name="description" content="{{ config('settings.site_desc') }}">
-    <link rel="shortcut icon" href="{{ asset(config('settings.site_favicon')) }}">
+    <title>{{ config('settings.site_title', 'iSRO CMS v2') }} - @yield('title')</title>
+    <meta name="description" content="{{ config('settings.site_desc', 'Description') }}">
+    <link rel="shortcut icon" href="{{ asset(config('settings.site_favicon', 'images/favicon.ico')) }}">
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/dashboard.css') }}" rel="stylesheet">
@@ -20,7 +20,7 @@
         nav[role=navigation] > div:first-child {margin-bottom: 1rem}
     </style>
 </head>
-<body data-bs-theme="{{ config('settings.dark_mode') }}">
+<body data-bs-theme="{{ config('settings.dark_mode', 'dark') }}">
 
 @include('admin.layouts.header')
 
