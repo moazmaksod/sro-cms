@@ -38,7 +38,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function donate_history(Request $request): View
+    public function silk_history(Request $request): View
     {
         $data = AphChangedSilk::getDonateHistory($request->user()->jid);
 
