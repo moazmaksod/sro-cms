@@ -72,10 +72,23 @@ class AphChangedSilk extends Model
         ]);
     }
 
-    public static function getDonateHistory($jid)
+    public static function getSilkHistory($jid)
     {
         return Cache::remember('donate_history', now()->addMinutes(config('global.general.cache.data.account')), function () use ($jid) {
-            return self::where('JID', $jid)->orderBy('ChangeDate', 'DESC')->get();
+            return self::join('APH_CPItemSaleDetails', 'APH_CPItemSaleDetails.PTInvoiceID', '=', 'APH_ChangedSilk.PTInvoiceID')
+                ->join('M_CPItem', 'M_CPItem.CPItemID', '=', 'APH_CPItemSaleDetails.CPItemID')
+                ->select(
+                    'M_CPItem.CPItemCode',
+                    'M_CPItem.CPItemName',
+                    'APH_ChangedSilk.RemainedSilk',
+                    'APH_ChangedSilk.ChangedSilk',
+                    'APH_ChangedSilk.SilkType',
+                    'APH_ChangedSilk.ChangeDate',
+                    'APH_ChangedSilk.AvailableStatus'
+                )
+                ->where('APH_ChangedSilk.JID', $jid)
+                ->orderBy('APH_ChangedSilk.ChangeDate', 'desc')
+                ->get();
         });
     }
 

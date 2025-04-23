@@ -9,24 +9,23 @@
                     <table class="table table-striped">
                         <thead class="table-dark">
                         <tr>
-                            <th scope="col">{{ __('Serial') }}</th>
+                            <th scope="col">{{ __('ItemName') }}</th>
                             <th scope="col">{{ __('Remained Silk') }}</th>
                             <th scope="col">{{ __('Changed Silk') }}</th>
                             <th scope="col">{{ __('Silk Type') }}</th>
                             <th scope="col">{{ __('Date') }}</th>
-                            <th scope="col">{{ __('Expire Date') }}</th>
                             <th scope="col">{{ __('Status') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse($data as $value)
                             <tr>
-                                <td>{{ $value->PTInvoiceID }}</td>
+                                <td><img src="{{ asset('https://raw.githubusercontent.com/Komiks8457/iSROWebApps/refs/heads/main/webmall/webmall_php/dist/images/itemlist_pac/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class=""></td>
+                                <td>{{ $value->CPItemName }}</td>
                                 <td style="color: orange">{{ $value->RemainedSilk }}</td>
                                 <td style="color: orangered">{{ $value->ChangedSilk }}</td>
                                 <td>{{ ($value->SilkType == 3) ? 'premium' : 'Normal' }}</td>
                                 <td>{{ $value->ChangeDate }}</td>
-                                <td>{{ $value->AvailableDate }}</td>
                                 <td>{{ ($value->AvailableStatus == 'Y') ? "Available" : "Not Available" }}</td>
                             </tr>
                         @empty

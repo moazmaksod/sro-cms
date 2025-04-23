@@ -33,7 +33,7 @@ class ProfileController extends Controller
 
     public function silk_history(Request $request): View
     {
-        $data = AphChangedSilk::getDonateHistory($request->user()->jid);
+        $data = AphChangedSilk::getSilkHistory($request->user()->jid);
 
         return view('profile.silk-history', [
             'user' => $request->user(),
