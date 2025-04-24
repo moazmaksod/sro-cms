@@ -8,7 +8,7 @@
                 @forelse($fortress_war as $value)
                     <li>
                         <span>
-                            <img src="{{ config('global.widgets.fortress_war.data')[$value->FortressID]['icon'] }}" alt="">
+                            <img src="{{ asset(config('global.widgets.fortress_war.data')[$value->FortressID]['icon']) }}" alt="">
                             {{ config('global.widgets.fortress_war.data')[$value->FortressID]['name'] }}
                         </span>
                         <span class="float-end">
