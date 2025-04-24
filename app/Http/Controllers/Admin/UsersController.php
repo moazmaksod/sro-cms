@@ -21,7 +21,7 @@ class UsersController extends Controller
             });
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate(25);
 
         return view('admin.users.index', compact('data'));
     }
