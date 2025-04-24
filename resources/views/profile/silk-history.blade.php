@@ -22,7 +22,7 @@
                             <tr>
                                 <td>
                                     @if($value->PTInvoiceID)
-                                        <img src="{{ asset('https://raw.githubusercontent.com/Komiks8457/iSROWebApps/refs/heads/main/webmall/webmall_php/dist/images/itemlist_pac/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class="">
+                                        <img src="{{ asset('images/webmall/' . $value->CPItemCode . '.jpg') }}" alt="" width="32" height="32" class="">
                                         {{ $value->CPItemName }}
                                     @elseif($value->ChangedSilk == 0 && $value->RemainedSilk > 0)
                                         <span class="text-success">{{ __('Add Silk') }}</span>

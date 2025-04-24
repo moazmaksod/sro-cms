@@ -280,6 +280,13 @@ return [
                 'route' => 'ranking.fortress-guild',
             ],
         ],
+        'hidden_characters' => [
+            '[GM]Eva',
+            '[GM]m1xawy',
+        ],
+        'hidden_guilds' => [
+            'RigidStaff',
+        ],
         'job_menu' => [
             'ranking_job_all' => [
                 'enable' => true,

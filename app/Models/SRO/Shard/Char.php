@@ -117,6 +117,7 @@ class Char extends Model
                 ->when(!empty($CharName), function ($query) use ($CharName) {
                     $query->where('_Char.CharName16', 'like', "%{$CharName}%");
                 })
+                ->whereNotIn('_Char.CharName16', config('global.ranking.hidden_characters'))
                 ->groupBy(
                     '_Char.CharID',
                     '_Char.CharName16',

@@ -71,6 +71,7 @@ class Guild extends Model
                 ->when(!empty($Name), function ($query) use ($Name) {
                     $query->where('_Guild.Name', 'like', "%{$Name}%");
                 })
+                ->whereNotIn('_Guild.Name', config('global.ranking.hidden_guilds'))
                 ->groupBy(
                     '_Guild.ID',
                     '_Guild.Name',
