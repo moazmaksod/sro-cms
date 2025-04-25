@@ -12,6 +12,7 @@
     <!-- SEO -->
     @include('partials.seo')
     <!-- Styles -->
+    <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" media="screen" rel="stylesheet" type="text/css" crossorigin="anonymous">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <!-- Inline Styles -->
@@ -45,8 +46,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script defer src="{{ asset('js/bootstrap.bundle.min.js') }}" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"></script>
 <script src="{{ asset('js/color-modes.js') }}"></script>
-<script src="https://kit.fontawesome.com/3d3e6e21dd.js" crossorigin="anonymous"></script>
-<script defer src="{{ asset('js/function.js') }}"></script>
+<script src="{{ asset('js/function.js') }}"></script>
 
 <script type="text/javascript">
     var ServerTime = new Date( {{ now()->format('Y, n, j, G, i, s') }} );
