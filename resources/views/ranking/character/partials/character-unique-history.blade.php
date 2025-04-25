@@ -12,7 +12,7 @@
                 <tr>
                     <td>{{ config('global.ranking.unique_points')[$value->Value]['name'] }}</td>
                     <td>+{{ config('global.ranking.unique_points')[$value->Value]['points'] }}</td>
-                    <td>{{ $value->EventTime }}</td>
+                    <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
                 </tr>
             @empty
                 <tr>

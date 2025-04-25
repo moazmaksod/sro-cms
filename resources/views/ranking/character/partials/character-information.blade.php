@@ -12,8 +12,8 @@
         <tr>
             <td>{{ __('Guild:') }}</td>
             <td>
-                @if($data->GuildID > 0)
-                    <a href="{{ route('ranking.guild.view', ['name' => $data->GuildName]) }}" class="text-decoration-none">{{ $data->GuildName }}</a>
+                @if($data->ID > 0)
+                    <a href="{{ route('ranking.guild.view', ['name' => $data->Name]) }}" class="text-decoration-none">{{ $data->Name }}</a>
                 @else
                     <span>{{ __('None') }}</span>
                 @endif

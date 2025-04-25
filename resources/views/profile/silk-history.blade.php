@@ -33,7 +33,7 @@
                                 <td style="color: orange">{{ $value->RemainedSilk }}</td>
                                 <td style="color: orangered">{{ $value->ChangedSilk }}</td>
                                 <td>{{ ($value->SilkType == 3) ? 'premium' : 'Normal' }}</td>
-                                <td>{{ $value->ChangeDate }}</td>
+                                <td>{{ \Carbon\Carbon::make($value->ChangeDate)->diffForHumans() }}</td>
                                 <td>{{ ($value->AvailableStatus == 'Y') ? "Available" : "Not Available" }}</td>
                             </tr>
                         @empty

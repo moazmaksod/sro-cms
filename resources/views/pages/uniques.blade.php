@@ -23,7 +23,7 @@
                                     <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
                                     {{ config('global.ranking.unique_points')[$value->Value]['name'] }}
                                 </td>
-                                <td>{{ $value->EventTime }}</td>
+                                <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
                                 <td>
                                     @if($value->CharName16 && $value['ValueCodeName128'] == 'KILL_UNIQUE_MONSTER')
                                         @if($value->RefObjID > 2000)
