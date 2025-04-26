@@ -28,6 +28,12 @@ return [
                 'ranking_fortress_guild' => 60, //1 Hours
             ]
         ],
+        'languages' => [
+            'en' => 'English',
+            'ar' => 'العربية',
+            'tr' => 'Türkçe',
+            'de' => 'Deutsch',
+        ],
         'sliders' => [
             0 => [
                 'title' => 'Example headline',

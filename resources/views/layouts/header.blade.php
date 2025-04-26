@@ -81,18 +81,18 @@
                 </div>
                 @endif
 
-                {{--
-                <div class="dropdown d-none">
+                @if(config('settings.default_locale') == 'switch')
+                <div class="dropdown">
                     <a href="#" class="nav-link px-2 py-2 me-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ language()->getName($code = 'default') }}
+                        {{ config('global.general.languages')[App::getLocale()] ?? 'Unknown' }}
                     </a>
                     <ul class="dropdown-menu" style="">
-                        @foreach (language()->allowed() as $code => $name)
-                            <li><a class="dropdown-item" href="{{ language()->back($code) }}">{{ $name }}</a></li>
+                        @foreach(config('global.general.languages') as $key => $value)
+                            <li><a class="dropdown-item" href="{{ route('lang.switch', $key) }}">{{ $value }}</a></li>
                         @endforeach
                     </ul>
                 </div>
-                --}}
+                @endif
 
                 @if (Route::has('login'))
                     @auth

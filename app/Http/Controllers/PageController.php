@@ -9,8 +9,6 @@ use App\Models\SRO\Log\LogChatMessage;
 use App\Models\SRO\Log\LogEventSiegeFortress;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
-use Illuminate\Support\Facades\Cache;
-use Outl1ne\PageManager\Helpers\NPMHelpers;
 
 class PageController extends Controller
 {

@@ -158,6 +158,26 @@
             </div>
 
             <div class="row mb-3">
+                <label for="default_locale" class="col-md-2 col-form-label text-md-end">{{ __('Default Language') }}</label>
+
+                <div class="col-md-10">
+                    <select class="form-select" name="default_locale" aria-label="Default select example">
+                        <option value="switch" {{ config('settings.default_locale') == 'switch' ? 'selected' : '' }}>Switch</option>
+
+                        @foreach(config('global.general.languages') as $key => $value)
+                            <option value="{{ $key }}" {{ config('settings.default_locale') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </select>
+
+                    @error('default_locale')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label for="theme" class="col-md-2 col-form-label text-md-end">{{ __('Theme') }}</label>
 
                 <div class="col-md-10">
