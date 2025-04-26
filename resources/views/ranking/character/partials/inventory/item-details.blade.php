@@ -6,7 +6,7 @@
         @if(file_exists(public_path($item['imgpath'])))
         <img alt="" src="{{ asset(strtolower($item['imgpath'])) }}">
         @else
-        <img alt="" src="{{ asset('/images/sro/icon_default.jpg') }}">
+        <img alt="" src="{{ asset('/images/sro/icon_default.png') }}">
         @endif
         @if($item['amount'])
         <span class="amount">{{ $item['amount'] }}</span>
