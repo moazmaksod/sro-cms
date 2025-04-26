@@ -64,8 +64,20 @@ class SettingSeeder extends Seeder
         );
         DB::table('settings')->updateOrInsert(
             [
+                'key' => 'max_level',
+                'value' => 140,
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
                 'key' => 'dark_mode',
-                'value' => 'dark',
+                'value' => 'switch',
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
+                'key' => 'default_locale',
+                'value' => 'switch',
             ]
         );
         DB::table('settings')->updateOrInsert(
