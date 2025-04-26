@@ -84,11 +84,16 @@
                 @if(config('settings.default_locale') == 'switch')
                 <div class="dropdown">
                     <a href="#" class="nav-link px-2 py-2 me-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ config('global.general.languages')[App::getLocale()] ?? 'Unknown' }}
+                        <span class="fi fi-{{ App::getLocale() == 'en' ? 'gb' : (App::getLocale() == 'ar' ? 'sa' : App::getLocale()) }}"></span>
                     </a>
                     <ul class="dropdown-menu" style="">
                         @foreach(config('global.general.languages') as $key => $value)
-                            <li><a class="dropdown-item" href="{{ route('lang.switch', $key) }}">{{ $value }}</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('lang.switch', $key) }}">
+                                    <span class="fi fi-{{ $key == 'en' ? 'gb' : ($key == 'ar' ? 'sa' : $key) }}"></span>
+                                    {{ $value }}
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

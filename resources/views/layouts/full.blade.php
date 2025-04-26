@@ -13,6 +13,7 @@
     @include('partials.seo')
     <!-- Styles -->
     <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" media="screen" rel="stylesheet" type="text/css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" rel="stylesheet" />
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <!-- Inline Styles -->
