@@ -60,7 +60,7 @@
 </script>
 
 <!-- Inline Scripts -->
-@yield('scripts')
+@stack('scripts')
 
 </body>
 </html>
