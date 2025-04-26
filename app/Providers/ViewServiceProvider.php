@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with('pages', Pages::get());
             });
 
-            View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+            View::composer(['partials.online-counter'], function ($view) {
                 $view->with([
                     'online_counter' => ShardCurrentUser::getOnlineCounter(),
                     'max_player' => config('settings.max_player', 1000),
@@ -32,32 +32,32 @@ class ViewServiceProvider extends ServiceProvider
             });
 
             if(config('global.widgets.event_schedule.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+                View::composer(['partials.event-schedule'], function ($view) {
                     $view->with('event_schedule', ScheduleService::getEventSchedules());
                 });
             }
             if(config('global.widgets.fortress_war.enable')) {
-                View::composer(['layouts.*', 'partials.*'], function ($view) {
+                View::composer(['partials.fortress-war'], function ($view) {
                     $view->with('fortress_war', SiegeFortress::getFortress());
                 });
             }
             if(config('global.widgets.globals_history.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+                View::composer(['partials.globals-history'], function ($view) {
                     $view->with('globals_history', LogChatMessage::getGlobalsHistory(config('global.widgets.globals_history.limit')));
                 });
             }
             if(config('global.widgets.unique_history.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+                View::composer(['partials.unique-history'], function ($view) {
                     $view->with('unique_history', LogInstanceWorldInfo::getUniques($limit = config('global.widgets.unique_history.limit')));
                 });
             }
             if(config('global.widgets.top_player.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+                View::composer(['partials.top-player'], function ($view) {
                     $view->with('top_player', Char::getPlayerRanking(config('global.widgets.top_player.limit'), 0, ''));
                 });
             }
             if(config('global.widgets.top_guild.enable')) {
-                View::composer(['layouts.sidebar', 'layouts.sidebar-right'], function ($view) {
+                View::composer(['partials.top-guild'], function ($view) {
                     $view->with('top_guild', Guild::getGuildRanking(config('global.widgets.top_guild.limit'), 0, ''));
                 });
             }
