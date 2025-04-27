@@ -17,7 +17,7 @@
                         <tbody>
                             @forelse($data as $value)
                                 <tr>
-                                    <td>[{{ $value->Comment }}]</td>
+                                    <td>{{ $value->Comment }}</td>
                                     <td>
                                         @if(!empty($value->CharName))
                                             <a href="{{ route('ranking.character.view', ['name' => $value->CharName]) }}" class="text-decoration-none">{{ $value->CharName }}</a>

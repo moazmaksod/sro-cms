@@ -83,24 +83,6 @@ class PageController extends Controller
     public function globals()
     {
         $data = LogChatMessage::getGlobalsHistory(25);
-
-        foreach ($data as $value) {
-            preg_match_all('/\d{19}/', $value->Comment, $matches);
-            $serials = $matches[0] ?? [];
-
-            if (!empty($serials)) {
-
-                $items = Items::getItemnameBySerial($serials);
-
-                foreach ($serials as $serial) {
-                    if (isset($items[$serial])) {
-                        $itemName = $items[$serial]['ItemName'];
-                        $value->Comment = str_replace($serial, '<'.$itemName.'>', $value->Comment);
-                    }
-                }
-            }
-        }
-
         return view('pages.globals', compact('data'));
     }
 }
