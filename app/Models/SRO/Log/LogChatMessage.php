@@ -6,6 +6,7 @@ use App\Models\SRO\Shard\Items;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class LogChatMessage extends Model
 {
@@ -35,7 +36,10 @@ class LogChatMessage extends Model
     public static function getGlobalsHistory($limit = 25, $CharName = null)
     {
         $globals_history =  Cache::remember('globals_history_'.$limit.'_'.$CharName, now()->addMinutes(config('global.general.cache.data.globals_history')), function () use ($CharName, $limit) {
-            return self::select(['CharName', 'EventTime', 'Comment'])
+            return self::select(['_Char.CharID', '_Char.RefObjID', 'CharName', 'EventTime', 'Comment'])
+                ->leftJoin(DB::raw('SILKROAD_R_SHARD.._Char'), function ($join) {
+                    $join->on(DB::raw('_Char.CharName16 COLLATE Latin1_General_CI_AS'), '=', DB::raw('_LogChatMessage.CharName COLLATE Latin1_General_CI_AS'));
+                })
                 ->where('TargetName', '[YELL]')
                 ->when(!is_null($CharName), function ($query) use ($CharName) {
                     $query->where('CharName', $CharName);

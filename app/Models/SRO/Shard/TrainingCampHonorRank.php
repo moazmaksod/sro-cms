@@ -43,6 +43,7 @@ class TrainingCampHonorRank extends Model
                     '_Char.CharID',
                     '_Char.RefObjID',
                     '_Char.CharName16',
+                    '_Char.CurLevel',
                     '_Guild.ID as GuildID',
                     '_Guild.Name as GuildName',
                     '_TrainingCampHonorRank.Rank',
