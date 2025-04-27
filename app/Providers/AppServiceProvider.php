@@ -24,12 +24,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (!app()->runningInConsole()) {
-            Config::set('settings', Setting::pluck('value', 'key')->toArray());
+        if ($this->app->runningInConsole()) {
+            return;
         }
 
         Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
-        date_default_timezone_set(config('settings.timezone', config('app.timezone')));
+        Config::set('settings', Setting::pluck('value', 'key')->toArray());
         View::getFinder()->prependLocation(resource_path("themes/".config('settings.theme').'/views'));
+        date_default_timezone_set(config('settings.timezone', config('app.timezone')));
     }
 }
