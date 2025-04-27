@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('admin', function () {return auth()->check() && auth()->user()->role?->is_admin;});
         Config::set('settings', Setting::pluck('value', 'key')->toArray());
         View::getFinder()->prependLocation(resource_path("themes/".config('settings.theme').'/views'));
-        date_default_timezone_set(config('settings.timezone', config('app.timezone')));
         App::setLocale(config('settings.locale', 'en'));
+        date_default_timezone_set(config('settings.timezone', config('app.timezone')));
     }
 }

@@ -82,6 +82,12 @@ class SettingSeeder extends Seeder
         );
         DB::table('settings')->updateOrInsert(
             [
+                'key' => 'locale',
+                'value' => 'en',
+            ]
+        );
+        DB::table('settings')->updateOrInsert(
+            [
                 'key' => 'theme',
                 'value' => 'default',
             ]
