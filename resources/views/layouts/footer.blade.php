@@ -22,7 +22,12 @@
             <h5>{{ __('Social Media') }}</h5>
             <ul class="nav flex-column">
                 @foreach(config('global.general.footer.social') as $value)
-                    <li class="nav-item mb-2"><a href="{{ $value['url'] }}" target="_blank" class="nav-link p-0 text-body-secondary">{{ $value['name'] }}</a></li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ $value['url'] }}" target="_blank" class="nav-link p-0 text-body-secondary">
+                            {!! $value['image'] !!}
+                            {{ $value['name'] }}
+                        </a>
+                    </li>
                 @endforeach
             </ul>
         </div>
@@ -31,7 +36,12 @@
             <h5>{{ __('Backlink') }}</h5>
             <ul class="nav flex-column">
                 @foreach(config('global.general.footer.backlink') as $value)
-                    <li class="nav-item mb-2"><a href="{{ $value['url'] }}" target="_blank" class="nav-link p-0 text-body-secondary">{{ $value['name'] }}</a></li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ $value['url'] }}" target="_blank" class="nav-link p-0 text-body-secondary">
+                            <img src="{{ $value['image'] }}" alt="" width="50">
+                            {{ $value['name'] }}
+                        </a>
+                    </li>
                 @endforeach
             </ul>
         </div>

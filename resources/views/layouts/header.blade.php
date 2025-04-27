@@ -83,7 +83,7 @@
 
                 @if(config('settings.default_locale') == 'switch')
                 <div class="dropdown">
-                    <a href="#" class="nav-link px-2 py-2 me-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="nav-link px-3 py-2 text-white dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="fi fi-{{ App::getLocale() == '' || App::getLocale() == 'en' ? 'gb' : (App::getLocale() == 'ar' ? 'sa' : App::getLocale()) }}"></span>
                     </a>
                     <ul class="dropdown-menu" style="">
@@ -103,7 +103,7 @@
                     @auth
                         <div class="dropdown">
                             <a href="{{ route('profile') }}" class="d-block text-decoration-none dropdown-toggle px-2 text-white" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle"> {{ Auth::user()->username }}
+                                <i class="fa-solid fa-user"></i> {{ Auth::user()->username }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account') }}</a></li>
