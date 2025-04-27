@@ -92,11 +92,10 @@ class PageController extends Controller
 
                 $items = Items::getItemnameBySerial($serials);
 
-                //dd($items);
                 foreach ($serials as $serial) {
                     if (isset($items[$serial])) {
                         $itemName = $items[$serial]['ItemName'];
-                        $value->Comment = str_replace($serial, $itemName, $value->Comment);
+                        $value->Comment = str_replace($serial, '<'.$itemName.'>', $value->Comment);
                     }
                 }
             }
