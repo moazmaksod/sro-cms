@@ -2,96 +2,88 @@
 @section('title', __('Login'))
 
 @section('content')
-    <div class="container my-5">
-        <div class="row w-50 m-auto">
-            @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <div class="row mb-3">
-                    <label for="username" class="col-md-12 col-form-label text-md-start">{{ __('Username') }}</label>
-
-                    <div class="col-md-12">
-                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required>
-
-                        @error('username')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="password" class="col-md-12 col-form-label text-md-start">{{ __('Password') }}</label>
-
-                    <div class="col-md-12">
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
-
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
-
-                @if (env('NOCAPTCHA_ENABLE', false))
-                    <!-- google recaptch -->
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            {!! NoCaptcha::renderJs() !!}
-                            {!! NoCaptcha::display() !!}
-                            @error('g-recaptcha-response')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
                     </div>
                 @endif
 
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-                            <label class="form-check-label" for="remember">
-                                {{ __('Remember me') }}
-                            </label>
+                    <div class="form-group row mb-3">
+                        <label for="username" class="col-md-12 col-form-label text-md-left">{{ __('Username') }}</label>
+
+                        <div class="col-md-12">
+                            <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required>
+
+                            @error('username')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="row mb-0">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('Log in') }}
-                        </button>
+                    <div class="form-group row mb-3">
+                        <label for="password" class="col-md-12 col-form-label text-md-left">{{ __('Password') }}</label>
 
-                        @if (Route::has('password.request'))
-                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                {{ __('Forgot your password?') }}
-                            </a>
-                        @endif
+                        <div class="col-md-12">
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+
+                            @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
                     </div>
-                </div>
-            </form>
+
+                    @if (env('NOCAPTCHA_ENABLE', false))
+                        <!-- google recaptch -->
+                        <div class="form-group row mb-3">
+                            <div class="col-md-12">
+                                {!! NoCaptcha::renderJs() !!}
+                                {!! NoCaptcha::display() !!}
+                                @error('g-recaptcha-response')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="form-group row mb-3">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                                <label class="form-check-label" for="remember">
+                                    {{ __('Remember me') }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-0">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Log in') }}
+                            </button>
+
+                            @if (Route::has('password.request'))
+                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    {{ __('Forgot your password?') }}
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

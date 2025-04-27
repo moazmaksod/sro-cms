@@ -3,10 +3,8 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\MuUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -48,22 +46,20 @@ class LoginRequest extends FormRequest
 
         if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
 
-            $tb_user = TbUser::where('StrUserID', $this->get('username'))->where('password', md5($this->get('password')))->first();
-            if ($tb_user) {
-                $user = User::create([
-                    'jid' => $tb_user->PortalJID,
-                    'username' => $this->get('username'),
-                    'email' => $tb_user->muUser->muEmail->EmailAddr,
-                    'password' => Hash::make($this->get('password')),
-                ]);
+            $tbUser = TbUser::where('StrUserID', $this->get('username'))->where('password', md5($this->get('password')))->first();
+            if (! $tbUser) {
+                RateLimiter::hit($this->throttleKey());
 
-                Auth::login($user);
+                throw ValidationException::withMessages([
+                    'username' => trans('auth.failed'),
+                ]);
             }
 
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'username' => trans('auth.failed'),
+            User::create([
+                'jid' => $tbUser->PortalJID,
+                'username' => $this->get('username'),
+                'email' => $tbUser->muUser->muEmail->EmailAddr,
+                'password' => Hash::make($this->get('password')),
             ]);
         }
 

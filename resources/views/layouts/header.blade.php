@@ -102,7 +102,7 @@
                 @if (Route::has('login'))
                     @auth
                         <div class="dropdown">
-                            <a href="{{ route('profile') }}" class="d-block text-decoration-none dropdown-toggle px-2 text-white" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="{{ route('profile') }}" class="d-block text-decoration-none dropdown-toggle px-3 py-1 text-white" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-user"></i> {{ Auth::user()->username }}
                             </a>
                             <ul class="dropdown-menu">

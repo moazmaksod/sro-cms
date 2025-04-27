@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
-use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
         Config::set('settings', Setting::pluck('value', 'key')->toArray());
         View::getFinder()->prependLocation(resource_path("themes/".config('settings.theme').'/views'));
         date_default_timezone_set(config('settings.timezone', config('app.timezone')));
+        App::setLocale(config('settings.locale', 'en'));
     }
 }

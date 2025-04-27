@@ -27,12 +27,6 @@ class SettingController extends Controller
             }
         }
 
-        /*
-        foreach ($request->except('_token') as $key => $value) {
-            Setting::set($key, $value);
-        }
-        */
-
         return back()->with('success', 'Settings updated!');
     }
 

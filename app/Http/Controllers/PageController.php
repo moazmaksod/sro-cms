@@ -8,7 +8,6 @@ use App\Models\Pages;
 use App\Models\SRO\Log\LogChatMessage;
 use App\Models\SRO\Log\LogEventSiegeFortress;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
-use App\Models\SRO\Shard\Items;
 use App\Services\ScheduleService;
 
 class PageController extends Controller
