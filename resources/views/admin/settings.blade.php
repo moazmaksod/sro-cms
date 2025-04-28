@@ -101,7 +101,7 @@
                 <label for="max_player" class="col-md-2 col-form-label text-md-end">{{ __('Max Online Player') }}</label>
 
                 <div class="col-md-10">
-                    <input id="max_player" type="text" class="form-control @error('max_player') is-invalid @enderror" name="max_player" value="{{ $settings['max_player'] ?? '' }}" placeholder="" required>
+                    <input id="max_player" type="number" class="form-control @error('max_player') is-invalid @enderror" name="max_player" value="{{ $settings['max_player'] ?? '' }}" placeholder="" required>
 
                     @error('max_player')
                     <span class="invalid-feedback" role="alert">
@@ -115,7 +115,7 @@
                 <label for="fake_player" class="col-md-2 col-form-label text-md-end">{{ __('Add Fake Player') }}</label>
 
                 <div class="col-md-10">
-                    <input id="fake_player" type="text" class="form-control @error('fake_player') is-invalid @enderror" name="fake_player" value="{{ $settings['fake_player'] ?? '' }}" placeholder="" required>
+                    <input id="fake_player" type="number" class="form-control @error('fake_player') is-invalid @enderror" name="fake_player" value="{{ $settings['fake_player'] ?? '' }}" placeholder="" required>
 
                     @error('fake_player')
                     <span class="invalid-feedback" role="alert">
@@ -129,7 +129,7 @@
                 <label for="max_level" class="col-md-2 col-form-label text-md-end">{{ __('Max Character Level') }}</label>
 
                 <div class="col-md-10">
-                    <input id="max_level" type="text" class="form-control @error('max_level') is-invalid @enderror" name="max_level" value="{{ $settings['max_level'] ?? '' }}" placeholder="" required>
+                    <input id="max_level" type="number" class="form-control @error('max_level') is-invalid @enderror" name="max_level" value="{{ $settings['max_level'] ?? '' }}" placeholder="" required>
 
                     @error('max_level')
                     <span class="invalid-feedback" role="alert">

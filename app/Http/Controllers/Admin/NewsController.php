@@ -31,8 +31,8 @@ class NewsController extends Controller
         ]);
 
         $validated['author_id'] = auth()->user()->id;
-        $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
-        $validated['slug'] = Str::slug($validated['title']) . '-' . now()->timestamp;
+        $validated['title'] = str_replace(' ','',$validated['title']);
+        $validated['slug'] = Str::slug(urldecode($validated['title']));
         $validated['content'] = $validated['news_content'];
 
         News::create($validated);
@@ -54,8 +54,8 @@ class NewsController extends Controller
             'news_content' => 'required',
         ]);
 
-        $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
-        $validated['slug'] = Str::slug($validated['title']) . '-' . now()->timestamp;
+        $validated['title'] = str_replace(' ', '', $validated['title']);
+        $validated['slug'] = Str::slug(urldecode($validated['title']));
         $validated['content'] = $validated['news_content'];
         $news->update($validated);
 

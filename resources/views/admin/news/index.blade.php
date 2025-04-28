@@ -35,8 +35,8 @@
                     @forelse($data as $value)
                         <tr>
                             <td>{{ $value->id }}</td>
-                            <td>{{ $value->title }}</td>
-                            <td>{{ $value->slug }}</td>
+                            <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $value->title }}</td>
+                            <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $value->slug }}</td>
                             <td>{{ $value->category }}</td>
                             <td>
                                 @if($value->active == 1)
