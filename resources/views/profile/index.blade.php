@@ -48,19 +48,20 @@
                         </tr>
                         <tr>
                             <th scope="row">{{ __('Silk') }}</th>
-                            <td>{{ Auth::user()->muUser->getJCash()->Silk }}</td>
+                            @php $cash = Auth::user()->muUser->getJCash() @endphp
+                            <td>{{ $cash->Silk }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('Premium Silk') }}</th>
-                            <td>{{ Auth::user()->muUser->getJCash()->PremiumSilk }}</td>
+                            <td>{{ $cash->PremiumSilk }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('Month Usage') }}</th>
-                            <td>{{ Auth::user()->muUser->getJCash()->MonthUsage }}</td>
+                            <td>{{ $cash->MonthUsage }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('3Month Usage') }}</th>
-                            <td>{{ Auth::user()->muUser->getJCash()->ThreeMonthUsage }}</td>
+                            <td>{{ $cash->ThreeMonthUsage }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{ __('VIP') }}</th>
