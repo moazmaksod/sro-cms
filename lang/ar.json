@@ -41,6 +41,7 @@
     "Logout": "تسجيل الخروج",
     "Name": "الاسم",
     "name": "الاسم",
+    "Username": "الاسم",
     "New Password": "كلمة مرور جديدة",
     "Not Found": "غير متوفر",
     "of": "من",
@@ -83,5 +84,11 @@
     "Whoops!": "عذراً!",
     "You are receiving this email because we received a password reset request for your account.": "لقد استلمت هذا الإيميل لأننا استقبلنا طلباً لاستعادة كلمة مرور حسابك.",
     "You're logged in!": "لقد قمت بتسجيل الدخول!",
-    "Your email address is unverified.": "لم يتم التحقق من عنوان بريدك الإلكتروني."
+    "Your email address is unverified.": "لم يتم التحقق من عنوان بريدك الإلكتروني.",
+    "Home": "الرئيسية",
+    "Download": "تحميل",
+    "Downloads": "تحميل",
+    "Ranking": "التصنيف",
+    "Search": "بحث",
+    "Pages": "الصفحات"
 }

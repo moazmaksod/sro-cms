@@ -9,7 +9,7 @@
                     <div class="d-inline-block text-center my-4 mx-3">
                         @foreach(config('global.ranking.menu') as $value)
                             @if($value['enable'])
-                                <button class="btn btn-primary ranking-main-button rounded-0 me-2 mb-2" data-link="{{ route($value['route']) }}">{{ $value['name'] }}</button>
+                                <button class="btn btn-primary ranking-main-button rounded-0 me-2 mb-2 {{ request()->routeIs('ranking.player') ? 'active' : '' }}" data-link="{{ route($value['route']) }}">{{ $value['name'] }}</button>
                             @endif
                         @endforeach
                     </div>

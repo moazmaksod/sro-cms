@@ -28,7 +28,7 @@ class DownloadController extends Controller
             'name' => 'required|string',
             'desc' => 'required|string',
             'url' => 'required|url',
-            'icon' => 'string',
+            'icon' => '',
         ]);
 
         Download::create($validated);
@@ -47,7 +47,7 @@ class DownloadController extends Controller
             'name' => 'required|string',
             'desc' => 'required|string',
             'url' => 'required|url',
-            'icon' => 'string',
+            'icon' => '',
         ]);
 
         $download->update($validated);
