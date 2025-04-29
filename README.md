@@ -72,6 +72,8 @@ npm run build
 
 Finally, Congratulation!
 
+for changing main settings, go to admin panel > settings
+and go `config/global.php` to customize everything.
 to access admin panel change role `user` to `admin` from users table or execute this query
    ```sql
    INSERT INTO ISRO_CMS..user_roles (user_id ,is_admin) VALUES (1, 1)

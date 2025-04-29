@@ -53,13 +53,13 @@ class SettingSeeder extends Seeder
         DB::table('settings')->updateOrInsert(
             [
                 'key' => 'max_player',
-                'value' => 1000,
+                'value' => 3500,
             ]
         );
         DB::table('settings')->updateOrInsert(
             [
                 'key' => 'fake_player',
-                'value' => 250,
+                'value' => 0,
             ]
         );
         DB::table('settings')->updateOrInsert(
