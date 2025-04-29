@@ -165,7 +165,7 @@
                         <option value="switch" {{ config('settings.default_locale') == 'switch' ? 'selected' : '' }}>Switch</option>
 
                         @foreach(config('global.general.languages') as $key => $value)
-                            <option value="{{ $key }}" {{ config('settings.default_locale') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            <option value="{{ $key }}" {{ config('settings.default_locale') == $key ? 'selected' : '' }}>{{ $value['name'] }}</option>
                         @endforeach
                     </select>
 

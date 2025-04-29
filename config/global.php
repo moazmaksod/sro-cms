@@ -29,10 +29,27 @@ return [
             ]
         ],
         'languages' => [
-            'en' => 'English',
-            'ar' => 'العربية',
-            'tr' => 'Türkçe',
-            'de' => 'Deutsch',
+            'en' => [
+                'name' => 'English',
+                'fi' => 'gb'
+
+            ],
+            'ar' => [
+                'name' => 'العربية',
+                'fi' => 'sa',
+            ],
+            'tr' => [
+                'name' => 'Türkçe',
+                'fi' => 'tr',
+            ],
+            'de' => [
+                'name' => 'Deutsch',
+                'fi' => 'de',
+            ],
+            'zh_CN' => [
+                'name' => '简体中文',
+                'fi' => 'cn',
+            ],
         ],
         'sliders' => [
             0 => [
