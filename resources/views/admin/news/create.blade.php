@@ -136,4 +136,10 @@
             checkbox.value = this.checked ? '1' : '0';
         });
     </script>
+
+    <script>
+        document.getElementById('title').addEventListener('blur', function() {
+            this.value = this.value.trim().replace(/\s+/g, ' ');
+        });
+    </script>
 @endpush

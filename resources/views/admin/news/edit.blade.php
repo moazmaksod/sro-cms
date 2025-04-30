@@ -123,7 +123,7 @@
 
     <script>
         $('#summernote').summernote({
-            placeholder: 'Hello Bootstrap 4',
+            placeholder: 'Hello iSRO-CMS v2',
             tabsize: 2,
             height: 400,
             codeviewFilter: false, // allows raw HTML
@@ -136,6 +136,12 @@
 
         checkbox.addEventListener('change', function () {
             checkbox.value = this.checked ? '1' : '0';
+        });
+    </script>
+
+    <script>
+        document.getElementById('title').addEventListener('blur', function() {
+            this.value = this.value.trim().replace(/\s+/g, ' ');
         });
     </script>
 @endpush

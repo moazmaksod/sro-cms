@@ -25,9 +25,13 @@ class NewsController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string',
-            'category' => 'required',
+            'category' => 'required|in:news,event,update',
             'published_at' => 'required|date',
             'news_content' => 'required',
+        ],
+        [
+            'title.required' => 'Please provide a title for the news.',
+            'category.in' => 'Invalid category selected.',
         ]);
 
         $validated['author_id'] = auth()->user()->id;
@@ -49,9 +53,13 @@ class NewsController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string',
-            'category' => 'required',
-            'published_at' => 'required',
+            'category' => 'required|in:news,event,update',
+            'published_at' => 'required|date',
             'news_content' => 'required',
+        ],
+        [
+            'title.required' => 'Please provide a title for the news.',
+            'category.in' => 'Invalid category selected.',
         ]);
 
         $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));

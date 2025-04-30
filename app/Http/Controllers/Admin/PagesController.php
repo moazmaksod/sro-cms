@@ -29,7 +29,7 @@ class PagesController extends Controller
             'pages_content' => 'required',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']) . '-' . now()->timestamp;
+        $validated['slug'] = Str::slug($validated['title']);
         $validated['content'] = $validated['pages_content'];
 
         Pages::create($validated);
@@ -49,7 +49,7 @@ class PagesController extends Controller
             'pages_content' => 'required',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']) . '-' . now()->timestamp;
+        $validated['slug'] = Str::slug($validated['title']);
         $validated['content'] = $validated['pages_content'];
 
         $pages->update($validated);
