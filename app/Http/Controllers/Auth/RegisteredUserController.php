@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:'.User::class, 'unique:'.MuUser::class.',UserID', 'unique:'.TbUser::class.',StrUserID'],
             'email' => ['required', 'string', 'email', 'max:70', 'unique:'.MuEmail::class.',EmailAddr'],
-            'password' => ['required', 'confirmed', 'min:6', 'max:32'],
+            'password' => ['required', 'string', 'min:6', 'max:32', 'confirmed', Rules\Password::defaults()],
             'g-recaptcha-response' => [
                 Rule::requiredIf(function () {
                     return env('NOCAPTCHA_ENABLE', false);
