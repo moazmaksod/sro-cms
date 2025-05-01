@@ -3,7 +3,7 @@
         <div class="d-inline-block mb-4 mx-2">
             @foreach(config('global.ranking.job_menu') as $value)
                 @if($value['enable'])
-                    <button class="btn btn-secondary ranking-main-button-job rounded-0 me-2 mb-2 btn-sm" data-link="{{ route($value['route']) }}">{{ $value['name'] }}</button>
+                    <button class="btn btn-secondary ranking-main-button-job rounded-0 me-2 mb-2 btn-sm" data-link="{{ route($value['route']) }}">{{ __($value['name']) }}</button>
                 @endif
             @endforeach
         </div>

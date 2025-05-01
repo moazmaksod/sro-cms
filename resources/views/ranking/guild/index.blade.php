@@ -12,7 +12,7 @@
                                 <div class="mt-3">
                                     <h2>
                                         @if(isset($data->CrestIcon))
-                                        <img src="/ranking/guild-crest/{{ $data->CrestIcon }}" alt="" width="32" height="32">
+                                        <img src="{{ route('ranking.guild-crest', ['hex' => $data->CrestIcon]) }}" alt="" width="32" height="32">
                                         @endif
                                         {{ $data->Name }}
                                     </h2>

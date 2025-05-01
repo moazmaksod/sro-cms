@@ -3,11 +3,11 @@
 
 @section('content')
     <div class="container">
-        <h3 class="">Characters:</h3>
+        <h3 class="">{{ __('Characters') }}</h3>
         <div class="row">
             @if($user->tbUser->shardUser->isEmpty())
                 <div class="alert alert-danger text-center" role="alert">
-                    {{ __('No Characters') }}
+                    {{ __('No Characters Found!') }}
                 </div>
             @else
                 @foreach($user->tbUser->shardUser as $value)
@@ -15,7 +15,7 @@
                         <div class="card">
                             <div class="card-body text-center">
                                 <div class="d-flex overflow-hidden align-items-center justify-content-center mb-2">
-                                    <img class="object-fit-cover rounded border" src="{{ asset(config('global.ranking.character')[$value->RefObjID]) }}" width="100" height="100" alt=""/>
+                                    <img class="object-fit-cover rounded border" src="{{ asset(config('global.ranking.character_image')[$value->RefObjID]) }}" width="100" height="100" alt=""/>
                                 </div>
 
                                 @if($value->RefObjID > 2000)
@@ -32,7 +32,7 @@
             @endif
         </div>
 
-        <h3 class="mt-4">Informaion:</h3>
+        <h3 class="mt-4">{{ __('Information') }}</h3>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">

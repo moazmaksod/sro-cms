@@ -30,48 +30,48 @@
         <div class="row">
             <div class="card mt-5 p-0">
                 <div class="card-header">
-                    <h4>System Requirements</h4>
+                    <h4>{{ __('System Requirements') }}</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table text-center">
                             <thead>
                             <tr>
-                                <th scope="col">Category</th>
-                                <th scope="col">Minimum Requirements</th>
-                                <th scope="col">Recommended Requirements</th>
+                                <th scope="col">{{ __('Category') }}</th>
+                                <th scope="col">{{ __('Minimum Requirements') }}</th>
+                                <th scope="col">{{ __('Recommended Requirements') }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>CPU</td>
-                                <td>Pentium 3 800MHz or higher</td>
-                                <td>Intel i3 or higher</td>
+                                <td>{{ __('CPU') }}</td>
+                                <td>{{ __('Pentium 3 800MHz or higher') }}</td>
+                                <td>{{ __('Intel i3 or higher') }}</td>
                             </tr>
                             <tr>
-                                <td>RAM</td>
-                                <td>2GB</td>
-                                <td>4GB</td>
+                                <td>{{ __('RAM') }}</td>
+                                <td>{{ __('2GB') }}</td>
+                                <td>{{ __('4GB') }}</td>
                             </tr>
                             <tr>
-                                <td>VGA</td>
-                                <td>3D speed over GeForce2 or ATI 9000</td>
-                                <td>3D speed over GeForce FX 5600 or ATI9500</td>
+                                <td>{{ __('VGA') }}</td>
+                                <td>{{ __('3D speed over GeForce2 or ATI 9000') }}</td>
+                                <td>{{ __('3D speed over GeForce FX 5600 or ATI9500') }}</td>
                             </tr>
                             <tr>
-                                <td>SOUND</td>
-                                <td>DirectX 9.0c Compatibility card</td>
-                                <td>DirectX 9.0c Compatibility card</td>
+                                <td>{{ __('SOUND') }}</td>
+                                <td>{{ __('DirectX 9.0c Compatibility card') }}</td>
+                                <td>{{ __('DirectX 9.0c Compatibility card') }}</td>
                             </tr>
                             <tr>
-                                <td>HDD</td>
-                                <td>5GB or higher(including swap and temporary file)</td>
-                                <td>8GB or higher(including swap and temporary file)</td>
+                                <td>{{ __('HDD') }}</td>
+                                <td>{{ __('5GB or higher(including swap and temporary file)') }}</td>
+                                <td>{{ __('8GB or higher(including swap and temporary file)') }}</td>
                             </tr>
                             <tr>
-                                <td>OS</td>
-                                <td>Windows 7</td>
-                                <td>Windows 10</td>
+                                <td>{{ __('OS') }}</td>
+                                <td>{{ __('Windows 7') }}</td>
+                                <td>{{ __('Windows 10') }}</td>
                             </tr>
                             </tbody>
                         </table>

@@ -8,7 +8,7 @@
 
         @if ($message = Session::get('successfully'))
             <div class="alert alert-success" role="alert">
-                {{ __('You have just been credited '.$message.' Silk to your account. Have fun with it!') }}
+                {{ __('You have just been credited :silk Silk to your account. Have fun with it!', ['silk' => $message]) }}
             </div>
         @endif
 

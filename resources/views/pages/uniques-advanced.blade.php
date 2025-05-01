@@ -14,19 +14,19 @@
                                         <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
                                         {{ $unique_list[$key]['name'] }}
                                     </h3>
-                                    <small>Last 3 Killers</small>
+                                    <small>{{ __('Last 3 Killers') }}</small>
                                 </div>
                                 <div class="card-body" style="min-height: 253px;">
                                     <table class="table table-bordered">
                                         <thead class="table-dark">
                                             <tr>
-                                                <th>#</th>
-                                                <th>Character</th>
-                                                <th>Points</th>
+                                                <th>{{ __('#') }}</th>
+                                                <th>{{ __('Character') }}</th>
+                                                <th>{{ __('Points') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <p class="text-center">{{ $unique_list[$key]['points'] }} Points</p>
+                                            <p class="text-center">{{ $unique_list[$key]['points'] }} {{ __('Points') }}</p>
                                             @php $i = 1 @endphp
                                             @foreach($data[$key] as $values)
                                                 @if($i == 4) @break @endif

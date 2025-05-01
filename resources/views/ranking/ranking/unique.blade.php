@@ -50,7 +50,7 @@
 
 <p class="mb-2 text-center">
     @forelse($unique_points as $value)
-        <span>{{ $value['name'] }} [{{ $value['points'] }} points]</span>,
+        <span>{{ $value['name'] }} [{{ $value['points'] }} {{ __('points') }}]</span>,
     @empty
     @endforelse
 </p>

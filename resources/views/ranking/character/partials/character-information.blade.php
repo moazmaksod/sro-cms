@@ -6,7 +6,7 @@
             <td>{{ $data->CharName16 }}</td>
         </tr>
         <tr>
-            <td>{{ __('Jobname:') }}</td>
+            <td>{{ __('JobName:') }}</td>
             <td>{{ $data->NickName16 }}</td>
         </tr>
         <tr>
