@@ -476,14 +476,14 @@ return [
         ],
         'job_type_icons' => [
             1 => [
-                'name' => 'Thief',
-                'small_icon' => 'images/com_job_thief.png',
-                'icon' => 'images/job_teaf_icon.png',
-            ],
-            2 => [
                 'name' => 'Hunter',
                 'small_icon' => 'images/com_job_hunter.png',
                 'icon' => 'images/job_hunter_icon.png',
+            ],
+            2 => [
+                'name' => 'Thief',
+                'small_icon' => 'images/com_job_thief.png',
+                'icon' => 'images/job_teaf_icon.png',
             ],
             3 => [
                 'name' => 'Trader',

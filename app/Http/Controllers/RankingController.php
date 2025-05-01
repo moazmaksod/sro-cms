@@ -91,22 +91,22 @@ class RankingController extends Controller
         return view('ranking.ranking.job-all', compact('data'));
     }
 
-    public function job_trader()
-    {
-        $data = CharTradeConflictJob::getJobRanking(25, 3);
-        return view('ranking.ranking.job-trader', compact('data'));
-    }
-
     public function job_hunter()
     {
-        $data = CharTradeConflictJob::getJobRanking(25, 2);
+        $data = CharTradeConflictJob::getJobRanking(25, 1);
         return view('ranking.ranking.job-hunter', compact('data'));
     }
 
     public function job_thieve()
     {
-        $data = CharTradeConflictJob::getJobRanking(25, 1);
+        $data = CharTradeConflictJob::getJobRanking(25, 2);
         return view('ranking.ranking.job-thieve', compact('data'));
+    }
+
+    public function job_trader()
+    {
+        $data = CharTradeConflictJob::getJobRanking(25, 3);
+        return view('ranking.ranking.job-trader', compact('data'));
     }
 
     public function character_view($name, InventoryService $inventoryService)

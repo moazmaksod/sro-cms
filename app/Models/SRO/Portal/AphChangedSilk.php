@@ -5,7 +5,7 @@ namespace App\Models\SRO\Portal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AphChangedSilk extends Model
 {
@@ -72,9 +72,9 @@ class AphChangedSilk extends Model
         ]);
     }
 
-    public static function getSilkHistory($jid, $paginate = 10, $page = 1)
+    public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
-        return Cache::remember('donate_history'.$jid.'_'.$paginate.'_'.$page, now()->addMinutes(config('global.general.cache.data.account')), function () use ($paginate, $jid) {
+        $data = Cache::remember("donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes(config('global.general.cache.data.account')), function () use ($paginate, $page, $jid) {
             return self::leftJoin('APH_CPItemSaleDetails', 'APH_CPItemSaleDetails.PTInvoiceID', '=', 'APH_ChangedSilk.PTInvoiceID')
                 ->leftJoin('M_CPItem', 'M_CPItem.CPItemID', '=', 'APH_CPItemSaleDetails.CPItemID')
                 ->select(
@@ -89,8 +89,19 @@ class AphChangedSilk extends Model
                 )
                 ->where('APH_ChangedSilk.JID', $jid)
                 ->orderBy('APH_ChangedSilk.ChangeDate', 'desc')
-                ->paginate($paginate);
+                ->get();
         });
+
+        return new LengthAwarePaginator(
+            $data->forPage($page, $paginate)->values(),
+            $data->count(),
+            $paginate,
+            $page,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
     }
 
     public static function getSilkSum()
