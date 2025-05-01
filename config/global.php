@@ -303,13 +303,6 @@ return [
                 'route' => 'ranking.fortress-guild',
             ],
         ],
-        'hidden_characters' => [
-            '[GM]Eva',
-            '[GM]m1xawy',
-        ],
-        'hidden_guilds' => [
-            'RigidStaff',
-        ],
         'job_menu' => [
             'ranking_job_all' => [
                 'enable' => true,
@@ -335,6 +328,13 @@ return [
                 'icon' => 'fa fa-users',
                 'route' => 'ranking.job-trader',
             ],
+        ],
+        'hidden_characters' => [
+            '[GM]Eva',
+            '[GM]m1xawy',
+        ],
+        'hidden_guilds' => [
+            'RigidStaff',
         ],
         'top_icons' => [
             1 => 'images/rank1.png',
@@ -549,7 +549,7 @@ return [
                 'icon' => 'images/com_kindred_europe.png',
             ],
         ],
-        'character' => [
+        'character_image' => [
             1907 => "images/character/char_ch_man1.png",
             1908 => "images/character/char_ch_man2.png",
             1909 => "images/character/char_ch_man3.png",

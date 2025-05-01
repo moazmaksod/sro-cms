@@ -9,7 +9,7 @@
                     <div class="col-md-6">
                         <div class="d-flex">
                             <div class="d-flex me-3 overflow-hidden align-items-center">
-                                <img class="object-fit-cover rounded border" src="{{ asset(config('global.ranking.character')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
+                                <img class="object-fit-cover rounded border" src="{{ asset(config('global.ranking.character_image')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
                             </div>
 
                             <div class="mt-4">
