@@ -14,7 +14,7 @@
                                         <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
                                         {{ $unique_list[$key]['name'] }}
                                     </h3>
-                                    <small>{{ __('Last 3 Killers') }}</small>
+                                    <small>{{ __('Last 5 Killers') }}</small>
                                 </div>
                                 <div class="card-body" style="min-height: 253px;">
                                     <table class="table table-bordered">
@@ -29,7 +29,7 @@
                                             <p class="text-center">{{ $unique_list[$key]['points'] }} {{ __('Points') }}</p>
                                             @php $i = 1 @endphp
                                             @foreach($data[$key] as $values)
-                                                @if($i == 4) @break @endif
+                                                @if($i > 5) @break @endif
                                                 <tr>
                                                     <td>{{ $i }}</td>
                                                     <td>{{ $values->CharName16 }}</td>

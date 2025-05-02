@@ -48,7 +48,7 @@ class ViewServiceProvider extends ServiceProvider
             }
             if(config('global.widgets.unique_history.enable')) {
                 View::composer(['partials.unique-history'], function ($view) {
-                    $view->with('unique_history', LogInstanceWorldInfo::getUniques($limit = config('global.widgets.unique_history.limit')));
+                    $view->with('unique_history', LogInstanceWorldInfo::getUniquesKill($limit = config('global.widgets.unique_history.limit')));
                 });
             }
             if(config('global.widgets.top_player.enable')) {

@@ -114,7 +114,7 @@ class RankingController extends Controller
         $charID = Char::getCharIDByName($name);
         if ($charID > 0) {
             $data = Char::getPlayerRanking(1, $charID)->first();
-            $unique_history = LogInstanceWorldInfo::getUniques(5, $charID);
+            $unique_history = LogInstanceWorldInfo::getUniquesKill(5, $charID);
             $globals_history = LogChatMessage::getGlobalsHistory(5, $name);
             $build_info = CharSkillMastery::getCharBuildInfo($charID);
 

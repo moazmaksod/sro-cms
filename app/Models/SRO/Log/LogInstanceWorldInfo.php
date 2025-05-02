@@ -74,7 +74,7 @@ class LogInstanceWorldInfo extends Model
         });
     }
 
-    public static function getUniques($limit = 25, $CharID = 0)
+    public static function getUniquesKill($limit = 25, $CharID = 0)
     {
         $unique_points = array_keys(config('global.ranking.unique_points'));
         return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes(config('global.general.cache.data.unique_history')), function () use ($CharID, $limit, $unique_points) {

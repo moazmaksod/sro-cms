@@ -54,7 +54,7 @@ class PageController extends Controller
 
     public function uniques_advanced()
     {
-        $data = LogInstanceWorldInfo::getUniques(9999, 0);
+        $data = LogInstanceWorldInfo::getUniquesKill(9999, 0);
         $data_ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
         $unique_list = config('global.ranking.unique_points');
 
