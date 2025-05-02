@@ -112,7 +112,7 @@
                                 <li><a class="dropdown-item" href="{{ route('profile.silk-history') }}">{{ __('Silk History') }}</a></li>
                                 @admin
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url('admin2') }}">{{ __('Admin panel') }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.home') }}">{{ __('Admin panel') }}</a></li>
                                 @endadmin
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
