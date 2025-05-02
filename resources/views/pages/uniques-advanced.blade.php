@@ -28,18 +28,16 @@
                                         <tbody>
                                             <p class="text-center">{{ $unique_list[$key]['points'] }} {{ __('Points') }}</p>
                                             @php $i = 1 @endphp
-                                            @foreach($data[$key] as $values)
+                                            @foreach($value as $values)
                                                 @if($i > 5) @break @endif
                                                 <tr>
                                                     <td>{{ $i }}</td>
                                                     <td>{{ $values->CharName16 }}</td>
-                                                    @if(array_key_exists($values->CharName16, $data_rank))
-                                                        @foreach($data_rank[$values->CharName16] as $value_char)
-                                                            <td>{{ $value_char->Points }}</td>
-                                                        @endforeach
-                                                    @else
-                                                        <td>{{ $unique_list[$key]['points'] }}</td>
-                                                    @endif
+                                                    @foreach($unique_ranking as $ranking)
+                                                        @if($ranking->CharName16 == $values->CharName16)
+                                                            <td>{{ $ranking->Points ?? 0 }}</td>
+                                                        @endif
+                                                    @endforeach
                                                 </tr>
                                                 @php $i++ @endphp
                                             @endforeach
