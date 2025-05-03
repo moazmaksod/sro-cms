@@ -39,7 +39,7 @@ class UsersController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        if (config('global.server.version' === 'vSRO')) {
+        if (config('global.server.version') === 'vSRO') {
             SkSilk::setSkSilk($user->JID, $validated['type'], $validated['amount']);
         } else {
             AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
