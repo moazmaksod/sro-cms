@@ -44,10 +44,6 @@ _Lets begin:
 ```sh
 git clone https://github.com/m1xawy/isro-cms.git
 ```
-1. Clone the repo for vSRO
-```sh
-git clone -b vsro https://github.com/m1xawy/isro-cms.git
-```
 
 2. Install Laravel dependencies
 ```sh
