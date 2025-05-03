@@ -55,10 +55,18 @@ class LoginRequest extends FormRequest
                 ]);
             }
 
+            if (config('global.server.version' === 'vSRO')) {
+                $jid = $tbUser->JID;
+                $email = $tbUser->Email;
+            } else {
+                $jid = $tbUser->PortalJID;
+                $email = $tbUser->muUser->muEmail->EmailAddr;
+            }
+
             User::create([
-                'jid' => $tbUser->PortalJID,
+                'jid' => $jid,
                 'username' => $this->get('username'),
-                'email' => $tbUser->muUser->muEmail->EmailAddr,
+                'email' => $email,
                 'password' => Hash::make($this->get('password')),
             ]);
         }

@@ -30,26 +30,30 @@ class Guild extends Model
     public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
         return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes(config('global.general.cache.data.ranking_guild')), function () use ($Name, $GuildID, $limit) {
-            return self::select(
+            $query = self::select(
                 '_Guild.ID',
                 '_Guild.Name',
                 '_Guild.Lvl',
                 '_Guild.GatheredSP',
                 '_Guild.FoundationDate',
-                DB::raw("CONVERT(VARCHAR(MAX), _GuildCrest.CrestBinary, 2) AS CrestIcon"),
                 DB::raw("(SELECT CharID FROM _GuildMember WHERE GuildID = _Guild.ID AND MemberClass = 0) AS LeaderID"),
                 DB::raw("(SELECT CharName FROM _GuildMember WHERE GuildID = _Guild.ID AND MemberClass = 0) AS LeaderName"),
                 DB::raw("(SELECT COUNT(CharID) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalMember"),
                 DB::raw("ISNULL((
-                    SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
-                    SUM(ISNULL(_Items.OptLevel, 0)) +
-                    SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
-                ), 0) AS ItemPoints"))
+                SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
+                SUM(ISNULL(_Items.OptLevel, 0)) +
+                SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
+            ), 0) AS ItemPoints")
+            );
 
-                ->join('_GuildMember', '_GuildMember.GuildID', '=', '_Guild.ID')
+            if (config('global.server.version') === 'iSRO') {
+                $query->addSelect(DB::raw("CONVERT(VARCHAR(MAX), _GuildCrest.CrestBinary, 2) AS CrestIcon"));
+            }
+
+            $query->join('_GuildMember', '_GuildMember.GuildID', '=', '_Guild.ID')
                 ->join('_Inventory', '_Inventory.CharID', '=', '_GuildMember.CharID')
                 ->join('_Items', '_Items.ID64', '=', '_Inventory.ItemID')
                 ->join('_RefObjCommon', '_RefObjCommon.ID', '=', '_Items.RefItemID')
@@ -57,11 +61,13 @@ class Guild extends Model
                     $join->on('_BindingOptionWithItem.nItemDBID', '=', '_Items.ID64')
                         ->where('_BindingOptionWithItem.nOptValue', '>', 0)
                         ->where('_BindingOptionWithItem.bOptType', '=', 2);
-                })
-                ->leftJoin('_GuildCrest', function ($join) {
-                    $join->on('_GuildCrest.GuildID', '=', '_Guild.ID');
-                })
-                ->where('_Inventory.Slot', '<', 13)
+                });
+
+            if (config('global.server.version') === 'iSRO') {
+                $query->leftJoin('_GuildCrest', '_GuildCrest.GuildID', '=', '_Guild.ID');
+            }
+
+            $query->where('_Inventory.Slot', '<', 13)
                 ->where('_Inventory.Slot', '!=', 8)
                 ->where('_Inventory.Slot', '!=', 7)
                 ->where('_Inventory.ItemID', '>', 0)
@@ -71,21 +77,27 @@ class Guild extends Model
                 ->when(!empty($Name), function ($query) use ($Name) {
                     $query->where('_Guild.Name', 'like', "%{$Name}%");
                 })
-                ->whereNotIn('_Guild.Name', config('global.ranking.hidden_guilds'))
-                ->groupBy(
-                    '_Guild.ID',
-                    '_Guild.Name',
-                    '_Guild.Lvl',
-                    '_Guild.GatheredSP',
-                    '_Guild.FoundationDate',
-                    '_GuildCrest.CrestBinary'
-                )
+                ->whereNotIn('_Guild.Name', config('global.ranking.hidden_guilds'));
+
+            $groupBy = [
+                '_Guild.ID',
+                '_Guild.Name',
+                '_Guild.Lvl',
+                '_Guild.GatheredSP',
+                '_Guild.FoundationDate',
+            ];
+
+            if (config('global.server.version') === 'iSRO') {
+                $groupBy[] = '_GuildCrest.CrestBinary';
+            }
+
+            $query->groupBy(...$groupBy)
                 ->orderByDesc('ItemPoints')
                 ->orderByDesc('_Guild.Lvl')
                 ->orderByDesc('_Guild.GatheredSP')
-                ->limit($limit)
-                ->get();
+                ->limit($limit);
 
+            return $query->get();
         });
     }
 

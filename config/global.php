@@ -2,6 +2,9 @@
 
 return [
     'general' => [
+        'server' => [
+            'version' => env('SRO_VERSION', 'vSRO'), // or 'iSRO'
+        ],
         'cache' => [
             'sql' => true,
             'data' => [

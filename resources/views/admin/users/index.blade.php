@@ -35,9 +35,9 @@
                 <tbody>
                     @forelse($data as $value)
                         <tr>
-                            <td>{{ $value->PortalJID }}</td>
+                            <td>{{ $value->PortalJID ?? $value->JID }}</td>
                             <td>{{ $value->StrUserID }}</td>
-                            <td>{{ $value->muUser->muEmail->EmailAddr ?? '' }}</td>
+                            <td>{{ $value->muUser->muEmail->EmailAddr ?? $value->Email }}</td>
                             <td>
                                 <a href="{{ route('admin.users.view', $value->JID) }}" class="btn btn-secondary btn-sm">View</a>
                             </td>

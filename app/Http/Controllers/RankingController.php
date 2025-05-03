@@ -7,6 +7,7 @@ use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Models\SRO\Shard\Char;
 use App\Models\SRO\Shard\CharSkillMastery;
 use App\Models\SRO\Shard\CharTradeConflictJob;
+use App\Models\SRO\Shard\CharTrijob;
 use App\Models\SRO\Shard\Guild;
 use App\Models\SRO\Shard\GuildMember;
 use App\Models\SRO\Shard\TrainingCampHonorRank;
@@ -81,31 +82,51 @@ class RankingController extends Controller
 
     public function job()
     {
-        $data = CharTradeConflictJob::getJobRanking();
+        if (config('global.server.version' === 'vSRO')) {
+            $data = CharTrijob::getJobRanking();
+        } else {
+            $data = CharTradeConflictJob::getJobRanking();
+        }
         return view('ranking.ranking.job', compact('data'));
     }
 
     public function job_all()
     {
-        $data = CharTradeConflictJob::getJobRanking();
+        if (config('global.server.version' === 'vSRO')) {
+            $data = CharTrijob::getJobRanking();
+        } else {
+            $data = CharTradeConflictJob::getJobRanking();
+        }
         return view('ranking.ranking.job-all', compact('data'));
     }
 
     public function job_hunter()
     {
-        $data = CharTradeConflictJob::getJobRanking(25, 1);
+        if (config('global.server.version' === 'vSRO')) {
+            $data = CharTrijob::getJobRanking(25, 3);
+        } else {
+            $data = CharTradeConflictJob::getJobRanking(25, 1);
+        }
         return view('ranking.ranking.job-hunter', compact('data'));
     }
 
     public function job_thieve()
     {
-        $data = CharTradeConflictJob::getJobRanking(25, 2);
+        if (config('global.server.version' === 'vSRO')) {
+            $data = CharTrijob::getJobRanking(25, 2);
+        } else {
+            $data = CharTradeConflictJob::getJobRanking(25, 2);
+        }
         return view('ranking.ranking.job-thieve', compact('data'));
     }
 
     public function job_trader()
     {
-        $data = CharTradeConflictJob::getJobRanking(25, 3);
+        if (config('global.server.version' === 'vSRO')) {
+            $data = CharTrijob::getJobRanking(25, 1);
+        } else {
+            $data = CharTradeConflictJob::getJobRanking(25, 3);
+        }
         return view('ranking.ranking.job-trader', compact('data'));
     }
 
@@ -119,8 +140,11 @@ class RankingController extends Controller
             $build_info = CharSkillMastery::getCharBuildInfo($charID);
 
             $inventory_set = $inventoryService->getInventorySet($charID, 13, 0);
-            $inventory_job = $inventoryService->getInventoryJob($charID);
             $inventory_avatar = $inventoryService->getInventoryAvatar($charID);
+
+            if (config('global.server.version' !== 'vSRO')) {
+                $inventory_job = $inventoryService->getInventoryJob($charID);
+            }
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -129,7 +153,7 @@ class RankingController extends Controller
                     'globals_history' => $globals_history,
                     'build_info' => $build_info,
                     'inventory_set' => $inventory_set,
-                    'inventory_job' => $inventory_job,
+                    'inventory_job' => $inventory_job ?? null,
                     'inventory_avatar' => $inventory_avatar
                 ]);
             }

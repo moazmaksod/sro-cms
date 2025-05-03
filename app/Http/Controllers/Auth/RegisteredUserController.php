@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\AuhAgreedService;
@@ -40,38 +41,52 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:'.User::class, 'unique:'.MuUser::class.',UserID', 'unique:'.TbUser::class.',StrUserID'],
-            'email' => ['required', 'string', 'email', 'max:70', 'unique:'.MuEmail::class.',EmailAddr'],
-            'password' => ['required', 'string', 'min:6', 'max:32', 'confirmed', Rules\Password::defaults()],
-            'g-recaptcha-response' => [
-                Rule::requiredIf(function () {
-                    return env('NOCAPTCHA_ENABLE', false);
-                }),
-                'captcha'
-            ],
-        ]);
+        $rules = [
+            'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class,],
+            'email' => ['required', 'string', 'email', 'max:70',],
+            'password' => ['required', 'string', 'min:6', 'max:32', 'confirmed', Rules\Password::defaults(),],
+            'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
+        ];
+
+        if (config('global.server.version') === 'vSRO') {
+            $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
+            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
+        } else {
+            $rules['username'][] = 'unique:' . MuUser::class . ',UserID';
+            $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
+            $rules['email'][] = 'unique:' . MuEmail::class . ',EmailAddr';
+        }
+
+        $request->validate($rules);
 
         DB::beginTransaction();
         try {
+            if (config('global.server.version') === 'vSRO') {
+                $tbUser = TbUser::setGameAccount($jid = null, $request->username, $request->password, $request->email, $request->ip());
+                $jid = $tbUser->JID;
 
-            //Fixing local registration
-            $userBinIP = ($request->ip() == "::1") ? ip2long('127.0.0.1') : ip2long($request->ip());
+                SkSilk::setSkSilk($jid, 0, 0);
+            } else {
+                //Fixing local registration
+                $userBinIP = ($request->ip() == "::1") ? ip2long('127.0.0.1') : ip2long($request->ip());
 
-            $portalUser = MuUser::setPortalAccount($request->username, $request->password);
-            MuEmail::setEmail($portalUser->JID, $request->email);
-            MuhAlteredInfo::setAlteredInfo($portalUser->JID, $request->username, $request->email, $userBinIP);
-            AuhAgreedService::setAgreedService($portalUser->JID, $userBinIP);
-            MuJoiningInfo::setJoiningInfo($portalUser->JID, $userBinIP);
-            MuVIPInfo::setVIPInfo($portalUser->JID);
+                $portalUser = MuUser::setPortalAccount($request->username, $request->password);
+                $jid = $portalUser->JID;
 
-            //type 1 = silk, type 3 = premium silk
-            //AphChangedSilk::setChangedSilk($portalUser->JID, 1, 0);
-            //AphChangedSilk::setChangedSilk($portalUser->JID, 3, 0);
-            TbUser::setGameAccount($portalUser->JID, $request->username, $request->password, $request->ip());
+                MuEmail::setEmail($jid, $request->email);
+                MuhAlteredInfo::setAlteredInfo($jid, $request->username, $request->email, $userBinIP);
+                AuhAgreedService::setAgreedService($jid, $userBinIP);
+                MuJoiningInfo::setJoiningInfo($jid, $userBinIP);
+                MuVIPInfo::setVIPInfo($jid);
+
+                //type 1 = silk, type 3 = premium silk
+                //AphChangedSilk::setChangedSilk($jid, 1, 0);
+                //AphChangedSilk::setChangedSilk($jid, 3, 0);
+                TbUser::setGameAccount($jid, $request->username, $request->password, $request->ip());
+            }
 
             $user = User::create([
-                'jid' => $portalUser->JID,
+                'jid' => $jid,
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),

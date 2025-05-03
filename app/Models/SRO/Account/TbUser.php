@@ -46,41 +46,80 @@ class TbUser extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'PortalJID',
-        'StrUserID',
-        'ServiceCompany',
-        'password',
-        'Active',
-        'UserIP',
-        'CountryCode',
-        'VisitDate',
-        'RegDate',
-        'sec_primary',
-        'sec_content',
-        'sec_grade',
-    ];
+    protected $fillable = [];
 
     protected $hidden = [
         'password'
     ];
 
-    public static function setGameAccount($jid, $username, $password, $ip)
+    public function __construct(array $attributes = [])
     {
-        return self::create([
-            'PortalJID' => $jid,
-            'StrUserID' => $username,
-            'ServiceCompany' => 11,
-            'password' => md5($password),
-            'Active' => 1,
-            'UserIP' => $ip,
-            'CountryCode' => 'EG',
-            'VisitDate' => now(),
-            'RegDate' => now(),
-            'sec_primary' => 3,
-            'sec_content' => 3,
-            'sec_grade' => 0,
-        ]);
+        parent::__construct($attributes);
+
+        if (config('global.server.version') === 'vSRO') {
+            $this->fillable = [
+                'StrUserID',
+                'Name',
+                'password',
+                'Status',
+                'GMrank',
+                'Email',
+                'regtime',
+                'reg_ip',
+                'sec_primary',
+                'sec_content',
+                'AccPlayTime',
+                'LatestUpdateTime_ToPlayTime'
+            ];
+        } else {
+            $this->fillable = [
+                'PortalJID',
+                'StrUserID',
+                'ServiceCompany',
+                'password',
+                'Active',
+                'UserIP',
+                'CountryCode',
+                'VisitDate',
+                'RegDate',
+                'sec_primary',
+                'sec_content',
+                'sec_grade',
+            ];
+        }
+    }
+
+    public static function setGameAccount($jid, $username, $email, $password, $ip)
+    {
+        if (config('global.server.version') === 'vSRO') {
+            return self::create([
+                'StrUserID' => strtolower($username),
+                'Name' => $username,
+                'password' => md5($password),
+                'Status' => 1,
+                'GMrank' => 0,
+                'Email' => $email,
+                'regtime' => now(),
+                'reg_ip' => $ip,
+                'sec_primary' => 3,
+                'sec_content' => 3
+            ]);
+        } else {
+            return self::create([
+                'PortalJID' => $jid,
+                'StrUserID' => $username,
+                'ServiceCompany' => 11,
+                'password' => md5($password),
+                'Active' => 1,
+                'UserIP' => $ip,
+                'CountryCode' => 'EG',
+                'VisitDate' => now(),
+                'RegDate' => now(),
+                'sec_primary' => 3,
+                'sec_content' => 3,
+                'sec_grade' => 0,
+            ]);
+        }
     }
 
     public static function getTbUserCount()
@@ -88,6 +127,16 @@ class TbUser extends Model
         return Cache::remember('game_account_count', now()->addMinutes(config('global.general.cache.data.account_info')), function () {
             return self::count();
         });
+    }
+
+    public function getSkSilk()
+    {
+        return $this->belongsTo(SkSilk::class, 'JID', 'JID');
+    }
+
+    public function getSkSilkHistory()
+    {
+        return $this->hasMany(SkSilkBuyList::class, 'UserJID', 'JID');
     }
 
     public function shardUser()
@@ -102,6 +151,10 @@ class TbUser extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'jid', 'PortalJID');
+        if (config('global.server.version') === 'vSRO') {
+            return $this->belongsTo(User::class, 'jid', 'JID');
+        } else{
+            return $this->belongsTo(User::class, 'jid', 'PortalJID');
+        }
     }
 }

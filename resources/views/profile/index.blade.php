@@ -37,44 +37,77 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <th scope="row">{{ __('Username') }}</th>
-                            <td>{{ Auth::user()->username }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('Email') }}</th>
-                            <td>{{ Auth::user()->email }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('Silk') }}</th>
-                            @php $cash = Auth::user()->muUser->getJCash() @endphp
-                            <td>{{ $cash->Silk }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('Premium Silk') }}</th>
-                            <td>{{ $cash->PremiumSilk }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('Month Usage') }}</th>
-                            <td>{{ $cash->MonthUsage }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('3Month Usage') }}</th>
-                            <td>{{ $cash->ThreeMonthUsage }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">{{ __('VIP') }}</th>
-                            <td>
-                                @isset(Auth::user()->muUser->muVIPInfo->VIPUserType)
-                                    <img src="{{ asset(config('global.ranking.vip_level.level')[Auth::user()->muUser->muVIPInfo->VIPLv]['icon']) }}" width="24" height="24" alt="">
-                                    <span>{{ config('global.ranking.vip_level.level')[Auth::user()->muUser->muVIPInfo->VIPLv]['name'] }}</span>
-                                @else
-                                    <span>{{ __('None') }}</span>
-                                @endisset
-                            </td>
-                        </tr>
-                        </tbody>
+                        @if(config('global.server.version' === 'vSRO'))
+                            <tbody>
+                            <tr>
+                                <th scope="row">JID</th>
+                                <td>{{ $user->JID }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Username</th>
+                                <td>{{ $user->StrUserID }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{{ $user->Email }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Silk') }}</th>
+                                <td>{{ $user->getSkSilk->silk_own }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Gift Silk') }}</th>
+                                <td>{{ $user->getSkSilk->silk_gift }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Point Silk') }}</th>
+                                <td>{{ $user->getSkSilk->silk_point }}</td>
+                            </tr>
+                            </tbody>
+                        @else
+                            <tbody>
+                            <tr>
+                                <th scope="row">Portal JID</th>
+                                <td>{{ $user->PortalJID ?? '' }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Username</th>
+                                <td>{{ $user->StrUserID }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{{ $user->muUser->muEmail->EmailAddr ?? '' }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Silk') }}</th>
+                                @php $cash = $user->muUser->getJCash() @endphp
+                                <td>{{ $cash->Silk }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Premium Silk') }}</th>
+                                <td>{{ $cash->PremiumSilk }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('Month Usage') }}</th>
+                                <td>{{ $cash->MonthUsage }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ __('3Month Usage') }}</th>
+                                <td>{{ $cash->ThreeMonthUsage }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">VIP</th>
+                                <td>
+                                    @isset($user->muUser->muVIPInfo->VIPUserType)
+                                        <img src="{{ asset(config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['icon']) }}" width="24" height="24" alt="">
+                                        <span>{{ config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
+                                    @else
+                                        <span>{{ __('None') }}</span>
+                                    @endisset
+                                </td>
+                            </tr>
+                            </tbody>
+                        @endif
                     </table>
                 </div>
             </div>

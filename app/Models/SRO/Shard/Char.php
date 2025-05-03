@@ -64,33 +64,40 @@ class Char extends Model
     public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')
     {
         return Cache::remember("ranking_player_{$limit}_{$CharID}_{$CharName}", now()->addMinutes(config('global.general.cache.data.ranking_player')), function () use ($CharName, $CharID, $limit) {
-            return self::select(
+            $query = self::select(
                 '_Char.CharID',
                 '_Char.CharName16',
                 '_Char.CurLevel',
                 '_Char.RefObjID',
                 '_Guild.ID',
                 '_Guild.Name',
-
                 '_Char.NickName16',
                 '_Char.HwanLevel',
                 '_Char.HP',
                 '_Char.MP',
                 '_Char.Strength',
                 '_Char.Intellect',
-                '_UserTradeConflictJob.JobType',
-                '_CharTradeConflictJob.JobLevel',
-
                 DB::raw("ISNULL((
-                    SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
-                    SUM(ISNULL(_Items.OptLevel, 0)) +
-                    SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
-                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
-                ), 0) AS ItemPoints"))
+                SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
+                SUM(ISNULL(_Items.OptLevel, 0)) +
+                SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
+                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
+            ), 0) AS ItemPoints")
+            );
 
-                ->join('_Guild', '_Char.GuildID', '=', '_Guild.ID')
+            if (config('global.server.version') === 'vSRO') {
+                $query->addSelect('_CharTrijob.JobType', '_CharTrijob.Level')
+                    ->leftJoin('_CharTrijob', '_Char.CharID', '=', '_CharTrijob.CharID');
+            } else {
+                $query->addSelect('_UserTradeConflictJob.JobType', '_CharTradeConflictJob.JobLevel')
+                    ->join('_User', '_User.CharID', '=', '_Char.CharID')
+                    ->join('_UserTradeConflictJob', '_UserTradeConflictJob.UserJID', '=', '_User.UserJID')
+                    ->leftJoin('_CharTradeConflictJob', '_CharTradeConflictJob.CharID', '=', '_Char.CharID');
+            }
+
+            $query->join('_Guild', '_Char.GuildID', '=', '_Guild.ID')
                 ->join('_Inventory', '_Inventory.CharID', '=', '_Char.CharID')
                 ->join('_Items', '_Items.ID64', '=', '_Inventory.ItemID')
                 ->join('_RefObjCommon', '_RefObjCommon.ID', '=', '_Items.RefItemID')
@@ -99,46 +106,43 @@ class Char extends Model
                         ->where('_BindingOptionWithItem.nOptValue', '>', 0)
                         ->where('_BindingOptionWithItem.bOptType', '=', 2);
                 })
-
-                ->join('_User', '_User.CharID', '=', '_Char.CharID')
-                ->join('_UserTradeConflictJob', '_UserTradeConflictJob.UserJID', '=', '_User.UserJID')
-                ->leftJoin('_CharTradeConflictJob', function ($join) {
-                    $join->on('_CharTradeConflictJob.CharID', '=', '_Char.CharID');
-                })
-
                 ->where('_Inventory.Slot', '<', 13)
-                ->where('_Inventory.Slot', '!=', 8)
-                ->where('_Inventory.Slot', '!=', 7)
+                ->whereNotIn('_Inventory.Slot', [7, 8])
                 ->where('_Inventory.ItemID', '>', 0)
                 ->where('_Char.deleted', '=', 0)
-                ->when($CharID > 0, function ($query) use ($CharID) {
-                    $query->where('_Char.CharID', '=', $CharID);
-                })
-                ->when(!empty($CharName), function ($query) use ($CharName) {
-                    $query->where('_Char.CharName16', 'like', "%{$CharName}%");
-                })
-                ->whereNotIn('_Char.CharName16', config('global.ranking.hidden_characters'))
-                ->groupBy(
-                    '_Char.CharID',
-                    '_Char.CharName16',
-                    '_Char.CurLevel',
-                    '_Char.RefObjID',
-                    '_Guild.ID',
-                    '_Guild.Name',
+                ->when($CharID > 0, fn($q) => $q->where('_Char.CharID', $CharID))
+                ->when(!empty($CharName), fn($q) => $q->where('_Char.CharName16', 'like', "%{$CharName}%"))
+                ->whereNotIn('_Char.CharName16', config('global.ranking.hidden_characters'));
 
-                    '_Char.NickName16',
-                    '_Char.HwanLevel',
-                    '_Char.HP',
-                    '_Char.MP',
-                    '_Char.Strength',
-                    '_Char.Intellect',
-                    '_UserTradeConflictJob.JobType',
-                    '_CharTradeConflictJob.JobLevel',
-                )
+            $groupBy = [
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.CurLevel',
+                '_Char.RefObjID',
+                '_Guild.ID',
+                '_Guild.Name',
+                '_Char.NickName16',
+                '_Char.HwanLevel',
+                '_Char.HP',
+                '_Char.MP',
+                '_Char.Strength',
+                '_Char.Intellect',
+            ];
+
+            if (config('global.server.version') === 'vSRO') {
+                $groupBy[] = '_CharTrijob.JobType';
+                $groupBy[] = '_CharTrijob.Level';
+            } else {
+                $groupBy[] = '_UserTradeConflictJob.JobType';
+                $groupBy[] = '_CharTradeConflictJob.JobLevel';
+            }
+
+            $query->groupBy(...$groupBy)
                 ->orderByDesc('ItemPoints')
                 ->orderByDesc('_Char.CurLevel')
-                ->limit($limit)
-                ->get();
+                ->limit($limit);
+
+            return $query->get();
         });
     }
 

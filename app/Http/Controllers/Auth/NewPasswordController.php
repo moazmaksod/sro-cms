@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
+use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\User;
 use Exception;
@@ -52,8 +54,12 @@ class NewPasswordController extends Controller
 
                 DB::beginTransaction();
                 try {
-                    MuUser::where('JID', $user->jid)->update(['UserPwd' => md5($request->password)]);
-                    TbUser::where('PortalJID', $user->jid)->update(['password' => md5($request->password)]);
+                    if (config('global.server.version' === 'vSRO')) {
+                        TbUser::where('JID', $user->jid)->update(['password' => md5($request->password)]);
+                    } else {
+                        MuUser::where('JID', $user->jid)->update(['UserPwd' => md5($request->password)]);
+                        TbUser::where('PortalJID', $user->jid)->update(['password' => md5($request->password)]);
+                    }
 
                 } catch (Exception $e) {
                     DB::rollBack();
