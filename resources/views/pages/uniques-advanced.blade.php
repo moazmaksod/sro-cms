@@ -12,7 +12,7 @@
                                 <div class="card-header">
                                     <h3>
                                         <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
-                                        {{ $unique_list[$key]['name'] }}
+                                        {{ $uniqueList[$key]['name'] }}
                                     </h3>
                                     <small>{{ __('Last 5 Killers') }}</small>
                                 </div>
@@ -26,7 +26,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <p class="text-center">{{ $unique_list[$key]['points'] }} {{ __('Points') }}</p>
+                                            <p class="text-center">{{ $uniqueList[$key]['points'] }} {{ __('Points') }}</p>
                                             @php $i = 1 @endphp
                                             @foreach($value as $values)
                                                 @if($i > 5) @break @endif
@@ -38,9 +38,9 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @foreach($unique_ranking as $ranking)
-                                                            @if($ranking->CharName16 == $values->CharName16)
-                                                                {{ $ranking->Points ?? 0 }}
+                                                        @foreach($uniqueRanking as $rank)
+                                                            @if($rank->CharName16 == $values->CharName16)
+                                                                {{ $rank->Points ?? 0 }}
                                                             @endif
                                                         @endforeach
                                                     </td>

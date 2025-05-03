@@ -35,31 +35,34 @@ class LogInstanceWorldInfo extends Model
 
     public static function getUniqueRanking($limit = 25, $month = 0)
     {
-        $uniquePoints = config('global.ranking.unique_points');
+        $uniqueList = config('global.ranking.unique_points');
 
-        $caseExpression = 'SUM(CASE ';
-        foreach ($uniquePoints as $mobCode => $points) {
+        $case = 'SUM(CASE ';
+        foreach ($uniqueList as $mobCode => $points) {
             $points = $points['points'];
-            $caseExpression .= "WHEN _LogInstanceWorldInfo.Value = '$mobCode' THEN $points ";
+            $case .= "WHEN _LogInstanceWorldInfo.Value = '$mobCode' THEN $points ";
         }
-        $caseExpression .= 'ELSE 0 END) AS Points';
+        $case .= 'ELSE 0 END) AS Points';
         $startOfMonth = Carbon::now()->startOfMonth();
 
-        return Cache::remember("ranking_unique_{$limit}_{$month}", now()->addMinutes(config('global.general.cache.data.ranking_unique')), function () use ($month, $startOfMonth, $uniquePoints, $caseExpression, $limit) {
-            return self::join('SILKROAD_R_SHARD.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
-                ->join('SILKROAD_R_SHARD.dbo._Guild', '_Char.GuildID', '=', '_Guild.ID')
-                ->select(
+        return Cache::remember("ranking_unique_{$limit}_{$month}", now()->addMinutes(config('global.general.cache.data.ranking_unique')), function () use ($month, $startOfMonth, $uniqueList, $case, $limit) {
+            return self::select(
                     '_Char.CharName16',
                     '_Char.RefObjID',
                     '_Char.CurLevel',
                     '_Guild.ID',
                     '_Guild.Name',
-                    DB::raw($caseExpression)
+                    DB::raw($case)
                 )
-                ->whereIn('_LogInstanceWorldInfo.Value', array_keys($uniquePoints))
+                ->join('SILKROAD_R_SHARD.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
+                ->join('SILKROAD_R_SHARD.dbo._Guild', '_Char.GuildID', '=', '_Guild.ID')
+                ->whereIn('_LogInstanceWorldInfo.Value', array_keys($uniqueList))
                 ->where('_LogInstanceWorldInfo.ValueCodeName128', 'KILL_UNIQUE_MONSTER')
                 ->when($month == 1, function ($query) use ($startOfMonth) {
                     $query->where('_LogInstanceWorldInfo.EventTime', '>=', $startOfMonth);
+                })
+                ->when(!is_null($limit), function ($query) use ($limit) {
+                    $query->limit($limit);
                 })
                 ->groupBy(
                     '_Char.CharName16',
@@ -69,7 +72,6 @@ class LogInstanceWorldInfo extends Model
                     '_Guild.Name'
                 )
                 ->orderByDesc('Points')
-                ->limit($limit)
                 ->get();
         });
     }
@@ -78,7 +80,20 @@ class LogInstanceWorldInfo extends Model
     {
         $unique_points = array_keys(config('global.ranking.unique_points'));
         return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes(config('global.general.cache.data.unique_history')), function () use ($CharID, $limit, $unique_points) {
-            return self::select(['_LogInstanceWorldInfo.CharID', '_Char.CharName16', '_Char.RefObjID', '_Char.CurLevel', '_LogInstanceWorldInfo.ValueCodeName128', '_LogInstanceWorldInfo.Value', '_LogInstanceWorldInfo.WorldID', '_RefRegion.wRegionID', '_RefRegion.AreaName', '_LogInstanceWorldInfo.EventTime',])
+            return self::select(
+                [
+                    '_LogInstanceWorldInfo.CharID',
+                    '_Char.CharName16',
+                    '_Char.RefObjID',
+                    '_Char.CurLevel',
+                    '_LogInstanceWorldInfo.ValueCodeName128',
+                    '_LogInstanceWorldInfo.Value',
+                    '_LogInstanceWorldInfo.WorldID',
+                    '_RefRegion.wRegionID',
+                    '_RefRegion.AreaName',
+                    '_LogInstanceWorldInfo.EventTime'
+                ])
+
                 ->leftJoin('SILKROAD_R_SHARD.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
                 ->leftJoin('SILKROAD_R_SHARD.dbo._RefRegion', '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
                 ->whereIn('_LogInstanceWorldInfo.Value', $unique_points)
@@ -86,8 +101,10 @@ class LogInstanceWorldInfo extends Model
                 ->when($CharID > 0, function ($query) use ($CharID) {
                     $query->where('_LogInstanceWorldInfo.CharID', $CharID);
                 })
+                ->when(!is_null($limit), function ($query) use ($limit) {
+                    $query->limit($limit);
+                })
                 ->orderByDesc('_LogInstanceWorldInfo.EventTime')
-                ->limit($limit)
                 ->get();
         });
     }

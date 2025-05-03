@@ -16,8 +16,7 @@ class AdminController extends Controller
         $userCount = TbUser::getTbUserCount();
         $charCount = Char::getCharCount();
         $totalGold = Char::getGoldSum();
-        //$totalSilk = AphChangedSilk::getSilkSum();
-        $totalSilk = 'Unknown';
+        $totalSilk = AphChangedSilk::getSilkSum();
 
         return view('admin.index', [
             'data' => $data,

@@ -36,8 +36,7 @@
                 <div class="card">
                     <div class="card-body">
                         <p>Total Amount of Silk</p>
-                        {{--<h2>{{ number_format($totalGold , 0, ',', '.')}}</h2>--}}
-                        <h2>{{ $totalSilk }}</h2>
+                        <h2>{{ number_format($totalSilk , 0, ',', '.')}}</h2>
                     </div>
                 </div>
             </div>
