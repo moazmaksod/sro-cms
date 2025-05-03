@@ -32,12 +32,18 @@
                                                 @if($i > 5) @break @endif
                                                 <tr>
                                                     <td>{{ $i }}</td>
-                                                    <td>{{ $values->CharName16 }}</td>
-                                                    @foreach($unique_ranking as $ranking)
-                                                        @if($ranking->CharName16 == $values->CharName16)
-                                                            <td>{{ $ranking->Points ?? 0 }}</td>
+                                                    <td>
+                                                        @if(!empty($values->CharName16))
+                                                        <a href="{{ route('ranking.character.view', ['name' => $values->CharName16]) }}" class="text-decoration-none">{{ $values->CharName16 }}</a>
                                                         @endif
-                                                    @endforeach
+                                                    </td>
+                                                    <td>
+                                                        @foreach($unique_ranking as $ranking)
+                                                            @if($ranking->CharName16 == $values->CharName16)
+                                                                {{ $ranking->Points ?? 0 }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
                                                 </tr>
                                                 @php $i++ @endphp
                                             @endforeach
