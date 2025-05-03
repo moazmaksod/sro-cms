@@ -30,7 +30,6 @@ return [
             'en' => [
                 'name' => 'English',
                 'fi' => 'gb'
-
             ],
             'tr' => [
                 'name' => 'Türkçe',
