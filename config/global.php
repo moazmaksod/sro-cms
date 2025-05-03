@@ -34,13 +34,17 @@ return [
                 'fi' => 'gb'
 
             ],
+            'tr' => [
+                'name' => 'Türkçe',
+                'fi' => 'tr',
+            ],
             'ar' => [
                 'name' => 'العربية',
                 'fi' => 'sa',
             ],
-            'tr' => [
-                'name' => 'Türkçe',
-                'fi' => 'tr',
+            'es' => [
+                'name' => 'Español',
+                'fi' => 'es',
             ],
             'de' => [
                 'name' => 'Deutsch',
