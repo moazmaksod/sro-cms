@@ -33,7 +33,9 @@ class LogEventSiegeFortress extends Model
 
     public static function getFortressHistory($limit = 25)
     {
-        return Cache::remember("fortress_history_{$limit}", now()->addMinutes(config('global.general.cache.data.fortress_war')), function () use ($limit) {
+        $minutes = config('global.general.cache.data.fortress_history', 10);
+
+        return Cache::remember("fortress_history_{$limit}", now()->addMinutes($minutes), function () use ($limit) {
             return self::select([
                     'FortressID',
                     'EventTime',

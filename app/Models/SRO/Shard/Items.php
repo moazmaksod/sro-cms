@@ -112,7 +112,9 @@ class Items extends Model
 
     public static function getItemNameBySerial($serials): array
     {
-        return Cache::remember("globals_history_serial_{$serials[0]}", now()->addMinutes(config('global.general.cache.data.globals_history')), static function () use ($serials) {
+        $minutes = config('global.general.cache.data.globals_history', 10);
+
+        return Cache::remember("globals_history_serial_{$serials[0]}", now()->addMinutes($minutes), static function () use ($serials) {
             return self::select(
                 '_Items.Serial64',
                 '_Items.OptLevel',

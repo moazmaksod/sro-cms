@@ -43,7 +43,9 @@ class MagOptDesc extends Model
 
     public static function getBlues($aItem, &$aSpecialInfo): array
     {
-        return Cache::remember('character_info_MagOptDesc', now()->addMinutes(config('global.general.cache.data.character_info')), static function () {
+        $minutes = config('global.general.cache.data.character_info', 5);
+
+        return Cache::remember('character_info_MagOptDesc', now()->addMinutes($minutes), static function () {
             $aData = self::all()->sortBy('id');
             $aList = [];
             foreach ($aData as $iKey => $aCurData) {

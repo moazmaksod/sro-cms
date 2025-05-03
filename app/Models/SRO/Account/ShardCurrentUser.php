@@ -40,7 +40,9 @@ class ShardCurrentUser extends Model
 
     public static function getOnlineCounter()
     {
-        return Cache::remember('online_counter', now()->addMinutes(config('global.general.cache.data.online_counter')), function () {
+        $minutes = config('global.general.cache.data.online_counter', 1);
+
+        return Cache::remember('online_counter', now()->addMinutes($minutes), function () {
             return self::select("nUserCount")
             ->orderBy("nID", "desc")
             ->take(1)

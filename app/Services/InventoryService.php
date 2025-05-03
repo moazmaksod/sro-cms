@@ -177,8 +177,8 @@ class InventoryService
         if (isset($aStats[4], $aStats[5], $aStats[6])) {
             $setKey = $aStats[4] . '_' . $aStats[5] . '_' . $aStats[6];
 
-            if (array_key_exists($setKey, config('global.item.rare_name'))) {
-                $aItem['RareName'] = config('global.item.rare_name')[$setKey][$aItem['Slot']];
+            if (array_key_exists($setKey, config('global.item.sox_name'))) {
+                $aItem['RareName'] = config('global.item.sox_name')[$setKey][$aItem['Slot']];
             }
         }
 

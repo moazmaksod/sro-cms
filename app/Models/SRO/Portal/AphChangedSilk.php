@@ -76,7 +76,9 @@ class AphChangedSilk extends Model
 
     public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
-        $data = Cache::remember("account_info_donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes(config('global.general.cache.data.account_info')), function () use ($paginate, $page, $jid) {
+        $minutes = config('global.general.cache.data.account_info', 5);
+
+        $data = Cache::remember("account_info_donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes($minutes), function () use ($paginate, $page, $jid) {
             return self::select(
                 'M_CPItem.CPItemCode',
                 'M_CPItem.CPItemName',
@@ -108,7 +110,9 @@ class AphChangedSilk extends Model
 
     public static function getSilkSum()
     {
-        return Cache::remember('account_info_silk_sum', now()->addMinutes(config('global.general.cache.data.account_info')), function () {
+        $minutes = config('global.general.cache.data.account_info', 5);
+
+        return Cache::remember('account_info_silk_sum', now()->addMinutes($minutes), function () {
             try {
                 return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->value('total');
             } catch (\Exception $e) {

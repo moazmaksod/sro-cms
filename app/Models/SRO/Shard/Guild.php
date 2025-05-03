@@ -29,7 +29,9 @@ class Guild extends Model
 
     public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
-        return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes(config('global.general.cache.data.ranking_guild')), function () use ($Name, $GuildID, $limit) {
+        $minutes = config('global.general.cache.data.ranking_guild', 60);
+
+        return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes($minutes), function () use ($Name, $GuildID, $limit) {
             $query = self::select(
                 '_Guild.ID',
                 '_Guild.Name',
@@ -77,7 +79,7 @@ class Guild extends Model
                 ->when(!empty($Name), function ($query) use ($Name) {
                     $query->where('_Guild.Name', 'like', "%{$Name}%");
                 })
-                ->whereNotIn('_Guild.Name', config('global.ranking.hidden_guilds'));
+                ->whereNotIn('_Guild.Name', config('global.ranking.hidden.guilds'));
 
             $groupBy = [
                 '_Guild.ID',
@@ -103,7 +105,9 @@ class Guild extends Model
 
     public static function getFortressGuildRanking($limit = 25)
     {
-        return Cache::remember("ranking_fortress_guild_{$limit}", now()->addMinutes(config('global.general.cache.data.ranking_fortress_guild')), function () use ($limit) {
+        $minutes = config('global.general.cache.data.ranking_fortress_guild', 60);
+
+        return Cache::remember("ranking_fortress_guild_{$limit}", now()->addMinutes($minutes), function () use ($limit) {
             return self::select(
                 '_Guild.ID',
                 '_Guild.Name',
@@ -121,14 +125,18 @@ class Guild extends Model
 
     public static function getGuildIDByName($GuildName)
     {
-        return Cache::remember("guild_info_name_{$GuildName}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildName) {
+        $minutes = config('global.general.cache.data.guild_info', 1440);
+
+        return Cache::remember("guild_info_name_{$GuildName}", now()->addMinutes($minutes), function () use ($GuildName) {
             return self::select('ID')->where('Name', $GuildName)->first()->ID ?? null;
         });
     }
 
     public static function getGuildInfoAlliance($GuildID)
     {
-        return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildID) {
+        $minutes = config('global.general.cache.data.guild_info', 1440);
+
+        return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes($minutes), function () use ($GuildID) {
             return self::where('Alliance', function ($query) use ($GuildID) {
                 $query->select('Alliance')
                 ->from('_Guild')

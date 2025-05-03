@@ -40,7 +40,9 @@ class Schedule extends Model
 
     public static function getSchedules($Type = [1], $Idx = [3])
     {
-        return Cache::remember("event_schedule_{$Type[0]}_{$Idx[0]}", now()->addMinutes(config('global.general.cache.data.event_schedule')), function () use ($Idx, $Type) {
+        $minutes = config('global.general.cache.data.event_schedule', 10080);
+
+        return Cache::remember("event_schedule_{$Type[0]}_{$Idx[0]}", now()->addMinutes($minutes), function () use ($Idx, $Type) {
             return self::select([
                 "MainInterval_Type",
                 "ScheduleDefineIdx",

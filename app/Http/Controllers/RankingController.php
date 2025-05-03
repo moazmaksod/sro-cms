@@ -49,22 +49,21 @@ class RankingController extends Controller
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
         $uniqueList = config('global.ranking.unique_list');
-        $uniqueImage = config('global.ranking.unique_images');
 
         return view('ranking.ranking.unique', [
             'data' => $data,
             'uniqueList' => $uniqueList,
-            'uniqueImage' => $uniqueImage,
         ]);
     }
 
     public function unique_monthly()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking(25, 1);
-        $unique_points = config('global.ranking.unique_points');
+        $uniqueList = config('global.ranking.unique_list');
+
         return view('ranking.ranking.unique-monthly', [
             'data' => $data,
-            'unique_points' => $unique_points,
+            'uniqueList' => $uniqueList,
         ]);
     }
 
@@ -93,6 +92,7 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
+
         return view('ranking.ranking.job', compact('data'));
     }
 
@@ -103,6 +103,7 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
+
         return view('ranking.ranking.job-all', compact('data'));
     }
 
@@ -113,6 +114,7 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 1);
         }
+
         return view('ranking.ranking.job-hunter', compact('data'));
     }
 
@@ -123,6 +125,7 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 2);
         }
+
         return view('ranking.ranking.job-thieve', compact('data'));
     }
 
@@ -133,6 +136,7 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 3);
         }
+
         return view('ranking.ranking.job-trader', compact('data'));
     }
 
@@ -140,27 +144,29 @@ class RankingController extends Controller
     {
         $charID = Char::getCharIDByName($name);
         if ($charID > 0) {
-            $data = Char::getPlayerRanking(1, $charID)->first();
-            $unique_history = LogInstanceWorldInfo::getUniquesKill(5, $charID);
-            $globals_history = LogChatMessage::getGlobalsHistory(5, $name);
-            $build_info = CharSkillMastery::getCharBuildInfo($charID);
 
-            $inventory_set = $inventoryService->getInventorySet($charID, 13, 0);
-            $inventory_avatar = $inventoryService->getInventoryAvatar($charID);
+            $data = Char::getPlayerRanking(1, $charID)->first();
+            $build = CharSkillMastery::getCharBuildInfo($charID);
+
+            $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
+            $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
+
+            $inventorySet = $inventoryService->getInventorySet($charID, 13, 0);
+            $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
             if (config('global.server.version') !== 'vSRO') {
-                $inventory_job = $inventoryService->getInventoryJob($charID);
+                $inventoryJob = $inventoryService->getInventoryJob($charID);
             }
 
             if ($data) {
                 return view('ranking.character.index', [
                     'data' => $data,
-                    'unique_history' => $unique_history,
-                    'globals_history' => $globals_history,
-                    'build_info' => $build_info,
-                    'inventory_set' => $inventory_set,
-                    'inventory_job' => $inventory_job ?? null,
-                    'inventory_avatar' => $inventory_avatar
+                    'build' => $build,
+                    'uniqueHistory' => $uniqueHistory,
+                    'globalsHistory' => $globalsHistory,
+                    'inventorySet' => $inventorySet,
+                    'inventoryAvatar' => $inventoryAvatar,
+                    'inventoryJob' => $inventoryJob ?? null
                 ]);
             }
         }
@@ -173,14 +179,14 @@ class RankingController extends Controller
         if ($guildID > 0) {
 
             $data = Guild::getGuildRanking(1, $guildID)->first();
-            $data_members = GuildMember::getGuildInfoMembers($guildID);
-            $data_alliances = Guild::getGuildInfoAlliance($guildID);
+            $members = GuildMember::getGuildInfoMembers($guildID);
+            $alliances = Guild::getGuildInfoAlliance($guildID);
 
             if ($data) {
                 return view('ranking.guild.index', [
                     'data' => $data,
-                    'data_members' => $data_members,
-                    'data_alliances' => $data_alliances,
+                    'members' => $members,
+                    'alliances' => $alliances,
                 ]);
             }
         }
@@ -190,7 +196,9 @@ class RankingController extends Controller
 
     public function guild_crest($hex, CrestService $guildService)
     {
-        if ($hex) return $guildService->drawGuildIconToPNG($hex);
+        if ($hex) {
+            return $guildService->drawGuildIconToPNG($hex);
+        }
 
         abort(404);
     }

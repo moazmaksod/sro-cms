@@ -115,7 +115,9 @@ class Inventory extends Model
 
     public static function getInventory($characterId, $maxSlot, $minSlot): array
     {
-        return Cache::remember("character_info_inventory_{$characterId}", now()->addMinutes(config('global.general.cache.data.character_info')), static function () use ($minSlot, $maxSlot, $characterId) {
+        $minutes = config('global.general.cache.data.character_info', 1440);
+
+        return Cache::remember("character_info_inventory_{$characterId}", now()->addMinutes($minutes), static function () use ($minSlot, $maxSlot, $characterId) {
             return self::where('CharID', '=', $characterId)
             ->join('_Items as Items', 'Items.ID64', '_Inventory.ItemID')
             ->leftJoin('_BindingOptionWithItem as Binding', static function ($join) {

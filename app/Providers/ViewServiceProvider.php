@@ -31,34 +31,51 @@ class ViewServiceProvider extends ServiceProvider
                 ]);
             });
 
-            if(config('global.widgets.event_schedule.enable')) {
-                View::composer(['partials.event-schedule'], function ($view) {
-                    $view->with('event_schedule', ScheduleService::getEventSchedules());
+            $eventSchedule = config('global.widgets.event_schedule');
+            if($eventSchedule['enabled']) {
+                View::composer(['partials.event-schedule'], function ($view, $eventSchedule) {
+                    $view->with([
+                        'eventSchedule', ScheduleService::getEventSchedules(),
+                        'eventScheduleConfig', $eventSchedule,
+                    ]);
                 });
             }
-            if(config('global.widgets.fortress_war.enable')) {
-                View::composer(['partials.fortress-war'], function ($view) {
-                    $view->with('fortress_war', SiegeFortress::getFortressWar());
+
+            $fortressWar = config('global.widgets.fortress_war');
+            if($fortressWar['enabled']) {
+                View::composer(['partials.fortress-war'], function ($view, $fortressWar) {
+                    $view->with([
+                        'fortressWar', SiegeFortress::getFortressWar(),
+                        'fortressWarConfig', $fortressWar,
+                    ]);
                 });
             }
-            if(config('global.widgets.globals_history.enable')) {
-                View::composer(['partials.globals-history'], function ($view) {
-                    $view->with('globals_history', LogChatMessage::getGlobalsHistory(config('global.widgets.globals_history.limit')));
+
+            $globalsHistory = config('global.widgets.globals_history');
+            if($globalsHistory['enabled']) {
+                View::composer(['partials.globals-history'], function ($view, $globalsHistory) {
+                    $view->with('globalsHistory', LogChatMessage::getGlobalsHistory($globalsHistory['limit']),);
                 });
             }
-            if(config('global.widgets.unique_history.enable')) {
-                View::composer(['partials.unique-history'], function ($view) {
-                    $view->with('unique_history', LogInstanceWorldInfo::getUniquesKill($limit = config('global.widgets.unique_history.limit')));
+
+            $uniqueHistory = config('global.widgets.unique_history');
+            if($uniqueHistory['enabled']) {
+                View::composer(['partials.unique-history'], function ($view, $uniqueHistory) {
+                    $view->with('unique_history', LogInstanceWorldInfo::getUniquesKill($uniqueHistory['limit']));
                 });
             }
-            if(config('global.widgets.top_player.enable')) {
-                View::composer(['partials.top-player'], function ($view) {
-                    $view->with('top_player', Char::getPlayerRanking(config('global.widgets.top_player.limit'), 0, ''));
+
+            $topPlayer = config('global.widgets.top_player');
+            if($topPlayer['enabled']) {
+                View::composer(['partials.top-player'], function ($view, $topPlayer) {
+                    $view->with('top_player', Char::getPlayerRanking($topPlayer['limit'], 0, ''));
                 });
             }
-            if(config('global.widgets.top_guild.enable')) {
-                View::composer(['partials.top-guild'], function ($view) {
-                    $view->with('top_guild', Guild::getGuildRanking(config('global.widgets.top_guild.limit'), 0, ''));
+
+            $topGuild = config('global.widgets.top_guild');
+            if($topGuild['enabled']) {
+                View::composer(['partials.top-guild'], function ($view, $topGuild) {
+                    $view->with('top_guild', Guild::getGuildRanking($topGuild['limit'], 0, ''));
                 });
             }
 

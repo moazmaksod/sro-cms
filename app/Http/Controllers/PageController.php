@@ -56,7 +56,7 @@ class PageController extends Controller
     {
         $uniqueKill = LogInstanceWorldInfo::getUniquesKill(9999, 0);
         $uniqueRanking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
-        $uniqueList = config('global.ranking.unique_points');
+        $uniqueList = config('global.ranking.unique_list');
 
         $data = [];
         foreach ($uniqueKill as $value) {

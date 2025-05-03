@@ -6,28 +6,26 @@ return [
             'version' => env('SRO_VERSION', 'iSRO'), // or 'vSRO'
         ],
         'cache' => [
-            'sql' => true,
-            'data' => [
-                'news' => 1440, //1 day
-                'download' => 10080, //1 week
-                'pages' => 10080, //1 weeek
-                'account_info' => 5, //5 minutes
-                'online_counter' => 1, //1 minute
-                'event_schedule' => 10080, //1 weeek
-                'fortress_war' => 10080, //1 weeek
-                'unique_history' => 5, //5 minutes
-                'globals_history' => 5, //5 minutes
-                'character_info' => 1440, //1 day
-                'guild_info' => 1440, //1 day
-                'ranking_player' => 60, //1 Hours
-                'ranking_guild' => 60, //1 Hours
-                'ranking_unique' => 60, //1 Hours
-                'ranking_unique_monthly' => 60, //1 Hours
-                'ranking_job' => 60, //1 Hours
-                'ranking_honor' => 60, //1 Hours
-                'ranking_fortress_player' => 60, //1 Hours
-                'ranking_fortress_guild' => 60, //1 Hours
-            ]
+            'news' => 1440, //1 day
+            'download' => 10080, //1 week
+            'pages' => 10080, //1 weeek
+            'account_info' => 5, //5 minutes
+            'online_counter' => 1, //1 minute
+            'event_schedule' => 10080, //1 weeek
+            'fortress_war' => 10080, //1 weeek
+            'fortress_history' => 10080, //1 weeek
+            'unique_history' => 10, //10 minutes
+            'globals_history' => 10, //10 minutes
+            'character_info' => 1440, //1 day
+            'guild_info' => 1440, //1 day
+            'ranking_player' => 60, //1 Hours
+            'ranking_guild' => 60, //1 Hours
+            'ranking_unique' => 60, //1 Hours
+            'ranking_unique_monthly' => 60, //1 Hours
+            'ranking_job' => 60, //1 Hours
+            'ranking_honor' => 60, //1 Hours
+            'ranking_fortress_player' => 60, //1 Hours
+            'ranking_fortress_guild' => 60, //1 Hours
         ],
         'languages' => [
             'en' => [
@@ -149,28 +147,28 @@ return [
     ],
     'widgets' => [
         'discord' => [
-            'enable' => true,
+            'enabled' => true,
             'server_id' => '1004443821570019338',
             'theme' => 'dark', //dark, light
         ],
         'globals_history' => [
-            'enable' => false,
+            'enabled' => false,
             'limit' => 5,
         ],
         'unique_history' => [
-            'enable' => false,
+            'enabled' => false,
             'limit' => 5,
         ],
         'top_player' => [
-            'enable' => false,
+            'enabled' => false,
             'limit' => 5,
         ],
         'top_guild' => [
-            'enable' => false,
+            'enabled' => false,
             'limit' => 5,
         ],
         'server_info' => [
-            'enable' => true,
+            'enabled' => true,
             'data' => [
                 0 => [
                     //To changing icon https://fontawesome.com/icons
@@ -216,7 +214,7 @@ return [
             ],
         ],
         'event_schedule' => [
-            'enable' => false,
+            'enabled' => false,
             'names' => [
                 'roc' => 'Roc',
                 'medusa' => 'Medusa',
@@ -235,7 +233,7 @@ return [
             ],
         ],
         'fortress_war' => [
-            'enable' => false,
+            'enabled' => false,
             'names' => [
                 1 => [
                     'name' => 'Jangan',
@@ -259,49 +257,49 @@ return [
     'ranking' => [
         'menu' => [
             'ranking_player' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Player Ranking',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.player',
             ],
             'ranking_guild' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Guild Ranking',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.guild',
             ],
             'ranking_unique' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Unique Ranking',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.unique',
             ],
             'ranking_unique-monthly' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Unique Ranking (Monthly)',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.unique-monthly',
             ],
             'ranking_job' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Job Ranking',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.job',
             ],
             'ranking-honor' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Honor Ranking',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.honor',
             ],
             'ranking-fortress-player' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Fortress War (Player)',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.fortress-player',
             ],
             'ranking-fortress-guild' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Fortress War (Guild)',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.fortress-guild',
@@ -309,25 +307,25 @@ return [
         ],
         'job_menu' => [
             'ranking_job_all' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'All',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.job-all',
             ],
             'ranking_job_hunters' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Hunters',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.job-hunter',
             ],
             'ranking_job_thieves' => [
-                'enable' => true,
+                'enabled' => true,
                 'name' => 'Thieves',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.job-thieve',
             ],
             'ranking_job_traders' => [
-                'enable' => false,
+                'enabled' => false,
                 'name' => 'Traders',
                 'image' => 'fa fa-users',
                 'route' => 'ranking.job-trader',
