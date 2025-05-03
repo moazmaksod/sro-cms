@@ -27,7 +27,10 @@ class RankingController extends Controller
             $data = Char::getPlayerRanking();
         }
 
-        return view('ranking.index', ['data' => $data, 'type' => $request->input('type')]);
+        return view('ranking.index', [
+            'data' => $data,
+            'type' => $request->input('type')
+        ]);
     }
 
     public function player()
@@ -45,10 +48,13 @@ class RankingController extends Controller
     public function unique()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
-        $unique_points = config('global.ranking.unique_points');
+        $uniqueList = config('global.ranking.unique_list');
+        $uniqueImage = config('global.ranking.unique_images');
+
         return view('ranking.ranking.unique', [
             'data' => $data,
-            'unique_points' => $unique_points,
+            'uniqueList' => $uniqueList,
+            'uniqueImage' => $uniqueImage,
         ]);
     }
 

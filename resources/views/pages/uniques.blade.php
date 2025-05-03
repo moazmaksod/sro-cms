@@ -20,8 +20,8 @@
                         @forelse($data as $key => $value)
                             <tr>
                                 <td>
-                                    <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
-                                    {{ config('global.ranking.unique_points')[$value->Value]['name'] }}
+                                    <img src="{{ asset($uniqueImage[1]) }}" alt=""/>
+                                    {{ $uniqueList[$value->Value]['name'] }}
                                 </td>
                                 <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
                                 <td>

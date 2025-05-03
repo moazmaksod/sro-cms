@@ -38,7 +38,7 @@ class ViewServiceProvider extends ServiceProvider
             }
             if(config('global.widgets.fortress_war.enable')) {
                 View::composer(['partials.fortress-war'], function ($view) {
-                    $view->with('fortress_war', SiegeFortress::getFortress());
+                    $view->with('fortress_war', SiegeFortress::getFortressWar());
                 });
             }
             if(config('global.widgets.globals_history.enable')) {

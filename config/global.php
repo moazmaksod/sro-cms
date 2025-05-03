@@ -32,27 +32,27 @@ return [
         'languages' => [
             'en' => [
                 'name' => 'English',
-                'fi' => 'gb'
+                'flag' => 'gb'
             ],
             'tr' => [
                 'name' => 'Türkçe',
-                'fi' => 'tr',
+                'flag' => 'tr',
             ],
             'ar' => [
                 'name' => 'العربية',
-                'fi' => 'sa',
+                'flag' => 'sa',
             ],
             'es' => [
                 'name' => 'Español',
-                'fi' => 'es',
+                'flag' => 'es',
             ],
             'de' => [
                 'name' => 'Deutsch',
-                'fi' => 'de',
+                'flag' => 'de',
             ],
             'zh_CN' => [
                 'name' => '简体中文',
-                'fi' => 'cn',
+                'flag' => 'cn',
             ],
         ],
         'sliders' => [
@@ -62,8 +62,8 @@ return [
                 'desc' => 'Some representative placeholder content for the first slide of the carousel.',
                 'desc_color' => '#fff',
                 'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
-                'btn-label' => 'Sign Up',
-                'btn-url' => '#',
+                'btn_label' => 'Sign Up',
+                'btn_url' => '#',
             ],
             1 => [
                 'title' => 'Example headline',
@@ -71,8 +71,8 @@ return [
                 'desc' => 'Some representative placeholder content for the first slide of the carousel.',
                 'desc_color' => '#fff',
                 'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
-                'btn-label' => 'Play Now',
-                'btn-url' => '#',
+                'btn_label' => 'Play Now',
+                'btn_url' => '#',
             ],
             2 => [
                 'title' => 'Example headline',
@@ -80,66 +80,66 @@ return [
                 'desc' => 'Some representative placeholder content for the first slide of the carousel.',
                 'desc_color' => '#fff',
                 'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
-                'btn-label' => 'Download Now',
-                'btn-url' => '#',
+                'btn_label' => 'Download Now',
+                'btn_url' => '#',
             ],
         ],
         'hero' => [
             'hero_background' => 'https://wallpapercave.com/wp/wp7441040.jpg',
             'hero_label_color' => '#fff',
         ],
-        'news-category' => [
+        'news_category' => [
             'news' => '<span class="badge text-bg-warning">News</span>',
             'update' => '<span class="badge text-bg-primary">Update</span>',
             'event' => '<span class="badge text-bg-success">Event</span>',
         ],
         'footer' => [
             'general' => [
-                1 => [
+                0 => [
                     'name' => 'Home',
                     'url' => '#',
                     'image' => '',
                 ],
-                2 => [
+                1 => [
                     'name' => 'Privacy Policy',
                     'url' => '#',
                     'image' => '',
                 ],
-                3 => [
+                2 => [
                     'name' => 'Terms & Conditions',
                     'url' => '#',
                     'image' => '',
                 ],
             ],
             'social' => [
-                1 => [
+                0 => [
                     'name' => 'Facebook',
                     'url' => 'https://www.facebook.com/',
                     'image' => '<i class="fab fa-facebook-f"></i>',
                 ],
-                2 => [
+                1 => [
                     'name' => 'Discord',
                     'url' => 'https://discord.com/',
                     'image' => '<i class="fab fa-discord"></i>',
                 ],
-                3 => [
+                2 => [
                     'name' => 'Youtube',
                     'url' => 'https://www.youtube.com/',
                     'image' => '<i class="fab fa-youtube"></i>',
                 ],
             ],
             'backlink' => [
-                1 => [
+                0 => [
                     'name' => 'Elitepvpers',
                     'url' => 'https://www.elitepvpers.com/forum/sro-pserver-advertising/',
                     'image' => 'https://www.elitepvpers.com/images/logo.png',
                 ],
-                2 => [
+                1 => [
                     'name' => 'SIlkroad4arab',
                     'url' => 'https://www.silkroad4arab.com/vb/forumdisplay.php?f=85',
                     'image' => 'https://www.silkroad4arab.com/vb/sawaweb/images/logo.png',
                 ],
-                3 => [
+                2 => [
                     'name' => 'SroCave',
                     'url' => 'https://srocave.com/forum/sro-private-server-advertising.34/',
                     'image' => 'https://srocave.com/data/assets/logo/SCLogo.png',
@@ -148,6 +148,11 @@ return [
         ],
     ],
     'widgets' => [
+        'discord' => [
+            'enable' => true,
+            'server_id' => '1004443821570019338',
+            'theme' => 'dark', //dark, light
+        ],
         'globals_history' => [
             'enable' => false,
             'limit' => 5,
@@ -164,51 +169,46 @@ return [
             'enable' => false,
             'limit' => 5,
         ],
-        'discord' => [
-            'enable' => true,
-            'server_id' => '1004443821570019338',
-            'theme' => 'dark', //dark, light
-        ],
         'server_info' => [
             'enable' => true,
             'data' => [
-                1 => [
+                0 => [
                     //To changing icon https://fontawesome.com/icons
                     'icon' => '<i class="fas fa-fw fa-check"></i>',
                     'name' => 'Cap',
                     'value' => '140'
                 ],
-                2 => [
+                1 => [
                     'icon' => '<i class="fa fa-fw fa-flask"></i>',
                     'name' => 'EXP & SP',
                     'value' => '1x'
                 ],
-                3 => [
+                2 => [
                     'icon' => '<i class="fa fa-fw fa-users"></i>',
                     'name' => 'Party EXP',
                     'value' => '1x'
                 ],
-                4 => [
+                3 => [
                     'icon' => '<i class="fa fa-fw fa-coins"></i>',
                     'name' => 'Gold',
                     'value' => '1x'
                 ],
-                5 => [
+                4 => [
                     'icon' => '<i class="fa fa-fw fa-coins"></i>',
                     'name' => 'Drop',
                     'value' => '1x'
                 ],
-                6 => [
+                5 => [
                     'icon' => '<i class="fa fa-fw fa-star"></i>',
                     'name' => 'Trade goods',
                     'value' => '1x'
                 ],
-                7 => [
+                6 => [
                     'icon' => '<i class="fa fa-fw fa-exclamation"></i>',
                     'name' => 'HWID Limit',
                     'value' => '1'
                 ],
-                8 => [
+                7 => [
                     'icon' => '<i class="fa fa-fw fa-exclamation"></i>',
                     'name' => 'IP Limit',
                     'value' => '1'
@@ -217,7 +217,7 @@ return [
         ],
         'event_schedule' => [
             'enable' => false,
-            'data' => [
+            'names' => [
                 'roc' => 'Roc',
                 'medusa' => 'Medusa',
                 'special' => 'Special Trade',
@@ -236,22 +236,22 @@ return [
         ],
         'fortress_war' => [
             'enable' => false,
-            'data' => [
+            'names' => [
                 1 => [
                     'name' => 'Jangan',
-                    'icon' => 'images/sro/etc/fort_jangan.png',
+                    'image' => 'images/sro/etc/fort_jangan.png',
                 ],
                 3 => [
                     'name' => 'Hotan',
-                    'icon' => 'images/sro/etc/fort_hotan.png',
+                    'image' => 'images/sro/etc/fort_hotan.png',
                 ],
                 4 => [
                     'name' => 'Constantinople',
-                    'icon' => 'images/sro/etc/fort_constantinople.png',
+                    'image' => 'images/sro/etc/fort_constantinople.png',
                 ],
                 6 => [
                     'name' => 'Bandit',
-                    'icon' => 'images/sro/etc/fort_bijeokdan.png',
+                    'image' => 'images/sro/etc/fort_bijeokdan.png',
                 ],
             ],
         ],
@@ -261,49 +261,49 @@ return [
             'ranking_player' => [
                 'enable' => true,
                 'name' => 'Player Ranking',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.player',
             ],
             'ranking_guild' => [
                 'enable' => true,
                 'name' => 'Guild Ranking',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.guild',
             ],
             'ranking_unique' => [
                 'enable' => true,
                 'name' => 'Unique Ranking',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.unique',
             ],
             'ranking_unique-monthly' => [
                 'enable' => true,
                 'name' => 'Unique Ranking (Monthly)',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.unique-monthly',
             ],
             'ranking_job' => [
                 'enable' => true,
                 'name' => 'Job Ranking',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.job',
             ],
             'ranking-honor' => [
                 'enable' => true,
                 'name' => 'Honor Ranking',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.honor',
             ],
             'ranking-fortress-player' => [
                 'enable' => true,
                 'name' => 'Fortress War (Player)',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.fortress-player',
             ],
             'ranking-fortress-guild' => [
                 'enable' => true,
                 'name' => 'Fortress War (Guild)',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.fortress-guild',
             ],
         ],
@@ -311,91 +311,94 @@ return [
             'ranking_job_all' => [
                 'enable' => true,
                 'name' => 'All',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.job-all',
             ],
             'ranking_job_hunters' => [
                 'enable' => true,
                 'name' => 'Hunters',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.job-hunter',
             ],
             'ranking_job_thieves' => [
                 'enable' => true,
                 'name' => 'Thieves',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.job-thieve',
             ],
             'ranking_job_traders' => [
                 'enable' => false,
                 'name' => 'Traders',
-                'icon' => 'fa fa-users',
+                'image' => 'fa fa-users',
                 'route' => 'ranking.job-trader',
             ],
         ],
-        'hidden_characters' => [
-            '[GM]Eva',
-            '[GM]m1xawy',
+        'hidden' => [
+            'characters' => [
+                '[GM]Eva',
+                '[GM]m1xawy',
+            ],
+            'guilds' => [
+                'RigidStaff',
+            ],
         ],
-        'hidden_guilds' => [
-            'RigidStaff',
-        ],
-        'top_icons' => [
-            1 => 'images/rank1.png',
-            2 => 'images/rank2.png',
-            3 => 'images/rank3.png',
-        ],
-        'unique_icons' => [
-            1 => 'images/tw_icon_unique.png',
-        ],
-        'unique_points' => [
+        'unique_list' => [
             'MOB_CH_TIGERWOMAN' => [
                 'id' => 1954,
                 'name' => 'Tiger Girl',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 1
             ],
             'MOB_OA_URUCHI' => [
                 'id' => 1982,
                 'name' => 'Uruchi',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 2
             ],
             'MOB_KK_ISYUTARU' => [
                 'id' => 2002,
                 'name' => 'Isyutaru',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 3
             ],
             'MOB_TK_BONELORD' => [
                 'id' => 3810,
                 'name' => 'Lord Yarkan',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 4
             ],
             'MOB_RM_TAHOMET' => [
                 'id' => 3875,
                 'name' => 'Demon Shaitan',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 5
             ],
             'MOB_AM_IVY' => [
                 'id' => 14778,
                 'name' => 'Captain Ivy',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 2
             ],
             'MOB_EU_KERBEROS' => [
                 'id' => 5871,
                 'name' => 'Cerberus',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 1
             ],
             'MOB_RM_ROC' => [
                 'id' => 3877,
                 'name' => 'Roc',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 15
             ],
             'MOB_TQ_WHITESNAKE' => [
                 'id' => 14839,
                 'name' => 'Medusa',
+                'image' => 'images/tw_icon_unique.png',
                 'points' => 10
             ],
         ],
-        'hwan_titles' => [
+        'hwan_title' => [
             'CH' => [
                 1 => 'Captain',
                 2 => 'General',
@@ -416,60 +419,65 @@ return [
         'skill_mastery' => [
             257 => [
                 "name" => "Blade",
-                "icon" => "images/sro/skillmastery/china/mastery_sword.png"
+                "image" => "images/sro/skillmastery/china/mastery_sword.png"
             ],
             258 => [
                 "name" => "Glavie",
-                "icon" => "images/sro/skillmastery/china/mastery_spear.png"
+                "image" => "images/sro/skillmastery/china/mastery_spear.png"
             ],
             259 => [
                 "name" => "Bow",
-                "icon" => "images/sro/skillmastery/china/mastery_bow.png"
+                "image" => "images/sro/skillmastery/china/mastery_bow.png"
             ],
             273 => [
                 "name" => "Cold",
-                "icon" => "images/sro/skillmastery/china/mastery_cold.png"
+                "image" => "images/sro/skillmastery/china/mastery_cold.png"
             ],
             274 => [
                 "name" => "Lightning",
-                "icon" => "images/sro/skillmastery/china/mastery_lightning.png"
+                "image" => "images/sro/skillmastery/china/mastery_lightning.png"
             ],
             275 => [
                 "name" => "Fire",
-                "icon" => "images/sro/skillmastery/china/mastery_fire.png"
+                "image" => "images/sro/skillmastery/china/mastery_fire.png"
             ],
             276 => [
                 "name" => "Force",
-                "icon" => "images/sro/skillmastery/china/mastery_gigong.png"
+                "image" => "images/sro/skillmastery/china/mastery_gigong.png"
             ],
             277 => [
                 "name" => "Recovery",
-                "icon" => "images/sro/skillmastery/china/mastery_water.png"
+                "image" => "images/sro/skillmastery/china/mastery_water.png"
             ],
             513 => [
                 "name" => "Warrior",
-                "icon" => "images/sro/skillmastery/europe/eu_warrior.png"
+                "image" => "images/sro/skillmastery/europe/eu_warrior.png"
             ],
             514 => [
                 "name" => "Wizard",
-                "icon" => "images/sro/skillmastery/europe/eu_wizard.png"
+                "image" => "images/sro/skillmastery/europe/eu_wizard.png"
             ],
             515 => [
                 "name" => "Rogue",
-                "icon" => "images/sro/skillmastery/europe/eu_rog.png"
+                "image" => "images/sro/skillmastery/europe/eu_rog.png"
             ],
             516 => [
                 "name" => "Warlock",
-                "icon" => "images/sro/skillmastery/europe/eu_warlock.png"
+                "image" => "images/sro/skillmastery/europe/eu_warlock.png"
             ],
             517 => [
                 "name" => "Bard",
-                "icon" => "images/sro/skillmastery/europe/eu_bard.png"
+                "image" => "images/sro/skillmastery/europe/eu_bard.png"
             ],
             518 => [
                 "name" => "Cleric",
-                "icon" => "images/sro/skillmastery/europe/eu_cleric.png"
+                "image" => "images/sro/skillmastery/europe/eu_cleric.png"
             ],
+        ],
+        'top_image' => [
+            1 => 'images/rank1.png',
+            2 => 'images/rank2.png',
+            3 => 'images/rank3.png',
         ],
         'honor_level' => [
             1 => 'images/com_honor_level_1.png',
@@ -478,21 +486,21 @@ return [
             4 => 'images/com_honor_level_4.png',
             5 => 'images/com_honor_level_5.png',
         ],
-        'job_type_icons' => [
+        'job_type' => [
             1 => [
                 'name' => 'Hunter',
-                'small_icon' => 'images/com_job_hunter.png',
-                'icon' => 'images/job_hunter_icon.png',
+                'small_image' => 'images/com_job_hunter.png',
+                'image' => 'images/job_hunter_icon.png',
             ],
             2 => [
                 'name' => 'Thief',
-                'small_icon' => 'images/com_job_thief.png',
-                'icon' => 'images/job_teaf_icon.png',
+                'small_image' => 'images/com_job_thief.png',
+                'image' => 'images/job_teaf_icon.png',
             ],
             3 => [
                 'name' => 'Trader',
-                'small_icon' => 'images/com_job_merchant.png',
-                'icon' => 'images/job_trader_icon.png',
+                'small_image' => 'images/com_job_merchant.png',
+                'image' => 'images/job_trader_icon.png',
             ],
         ],
         'vip_level' => [
@@ -543,14 +551,14 @@ return [
             16 => 'Training Administrator',
             32 => 'Military Engineer',
         ],
-        'race' => [
+        'character_race' => [
             0 => [
                 'name' => 'Chinese',
-                'icon' => 'images/com_kindred_china.png',
+                'image' => 'images/com_kindred_china.png',
             ],
             1 => [
                 'name' => 'Europe',
-                'icon' => 'images/com_kindred_europe.png',
+                'image' => 'images/com_kindred_europe.png',
             ],
         ],
         'character_image' => [
@@ -567,7 +575,6 @@ return [
             1917 => "images/character/char_ch_man11.png",
             1918 => "images/character/char_ch_man12.png",
             1919 => "images/character/char_ch_man13.png",
-
             1920 => "images/character/char_ch_woman1.png",
             1921 => "images/character/char_ch_woman2.png",
             1922 => "images/character/char_ch_woman3.png",
@@ -581,7 +588,6 @@ return [
             1930 => "images/character/char_ch_woman11.png",
             1931 => "images/character/char_ch_woman12.png",
             1932 => "images/character/char_ch_woman13.png",
-
             14717 => "images/character/char_eu_man1.png",
             14718 => "images/character/char_eu_man2.png",
             14719 => "images/character/char_eu_man3.png",
@@ -595,7 +601,6 @@ return [
             14727 => "images/character/char_eu_man11.png",
             14728 => "images/character/char_eu_man12.png",
             14729 => "images/character/char_eu_man13.png",
-
             14730 => "images/character/char_eu_woman1.png",
             14731 => "images/character/char_eu_woman2.png",
             14732 => "images/character/char_eu_woman3.png",
@@ -633,7 +638,7 @@ return [
             1 => 'Seal of Moon',
             0 => 'Seal of Sun'
         ],
-        'rare_name' => [
+        'sox_name' => [
             'SET_A_RARE' => [
                 0 => 'Destruction',
                 1 => 'Destruction',

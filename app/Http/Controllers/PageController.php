@@ -59,7 +59,6 @@ class PageController extends Controller
         $uniqueList = config('global.ranking.unique_points');
 
         $data = [];
-
         foreach ($uniqueKill as $value) {
             $data[$value->Value][] = $value;
         }
