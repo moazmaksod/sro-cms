@@ -1,5 +1,4 @@
-DROP TABLE [dbo].[_Rigid_MagOptDesc]
-GO
+DROP TABLE IF EXISTS [dbo].[_Rigid_MagOptDesc]
 
 CREATE TABLE [dbo].[_Rigid_MagOptDesc](
     [id] [int] NOT NULL,

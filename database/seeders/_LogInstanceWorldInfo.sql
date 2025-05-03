@@ -1,5 +1,4 @@
-DROP TABLE [dbo].[_LogInstanceWorldInfo]
-GO
+DROP TABLE IF EXISTS [dbo].[_LogInstanceWorldInfo]
 
 CREATE TABLE [dbo].[_LogInstanceWorldInfo](
     [WorldID] [int] NOT NULL,
@@ -9,6 +8,3 @@ CREATE TABLE [dbo].[_LogInstanceWorldInfo](
     [ValueCodeName128] [varchar](129) NOT NULL,
     [Value] [varchar](129) NULL
     ) ON [PRIMARY]
-    GO
-
-

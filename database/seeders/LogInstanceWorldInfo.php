@@ -16,7 +16,7 @@ class LogInstanceWorldInfo extends Seeder
     {
         $files = [
             'database/seeders/_LogInstanceWorldInfo.sql',
-            'database/seeders/_AddLogInstanceWorldInfo.sql',
+            //'database/seeders/_AddLogInstanceWorldInfo.sql',
         ];
 
         foreach ($files as $file) {

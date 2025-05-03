@@ -28,7 +28,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->muUser->muEmail->EmailAddr }}</td>
+                                <td>{{ $user->muUser->muEmail->EmailAddr ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>

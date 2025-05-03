@@ -16,7 +16,7 @@ class LogChatMessage extends Seeder
     {
         $files = [
             'database/seeders/_LogChatMessage.sql',
-            'database/seeders/_InsertLogChatMessage.sql',
+            //'database/seeders/_InsertLogChatMessage.sql',
         ];
 
         foreach ($files as $file) {
