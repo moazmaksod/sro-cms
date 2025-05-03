@@ -3,7 +3,7 @@
 return [
     'general' => [
         'server' => [
-            'version' => env('SRO_VERSION', 'vSRO'), // or 'iSRO'
+            'version' => env('SRO_VERSION', 'iSRO'), // or 'vSRO'
         ],
         'cache' => [
             'sql' => true,
