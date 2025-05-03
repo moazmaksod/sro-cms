@@ -77,30 +77,30 @@ class MuUser extends Model
     {
         return Cache::remember("account_jcash_{$this->JID}", now()->addMinutes(config('global.general.cache.data.account_info')), function () {
             return collect(DB::select("
-            Declare @ReturnValue Int
-            Declare @PremiumSilk Int
-            Declare @Silk Int;
-            Declare @VipLevel Int
-            Declare @UsageMonth Int
-            Declare @Usage3Month Int;
-            SET NOCOUNT ON;
+                Declare @ReturnValue Int
+                Declare @PremiumSilk Int
+                Declare @Silk Int;
+                Declare @VipLevel Int
+                Declare @UsageMonth Int
+                Declare @Usage3Month Int;
+                SET NOCOUNT ON;
 
-            Execute @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash]
-                ".$this->JID.",
-                @PremiumSilk Output,
-                @Silk Output,
-                @VipLevel Output,
-                @UsageMonth Output,
-                @Usage3Month Output;
+                Execute @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash]
+                    ".$this->JID.",
+                    @PremiumSilk Output,
+                    @Silk Output,
+                    @VipLevel Output,
+                    @UsageMonth Output,
+                    @Usage3Month Output;
 
-            Select
-                @ReturnValue AS 'ErrorCode',
-                @PremiumSilk AS 'PremiumSilk',
-                @Silk AS 'Silk',
-                @UsageMonth AS 'MonthUsage',
-                @Usage3Month AS 'ThreeMonthUsage'
-            "
-            ))->first();
+                Select
+                    @ReturnValue AS 'ErrorCode',
+                    @PremiumSilk AS 'PremiumSilk',
+                    @Silk AS 'Silk',
+                    @UsageMonth AS 'MonthUsage',
+                    @Usage3Month AS 'ThreeMonthUsage'
+                "
+                ))->first();
         });
     }
 

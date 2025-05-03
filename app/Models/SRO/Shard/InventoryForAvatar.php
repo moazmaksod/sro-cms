@@ -50,7 +50,6 @@ class InventoryForAvatar extends Model
     {
         return Cache::remember("character_info_inventory_avatar_{$characterId}", now()->addMinutes(config('global.general.cache.data.character_info')), static function () use ($characterId) {
             return self::where('CharID', '=', $characterId)
-            ->where('ItemID', '>', 1)
             ->join('_Items as Items', 'Items.ID64', 'ItemID')
             ->leftJoin('_BindingOptionWithItem as Binding', static function ($join) {
                 $join->on('Binding.nItemDBID', 'Items.ID64');
@@ -58,6 +57,7 @@ class InventoryForAvatar extends Model
             })
             ->join('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
             ->join('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
+            ->where('ItemID', '>', 1)
             ->get()
             ->toArray();
         });

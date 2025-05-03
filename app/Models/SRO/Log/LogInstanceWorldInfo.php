@@ -38,9 +38,9 @@ class LogInstanceWorldInfo extends Model
         $uniqueList = config('global.ranking.unique_points');
 
         $case = 'SUM(CASE ';
-        foreach ($uniqueList as $mobCode => $points) {
+        foreach ($uniqueList as $uniqueCode => $points) {
             $points = $points['points'];
-            $case .= "WHEN _LogInstanceWorldInfo.Value = '$mobCode' THEN $points ";
+            $case .= "WHEN _LogInstanceWorldInfo.Value = '$uniqueCode' THEN $points ";
         }
         $case .= 'ELSE 0 END) AS Points';
         $startOfMonth = Carbon::now()->startOfMonth();
@@ -78,10 +78,9 @@ class LogInstanceWorldInfo extends Model
 
     public static function getUniquesKill($limit = 25, $CharID = 0)
     {
-        $unique_points = array_keys(config('global.ranking.unique_points'));
-        return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes(config('global.general.cache.data.unique_history')), function () use ($CharID, $limit, $unique_points) {
-            return self::select(
-                [
+        $uniqueList = array_keys(config('global.ranking.unique_points'));
+        return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes(config('global.general.cache.data.unique_history')), function () use ($CharID, $limit, $uniqueList) {
+            return self::select([
                     '_LogInstanceWorldInfo.CharID',
                     '_Char.CharName16',
                     '_Char.RefObjID',
@@ -93,10 +92,9 @@ class LogInstanceWorldInfo extends Model
                     '_RefRegion.AreaName',
                     '_LogInstanceWorldInfo.EventTime'
                 ])
-
                 ->leftJoin('SILKROAD_R_SHARD.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
                 ->leftJoin('SILKROAD_R_SHARD.dbo._RefRegion', '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
-                ->whereIn('_LogInstanceWorldInfo.Value', $unique_points)
+                ->whereIn('_LogInstanceWorldInfo.Value', $uniqueList)
                 ->whereIn('_LogInstanceWorldInfo.ValueCodeName128', ['KILL_UNIQUE_MONSTER', 'SPAWN_UNIQUE_MONSTER'])
                 ->when($CharID > 0, function ($query) use ($CharID) {
                     $query->where('_LogInstanceWorldInfo.CharID', $CharID);

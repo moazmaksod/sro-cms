@@ -40,13 +40,13 @@ class Guild extends Model
                 DB::raw("(SELECT CharName FROM _GuildMember WHERE GuildID = _Guild.ID AND MemberClass = 0) AS LeaderName"),
                 DB::raw("(SELECT COUNT(CharID) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalMember"),
                 DB::raw("ISNULL((
-                SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
-                SUM(ISNULL(_Items.OptLevel, 0)) +
-                SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
-            ), 0) AS ItemPoints")
+                    SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
+                    SUM(ISNULL(_Items.OptLevel, 0)) +
+                    SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
+                ), 0) AS ItemPoints")
             );
 
             if (config('global.server.version') !== 'vSRO') {
@@ -104,18 +104,18 @@ class Guild extends Model
     public static function getFortressGuildRanking($limit = 25)
     {
         return Cache::remember("ranking_fortress_guild_{$limit}", now()->addMinutes(config('global.general.cache.data.ranking_fortress_guild')), function () use ($limit) {
-            return self::join('_GuildMember', '_Guild.ID', '=', '_GuildMember.GuildID')
-                ->select(
-                    '_Guild.ID',
-                    '_Guild.Name',
-                    DB::raw('(SELECT SUM(GuildWarKill) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalKills'),
-                    DB::raw('(SELECT SUM(GuildWarKilled) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalDeath')
-                )
-                ->where('_Guild.ID', '>', 0)
-                ->groupBy('_Guild.ID', '_Guild.Name')
-                ->orderByDesc('TotalKills')
-                ->limit($limit)
-                ->get();
+            return self::select(
+                '_Guild.ID',
+                '_Guild.Name',
+                DB::raw('(SELECT SUM(GuildWarKill) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalKills'),
+                DB::raw('(SELECT SUM(GuildWarKilled) FROM _GuildMember WHERE GuildID = _Guild.ID) AS TotalDeath')
+            )
+            ->join('_GuildMember', '_Guild.ID', '=', '_GuildMember.GuildID')
+            ->where('_Guild.ID', '>', 0)
+            ->groupBy('_Guild.ID', '_Guild.Name')
+            ->orderByDesc('TotalKills')
+            ->limit($limit)
+            ->get();
         });
     }
 
@@ -131,9 +131,9 @@ class Guild extends Model
         return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildID) {
             return self::where('Alliance', function ($query) use ($GuildID) {
                 $query->select('Alliance')
-                    ->from('_Guild')
-                    ->where('ID', $GuildID)
-                    ->where('Alliance', '>', 0);
+                ->from('_Guild')
+                ->where('ID', $GuildID)
+                ->where('Alliance', '>', 0);
             })
             ->pluck('Name');
         });

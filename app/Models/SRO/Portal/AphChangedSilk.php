@@ -77,21 +77,21 @@ class AphChangedSilk extends Model
     public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
         $data = Cache::remember("account_info_donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes(config('global.general.cache.data.account_info')), function () use ($paginate, $page, $jid) {
-            return self::leftJoin('APH_CPItemSaleDetails', 'APH_CPItemSaleDetails.PTInvoiceID', '=', 'APH_ChangedSilk.PTInvoiceID')
-                ->leftJoin('M_CPItem', 'M_CPItem.CPItemID', '=', 'APH_CPItemSaleDetails.CPItemID')
-                ->select(
-                    'M_CPItem.CPItemCode',
-                    'M_CPItem.CPItemName',
-                    'APH_ChangedSilk.PTInvoiceID',
-                    'APH_ChangedSilk.RemainedSilk',
-                    'APH_ChangedSilk.ChangedSilk',
-                    'APH_ChangedSilk.SilkType',
-                    'APH_ChangedSilk.ChangeDate',
-                    'APH_ChangedSilk.AvailableStatus'
-                )
-                ->where('APH_ChangedSilk.JID', $jid)
-                ->orderBy('APH_ChangedSilk.ChangeDate', 'desc')
-                ->get();
+            return self::select(
+                'M_CPItem.CPItemCode',
+                'M_CPItem.CPItemName',
+                'APH_ChangedSilk.PTInvoiceID',
+                'APH_ChangedSilk.RemainedSilk',
+                'APH_ChangedSilk.ChangedSilk',
+                'APH_ChangedSilk.SilkType',
+                'APH_ChangedSilk.ChangeDate',
+                'APH_ChangedSilk.AvailableStatus'
+            )
+            ->leftJoin('APH_CPItemSaleDetails', 'APH_CPItemSaleDetails.PTInvoiceID', '=', 'APH_ChangedSilk.PTInvoiceID')
+            ->leftJoin('M_CPItem', 'M_CPItem.CPItemID', '=', 'APH_CPItemSaleDetails.CPItemID')
+            ->where('APH_ChangedSilk.JID', $jid)
+            ->orderBy('APH_ChangedSilk.ChangeDate', 'desc')
+            ->get();
         });
 
         return new LengthAwarePaginator(

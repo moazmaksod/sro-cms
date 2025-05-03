@@ -78,13 +78,13 @@ class Char extends Model
                 '_Char.Strength',
                 '_Char.Intellect',
                 DB::raw("ISNULL((
-                SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
-                SUM(ISNULL(_Items.OptLevel, 0)) +
-                SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
-                SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
-            ), 0) AS ItemPoints")
+                    SUM(ISNULL(_BindingOptionWithItem.nOptValue, 0)) +
+                    SUM(ISNULL(_Items.OptLevel, 0)) +
+                    SUM(ISNULL(_RefObjCommon.ReqLevel1, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_A_RARE%' THEN 5 ELSE 0 END, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_B_RARE%' THEN 10 ELSE 0 END, 0)) +
+                    SUM(ISNULL(CASE WHEN _RefObjCommon.CodeName128 LIKE '%_C_RARE%' THEN 15 ELSE 0 END, 0))
+                ), 0) AS ItemPoints")
             );
 
             if (config('global.server.version') === 'vSRO') {

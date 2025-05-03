@@ -33,27 +33,27 @@ class CharTrijob extends Model
 
     public static function getJobRanking($limit = 25, $type = 0)
     {
-        return Cache::remember("ranking_job_{$limit}_{$type}", now()->addMinutes(config('global.general.cache.data.ranking_job')), function () use ($type, $limit) {
-            return self::join('_Char', '_Char.CharID', '=', '_CharTrijob.CharID')
-                ->join('_User', '_User.CharID', '=', '_Char.CharID')
-                ->select(
-                    '_Char.CharID',
-                    '_Char.CharName16',
-                    '_Char.NickName16',
-                    '_Char.RefObjID',
-                    '_CharTrijob.JobType',
-                    '_CharTrijob.Level',
-                    '_CharTrijob.Exp',
-                )
-                ->where('_Char.deleted', 0)
-                ->where('_Char.CharID', '>', 0)
-                ->where('_CharTrijob.JobType', '!=', 0)
-                ->when($type > 0, function ($query) use ($type) {
-                    $query->where('_CharTrijob.JobType', '=', $type);
-                })
-                ->orderByDesc('_CharTrijob.Exp')
-                ->limit($limit)
-                ->get();
+        return Cache::remember("ranking_job_vsro_{$limit}_{$type}", now()->addMinutes(config('global.general.cache.data.ranking_job')), function () use ($type, $limit) {
+            return self::select(
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.NickName16',
+                '_Char.RefObjID',
+                '_CharTrijob.JobType',
+                '_CharTrijob.Level',
+                '_CharTrijob.Exp',
+            )
+            ->join('_Char', '_Char.CharID', '=', '_CharTrijob.CharID')
+            ->join('_User', '_User.CharID', '=', '_Char.CharID')
+            ->where('_Char.deleted', 0)
+            ->where('_Char.CharID', '>', 0)
+            ->where('_CharTrijob.JobType', '!=', 0)
+            ->when($type > 0, function ($query) use ($type) {
+                $query->where('_CharTrijob.JobType', '=', $type);
+            })
+            ->orderByDesc('_CharTrijob.Exp')
+            ->limit($limit)
+            ->get();
         });
     }
 }

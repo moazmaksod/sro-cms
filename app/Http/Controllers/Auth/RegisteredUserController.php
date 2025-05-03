@@ -42,9 +42,9 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $rules = [
-            'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class,],
-            'email' => ['required', 'string', 'email', 'max:70',],
-            'password' => ['required', 'string', 'min:6', 'max:32', 'confirmed', Rules\Password::defaults(),],
+            'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'max:70'],
+            'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
         ];
 

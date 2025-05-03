@@ -117,10 +117,6 @@ class Inventory extends Model
     {
         return Cache::remember("character_info_inventory_{$characterId}", now()->addMinutes(config('global.general.cache.data.character_info')), static function () use ($minSlot, $maxSlot, $characterId) {
             return self::where('CharID', '=', $characterId)
-            ->where('ItemID', '>', '0')
-            ->where('slot', '<', $maxSlot)
-            ->where('slot', '>=', $minSlot)
-            ->where('slot', '!=', 8)
             ->join('_Items as Items', 'Items.ID64', '_Inventory.ItemID')
             ->leftJoin('_BindingOptionWithItem as Binding', static function ($join) {
                 $join->on('Binding.nItemDBID', 'Items.ID64');
@@ -128,6 +124,10 @@ class Inventory extends Model
             })
             ->join('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
             ->join('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
+            ->where('ItemID', '>', '0')
+            ->where('slot', '<', $maxSlot)
+            ->where('slot', '>=', $minSlot)
+            ->where('slot', '!=', 8)
             ->get()
             ->toArray();
         });

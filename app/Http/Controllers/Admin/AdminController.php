@@ -12,14 +12,12 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $data = "Test from admin controller";
         $userCount = TbUser::getTbUserCount();
         $charCount = Char::getCharCount();
         $totalGold = Char::getGoldSum();
         $totalSilk = AphChangedSilk::getSilkSum();
 
         return view('admin.index', [
-            'data' => $data,
             'userCount' => $userCount,
             'charCount' => $charCount,
             'totalGold' => $totalGold,

@@ -49,12 +49,17 @@ class SiegeFortress extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
-    public static function getFortress()
+    public static function getFortressWar()
     {
-        return Cache::remember('fortress_war_widget', now()->addMinutes(config('global.general.cache.data.fortress_war')), function () {
-            return self::select(["FortressID", "GuildID", "TaxRatio", "_Guild.Name"])
-                ->join("_Guild", "_SiegeFortress.GuildID", "=", "_Guild.ID")
-                ->get();
+        return Cache::remember('fortress_war', now()->addMinutes(config('global.general.cache.data.fortress_war')), function () {
+            return self::select([
+                "FortressID",
+                "GuildID",
+                "TaxRatio",
+                "_Guild.Name"
+            ])
+            ->join("_Guild", "_SiegeFortress.GuildID", "=", "_Guild.ID")
+            ->get();
         });
     }
 

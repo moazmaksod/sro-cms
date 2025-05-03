@@ -60,26 +60,26 @@ class GuildMember extends Model
     public static function getFortressPlayerRanking($limit = 25)
     {
         return Cache::remember("ranking_fortress_player_{$limit}", now()->addMinutes(config('global.general.cache.data.ranking_fortress_player')), function () use ($limit) {
-            return self::join('_Char', '_Char.CharID', '=', '_GuildMember.CharID')
-                ->select(
-                    '_Char.CharID',
-                    '_Char.CharName16',
-                    '_Char.RefObjID',
-                    '_GuildMember.GuildWarKill',
-                    '_GuildMember.GuildWarKilled'
-                )
-                ->where('_Char.deleted', '=', 0)
-                ->where('_Char.CharID', '>', 0)
-                ->groupBy(
-                    '_Char.CharID',
-                    '_Char.CharName16',
-                    '_Char.RefObjID',
-                    '_GuildMember.GuildWarKill',
-                    '_GuildMember.GuildWarKilled',
-                )
-                ->orderByDesc('_GuildMember.GuildWarKill')
-                ->limit($limit)
-                ->get();
+            return self::select(
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.RefObjID',
+                '_GuildMember.GuildWarKill',
+                '_GuildMember.GuildWarKilled'
+            )
+            ->join('_Char', '_Char.CharID', '=', '_GuildMember.CharID')
+            ->where('_Char.deleted', '=', 0)
+            ->where('_Char.CharID', '>', 0)
+            ->groupBy(
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.RefObjID',
+                '_GuildMember.GuildWarKill',
+                '_GuildMember.GuildWarKilled',
+            )
+            ->orderByDesc('_GuildMember.GuildWarKill')
+            ->limit($limit)
+            ->get();
         });
     }
 
@@ -87,12 +87,12 @@ class GuildMember extends Model
     {
         return Cache::remember("guild_info_members_{$GuildID}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildID) {
             return self::where('GuildID', $GuildID)
-                ->orderBy('MemberClass', 'asc')
-                ->orderBy('Contribution', 'desc')
-                ->orderBy('GuildWarKill', 'desc')
-                ->orderBy('CharLevel', 'desc')
-                ->orderBy('GP_Donation', 'desc')
-                ->get();
+            ->orderBy('MemberClass', 'asc')
+            ->orderBy('Contribution', 'desc')
+            ->orderBy('GuildWarKill', 'desc')
+            ->orderBy('CharLevel', 'desc')
+            ->orderBy('GP_Donation', 'desc')
+            ->get();
         });
     }
 }
