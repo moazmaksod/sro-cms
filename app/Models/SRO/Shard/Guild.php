@@ -29,7 +29,7 @@ class Guild extends Model
 
     public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
-        return Cache::remember('ranking_guild_'.$limit.'_'.$GuildID.'_'.$Name, config('global.general.cache.data.ranking-guild'), function () use ($Name, $GuildID, $limit) {
+        return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes(config('global.general.cache.data.ranking_guild')), function () use ($Name, $GuildID, $limit) {
             return self::select(
                 '_Guild.ID',
                 '_Guild.Name',
@@ -91,7 +91,7 @@ class Guild extends Model
 
     public static function getFortressGuildRanking($limit = 25)
     {
-        return Cache::remember('ranking_fortress_guild_'.$limit, config('global.general.cache.data.ranking_fortress_guild'), function () use ($limit) {
+        return Cache::remember("ranking_fortress_guild_{$limit}", now()->addMinutes(config('global.general.cache.data.ranking_fortress_guild')), function () use ($limit) {
             return self::join('_GuildMember', '_Guild.ID', '=', '_GuildMember.GuildID')
                 ->select(
                     '_Guild.ID',
@@ -109,14 +109,14 @@ class Guild extends Model
 
     public static function getGuildIDByName($GuildName)
     {
-        return Cache::remember('guild_name_'.$GuildName, config('global.general.cache.data.guild'), function () use ($GuildName) {
+        return Cache::remember("guild_info_name_{$GuildName}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildName) {
             return self::select('ID')->where('Name', $GuildName)->first()->ID ?? null;
         });
     }
 
     public static function getGuildInfoAlliance($GuildID)
     {
-        return Cache::remember('guild_alliance_'.$GuildID, config('global.general.cache.data.guild'), function () use ($GuildID) {
+        return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes(config('global.general.cache.data.guild_info')), function () use ($GuildID) {
             return self::where('Alliance', function ($query) use ($GuildID) {
                 $query->select('Alliance')
                     ->from('_Guild')

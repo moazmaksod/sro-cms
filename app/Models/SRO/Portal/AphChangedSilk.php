@@ -74,7 +74,7 @@ class AphChangedSilk extends Model
 
     public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
-        $data = Cache::remember("donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes(config('global.general.cache.data.account')), function () use ($paginate, $page, $jid) {
+        $data = Cache::remember("donate_history_{$jid}_{$paginate}_{$page}", now()->addMinutes(config('global.general.cache.data.account_info')), function () use ($paginate, $page, $jid) {
             return self::leftJoin('APH_CPItemSaleDetails', 'APH_CPItemSaleDetails.PTInvoiceID', '=', 'APH_ChangedSilk.PTInvoiceID')
                 ->leftJoin('M_CPItem', 'M_CPItem.CPItemID', '=', 'APH_CPItemSaleDetails.CPItemID')
                 ->select(

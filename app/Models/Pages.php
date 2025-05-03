@@ -20,7 +20,7 @@ class Pages extends Model
 
     public static function getPage($slug)
     {
-        return Cache::remember('pages_view_'.$slug, now()->addMinutes(config('global.general.cache.data.pages')), function () use ($slug) {
+        return Cache::remember("pages_view_{$slug}", now()->addMinutes(config('global.general.cache.data.pages')), function () use ($slug) {
             return self::where('slug', $slug)->first();
         });
     }

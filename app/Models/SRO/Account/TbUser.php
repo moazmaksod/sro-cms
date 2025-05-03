@@ -85,7 +85,7 @@ class TbUser extends Model
 
     public static function getTbUserCount()
     {
-        return Cache::remember('game_account_count', config('global.general.cache.data.account'), function () {
+        return Cache::remember('game_account_count', now()->addMinutes(config('global.general.cache.data.account_info')), function () {
             return self::count();
         });
     }

@@ -35,7 +35,7 @@ class LogChatMessage extends Model
 
     public static function getGlobalsHistory($limit = 25, $CharName = null)
     {
-        $globals_history =  Cache::remember('globals_history_'.$limit.'_'.$CharName, now()->addMinutes(config('global.general.cache.data.globals_history')), function () use ($CharName, $limit) {
+        $globals_history =  Cache::remember("globals_history_{$limit}_{$CharName}", now()->addMinutes(config('global.general.cache.data.globals_history')), function () use ($CharName, $limit) {
             return self::select(['_Char.CharID', '_Char.RefObjID', 'CharName', 'EventTime', 'Comment'])
                 ->leftJoin(DB::raw('SILKROAD_R_SHARD.._Char'), function ($join) {
                     $join->on(DB::raw('_Char.CharName16 COLLATE Latin1_General_CI_AS'), '=', DB::raw('_LogChatMessage.CharName COLLATE Latin1_General_CI_AS'));
@@ -54,14 +54,15 @@ class LogChatMessage extends Model
             $serials = $matches[0] ?? [];
 
             if (!empty($serials)) {
-                $items = Items::getItemnameBySerial($serials);
+                $items = Items::getItemNameBySerial($serials);
 
                 foreach ($serials as $serial) {
                     if (isset($items[$serial])) {
-                        $itemName = $items[$serial]['ItemName'];
-                        $value->Comment = str_replace($serial, '<'.$itemName.'>', $value->Comment);
+                        //$itemName = "<img src='".asset("/images/sro/".$items[$serial]['IconPath'].".png")."' alt='' width='32' height='32'><u><span><</span>".$items[$serial]['ItemName']."<span>>[+".$items[$serial]['OptLevel']."]</span></u>";
+                        $itemName = "<u><span><</span>".$items[$serial]['ItemName']."<span>>[+".$items[$serial]['OptLevel']."]</span></u>";
+                        $value->Comment = str_replace($serial, $itemName, $value->Comment);
                     }else {
-                        $value->Comment = str_replace($serial, '<ItemName>', $value->Comment);
+                        $value->Comment = str_replace($serial, '<u><span><</span>Unknown<span>></span></u>', $value->Comment);
                     }
                 }
             }

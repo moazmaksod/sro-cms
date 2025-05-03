@@ -75,7 +75,7 @@ class MuUser extends Model
 
     public function getJCash()
     {
-        return Cache::remember('account_j_cash_'.$this->JID, config('global.general.cache.data.silk'), function () {
+        return Cache::remember("account_jcash_{$this->JID}", now()->addMinutes(config('global.general.cache.data.account_info')), function () {
             return collect(DB::select("
             Declare @ReturnValue Int
             Declare @PremiumSilk Int

@@ -7,7 +7,7 @@
             <ul class="list-unstyled">
                 @forelse($globals_history as $value)
                     <li class="mb-3">
-                        <p class="mb-0">{{ $value->Comment }}</p>
+                        <p class="mb-0">{!! $value->Comment !!}</p>
                         <small>
                             {{ __('Sent by:') }}
                             @if(!empty($value->CharName))

@@ -110,12 +110,13 @@ class Items extends Model
         'MagParam12' => 'integer',
     ];
 
-    public static function getItemnameBySerial($serials): array
+    public static function getItemNameBySerial($serials): array
     {
-        return Cache::remember('itemname_bySerial_'.$serials[0], now()->addMinutes(config('global.general.cache.data.globals_history')), static function () use ($serials) {
-            return self::join('_RefObjCommon', '_Items.RefItemID', '=', '_RefObjCommon.ID')
+        return Cache::remember("globals_history_serial_{$serials[0]}", now()->addMinutes(config('global.general.cache.data.globals_history')), static function () use ($serials) {
+            return self::select('_Items.Serial64', '_Items.OptLevel', '_Rigid_ItemNameDesc.ENG as ItemName',
+                DB::raw("REPLACE(REPLACE(_RefObjCommon.AssocFileIcon128, '\\', '/'), '.ddj', '') as IconPath"))
+                ->join('_RefObjCommon', '_Items.RefItemID', '=', '_RefObjCommon.ID')
                 ->leftJoin(DB::raw('SILKROAD_R_ACCOUNT.._Rigid_ItemNameDesc'), '_Rigid_ItemNameDesc.StrID', '=', '_RefObjCommon.NameStrID128')
-                ->select('_Items.Serial64', '_Rigid_ItemNameDesc.ENG as ItemName')
                 ->whereIn('Serial64', $serials)
                 ->get()
                 ->keyBy('Serial64')
