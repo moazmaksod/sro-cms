@@ -68,7 +68,7 @@
                             <tbody>
                             <tr>
                                 <th scope="row">Portal JID</th>
-                                <td>{{ $user->PortalJID ?? '' }}</td>
+                                <td>{{ $user->PortalJID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
@@ -76,7 +76,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->muUser->muEmail->EmailAddr ?? '' }}</td>
+                                <td>{{ $user->muUser->muEmail->EmailAddr }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
