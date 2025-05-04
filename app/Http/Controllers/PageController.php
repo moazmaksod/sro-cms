@@ -71,19 +71,18 @@ class PageController extends Controller
 
     public function uniques_advanced()
     {
-        $uniqueKill = LogInstanceWorldInfo::getUniquesKill(9999, 0);
-        $uniqueRanking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
+        $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0);
+        $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
         $config = config('global.ranking.uniques');
 
-        $data = [];
-        foreach ($uniqueKill as $value) {
+        foreach ($kills as $value) {
             $data[$value->Value][] = $value;
         }
 
         return view('pages.uniques-advanced', [
             'data' => $data,
+            'ranking' => $ranking,
             'config' => $config,
-            'uniqueRanking' => $uniqueRanking,
         ]);
     }
 

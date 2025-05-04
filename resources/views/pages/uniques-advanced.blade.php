@@ -11,8 +11,8 @@
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h3>
-                                        <img src="{{ asset($config[$value->Value]['image']) }}" alt=""/>
-                                        {{ $config[$value->Value]['name'] }}
+                                        <img src="{{ asset($config[$key]['image']) }}" alt=""/>
+                                        {{ $config[$key]['name'] }}
                                     </h3>
                                     <small>{{ __('Last 5 Killers') }}</small>
                                 </div>
@@ -38,7 +38,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @foreach($uniqueRanking as $rank)
+                                                        @foreach($ranking as $rank)
                                                             @if($rank->CharName16 == $values->CharName16)
                                                                 {{ $rank->Points ?? 0 }}
                                                             @endif

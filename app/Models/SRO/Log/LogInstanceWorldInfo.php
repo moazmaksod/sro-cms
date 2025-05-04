@@ -62,9 +62,6 @@ class LogInstanceWorldInfo extends Model
                 ->when($month == 1, function ($query) use ($startOfMonth) {
                     $query->where('_LogInstanceWorldInfo.EventTime', '>=', $startOfMonth);
                 })
-                ->when(!is_null($limit), function ($query) use ($limit) {
-                    $query->limit($limit);
-                })
                 ->groupBy(
                     '_Char.CharName16',
                     '_Char.RefObjID',
@@ -73,6 +70,7 @@ class LogInstanceWorldInfo extends Model
                     '_Guild.Name'
                 )
                 ->orderByDesc('Points')
+                ->limit($limit)
                 ->get();
         });
     }
@@ -102,10 +100,8 @@ class LogInstanceWorldInfo extends Model
                 ->when($CharID > 0, function ($query) use ($CharID) {
                     $query->where('_LogInstanceWorldInfo.CharID', $CharID);
                 })
-                ->when(!is_null($limit), function ($query) use ($limit) {
-                    $query->limit($limit);
-                })
                 ->orderByDesc('_LogInstanceWorldInfo.EventTime')
+                ->limit($limit)
                 ->get();
         });
     }

@@ -23,8 +23,6 @@ return new class extends Migration
             $table->dateTimeTz('published_at');
             $table->softDeletesTz();
             $table->timestampsTz();
-
-            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

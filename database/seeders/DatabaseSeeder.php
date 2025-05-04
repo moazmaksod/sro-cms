@@ -22,10 +22,14 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        //$this->call(MagOptSeeder::class);
-        //$this->call(ItemNameSeeder::class);
-        $this->call(LogInstanceWorldInfo::class);
-        $this->call(LogChatMessage::class);
+
+        if (config('global.general.server.version') === 'vSRO') {
+            $this->call(ItemNameSeeder::class);
+            $this->call(LogInstanceWorldInfo::class);
+            $this->call(LogChatMessage::class);
+        }
+
+        $this->call(MagOptSeeder::class);
         $this->call(SettingSeeder::class);
         $this->call(DonationMethodsSeeder::class);
         $this->call(MaxiCardSeeder::class);

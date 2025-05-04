@@ -51,6 +51,10 @@ composer install
 ```
 3. Rename `.env.example` to `.env` and fill it with Silkroad database info
    ```ini
+    # Silkroad Server Files Type, iSRO, vSRO
+    SRO_VERSION=iSRO
+    
+    # Silkroad Server Information
     DB_CONNECTION=sqlsrv
     DB_HOST=192.168.1.101
     DB_PORT=1433
