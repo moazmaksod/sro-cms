@@ -70,7 +70,7 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        if (config('global.server.version') !== 'vSRO') {
+        if (config('global.general.server.version') !== 'vSRO') {
             DB::beginTransaction();
             try {
                 MuEmail::where('JID', $request->user()->jid)->update(['EmailAddr' => $request->user()->email]);

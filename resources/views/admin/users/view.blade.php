@@ -17,7 +17,7 @@
             <div class="col-md-6">
                 <div class="table-responsive">
                     <table class="table table-striped">
-                        @if(config('global.server.version') === 'vSRO')
+                        @if(config('global.general.server.version') === 'vSRO')
                             <tbody>
                                 <tr>
                                     <th scope="row">JID</th>
@@ -114,7 +114,7 @@
                                 </div>
                             </div>
 
-                            @if(config('global.server.version') === 'vSRO')
+                            @if(config('global.general.server.version') === 'vSRO')
                                 <div class="row mb-3">
                                     <label for="type" class="col-md-2 col-form-label text-md-end">{{ __('Type') }}</label>
 

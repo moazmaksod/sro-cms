@@ -89,7 +89,7 @@ class RankingController extends Controller
 
     public function job()
     {
-        if (config('global.server.version') === 'vSRO') {
+        if (config('global.general.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
         } else {
             $data = CharTradeConflictJob::getJobRanking();
@@ -104,7 +104,7 @@ class RankingController extends Controller
 
     public function job_all()
     {
-        if (config('global.server.version') === 'vSRO') {
+        if (config('global.general.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
         } else {
             $data = CharTradeConflictJob::getJobRanking();
@@ -115,7 +115,7 @@ class RankingController extends Controller
 
     public function job_hunter()
     {
-        if (config('global.server.version') === 'vSRO') {
+        if (config('global.general.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 3);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 1);
@@ -126,7 +126,7 @@ class RankingController extends Controller
 
     public function job_thieve()
     {
-        if (config('global.server.version') === 'vSRO') {
+        if (config('global.general.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 2);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 2);
@@ -137,7 +137,7 @@ class RankingController extends Controller
 
     public function job_trader()
     {
-        if (config('global.server.version') === 'vSRO') {
+        if (config('global.general.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 1);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 3);
@@ -160,7 +160,7 @@ class RankingController extends Controller
             $inventorySet = $inventoryService->getInventorySet($charID, 13, 0);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
-            if (config('global.server.version') !== 'vSRO') {
+            if (config('global.general.server.version') !== 'vSRO') {
                 $inventoryJob = $inventoryService->getInventoryJob($charID);
             }
 

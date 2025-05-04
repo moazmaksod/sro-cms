@@ -89,7 +89,7 @@ class Char extends Model
                 ), 0) AS ItemPoints")
             );
 
-            if (config('global.server.version') === 'vSRO') {
+            if (config('global.general.server.version') === 'vSRO') {
                 $query->addSelect('_CharTrijob.JobType', '_CharTrijob.Level')
                     ->leftJoin('_CharTrijob', '_Char.CharID', '=', '_CharTrijob.CharID');
             } else {
@@ -131,7 +131,7 @@ class Char extends Model
                 '_Char.Intellect',
             ];
 
-            if (config('global.server.version') === 'vSRO') {
+            if (config('global.general.server.version') === 'vSRO') {
                 $groupBy[] = '_CharTrijob.JobType';
                 $groupBy[] = '_CharTrijob.Level';
             } else {

@@ -37,7 +37,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped">
-                        @if(config('global.server.version') === 'vSRO')
+                        @if(config('global.general.server.version') === 'vSRO')
                             <tbody>
                             <tr>
                                 <th scope="row">JID</th>

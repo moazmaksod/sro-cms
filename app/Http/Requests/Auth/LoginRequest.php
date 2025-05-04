@@ -55,7 +55,7 @@ class LoginRequest extends FormRequest
                 ]);
             }
 
-            if (config('global.server.version') === 'vSRO') {
+            if (config('global.general.server.version') === 'vSRO') {
                 $jid = $tbUser->JID;
                 $email = $tbUser->Email;
             } else {

@@ -51,7 +51,7 @@ class Guild extends Model
                 ), 0) AS ItemPoints")
             );
 
-            if (config('global.server.version') !== 'vSRO') {
+            if (config('global.general.server.version') !== 'vSRO') {
                 $query->addSelect(DB::raw("CONVERT(VARCHAR(MAX), _GuildCrest.CrestBinary, 2) AS CrestIcon"));
             }
 
@@ -65,7 +65,7 @@ class Guild extends Model
                         ->where('_BindingOptionWithItem.bOptType', '=', 2);
                 });
 
-            if (config('global.server.version') !== 'vSRO') {
+            if (config('global.general.server.version') !== 'vSRO') {
                 $query->leftJoin('_GuildCrest', '_GuildCrest.GuildID', '=', '_Guild.ID');
             }
 
@@ -89,7 +89,7 @@ class Guild extends Model
                 '_Guild.FoundationDate',
             ];
 
-            if (config('global.server.version') !== 'vSRO') {
+            if (config('global.general.server.version') !== 'vSRO') {
                 $groupBy[] = '_GuildCrest.CrestBinary';
             }
 
