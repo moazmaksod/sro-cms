@@ -26,9 +26,11 @@ class RankingController extends Controller
         }else {
             $data = Char::getPlayerRanking();
         }
+        $config = config('global.ranking.menu');
 
         return view('ranking.index', [
             'data' => $data,
+            'config' => $config,
             'type' => $request->input('type')
         ]);
     }
@@ -48,7 +50,7 @@ class RankingController extends Controller
     public function unique()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
-        $uniqueList = config('global.ranking.unique_list');
+        $uniqueList = config('global.ranking.uniques');
 
         return view('ranking.ranking.unique', [
             'data' => $data,
@@ -59,7 +61,7 @@ class RankingController extends Controller
     public function unique_monthly()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking(25, 1);
-        $uniqueList = config('global.ranking.unique_list');
+        $uniqueList = config('global.ranking.uniques');
 
         return view('ranking.ranking.unique-monthly', [
             'data' => $data,
@@ -92,8 +94,12 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
+        $config = config('global.ranking.job_menu');
 
-        return view('ranking.ranking.job', compact('data'));
+        return view('ranking.ranking.job', [
+            'data' => $data,
+            'config' => $config
+        ]);
     }
 
     public function job_all()

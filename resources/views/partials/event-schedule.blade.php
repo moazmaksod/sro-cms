@@ -1,4 +1,4 @@
-@if (config('global.widgets.event_schedule.enable'))
+@if ($config['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Event Schedule') }}
@@ -6,10 +6,10 @@
         <div class="card-body">
             <ul class="list-unstyled">
                 @php $i = 0; @endphp
-                @foreach($event_schedule as $key => $value)
+                @foreach($data as $key => $value)
                     @if(is_null($value)) @continue @endif
                     <li>
-                        <span>{{ config('global.widgets.event_schedule.data')[$key] }}</span>
+                        <span>{{ $config['names'][$key] }}</span>
                         <span class="float-end">
                             @if($value['status'])
                                 <span class="text-success">{{ __('Active') }}</span>

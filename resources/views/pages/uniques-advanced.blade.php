@@ -11,8 +11,8 @@
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h3>
-                                        <img src="{{ asset(config('global.ranking.unique_icons')[1]) }}" alt=""/>
-                                        {{ $uniqueList[$key]['name'] }}
+                                        <img src="{{ asset($config[$value->Value]['image']) }}" alt=""/>
+                                        {{ $config[$value->Value]['name'] }}
                                     </h3>
                                     <small>{{ __('Last 5 Killers') }}</small>
                                 </div>
@@ -26,7 +26,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <p class="text-center">{{ $uniqueList[$key]['points'] }} {{ __('Points') }}</p>
+                                            <p class="text-center">{{ $config[$key]['points'] }} {{ __('Points') }}</p>
                                             @php $i = 1 @endphp
                                             @foreach($value as $values)
                                                 @if($i > 5) @break @endif

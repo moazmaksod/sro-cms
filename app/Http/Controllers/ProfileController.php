@@ -19,8 +19,15 @@ class ProfileController extends Controller
 {
     public function index(Request $request): View
     {
+        $characterImage = config('global.ranking.character_image');
+        $characterRace = config('global.ranking.character_race');
+        $vipLevel = config('global.ranking.vip_level');
+
         return view('profile.index', [
             'user' => $request->user(),
+            'characterImage' => $characterImage,
+            'characterRace' => $characterRace,
+            'vipLevel' => $vipLevel,
         ]);
     }
 

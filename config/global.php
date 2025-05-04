@@ -83,8 +83,8 @@ return [
             ],
         ],
         'hero' => [
-            'hero_background' => 'https://wallpapercave.com/wp/wp7441040.jpg',
-            'hero_label_color' => '#fff',
+            'background' => 'https://wallpapercave.com/wp/wp7441040.jpg',
+            'color' => '#fff',
         ],
         'news_category' => [
             'news' => '<span class="badge text-bg-warning">News</span>',
@@ -340,7 +340,7 @@ return [
                 'RigidStaff',
             ],
         ],
-        'unique_list' => [
+        'uniques' => [
             'MOB_CH_TIGERWOMAN' => [
                 'id' => 1954,
                 'name' => 'Tiger Girl',
@@ -506,31 +506,31 @@ return [
             "level" => [
                 0 => [
                     'name' => "Normal",
-                    'icon' => "",
+                    'image' => "",
                 ],
                 1 => [
                     'name' => "Iron",
-                    'icon' => "images/viplevel_1.jpg",
+                    'image' => "images/viplevel_1.jpg",
                 ],
                 2 => [
                     'name' => "Bronze",
-                    'icon' => "images/viplevel_2.jpg",
+                    'image' => "images/viplevel_2.jpg",
                 ],
                 3 => [
                     'name' => "Silver",
-                    'icon' => "images/viplevel_3.jpg",
+                    'image' => "images/viplevel_3.jpg",
                 ],
                 4 => [
                     'name' => "Gold",
-                    'icon' => "images/viplevel_4.jpg",
+                    'image' => "images/viplevel_4.jpg",
                 ],
                 5 => [
                     'name' => "Platinum",
-                    'icon' => "images/viplevel_5.jpg",
+                    'image' => "images/viplevel_5.jpg",
                 ],
                 6 => [
                     'name' => "VIP",
-                    'icon' => "images/viplevel_6.jpg",
+                    'image' => "images/viplevel_6.jpg",
                 ],
             ],
             "type" => [

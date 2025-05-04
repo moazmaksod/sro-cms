@@ -15,7 +15,12 @@ class PageController extends Controller
     public function index()
     {
         $data = News::getPosts();
-        return view('pages.index', compact('data'));
+        $config = config('global.general.news_category');
+
+        return view('pages.index', [
+            'data' => $data,
+            'config' => $config,
+        ]);
     }
 
     public function post($slug)
@@ -43,20 +48,32 @@ class PageController extends Controller
     public function timers(ScheduleService $scheduleService)
     {
         $data = $scheduleService->getEventSchedules();
-        return view('pages.timers', compact('data'));
+        $config = config('global.widgets.event_schedule');
+
+        return view('pages.timers', [
+            'data' => $data,
+            'config' => $config,
+        ]);
     }
 
     public function uniques()
     {
         $data = LogInstanceWorldInfo::getUniquesKill();
-        return view('pages.uniques', compact('data'));
+        $config = config('global.ranking.uniques');
+        $characterRace = config('global.ranking.character_race');
+
+        return view('pages.uniques', [
+            'data' => $data,
+            'config' => $config,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function uniques_advanced()
     {
         $uniqueKill = LogInstanceWorldInfo::getUniquesKill(9999, 0);
         $uniqueRanking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
-        $uniqueList = config('global.ranking.unique_list');
+        $config = config('global.ranking.uniques');
 
         $data = [];
         foreach ($uniqueKill as $value) {
@@ -65,15 +82,20 @@ class PageController extends Controller
 
         return view('pages.uniques-advanced', [
             'data' => $data,
+            'config' => $config,
             'uniqueRanking' => $uniqueRanking,
-            'uniqueList' => $uniqueList,
         ]);
     }
 
     public function fortress()
     {
         $data = LogEventSiegeFortress::getFortressHistory(25);
-        return view('pages.fortress', compact('data'));
+        $config = config('global.widgets.fortress_war');
+
+        return view('pages.fortress', [
+            'data' => $data,
+            'config' => $config,
+        ]);
     }
 
     public function globals()

@@ -18,8 +18,8 @@
                             @forelse($data as $value)
                                 <tr>
                                     <td>
-                                        <img src="{{ config('global.widgets.fortress_war.data')[$value->FortressID]['icon'] }}" alt="">
-                                        {{ config('global.widgets.fortress_war.data')[$value->FortressID]['name'] }}
+                                        <img src="{{ $config['names'][$value->FortressID]['image'] }}" alt="">
+                                        {{ $config['names'][$value->FortressID]['name'] }}
                                     </td>
                                     <td>
                                         @if(!empty($value->strDesc))
