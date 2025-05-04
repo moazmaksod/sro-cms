@@ -42,46 +42,46 @@
                             <tbody>
                             <tr>
                                 <th scope="row">JID</th>
-                                <td>{{ $user->tbUser->JID }}</td>
+                                <td>{{ Auth::user()->tbUser->JID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
-                                <td>{{ $user->tbUser->StrUserID }}</td>
+                                <td>{{ Auth::user()->tbUser->StrUserID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->tbUser->Email }}</td>
+                                <td>{{ Auth::user()->tbUser->Email }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
-                                <td>{{ $user->tbUser->getSkSilk->silk_own ?? 0 }}</td>
+                                <td>{{ Auth::user()->tbUser->getSkSilk->silk_own ?? 0 }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Gift Silk') }}</th>
-                                <td>{{ $user->tbUser->getSkSilk->silk_gift ?? 0 }}</td>
+                                <td>{{ Auth::user()->tbUser->getSkSilk->silk_gift ?? 0 }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Point Silk') }}</th>
-                                <td>{{ $user->tbUser->getSkSilk->silk_point ?? 0 }}</td>
+                                <td>{{ Auth::user()->tbUser->getSkSilk->silk_point ?? 0 }}</td>
                             </tr>
                             </tbody>
                         @else
                             <tbody>
                             <tr>
                                 <th scope="row">Portal JID</th>
-                                <td>{{ $user->tbUser->PortalJID }}</td>
+                                <td>{{ Auth::user()->tbUser->PortalJID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
-                                <td>{{ $user->tbUser->StrUserID }}</td>
+                                <td>{{ Auth::user()->tbUser->StrUserID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->muUser->muEmail->EmailAddr }}</td>
+                                <td>{{ Auth::user()->muUser->muEmail->EmailAddr }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
-                                @php $cash = $user->muUser->getJCash() @endphp
+                                @php $cash = Auth::user()->muUser->getJCash() @endphp
                                 <td>{{ $cash->Silk ?? 0 }}</td>
                             </tr>
                             <tr>
@@ -99,9 +99,9 @@
                             <tr>
                                 <th scope="row">VIP</th>
                                 <td>
-                                    @isset($user->muUser->muVIPInfo->VIPUserType)
-                                        <img src="{{ asset($vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
-                                        <span>{{ $vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
+                                    @isset(Auth::user()->muUser->muVIPInfo->VIPUserType)
+                                        <img src="{{ asset($vipLevel['level'][Auth::user()->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
+                                        <span>{{ $vipLevel['level'][Auth::user()->muUser->muVIPInfo->VIPLv]['name'] }}</span>
                                     @else
                                         <span>{{ __('None') }}</span>
                                     @endisset
