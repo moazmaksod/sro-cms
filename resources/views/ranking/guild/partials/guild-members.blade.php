@@ -11,22 +11,22 @@
         </thead>
         <tbody>
             @php $i = 1; @endphp
-            @forelse($data_members as $value)
+            @forelse($members as $value)
                 <tr>
                     <td>{{ $i }}</td>
                     <td>
                         @if($value->RefObjID > 2000)
-                            <img src="{{ asset('images/com_kindred_europe.png') }}" width="16" height="16" alt=""/>
+                            <img src="{{ asset($characterRace[1]['icon']) }}" width="16" height="16" alt=""/>
                         @else
-                            <img src="{{ asset('images/com_kindred_china.png') }}" width="16" height="16" alt=""/>
+                            <img src="{{ asset($characterRace[0]['icon']) }}" width="16" height="16" alt=""/>
                         @endif
                         <a href="{{ route('ranking.character.view', ['name' => $value->CharName]) }}" class="text-decoration-none">{{ $value->CharName }}</a>
                     </td>
                     <td>{{ date('d-m-Y', strtotime($value->JoinDate)) }}</td>
                     <td>
                         @if($value->SiegeAuthority > 0)
-                            @if (array_key_exists($value->SiegeAuthority, config('global.ranking.guild_authority')))
-                                {{ config('global.ranking.guild_authority')[$value->SiegeAuthority] }}
+                            @if (array_key_exists($value->SiegeAuthority, $guildAuthority))
+                                {{ $guildAuthority[$value->SiegeAuthority] }}
                             @endif
                         @else
                             {{ __('Member') }}

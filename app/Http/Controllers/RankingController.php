@@ -252,12 +252,16 @@ class RankingController extends Controller
             $data = Guild::getGuildRanking(1, $guildID)->first();
             $members = GuildMember::getGuildInfoMembers($guildID);
             $alliances = Guild::getGuildInfoAlliance($guildID);
+            $characterRace = config('global.ranking.character_race');
+            $guildAuthority = config('global.ranking.guild_authority');
 
             if ($data) {
                 return view('ranking.guild.index', [
                     'data' => $data,
                     'members' => $members,
                     'alliances' => $alliances,
+                    'characterRace' => $characterRace,
+                    'guildAuthority' => $guildAuthority,
                 ]);
             }
         }
