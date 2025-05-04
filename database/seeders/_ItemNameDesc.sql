@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS [dbo].[_Rigid_ItemNameDesc]
+DROP TABLE IF EXISTS [dbo].[_ItemNameDesc]
 
-CREATE TABLE [dbo].[_Rigid_ItemNameDesc](
+CREATE TABLE [dbo].[_ItemNameDesc](
     [Service] [int] NOT NULL,
     [ID] [int] NOT NULL,
     [StrID] [varchar](255) NOT NULL,

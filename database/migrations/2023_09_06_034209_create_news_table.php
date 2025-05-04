@@ -14,15 +14,17 @@ return new class extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('author_id')->index();
-            $table->char('title');
-            $table->char('slug')->index();
+            $table->string('title');
+            $table->string('slug')->unique();
             $table->string('category')->nullable();
             $table->boolean('active')->default(true);
             $table->text('content');
-            $table->char('image')->nullable();
-            $table->dateTime('published_at');
+            $table->string('image')->nullable();
+            $table->dateTimeTz('published_at');
             $table->softDeletesTz();
-            $table->timestamps();
+            $table->timestampsTz();
+
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

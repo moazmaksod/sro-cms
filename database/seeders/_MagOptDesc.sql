@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS [dbo].[_Rigid_MagOptDesc]
+DROP TABLE IF EXISTS [dbo].[_MagOptDesc];
 
-CREATE TABLE [dbo].[_Rigid_MagOptDesc](
+CREATE TABLE [dbo].[_MagOptDesc](
     [id] [int] NOT NULL,
     [name] [nvarchar](255) NOT NULL,
     [desc] [nvarchar](255) NOT NULL,

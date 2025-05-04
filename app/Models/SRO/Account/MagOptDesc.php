@@ -26,7 +26,7 @@ class MagOptDesc extends Model
      *
      * @var string
      */
-    protected $table = 'dbo._Rigid_MagOptDesc';
+    protected $table = 'dbo._MagOptDesc';
 
     /**
      * The attributes that are mass assignable.

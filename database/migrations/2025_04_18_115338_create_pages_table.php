@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('title');
-            $table->char('slug')->index();
+            $table->string('title');
+            $table->string('slug')->unique();
             $table->boolean('active')->default(true);
             $table->text('content');
             $table->softDeletesTz();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

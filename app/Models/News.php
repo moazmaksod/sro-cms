@@ -15,9 +15,10 @@ class News extends Model
         'author_id',
         'title',
         'slug',
+        'image',
+        'category',
         'content',
         'published_at',
-        'category',
     ];
 
     protected $casts = [

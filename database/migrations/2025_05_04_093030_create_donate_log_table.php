@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('downloads', function (Blueprint $table) {
+        Schema::create('donate_log', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('method');
+            $table->string('transaction_id');
+            $table->string('status');
+            $table->integer('amount');
+            $table->integer('value');
             $table->text('desc');
-            $table->string('url');
-            $table->string('image')->nullable();
+            $table->unsignedInteger('jid');
+            $table->string('ip');
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('downloads');
+        Schema::dropIfExists('donate_log');
     }
 };

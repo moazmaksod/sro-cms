@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = ['key', 'value'];
 
     public static function get($key, $default = null)
