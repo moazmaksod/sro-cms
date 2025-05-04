@@ -23,9 +23,14 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with('pages', Pages::get());
             });
 
-            $slider = config('global.general.sliders');
-            View::composer(['partials.carousel'], function ($view, $slider) {
-                $view->with('config', $slider);
+            $languages = config('global.general.languages');
+            View::composer(['layouts.header', 'layouts.navigation'], function ($view) use ($languages) {
+                $view->with('languages', $languages);
+            });
+
+            $sliders = config('global.general.sliders');
+            View::composer(['partials.carousel'], function ($view) use ($sliders) {
+                $view->with('sliders', $sliders);
             });
 
             View::composer(['partials.online-counter'], function ($view) {
@@ -38,80 +43,80 @@ class ViewServiceProvider extends ServiceProvider
 
             $discord = config('global.widgets.discord');
             if($discord['enabled']) {
-                View::composer(['partials.discord'], function ($view, $discord) {
-                    $view->with('config', $discord);
+                View::composer(['partials.discord'], function ($view) use ($discord) {
+                    $view->with('discord', $discord);
                 });
             }
 
             $serverInfo = config('global.widgets.server_info');
             if($serverInfo['enabled']) {
-                View::composer(['partials.server-info'], function ($view, $serverInfo) {
-                    $view->with('config', $serverInfo);
+                View::composer(['partials.server-info'], function ($view) use ($serverInfo) {
+                    $view->with('serverInfo', $serverInfo);
                 });
             }
 
-            $eventSchedule = config('global.widgets.event_schedule');
-            if($eventSchedule['enabled']) {
-                View::composer(['partials.event-schedule'], function ($view, $eventSchedule) {
+            $eventScheduleConfig = config('global.widgets.event_schedule');
+            if($eventScheduleConfig['enabled']) {
+                View::composer(['partials.event-schedule'], function ($view) use ($eventScheduleConfig) {
                     $view->with([
-                        'data' => ScheduleService::getEventSchedules(),
-                        'config' => $eventSchedule
+                        'eventSchedule' => ScheduleService::getEventSchedules(),
+                        'eventScheduleConfig' => $eventScheduleConfig
                     ]);
                 });
             }
 
-            $fortressWar = config('global.widgets.fortress_war');
-            if($fortressWar['enabled']) {
-                View::composer(['partials.fortress-war'], function ($view, $fortressWar) {
+            $fortressWarConfig = config('global.widgets.fortress_war');
+            if($fortressWarConfig['enabled']) {
+                View::composer(['partials.fortress-war'], function ($view) use ($fortressWarConfig) {
                     $view->with([
-                        'data' => SiegeFortress::getFortressWar(),
-                        'config' => $fortressWar
+                        'fortressWar' => SiegeFortress::getFortressWar(),
+                        'fortressWarConfig' => $fortressWarConfig
                     ]);
                 });
             }
 
-            $globalsHistory = config('global.widgets.globals_history');
-            if($globalsHistory['enabled']) {
-                View::composer(['partials.globals-history'], function ($view, $globalsHistory) {
+            $globalsHistoryConfig = config('global.widgets.globals_history');
+            if($globalsHistoryConfig['enabled']) {
+                View::composer(['partials.globals-history'], function ($view) use ($globalsHistoryConfig) {
                     $view->with([
-                        'data' => LogChatMessage::getGlobalsHistory($globalsHistory['limit']),
-                        'config' => $globalsHistory
+                        'globalsHistory' => LogChatMessage::getGlobalsHistory($globalsHistoryConfig['limit']),
+                        'globalsHistoryConfig' => $globalsHistoryConfig
                     ]);
                 });
             }
 
-            $uniqueHistory = config('global.widgets.unique_history');
-            $uniques = config('global.ranking.uniques');
-            if($uniqueHistory['enabled']) {
-                View::composer(['partials.unique-history'], function ($view, $uniqueHistory, $uniques) {
+            $uniqueHistoryConfig = config('global.widgets.unique_history');
+            $uniquesList = config('global.ranking.uniques');
+            if($uniqueHistoryConfig['enabled']) {
+                View::composer(['partials.unique-history'], function ($view) use ($uniqueHistoryConfig, $uniquesList) {
                     $view->with([
-                        'data' => LogInstanceWorldInfo::getUniquesKill($uniqueHistory['limit']),
-                        'config' => $uniqueHistory,
-                        'uniques' => $uniques
+                        'uniqueHistory' => LogInstanceWorldInfo::getUniquesKill($uniqueHistoryConfig['limit']),
+                        'uniqueHistoryConfig' => $uniqueHistoryConfig,
+                        'uniquesList' => $uniquesList
                     ]);
                 });
             }
 
-            $topPlayer = config('global.widgets.top_player');
+            $topPlayerConfig = config('global.widgets.top_player');
             $topImage = config('global.ranking.top_image');
-            if($topPlayer['enabled']) {
-                View::composer(['partials.top-player'], function ($view, $topPlayer, $topImage) {
+            if($topPlayerConfig['enabled']) {
+                View::composer(['partials.top-player'], function ($view) use ($topPlayerConfig, $topImage) {
                     $view->with([
-                        'data' => Char::getPlayerRanking($topPlayer['limit']),
-                        'config' => $topPlayer,
-                        'image' => $topImage
+                        'topPlayer' => Char::getPlayerRanking($topPlayerConfig['limit']),
+                        'topPlayerConfig' => $topPlayerConfig,
+                        'topImage' => $topImage
                     ]);
                 });
             }
 
-            $topGuild = config('global.widgets.top_guild');
+            $topGuildConfig = config('global.widgets.top_guild');
             $topImage = config('global.ranking.top_image');
-            if($topGuild['enabled']) {
-                View::composer(['partials.top-guild'], function ($view, $topGuild, $topImage) {
+            if($topGuildConfig['enabled']) {
+                View::composer(['partials.top-guild'], function ($view) use ($topGuildConfig, $topImage) {
                     $view->with([
-                        'data' => Guild::getGuildRanking($topGuild['limit']),
-                        'config' => $topGuild,
-                        'image' => $topImage
+                        'topGuild' => Guild::getGuildRanking($topGuildConfig['limit']),
+                        'topGuildConfig' => $topGuildConfig,
+                        'topImage' => $topImage
                     ]);
                 });
             }

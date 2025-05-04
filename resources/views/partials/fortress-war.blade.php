@@ -1,15 +1,15 @@
-@if ($config['enabled'])
+@isset($fortressWarConfig['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Fortress War') }}
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                @forelse($data as $value)
+                @forelse($fortressWar as $value)
                     <li>
                         <span>
-                            <img src="{{ asset($config['names'][$value->FortressID]['image']) }}" alt="">
-                            {{ $config['names'][$value->FortressID]['name'] }}
+                            <img src="{{ asset($fortressWarConfig['names'][$value->FortressID]['image']) }}" alt="">
+                            {{ $fortressWarConfig['names'][$value->FortressID]['name'] }}
                         </span>
                         <span class="float-end">
                             @if($value->Name !== 'DummyGuild')
@@ -25,4 +25,4 @@
             </ul>
         </div>
     </div>
-@endif
+@endisset

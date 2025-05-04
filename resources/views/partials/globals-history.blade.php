@@ -1,11 +1,11 @@
-@if ($config['enabled'])
+@isset ($globalsHistoryConfig['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Global History') }}
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                @forelse($data as $value)
+                @forelse($globalsHistory as $value)
                     <li class="mb-3">
                         <p class="mb-0">{!! $value->Comment !!}</p>
                         <small>
@@ -24,4 +24,4 @@
             </ul>
         </div>
     </div>
-@endif
+@endisset

@@ -1,11 +1,11 @@
-@if ($config['enabled'])
+@isset ($serverInfo['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Server Info') }}
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                @foreach($config['data'] as $value)
+                @foreach($serverInfo['data'] as $value)
                     <li>
                         <span>
                             {!! $value['icon'] !!}
@@ -17,4 +17,4 @@
             </ul>
         </div>
     </div>
-@endif
+@endisset

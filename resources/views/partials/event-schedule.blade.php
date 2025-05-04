@@ -1,4 +1,4 @@
-@if ($config['enabled'])
+@isset ($eventScheduleConfig['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Event Schedule') }}
@@ -6,10 +6,10 @@
         <div class="card-body">
             <ul class="list-unstyled">
                 @php $i = 0; @endphp
-                @foreach($data as $key => $value)
+                @foreach($eventSchedule as $key => $value)
                     @if(is_null($value)) @continue @endif
                     <li>
-                        <span>{{ $config['names'][$key] }}</span>
+                        <span>{{ $eventScheduleConfig['names'][$key] }}</span>
                         <span class="float-end">
                             @if($value['status'])
                                 <span class="text-success">{{ __('Active') }}</span>
@@ -23,4 +23,4 @@
             </ul>
         </div>
     </div>
-@endif
+@endisset

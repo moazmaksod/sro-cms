@@ -1,13 +1,13 @@
-@if ($config['enabled'])
+@isset($uniqueHistoryConfig['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Unique History') }}
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                @forelse($unique_history as $value)
+                @forelse($uniqueHistory as $value)
                     <li class="mb-3">
-                        <p class="mb-0">{{ $uniques[$value->Value]['name'] }}</p>
+                        <p class="mb-0">{{ $uniqueHistoryConfig[$value->Value]['name'] }}</p>
                         <small>
                             {{ __('Killed by:') }}
                             @if(!empty($value->CharName16))
@@ -24,4 +24,4 @@
             </ul>
         </div>
     </div>
-@endif
+@endisset

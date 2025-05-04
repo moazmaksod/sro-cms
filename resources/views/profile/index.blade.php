@@ -99,8 +99,8 @@
                                 <th scope="row">VIP</th>
                                 <td>
                                     @isset($user->muUser->muVIPInfo->VIPUserType)
-                                        <img src="{{ asset($vipLevel[$user->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
-                                        <span>{{ $vipLevel[$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
+                                        <img src="{{ asset($vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
+                                        <span>{{ $vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
                                     @else
                                         <span>{{ __('None') }}</span>
                                     @endisset

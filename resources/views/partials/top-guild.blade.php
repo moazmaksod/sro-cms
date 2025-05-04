@@ -1,4 +1,4 @@
-@if ($config['enabled'])
+@isset ($topGuildConfig['enabled'])
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Top Guild') }}
@@ -15,11 +15,11 @@
                     </thead>
                     <tbody>
                         @php $i = 1; @endphp
-                        @forelse($top_guild as $value)
+                        @forelse($topGuild as $value)
                             <tr>
                                 <td>
                                     @if($i <= 3)
-                                        <img src="{{ asset($image[$i]) }}" alt=""/>
+                                        <img src="{{ asset($topImage[$i]) }}" alt=""/>
                                     @else
                                         {{ $i }}
                                     @endif
@@ -42,4 +42,4 @@
             </div>
         </div>
     </div>
-@endif
+@endisset
