@@ -87,7 +87,7 @@ class MuUser extends Model
                 Declare @Usage3Month Int;
                 SET NOCOUNT ON;
 
-                Execute @ReturnValue = [dbo].[B_GetJCash]
+                Execute @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash]
                     ".$this->JID.",
                     @PremiumSilk Output,
                     @Silk Output,
