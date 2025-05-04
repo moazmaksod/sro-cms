@@ -33,7 +33,7 @@ class TrainingCampHonorRank extends Model
 
     public static function getHonorRanking($limit = 25)
     {
-        $minutes = config('global.general.cache.data.ranking_honor', 60);
+        $minutes = config('global.general.cache.ranking_honor', 60);
 
         return Cache::remember("ranking_honor_{$limit}", now()->addMinutes($minutes), function () use ($limit) {
             return self::select(

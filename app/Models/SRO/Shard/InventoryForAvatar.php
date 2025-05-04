@@ -48,7 +48,7 @@ class InventoryForAvatar extends Model
 
     public static function getInventoryForAvatar($characterId): array
     {
-        $minutes = config('global.general.cache.data.character_info', 1440);
+        $minutes = config('global.general.cache.character_info', 1440);
 
         return Cache::remember("character_info_inventory_avatar_{$characterId}", now()->addMinutes($minutes), static function () use ($characterId) {
             return self::where('CharID', '=', $characterId)

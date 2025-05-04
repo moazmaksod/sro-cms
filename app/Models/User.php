@@ -55,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public static function getUserCount()
     {
-        $minutes = config('global.general.cache.data.account_info', 5);
+        $minutes = config('global.general.cache.account_info', 5);
 
         return Cache::remember('account_count', now()->addMinutes($minutes), function () {
             return self::count();

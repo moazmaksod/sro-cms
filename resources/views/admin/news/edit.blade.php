@@ -90,9 +90,9 @@
                 <label for="content" class="col-md-2 col-form-label text-md-end">{{ __('Content') }}</label>
 
                 <div class="col-md-10">
-                    <textarea id="summernote" rows="10" class="form-control" name="news_content">{{ old('content', $news->content) }}</textarea>
+                    <textarea id="summernote" rows="10" class="form-control" name="content">{{ old('content', $news->content) }}</textarea>
 
-                    @error('news_content')
+                    @error('content')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

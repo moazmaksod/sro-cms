@@ -26,9 +26,9 @@ class DownloadController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'desc' => 'required|string',
+            'desc' => 'string',
             'url' => 'required|url',
-            'icon' => '',
+            'image' => 'string',
         ]);
 
         Download::create($validated);
@@ -45,9 +45,9 @@ class DownloadController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'desc' => 'required|string',
+            'desc' => 'string',
             'url' => 'required|url',
-            'icon' => '',
+            'image' => 'string',
         ]);
 
         $download->update($validated);

@@ -15,100 +15,68 @@ class SettingSeeder extends Seeder
     public function run()
     {
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'site_title',
-                'value' => 'Silkroad Online',
-            ]
+            ['key' => 'site_title'],
+            ['value' => 'Silkroad Online',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'site_desc',
-                'value' => "Silkroad Online is a World's first blockbuster Free to play MMORPG. Silkroad Olnine puts players deep into ancient Chinese, Islamic, and European civilization. Enjoy Silkroad's hardcore PvP, personal dungeon system, never ending fortress war and be the top of the highest heroes!",
-            ]
+            ['key' => 'site_desc'],
+            ['value' => "Silkroad Online is a World's first blockbuster Free to play MMORPG. Silkroad Olnine puts players deep into ancient Chinese, Islamic, and European civilization. Enjoy Silkroad's hardcore PvP, personal dungeon system, never ending fortress war and be the top of the highest heroes!",]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'site_url',
-                'value' => 'https://localhost',
-            ]
+            ['key' => 'site_url'],
+            ['value' => 'https://localhost',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'site_favicon',
-                'value' => 'images/favicon.ico',
-            ]
+            ['key' => 'site_favicon'],
+            ['value' => 'images/favicon.ico',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'site_logo',
-                'value' => 'images/logo.png',
-            ]
+            ['key' => 'site_logo'],
+            ['value' => 'images/logo.png',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'max_level',
-                'value' => 140,
-            ]
+            ['key' => 'max_level'],
+            ['value' => 140,]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'max_player',
-                'value' => 3500,
-            ]
+            ['key' => 'max_player'],
+            ['value' => 3500,]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'fake_player',
-                'value' => 0,
-            ]
+            ['key' => 'fake_player'],
+            ['value' => 0,]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'max_level',
-                'value' => 140,
-            ]
+            ['key' => 'max_level'],
+            ['value' => 140,]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'dark_mode',
-                'value' => 'switch',
-            ]
+            ['key' => 'dark_mode'],
+            ['value' => 'switch',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'default_locale',
-                'value' => 'switch',
-            ]
+            ['key' => 'default_locale'],
+            ['value' => 'switch',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'locale',
-                'value' => 'en',
-            ]
+            ['key' => 'locale'],
+            ['value' => 'en',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'theme',
-                'value' => 'default',
-            ]
+            ['key' => 'theme'],
+            ['value' => 'default',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'timezone',
-                'value' => 'Africa/Cairo',
-            ]
+            ['key' => 'timezone'],
+            ['value' => 'Africa/Cairo',]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'disable_register',
-                'value' => 0,
-            ]
+            ['key' => 'disable_register'],
+            ['value' => 0,]
         );
         DB::table('settings')->updateOrInsert(
-            [
-                'key' => 'register_confirm',
-                'value' => 0,
-            ]
+            ['key' => 'register_confirm'],
+            ['value' => 0,]
         );
     }
 }

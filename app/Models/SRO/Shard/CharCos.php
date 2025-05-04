@@ -57,7 +57,7 @@ class CharCos extends Model
 
     public static function getPet($iPetId)
     {
-        $minutes = config('global.general.cache.data.character_info', 1440);
+        $minutes = config('global.general.cache.character_info', 1440);
 
         return Cache::remember("character_info_pet_{$iPetId}", now()->addMinutes($minutes), function () use ($iPetId) {
             return self::select(

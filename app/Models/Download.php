@@ -16,7 +16,7 @@ class Download extends Model
 
     public static function getDownloads()
     {
-        $minutes = config('global.general.cache.data.download', 10080);
+        $minutes = config('global.general.cache.download', 10080);
 
         return Cache::remember('download', now()->addMinutes($minutes), function () {
             return self::all();

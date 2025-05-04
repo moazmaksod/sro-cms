@@ -26,11 +26,10 @@ class PagesController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string',
-            'pages_content' => 'required',
+            'content' => 'required',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
-        $validated['content'] = $validated['pages_content'];
 
         Pages::create($validated);
 
@@ -46,11 +45,10 @@ class PagesController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string',
-            'pages_content' => 'required',
+            'content' => 'required',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
-        $validated['content'] = $validated['pages_content'];
 
         $pages->update($validated);
 

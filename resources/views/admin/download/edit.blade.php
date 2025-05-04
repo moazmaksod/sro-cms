@@ -64,12 +64,12 @@
             </div>
 
             <div class="row mb-3">
-                <label for="icon" class="col-md-2 col-form-label text-md-end">{{ __('Icon') }}</label>
+                <label for="image" class="col-md-2 col-form-label text-md-end">{{ __('Image') }}</label>
 
                 <div class="col-md-10">
-                    <input id="icon" type="text" class="form-control @error('icon') is-invalid @enderror" name="icon" value="{{ old('icon', $download->icon) }}">
+                    <input id="image" type="text" class="form-control @error('image') is-invalid @enderror" name="image" value="{{ old('image', $download->image) }}">
 
-                    @error('icon')
+                    @error('image')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

@@ -27,13 +27,12 @@ class NewsController extends Controller
             'title' => 'required|string',
             'category' => 'required|in:news,event,update',
             'published_at' => 'required|date',
-            'news_content' => 'required',
+            'content' => 'required',
         ]);
 
         $validated['author_id'] = auth()->user()->id;
         $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
         $validated['slug'] = Str::slug($validated['title']);
-        $validated['content'] = $validated['news_content'];
 
         News::create($validated);
 
@@ -51,12 +50,11 @@ class NewsController extends Controller
             'title' => 'required|string',
             'category' => 'required|in:news,event,update',
             'published_at' => 'required|date',
-            'news_content' => 'required',
+            'content' => 'required',
         ]);
 
         $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
         $validated['slug'] = Str::slug($validated['title']);
-        $validated['content'] = $validated['news_content'];
         $news->update($validated);
 
         return redirect()->route('admin.news.index')->with('success', 'News updated successfully.');

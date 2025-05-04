@@ -51,7 +51,7 @@ class SiegeFortress extends Model
 
     public static function getFortressWar()
     {
-        $minutes = config('global.general.cache.data.fortress_war', 10080);
+        $minutes = config('global.general.cache.fortress_war', 10080);
 
         return Cache::remember('fortress_war', now()->addMinutes($minutes), function () {
             return self::select([

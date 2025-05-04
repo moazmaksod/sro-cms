@@ -10,6 +10,12 @@ class Setting extends Model
 {
     public $timestamps = false;
 
+    public $incrementing = false;
+
+    protected $primaryKey = 'key';
+
+    protected $keyType = 'string';
+
     protected $fillable = ['key', 'value'];
 
     public static function get($key, $default = null)

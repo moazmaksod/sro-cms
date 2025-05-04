@@ -7,8 +7,8 @@
             @forelse($data as $value)
                 <div class="col-md-3 mb-4">
                     <div class="card">
-                        @if ($value->icon)
-                            <img src="{{ $value->icon }}" class="card-img-top object-fit-contain p-3" width="" height="100" alt="...">
+                        @if ($value->image)
+                            <img src="{{ $value->image }}" class="card-img-top object-fit-contain p-3" width="" height="100" alt="...">
                         @endif
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ $value->name }}</h5>

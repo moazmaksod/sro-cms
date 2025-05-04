@@ -58,9 +58,9 @@
                 <label for="content" class="col-md-2 col-form-label text-md-end">{{ __('Content') }}</label>
 
                 <div class="col-md-10">
-                    <textarea id="summernote" rows="10" class="form-control" name="pages_content">{{ old('content', $pages->content) }}</textarea>
+                    <textarea id="summernote" rows="10" class="form-control" name="content">{{ old('content', $pages->content) }}</textarea>
 
-                    @error('pages_content')
+                    @error('content')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

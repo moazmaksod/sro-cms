@@ -9,7 +9,7 @@ return [
             'news' => 1440, //1 day
             'download' => 10080, //1 week
             'pages' => 10080, //1 weeek
-            'account_info' => 5, //5 minutes
+            'account_info' => 5, //5 seconds
             'online_counter' => 1, //1 minute
             'event_schedule' => 10080, //1 weeek
             'fortress_war' => 10080, //1 weeek
