@@ -33,6 +33,11 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with('sliders', $sliders);
             });
 
+            $footer = config('global.general.footer');
+            View::composer(['layouts.footer'], function ($view) use ($footer) {
+                $view->with('footer', $footer);
+            });
+
             View::composer(['partials.online-counter'], function ($view) {
                 $view->with([
                     'onlinePlayer' => ShardCurrentUser::getOnlineCounter(),
