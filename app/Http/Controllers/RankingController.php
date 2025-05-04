@@ -27,11 +27,16 @@ class RankingController extends Controller
             $data = Char::getPlayerRanking();
         }
         $config = config('global.ranking.menu');
+        $data = Char::getPlayerRanking();
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
         return view('ranking.index', [
             'data' => $data,
             'config' => $config,
-            'type' => $request->input('type')
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+            'type' => $request->input('type'),
         ]);
     }
 
@@ -134,10 +139,16 @@ class RankingController extends Controller
             $data = CharTradeConflictJob::getJobRanking();
         }
         $config = config('global.ranking.job_menu');
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
+        $jobType = config('global.ranking.job_type');
 
         return view('ranking.ranking.job', [
             'data' => $data,
-            'config' => $config
+            'config' => $config,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+            'jobType' => $jobType,
         ]);
     }
 
