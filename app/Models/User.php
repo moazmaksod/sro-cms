@@ -69,7 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function tbUser()
     {
-        return $this->hasOne(TbUser::class, 'PortalJID', 'jid');
+        if (config('global.general.server.version') === 'vSRO') {
+            return $this->hasOne(TbUser::class, 'JID', 'jid');
+        } else{
+            return $this->hasOne(TbUser::class, 'PortalJID', 'jid');
+        }
     }
 
     public function news()

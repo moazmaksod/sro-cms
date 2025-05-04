@@ -33,15 +33,15 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Silk') }}</th>
-                                    <td>{{ $user->getSkSilk->silk_own }}</td>
+                                    <td>{{ $user->getSkSilk->silk_own ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Gift Silk') }}</th>
-                                    <td>{{ $user->getSkSilk->silk_gift }}</td>
+                                    <td>{{ $user->getSkSilk->silk_gift ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Point Silk') }}</th>
-                                    <td>{{ $user->getSkSilk->silk_point }}</td>
+                                    <td>{{ $user->getSkSilk->silk_point ?? 0 }}</td>
                                 </tr>
                             </tbody>
                         @else
@@ -61,19 +61,19 @@
                                 <tr>
                                     <th scope="row">{{ __('Silk') }}</th>
                                     @php $cash = $user->muUser->getJCash() @endphp
-                                    <td>{{ $cash->Silk }}</td>
+                                    <td>{{ $cash->Silk ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Premium Silk') }}</th>
-                                    <td>{{ $cash->PremiumSilk }}</td>
+                                    <td>{{ $cash->PremiumSilk ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Month Usage') }}</th>
-                                    <td>{{ $cash->MonthUsage }}</td>
+                                    <td>{{ $cash->MonthUsage ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('3Month Usage') }}</th>
-                                    <td>{{ $cash->ThreeMonthUsage }}</td>
+                                    <td>{{ $cash->ThreeMonthUsage ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">VIP</th>
