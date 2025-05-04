@@ -91,7 +91,7 @@
 
     <script>
         $('#summernote').summernote({
-            placeholder: 'Hello Bootstrap 4',
+            placeholder: 'Hello iSRO-CMS v2',
             tabsize: 2,
             height: 400,
             codeviewFilter: false, // allows raw HTML
