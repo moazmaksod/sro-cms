@@ -38,23 +38,39 @@ class RankingController extends Controller
     public function player()
     {
         $data = Char::getPlayerRanking();
-        return view('ranking.ranking.player', compact('data'));
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
+
+        return view('ranking.ranking.player', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function guild()
     {
         $data = Guild::getGuildRanking();
-        return view('ranking.ranking.guild', compact('data'));
+        $topImage = config('global.ranking.top_image');
+
+        return view('ranking.ranking.guild', [
+            'data' => $data,
+            'topImage' => $topImage,
+        ]);
     }
 
     public function unique()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
         $uniqueList = config('global.ranking.uniques');
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
         return view('ranking.ranking.unique', [
             'data' => $data,
             'uniqueList' => $uniqueList,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
         ]);
     }
 
@@ -62,29 +78,52 @@ class RankingController extends Controller
     {
         $data = LogInstanceWorldInfo::getUniqueRanking(25, 1);
         $uniqueList = config('global.ranking.uniques');
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
         return view('ranking.ranking.unique-monthly', [
             'data' => $data,
             'uniqueList' => $uniqueList,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
         ]);
     }
 
     public function fortress_player()
     {
         $data = GuildMember::getFortressPlayerRanking();
-        return view('ranking.ranking.fortress-player', compact('data'));
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
+
+        return view('ranking.ranking.fortress-player', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function fortress_guild()
     {
         $data = Guild::getFortressGuildRanking();
-        return view('ranking.ranking.fortress-guild', compact('data'));
+        $topImage = config('global.ranking.top_image');
+
+        return view('ranking.ranking.fortress-guild', [
+            'data' => $data,
+            'topImage' => $topImage,
+        ]);
     }
 
     public function honor()
     {
         $data = TrainingCampHonorRank::getHonorRanking();
-        return view('ranking.ranking.honor', compact('data'));
+        $honorLevel = config('global.ranking.honor_level');
+        $characterRace = config('global.ranking.character_race');
+
+        return view('ranking.ranking.honor', [
+            'data' => $data,
+            'honorLevel' => $honorLevel,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function job()
@@ -109,8 +148,16 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
+        $jobType = config('global.ranking.job_type');
 
-        return view('ranking.ranking.job-all', compact('data'));
+        return view('ranking.ranking.job-all', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+            'jobType' => $jobType,
+        ]);
     }
 
     public function job_hunter()
@@ -120,8 +167,14 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 1);
         }
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
-        return view('ranking.ranking.job-hunter', compact('data'));
+        return view('ranking.ranking.job-hunter', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function job_thieve()
@@ -131,8 +184,14 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 2);
         }
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
-        return view('ranking.ranking.job-thieve', compact('data'));
+        return view('ranking.ranking.job-thieve', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function job_trader()
@@ -142,8 +201,14 @@ class RankingController extends Controller
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 3);
         }
+        $topImage = config('global.ranking.top_image');
+        $characterRace = config('global.ranking.character_race');
 
-        return view('ranking.ranking.job-trader', compact('data'));
+        return view('ranking.ranking.job-trader', [
+            'data' => $data,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+        ]);
     }
 
     public function character_view($name, InventoryService $inventoryService)

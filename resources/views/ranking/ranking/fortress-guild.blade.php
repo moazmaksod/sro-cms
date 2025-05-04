@@ -13,7 +13,7 @@
                 <tr>
                     <td>
                         @if($i <= 3)
-                            <img src="{{ asset(config('global.ranking.top_icons')[$i]) }}" alt=""/>
+                            <img src="{{ asset($topImage[$i]) }}" alt=""/>
                         @else
                             {{ $i }}
                         @endif
