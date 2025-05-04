@@ -4,7 +4,6 @@ namespace App\Models\SRO\Log;
 
 use App\Models\SRO\Shard\Char;
 use App\Models\SRO\Shard\Guild;
-use App\Models\SRO\Shard\RefRegion;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,8 +57,8 @@ class LogInstanceWorldInfo extends Model
                     '_Guild.Name',
                     DB::raw($case)
                 )
-                ->join((new Char())->getTable(), '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
-                ->join((new Guild())->getTable(), '_Char.GuildID', '=', '_Guild.ID')
+                ->join(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
+                ->join(DB::connection('shard')->getDatabaseName().'.dbo._Guild', '_Char.GuildID', '=', '_Guild.ID')
                 ->whereIn('_LogInstanceWorldInfo.Value', array_keys($uniqueList))
                 ->where('_LogInstanceWorldInfo.ValueCodeName128', 'KILL_UNIQUE_MONSTER')
                 ->when($month == 1, function ($query) use ($startOfMonth) {
@@ -96,8 +95,8 @@ class LogInstanceWorldInfo extends Model
                     '_RefRegion.AreaName',
                     '_LogInstanceWorldInfo.EventTime'
                 ])
-                ->leftJoin((new Char())->getTable(), '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
-                ->leftJoin((new RefRegion())->getTable(), '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
+                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
+                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefRegion', '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
                 ->whereIn('_LogInstanceWorldInfo.Value', $uniqueList)
                 ->whereIn('_LogInstanceWorldInfo.ValueCodeName128', ['KILL_UNIQUE_MONSTER', 'SPAWN_UNIQUE_MONSTER'])
                 ->when($CharID > 0, function ($query) use ($CharID) {
