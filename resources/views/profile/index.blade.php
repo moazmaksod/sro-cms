@@ -25,6 +25,7 @@
                                 @endif
                                 <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
                                 <p>{{ __('Lv:') }} {{ $value->CurLevel }}</p>
+                                <p>{{ __('Gold:') }} {{ number_format($value->RemainGold , 0, ',', '.')}}</p>
                             </div>
                         </div>
                     </div>
@@ -41,15 +42,15 @@
                             <tbody>
                             <tr>
                                 <th scope="row">JID</th>
-                                <td>{{ $user->JID }}</td>
+                                <td>{{ $user->tbUser->JID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
-                                <td>{{ $user->StrUserID }}</td>
+                                <td>{{ $user->tbUser->StrUserID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
-                                <td>{{ $user->Email }}</td>
+                                <td>{{ $user->tbUser->Email }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
@@ -68,11 +69,11 @@
                             <tbody>
                             <tr>
                                 <th scope="row">Portal JID</th>
-                                <td>{{ $user->PortalJID }}</td>
+                                <td>{{ $user->tbUser->PortalJID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Username</th>
-                                <td>{{ $user->StrUserID }}</td>
+                                <td>{{ $user->tbUser->StrUserID }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Email</th>
