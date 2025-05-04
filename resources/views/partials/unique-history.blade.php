@@ -7,7 +7,7 @@
             <ul class="list-unstyled">
                 @forelse($uniqueHistory as $value)
                     <li class="mb-3">
-                        <p class="mb-0">{{ $uniqueHistoryConfig[$value->Value]['name'] }}</p>
+                        <p class="mb-0">{{ $uniquesList[$value->Value]['name'] }}</p>
                         <small>
                             {{ __('Killed by:') }}
                             @if(!empty($value->CharName16))
