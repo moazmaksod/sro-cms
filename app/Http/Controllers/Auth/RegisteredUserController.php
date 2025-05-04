@@ -82,7 +82,7 @@ class RegisteredUserController extends Controller
                 //type 1 = silk, type 3 = premium silk
                 //AphChangedSilk::setChangedSilk($jid, 1, 0);
                 //AphChangedSilk::setChangedSilk($jid, 3, 0);
-                TbUser::setGameAccount($jid, $request->username, $request->password, $request->ip());
+                TbUser::setGameAccount($jid, $request->username, $request->password, $request->email, $request->ip());
             }
 
             $user = User::create([
