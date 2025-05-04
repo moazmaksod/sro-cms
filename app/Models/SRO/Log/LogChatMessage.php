@@ -45,7 +45,7 @@ class LogChatMessage extends Model
                     '_LogChatMessage.EventTime',
                     '_LogChatMessage.Comment'
                 ])
-                ->leftJoin(DB::raw('SILKROAD_R_SHARD.._Char'), function ($join) {
+                ->leftJoin(DB::raw(DB::connection('shard')->getDatabaseName().'.._Char'), function ($join) {
                     $join->on(DB::raw('_Char.CharName16 COLLATE Latin1_General_CI_AS'), '=', DB::raw('_LogChatMessage.CharName COLLATE Latin1_General_CI_AS'));
                 })
                 ->where('_LogChatMessage.TargetName', '[YELL]')

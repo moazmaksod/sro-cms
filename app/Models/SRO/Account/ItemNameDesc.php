@@ -26,7 +26,7 @@ class ItemNameDesc extends Model
      *
      * @var string
      */
-    protected $table = 'dbo._Rigid_ItemNameDesc';
+    //protected $table = 'dbo._Rigid_ItemNameDesc';
 
     /**
      * The attributes that are mass assignable.
@@ -52,6 +52,13 @@ class ItemNameDesc extends Model
         'ESP',
         'GER'
     ];
+
+    public function getTable()
+    {
+        return config('global.general.server.version') === 'vSRO'
+            ? 'dbo._ItemNameDesc'
+            : 'dbo._Rigid_ItemNameDesc';
+    }
 
     public static function getItemRealName($CodeName128): string
     {
