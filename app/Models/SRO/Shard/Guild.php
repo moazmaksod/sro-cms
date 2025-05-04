@@ -137,13 +137,15 @@ class Guild extends Model
         $minutes = config('global.general.cache.guild_info', 1440);
 
         return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes($minutes), function () use ($GuildID) {
-            return self::where('Alliance', function ($query) use ($GuildID) {
+            return self::select('Name')
+            ->where('Alliance', function ($query) use ($GuildID) {
                 $query->select('Alliance')
-                ->from('_Guild')
-                ->where('ID', $GuildID)
-                ->where('Alliance', '>', 0);
+                    ->from('_Guild')
+                    ->where('ID', $GuildID)
+                    ->where('Alliance', '>', 0);
             })
-            ->pluck('Name');
+            ->where('ID', '!=', $GuildID)
+            ->get();
         });
     }
 }
