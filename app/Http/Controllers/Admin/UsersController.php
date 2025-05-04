@@ -29,7 +29,11 @@ class UsersController extends Controller
 
     public function view(TbUser $user)
     {
-        return view('admin.users.view', compact('user'));
+        $vipLevel = config('global.ranking.vip_level');
+        return view('admin.users.view', [
+            'user' => $user,
+            'vipLevel' => $vipLevel,
+        ]);
     }
 
     public function update(Request $request, TbUser $user)

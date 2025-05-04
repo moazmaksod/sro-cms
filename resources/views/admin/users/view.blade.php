@@ -48,7 +48,7 @@
                             <tbody>
                                 <tr>
                                     <th scope="row">Portal JID</th>
-                                    <td>{{ $user->PortalJID ?? '' }}</td>
+                                    <td>{{ $user->PortalJID }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Username</th>
@@ -56,7 +56,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Email</th>
-                                    <td>{{ $user->muUser->muEmail->EmailAddr ?? '' }}</td>
+                                    <td>{{ $user->muUser->muEmail->EmailAddr }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Silk') }}</th>
@@ -79,8 +79,8 @@
                                     <th scope="row">VIP</th>
                                     <td>
                                         @isset($user->muUser->muVIPInfo->VIPUserType)
-                                            <img src="{{ asset(config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['icon']) }}" width="24" height="24" alt="">
-                                            <span>{{ config('global.ranking.vip_level.level')[$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
+                                            <img src="{{ asset($vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
+                                            <span>{{ $vipLevel['level'][$user->muUser->muVIPInfo->VIPLv]['name'] }}</span>
                                         @else
                                             <span>{{ __('None') }}</span>
                                         @endisset
