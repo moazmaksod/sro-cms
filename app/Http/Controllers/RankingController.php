@@ -240,6 +240,13 @@ class RankingController extends Controller
                 $inventoryJob = $inventoryService->getInventoryJob($charID);
             }
 
+            $uniqueList = config('global.ranking.uniques');
+            $characterImage = config('global.ranking.character_image');
+            $skillMastery = config('global.ranking.skill_mastery');
+            $jobType = config('global.ranking.job_type');
+            $characterRace = config('global.ranking.character_race');
+            $hwanLevel = config('global.ranking.hwan_level');
+
             if ($data) {
                 return view('ranking.character.index', [
                     'data' => $data,
@@ -248,7 +255,13 @@ class RankingController extends Controller
                     'globalsHistory' => $globalsHistory,
                     'inventorySet' => $inventorySet,
                     'inventoryAvatar' => $inventoryAvatar,
-                    'inventoryJob' => $inventoryJob ?? null
+                    'inventoryJob' => $inventoryJob ?? null,
+                    'uniqueList' => $uniqueList,
+                    'characterImage' => $characterImage,
+                    'skillMastery' => $skillMastery,
+                    'jobType' => $jobType,
+                    'characterRace' => $characterRace,
+                    'hwanLevel' => $hwanLevel,
                 ]);
             }
         }

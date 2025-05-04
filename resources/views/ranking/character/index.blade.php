@@ -9,7 +9,7 @@
                     <div class="col-md-6">
                         <div class="d-flex">
                             <div class="d-flex me-3 overflow-hidden align-items-center">
-                                <img class="object-fit-cover rounded border" src="{{ asset(config('global.ranking.character_image')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
+                                <img class="object-fit-cover rounded border" src="{{ asset($characterImage[$data->RefObjID]) }}" width="100" height="100" alt=""/>
                             </div>
 
                             <div class="mt-4">
@@ -17,9 +17,9 @@
                                 <p class="m-0">{{ __('Item Points:') }} <span class="">{{ $data->ItemPoints }}</span></p>
 
                                 <ul class="list-unstyled d-flex">
-                                    @foreach($build_info as $value)
+                                    @foreach($build as $value)
                                         <li class="me-1">
-                                            <img src="{{ asset(config('global.ranking.skill_mastery')[$value->MasteryID]['icon']) }}" title="{{ config('global.ranking.skill_mastery')[$value->MasteryID]['name'] }}" alt="">
+                                            <img src="{{ asset($skillMastery[$value->MasteryID]['image']) }}" title="{{ $skillMastery[$value->MasteryID]['name'] }}" alt="">
                                         </li>
                                     @endforeach
                                 </ul>
@@ -32,12 +32,12 @@
                                 <div class="col-md-4">
                                     <div class="d-flex">
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ asset(config('global.ranking.job_type_icons')[$data->JobType]['icon']) }}" width="50" height="" alt=""/>
+                                            <img src="{{ asset($jobType[$data->JobType]['image']) }}" width="50" height="" alt=""/>
                                         </div>
 
                                         <ul class="list-unstyled mt-3">
                                             <li class="mb-0">
-                                                <span>{{ config('global.ranking.job_type_icons')[$data->JobType]['name'] }}</span>
+                                                <span>{{ $jobType[$data->JobType]['name'] }}</span>
                                             </li>
                                             <li class="mb-0">{{ __('Job Level:') }} <span class="">{{ $data->JobLevel }}</span></li>
                                         </ul>
@@ -90,11 +90,11 @@
                         <div class="card">
                             <div class="card-body d-flex justify-content-center" id="display-inventory">
                                 <div class="" id="display-inventory-set">
-                                    @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventory_set])
+                                    @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventorySet])
                                 </div>
                                 @if(config('global.general.server.version') !== 'vSRO')
                                     <div class="d-none" id="display-inventory-avatar">
-                                        @include('ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $inventory_job])
+                                        @include('ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $inventoryJob])
                                     </div>
                                 @endif
                                 <div class="" id="display-inventory-avatar-accessory">
@@ -102,7 +102,7 @@
                                         <button id="display-inventory-switch" data-type="set" class="btn btn-secondary position-absolute" style="top: -50px;">{{ __('Job Equip') }}</button>
                                     @endif
                                     <p class="mb-0" id="display-inventory-avatar-accessory-label">{{ __('Accessories') }}</p>
-                                    @include('ranking.character.partials.inventory.inventory-avatar-view', ['inventoryAvatarList' => $inventory_avatar])
+                                    @include('ranking.character.partials.inventory.inventory-avatar-view', ['inventoryAvatarList' => $inventoryAvatar])
                                 </div>
                             </div>
                         </div>

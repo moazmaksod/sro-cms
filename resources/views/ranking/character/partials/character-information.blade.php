@@ -23,11 +23,11 @@
             <td>{{ __('Race:') }}</td>
             <td>
                 @if($data->RefObjID > 2000)
-                    <img src="{{ asset(config('global.ranking.race')[1]['icon']) }}" width="16" height="16" alt=""/>
-                    <span>{{ config('global.ranking.race')[1]['name'] }}</span>
+                    <img src="{{ asset($characterRace[1]['image']) }}" width="16" height="16" alt=""/>
+                    <span>{{ $characterRace[1]['name'] }}</span>
                 @else
-                    <img src="{{ asset(config('global.ranking.race')[0]['icon']) }}" width="16" height="16" alt=""/>
-                    <span>{{ config('global.ranking.race')[0]['name'] }}</span>
+                    <img src="{{ asset($characterRace[0]['image']) }}" width="16" height="16" alt=""/>
+                    <span>{{ $characterRace[0]['name'] }}</span>
                 @endif
             </td>
         </tr>
@@ -44,9 +44,9 @@
             <td style="color: #ffc345">
                 @if($data->HwanLevel > 0)
                     @if($data->RefObjID > 2000)
-                        [{{ config('global.ranking.hwan_titles')['EU'][$data->HwanLevel] }}]
+                        [{{ $hwanLevel['EU'][$data->HwanLevel] ?? 'Unknown' }}]
                     @else
-                        [{{ config('global.ranking.hwan_titles')['CH'][$data->HwanLevel] }}]
+                        [{{ $hwanLevel['CH'][$data->HwanLevel] ?? 'Unknown' }}]
                     @endif
                 @endif
             </td>

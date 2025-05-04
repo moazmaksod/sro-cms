@@ -396,7 +396,7 @@ return [
                 'points' => 10
             ],
         ],
-        'hwan_title' => [
+        'hwan_level' => [
             'CH' => [
                 1 => 'Captain',
                 2 => 'General',
