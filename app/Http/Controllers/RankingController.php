@@ -27,7 +27,6 @@ class RankingController extends Controller
             $data = Char::getPlayerRanking();
         }
         $config = config('global.ranking.menu');
-        $data = Char::getPlayerRanking();
         $topImage = config('global.ranking.top_image');
         $characterRace = config('global.ranking.character_race');
 
