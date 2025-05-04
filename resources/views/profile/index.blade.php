@@ -5,12 +5,12 @@
     <div class="container">
         <h3 class="">{{ __('Characters') }}</h3>
         <div class="row">
-            @if($user->tbUser->shardUser->isEmpty())
+            @if(Auth::user()->tbUser->shardUser->isEmpty())
                 <div class="alert alert-danger text-center" role="alert">
                     {{ __('No Characters Found!') }}
                 </div>
             @else
-                @foreach($user->tbUser->shardUser as $value)
+                @foreach(Auth::user()->tbUser->shardUser as $value)
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-body text-center">
