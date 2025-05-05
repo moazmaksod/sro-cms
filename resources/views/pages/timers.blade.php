@@ -18,12 +18,12 @@
                             @php $i = 0; @endphp
                             @foreach($data as $value)
                                 <tr>
-                                    <td>{{ $value['description'] }}</td>
+                                    <td>{{ $value['name'] }}</td>
                                     <td>
                                         <span class="timerCountdown" id="idTimeCountdown_{{ $i }}" data-time="{{ $value['timestamp'] }}"></span>
                                     </td>
                                     <td>
-                                        @if($value['is_running'])
+                                        @if($value['status'])
                                             <span class="text-success">{{ __('Active') }}</span>
                                         @else
                                             <span class="text-warning">{{ __('Planned') }}</span>

@@ -8,9 +8,9 @@
                 @php $i = 0; @endphp
                 @foreach($eventSchedule as $value)
                     <li>
-                        <span>{{ $value['description'] }}</span>
+                        <span>{{ $value['name'] }}</span>
                         <span class="float-end">
-                            @if($value['is_running'])
+                            @if($value['status'])
                                 <span class="text-success">{{ __('Active') }}</span>
                             @else
                                 <span class="timerCountdown" id="idTimeCountdown_{{ $i }}" data-time="{{ $value['timestamp'] }}"></span>
