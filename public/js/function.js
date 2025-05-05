@@ -37,6 +37,11 @@ function clockTimer(element)
     var Minuten = ServerTime.getMinutes();
     var Sekunden = ServerTime.getSeconds();
     ServerTime.setSeconds(Sekunden + 1);
+
+    var ampm = Stunden >= 12 ? 'PM' : 'AM';
+    Stunden = Stunden % 12;
+    Stunden = Stunden ? Stunden : 12;
+
     if (Stunden <= 9) {
         Stunden = "0" + Stunden;
     }
@@ -47,7 +52,7 @@ function clockTimer(element)
     if (Sekunden <= 9) {
         Sekunden = "0" + Sekunden;
     }
-    jQuery(element).text(Stunden.toString()+':'+Minuten.toString()+':'+Sekunden.toString());
+    jQuery(element).text(Stunden.toString()+':'+Minuten.toString()+':'+Sekunden.toString() + ' ' + ampm);
 }
 
 
