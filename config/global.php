@@ -214,7 +214,7 @@ return [
             ],
         ],
         'event_schedule' => [
-            'enabled' => false,
+            'enabled' => true,
             'names' => [
                 10 => 'Roc',
                 9 => 'Medusa',

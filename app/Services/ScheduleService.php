@@ -29,30 +29,24 @@ class ScheduleService
                         (int)$schedule->SubInterval_StartTimeSecond
                     );
 
-                    if ($now->gte($nextStart)) {
+                    $nextEnd = $nextStart->copy()->addSeconds((int)$schedule->SubInterval_DurationSecond);
+
+                    if ($now->gte($nextEnd)) {
                         $nextStart->addDay();
+                        $nextEnd = $nextStart->copy()->addSeconds((int)$schedule->SubInterval_DurationSecond);
                     }
                 } elseif ((int)$schedule->MainInterval_Type === 3) {
-                    $nextStart = $now->copy()
-                        ->next(
-                            (int)$schedule->SubInterval_DayOfWeek - 1
-                        )
-                        ->setTime(
+                    $targetDay = (int)$schedule->SubInterval_DayOfWeek - 1;
+                    $nextStart = $now->copy()->startOfDay()->setTime(
                         (int)$schedule->SubInterval_StartTimeHour,
                         (int)$schedule->SubInterval_StartTimeMinute,
                         (int)$schedule->SubInterval_StartTimeSecond
                     );
 
-                    if ($now->dayOfWeek === (int)$schedule->SubInterval_DayOfWeek - 1) {
-                        $todayStart = $now->copy()->setTime(
-                            (int)$schedule->SubInterval_StartTimeHour,
-                            (int)$schedule->SubInterval_StartTimeMinute,
-                            (int)$schedule->SubInterval_StartTimeSecond
-                        );
-
-                        if ($now->lt($todayStart)) {
-                            $nextStart = $todayStart;
-                        }
+                    if ($now->dayOfWeek !== $targetDay) {
+                        $nextStart->next($targetDay);
+                    } elseif ($now->gte($nextStart->copy()->addSeconds((int)$schedule->SubInterval_DurationSecond))) {
+                        $nextStart->addWeek();
                     }
                 }
 
@@ -63,8 +57,8 @@ class ScheduleService
                 $nextEnd = $nextStart->copy()->addSeconds((int)$schedule->SubInterval_DurationSecond);
                 $status = $now->between($nextStart, $nextEnd);
 
-                if (!$soonestEvent || $nextStart->lt($soonestEvent['start'])) {
-                    $soonestEvent = ['start' => $nextStart, 'end' => $nextEnd];
+                if (!$soonestEvent || $status || (!$soonestEvent['status'] && $nextStart->lt($soonestEvent['start']))) {
+                    $soonestEvent = ['start' => $nextStart, 'end' => $nextEnd, 'status' => $status];
 
                     $result[$ScheduleDefineIdx] = [
                         'idx' => $ScheduleDefineIdx,
