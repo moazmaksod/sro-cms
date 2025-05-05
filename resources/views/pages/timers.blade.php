@@ -18,7 +18,7 @@
                             @php $i = 0; @endphp
                             @foreach($data as $value)
                                 <tr>
-                                    <td>{{ $value['name'] }}</td>
+                                    <td>{{ $value['Description'] }}</td>
                                     <td>
                                         <span class="timerCountdown" id="idTimeCountdown_{{ $i }}" data-time="{{ $value['timestamp'] }}"></span>
                                     </td>
