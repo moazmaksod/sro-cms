@@ -48,12 +48,7 @@ class PageController extends Controller
     public function timers(ScheduleService $scheduleService)
     {
         $data = $scheduleService->getEventSchedules();
-        $config = config('global.widgets.event_schedule');
-
-        return view('pages.timers', [
-            'data' => $data,
-            'config' => $config,
-        ]);
+        return view('pages.timers', compact('data'));
     }
 
     public function uniques()

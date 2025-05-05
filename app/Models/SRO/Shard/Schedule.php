@@ -38,22 +38,12 @@ class Schedule extends Model
      */
     protected $primaryKey = 'ScheduleIdx';
 
-    public static function getSchedules($Type = [1], $Idx = [3])
+    public static function getSchedules($Idx = [])
     {
         $minutes = config('global.general.cache.event_schedule', 10080);
 
-        return Cache::remember("event_schedule_{$Type[0]}_{$Idx[0]}", now()->addMinutes($minutes), function () use ($Idx, $Type) {
-            return self::select([
-                "MainInterval_Type",
-                "ScheduleDefineIdx",
-                "SubInterval_DayOfWeek",
-                "SubInterval_StartTimeHour",
-                "SubInterval_StartTimeMinute",
-                "SubInterval_DurationSecond"]
-            )
-            ->whereIn("MainInterval_Type", $Type)
-            ->whereIn("ScheduleDefineIdx", $Idx)
-            ->get();
+        return Cache::remember("event_schedule_{$Idx[0]}", now()->addMinutes($minutes), function () use ($Idx) {
+            return self::whereIn("ScheduleDefineIdx", $Idx)->orderBy('ScheduleDefineIdx')->get();
         });
     }
 }

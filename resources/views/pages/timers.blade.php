@@ -16,15 +16,14 @@
                         </thead>
                         <tbody>
                             @php $i = 0; @endphp
-                            @foreach($data as $key => $value)
-                                @if(is_null($value)) @continue @endif
+                            @foreach($data as $value)
                                 <tr>
-                                    <td>{{ $config['names'][$key] }}</td>
+                                    <td>{{ $value['name'] }}</td>
                                     <td>
-                                        <span class="timerCountdown" id="idTimeCountdown_{{ $i }}" data-time="{{ $value['start'] }}"></span>
+                                        <span class="timerCountdown" id="idTimeCountdown_{{ $i }}" data-time="{{ $value['timestamp'] }}"></span>
                                     </td>
                                     <td>
-                                        @if($value['status'])
+                                        @if($value['is_running'])
                                             <span class="text-success">{{ __('Active') }}</span>
                                         @else
                                             <span class="text-warning">{{ __('Planned') }}</span>
