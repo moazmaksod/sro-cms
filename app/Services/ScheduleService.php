@@ -54,25 +54,17 @@ class ScheduleService
                 $isRunning = $now->between($nextStart, $nextEnd);
 
                 if (!$soonestEvent || $nextStart->lt($soonestEvent['start'])) {
-                    $soonestEvent = [
-                        'start' => $nextStart,
-                        'end' => $nextEnd,
+                    $soonestEvent = ['start' => $nextStart, 'end' => $nextEnd];
+
+                    $result[$ScheduleDefineIdx] = [
+                        'timestamp' => $nextStart->timestamp,
                         'is_running' => $isRunning,
                         'duration' => $duration,
                         'description' => $config[$ScheduleDefineIdx] ?? $schedule->Description,
+                        'start' => $nextStart,
+                        'end' => $nextEnd
                     ];
                 }
-            }
-
-            if ($soonestEvent) {
-                $result[$ScheduleDefineIdx] = [
-                    'timestamp' => $soonestEvent['start']->timestamp,
-                    'is_running' => $soonestEvent['is_running'],
-                    'duration' => $soonestEvent['duration'],
-                    'description' => $soonestEvent['description'],
-                    'start_time' => $soonestEvent['start']->toDateTimeString(),
-                    'end_time' => $soonestEvent['end']->toDateTimeString(),
-                ];
             }
         }
 
