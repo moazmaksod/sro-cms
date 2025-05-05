@@ -8,7 +8,7 @@
                 @php $i = 0; @endphp
                 @foreach($eventSchedule as $value)
                     <li>
-                        <span>{{ $value['Description'] }}</span>
+                        <span>{{ $value['description'] }}</span>
                         <span class="float-end">
                             @if($value['is_running'])
                                 <span class="text-success">{{ __('Active') }}</span>

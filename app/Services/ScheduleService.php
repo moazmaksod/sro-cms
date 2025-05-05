@@ -20,91 +20,58 @@ class ScheduleService
             $soonestEvent = null;
 
             foreach ($schedules as $schedule) {
-                // Use exact column names from table
-                $SubInterval_StartTimeHour = (int)$schedule->SubInterval_StartTimeHour;
-                $SubInterval_StartTimeMinute = (int)$schedule->SubInterval_StartTimeMinute;
-                $SubInterval_StartTimeSecond = (int)$schedule->SubInterval_StartTimeSecond;
-                $SubInterval_DurationSecond = (int)$schedule->SubInterval_DurationSecond;
-                $SubInterval_DayOfWeek = (int)$schedule->SubInterval_DayOfWeek;
-                $MainInterval_Type = (int)$schedule->MainInterval_Type;
+                $hour = (int)$schedule->SubInterval_StartTimeHour;
+                $minute = (int)$schedule->SubInterval_StartTimeMinute;
+                $second = (int)$schedule->SubInterval_StartTimeSecond;
+                $duration = (int)$schedule->SubInterval_DurationSecond;
+                $dayOfWeek = (int)$schedule->SubInterval_DayOfWeek;
+                $intervalType = (int)$schedule->MainInterval_Type;
 
-                $nextOccurrence = null;
+                $nextStart = null;
+                if ($intervalType === 1) {
+                    $nextStart = $now->copy()->setTime($hour, $minute, $second);
 
-                switch ($MainInterval_Type) {
-                    case 1: // Daily
-                        $dateStart = $now->copy()->setTime(
-                            $SubInterval_StartTimeHour,
-                            $SubInterval_StartTimeMinute,
-                            $SubInterval_StartTimeSecond
-                        );
+                    if ($now->gte($nextStart)) {
+                        $nextStart->addDay();
+                    }
+                } elseif ($intervalType === 3) {
+                    $nextStart = $now->copy()->next($dayOfWeek - 1)->setTime($hour, $minute, $second);
 
-                        if ($now->lt($dateStart)) {
-                            $nextOccurrence = $dateStart;
-                        } else {
-                            $nextOccurrence = $dateStart->addDay();
+                    if ($now->dayOfWeek === $dayOfWeek - 1) {
+                        $todayStart = $now->copy()->setTime($hour, $minute, $second);
+
+                        if ($now->lt($todayStart)) {
+                            $nextStart = $todayStart;
                         }
-                        break;
-
-                    case 3: // Weekly
-                        $carbonDayOfWeek = $SubInterval_DayOfWeek - 1; // Convert to Carbon's 0-6 format
-                        $nextDate = $now->copy()
-                            ->next($carbonDayOfWeek)
-                            ->setTime(
-                                $SubInterval_StartTimeHour,
-                                $SubInterval_StartTimeMinute,
-                                $SubInterval_StartTimeSecond
-                            );
-
-                        // Check if today is event day and hasn't started yet
-                        if ($now->dayOfWeek === $carbonDayOfWeek) {
-                            $todayStart = $now->copy()->setTime(
-                                $SubInterval_StartTimeHour,
-                                $SubInterval_StartTimeMinute,
-                                $SubInterval_StartTimeSecond
-                            );
-                            if ($now->lt($todayStart)) {
-                                $nextOccurrence = $todayStart;
-                                break;
-                            }
-                        }
-
-                        $nextOccurrence = $nextDate;
-                        break;
-
-                    default:
-                        continue 2;
+                    }
                 }
 
-                if (!$nextOccurrence) {
+                if (!$nextStart) {
                     continue;
                 }
 
-                // Calculate exact end time using duration
-                $dateEnd = $nextOccurrence->copy()->addSeconds($SubInterval_DurationSecond);
+                $nextEnd = $nextStart->copy()->addSeconds($duration);
+                $isRunning = $now->between($nextStart, $nextEnd);
 
-                // PROPER is_running calculation
-                $is_running = ($now >= $nextOccurrence && $now <= $dateEnd);
-
-                // Keep only the soonest event
-                if (!$soonestEvent || $nextOccurrence->lt($soonestEvent['dateStart'])) {
+                if (!$soonestEvent || $nextStart->lt($soonestEvent['start'])) {
                     $soonestEvent = [
-                        'dateStart' => $nextOccurrence,
-                        'dateEnd' => $dateEnd,
-                        'is_running' => $is_running,
-                        'SubInterval_DurationSecond' => $SubInterval_DurationSecond,
-                        'Description' => $config[$ScheduleDefineIdx] ?? $schedule->Description,
+                        'start' => $nextStart,
+                        'end' => $nextEnd,
+                        'is_running' => $isRunning,
+                        'duration' => $duration,
+                        'description' => $config[$ScheduleDefineIdx] ?? $schedule->Description,
                     ];
                 }
             }
 
             if ($soonestEvent) {
                 $result[$ScheduleDefineIdx] = [
-                    'timestamp' => $soonestEvent['dateStart']->timestamp,
+                    'timestamp' => $soonestEvent['start']->timestamp,
                     'is_running' => $soonestEvent['is_running'],
-                    'SubInterval_DurationSecond' => $soonestEvent['SubInterval_DurationSecond'],
-                    'Description' => $soonestEvent['Description'],
-                    'start_time' => $soonestEvent['dateStart']->toDateTimeString(),
-                    'end_time' => $soonestEvent['dateEnd']->toDateTimeString(),
+                    'duration' => $soonestEvent['duration'],
+                    'description' => $soonestEvent['description'],
+                    'start_time' => $soonestEvent['start']->toDateTimeString(),
+                    'end_time' => $soonestEvent['end']->toDateTimeString(),
                 ];
             }
         }
