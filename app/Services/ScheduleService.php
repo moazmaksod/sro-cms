@@ -60,6 +60,7 @@ class ScheduleService
                         'timestamp' => $nextStart->timestamp,
                         'is_running' => $isRunning,
                         'duration' => $duration,
+                        //'description' => !empty($schedule->Description) ? $schedule->Description : $config[$ScheduleDefineIdx],
                         'description' => $config[$ScheduleDefineIdx] ?? $schedule->Description,
                         'start' => $nextStart,
                         'end' => $nextEnd
