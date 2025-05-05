@@ -67,10 +67,11 @@ class ScheduleService
                     $soonestEvent = ['start' => $nextStart, 'end' => $nextEnd];
 
                     $result[$ScheduleDefineIdx] = [
+                        'idx' => $ScheduleDefineIdx,
                         'name' => $config[$ScheduleDefineIdx] ?? $schedule->Description,
                         'timestamp' => $nextStart->timestamp,
-                        'status' => $status,
                         'duration' => (int)$schedule->SubInterval_DurationSecond,
+                        'status' => $status,
                         'start' => $nextStart,
                         'end' => $nextEnd
                     ];
@@ -78,6 +79,7 @@ class ScheduleService
             }
         }
 
+        ksort($result, SORT_NUMERIC);
         return $result;
     }
 }
