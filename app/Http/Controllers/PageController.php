@@ -108,9 +108,7 @@ class PageController extends Controller
         $data = WebItemCertifyKey::getCertifyKey($user->tbUser->JID);
         $config = config('global.general.server');
         $key = strtoupper(md5($data->UserJID.$data->Certifykey.$config['saltKey']));
-
-        $response = Http::get($config['WebMallAddr'], ['jid' => $data->UserJID, 'key' => $key, 'loc' => 'us']);
-        $data = $response->body();
+        $data = "{$config['WebMallAddr']}?jid={$data->UserJID}&key={$key}&loc=us";
 
         return view('pages.gateway', [
             'data' => $data,
