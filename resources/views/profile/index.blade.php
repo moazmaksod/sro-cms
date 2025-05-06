@@ -114,6 +114,7 @@
             </div>
         </div>
 
+        {{--
         <h3 class="mt-4">{{ __('Itemmall') }}</h3>
         <div class="card p-3 ">
             <div class="card-body text-center">
@@ -121,5 +122,6 @@
                 <a href="{{ route('pages.gateway') }}" class="btn btn-primary">{{ __('Open ItemMall') }}</a>
             </div>
         </div>
+        --}}
     </div>
 @endsection
