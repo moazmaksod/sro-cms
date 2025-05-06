@@ -142,8 +142,7 @@ class InventoryService
         $aData['sox'] = null; // For Blade
         $aData['OptLevel'] = data_get($aItem, 'OptLevel', 0);
         $aData['Degree'] = data_get($aItem, 'ItemClass', '0'); // For Blade
-        //$aData['WebName'] = ItemNameDesc::getItemRealName($aItem['NameStrID128']);
-        $aData['WebName'] = config('itemname')[$aItem['NameStrID128']] ?? $aItem['NameStrID128'];
+        $aData['WebName'] = ItemNameDesc::getItemRealName($aItem['NameStrID128']);
 
         if (!in_array($aItem['TypeID2'], [1, 4])) {
             return $aData;
