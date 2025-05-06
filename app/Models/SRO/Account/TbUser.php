@@ -136,6 +136,11 @@ class TbUser extends Model
         return $this->belongsTo(SkSilk::class, 'JID', 'JID');
     }
 
+    public function certifyKey()
+    {
+        return $this->hasMany(WebItemCertifyKey::class, 'UserJID', 'JID');
+    }
+
     public function getSkSilkHistory()
     {
         return $this->hasMany(SkSilkBuyList::class, 'UserJID', 'JID');

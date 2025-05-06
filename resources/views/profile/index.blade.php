@@ -113,5 +113,13 @@
                 </div>
             </div>
         </div>
+
+        <h3 class="mt-4">{{ __('Itemmall') }}</h3>
+        <div class="card p-3 ">
+            <div class="card-body text-center">
+                <p>Purchase items from game itemmall</p>
+                <a href="{{ route('pages.gateway') }}" class="btn btn-primary">{{ __('Open ItemMall') }}</a>
+            </div>
+        </div>
     </div>
 @endsection

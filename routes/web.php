@@ -17,6 +17,7 @@ Route::get('/uniques-advanced', [PageController::class, 'uniques_advanced'])->na
 Route::any('/fortress', [PageController::class, 'fortress'])->name('pages.fortress');
 Route::any('/globals', [PageController::class, 'globals'])->name('pages.globals');
 Route::get('/download', [PageController::class, 'download'])->name('pages.download');
+Route::get('/gateway', [PageController::class, 'gateway'])->name('pages.gateway');
 
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking');
 Route::any('/ranking/player', [RankingController::class, 'player'])->name('ranking.player');

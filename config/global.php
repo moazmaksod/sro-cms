@@ -4,6 +4,9 @@ return [
     'general' => [
         'server' => [
             'version' => env('SRO_VERSION', 'iSRO'), // or 'vSRO'
+            'saltKey' => 'eset5ag.nsy-g6ky5.mp',
+            'WebMallPass' => 'ISRO-R Development',
+            'WebMallAddr' => "http://webmall.luxor-online.com/gateway.asp"
         ],
         'cache' => [
             'news' => 1440, //1 day

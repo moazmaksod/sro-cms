@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Download;
 use App\Models\News;
 use App\Models\Pages;
+use App\Models\SRO\Account\WebItemCertifyKey;
 use App\Models\SRO\Log\LogChatMessage;
 use App\Models\SRO\Log\LogEventSiegeFortress;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PageController extends Controller
 {
@@ -97,5 +100,20 @@ class PageController extends Controller
     {
         $data = LogChatMessage::getGlobalsHistory(25);
         return view('pages.globals', compact('data'));
+    }
+
+    public function gateway(Request $request)
+    {
+        $user = $request->user();
+        $data = WebItemCertifyKey::getCertifyKey($user->tbUser->JID);
+        $config = config('global.general.server');
+        $key = strtoupper(md5($data->UserJID.$data->Certifykey.$config['saltKey']));
+
+        $response = Http::get($config['WebMallAddr'], ['jid' => $data->UserJID, 'key' => $key, 'loc' => 'us']);
+        $data = $response->body();
+
+        return view('pages.gateway', [
+            'data' => $data,
+        ]);
     }
 }
