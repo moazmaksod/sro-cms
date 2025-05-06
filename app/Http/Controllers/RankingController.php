@@ -292,12 +292,12 @@ class RankingController extends Controller
         return redirect()->back();
     }
 
-    public function guild_crest($hex, CrestService $guildService)
+    public function guild_crest($hex)
     {
-        if ($hex) {
-            return $guildService->drawGuildIconToPNG($hex);
+        if (!preg_match('/^[a-fA-F0-9]+$/', $hex)) {
+            abort(400, 'Invalid crest data.');
         }
 
-        abort(404);
+        return response()->stream(function () use ($hex) {CrestService::generateGuildCrest($hex);}, 200, ['Content-Type' => 'image/png']);
     }
 }

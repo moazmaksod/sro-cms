@@ -35,7 +35,7 @@ Route::any('/ranking/fortress-guild', [RankingController::class, 'fortress_guild
 
 Route::get('/ranking/character/{name}', [RankingController::class, 'character_view'])->name('ranking.character.view');
 Route::get('/ranking/guild/{name}', [RankingController::class, 'guild_view'])->name('ranking.guild.view');
-Route::any('/ranking/guild-crest/{hex}', [RankingController::class, 'guild_crest'])->name('ranking.guild-crest');
+Route::any('/ranking/guild-crest/{hex}.png', [RankingController::class, 'guild_crest'])->name('ranking.guild-crest');
 
 Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 'throttle'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
