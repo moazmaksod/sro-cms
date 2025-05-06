@@ -18,7 +18,7 @@ class PageController extends Controller
     public function index()
     {
         $data = News::getPosts();
-        $config = config('global.general.news_category');
+        $config = config('global.news_category');
 
         return view('pages.index', [
             'data' => $data,
@@ -57,8 +57,8 @@ class PageController extends Controller
     public function uniques()
     {
         $data = LogInstanceWorldInfo::getUniquesKill();
-        $config = config('global.ranking.uniques');
-        $characterRace = config('global.ranking.character_race');
+        $config = config('ranking.uniques');
+        $characterRace = config('ranking.character_race');
 
         return view('pages.uniques', [
             'data' => $data,
@@ -71,7 +71,7 @@ class PageController extends Controller
     {
         $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0);
         $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
-        $config = config('global.ranking.uniques');
+        $config = config('ranking.uniques');
 
         $data = [];
         foreach ($kills as $value) {
@@ -88,7 +88,7 @@ class PageController extends Controller
     public function fortress()
     {
         $data = LogEventSiegeFortress::getFortressHistory(25);
-        $config = config('global.widgets.fortress_war');
+        $config = config('widgets.fortress_war');
 
         return view('pages.fortress', [
             'data' => $data,
@@ -106,7 +106,7 @@ class PageController extends Controller
     {
         $user = $request->user();
         $data = WebItemCertifyKey::getCertifyKey($user->tbUser->JID);
-        $config = config('global.general.server');
+        $config = config('global.server');
         $key = strtoupper(md5($data->UserJID.$data->Certifykey.$config['saltKey']));
         $data = "{$config['WebMallAddr']}?jid={$data->UserJID}&key={$key}&loc=us";
 

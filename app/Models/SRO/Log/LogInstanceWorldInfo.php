@@ -37,8 +37,8 @@ class LogInstanceWorldInfo extends Model
 
     public static function getUniqueRanking($limit = 25, $month = 0)
     {
-        $uniqueList = config('global.ranking.uniques');
-        $minutes = config('global.general.cache.ranking_unique', 60);
+        $uniqueList = config('ranking.uniques');
+        $minutes = config('global.cache.ranking_unique', 60);
 
         $case = 'SUM(CASE ';
         foreach ($uniqueList as $uniqueCode => $points) {
@@ -79,8 +79,8 @@ class LogInstanceWorldInfo extends Model
 
     public static function getUniquesKill($limit = 25, $CharID = 0)
     {
-        $uniqueList = array_keys(config('global.ranking.uniques'));
-        $minutes = config('global.general.cache.unique_history', 10);
+        $uniqueList = array_keys(config('ranking.uniques'));
+        $minutes = config('global.cache.unique_history', 10);
 
         return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes($minutes), function () use ($CharID, $limit, $uniqueList) {
             return self::select([

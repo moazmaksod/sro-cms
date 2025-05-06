@@ -40,7 +40,7 @@ class Schedule extends Model
 
     public static function getSchedules($Idx = [])
     {
-        $minutes = config('global.general.cache.event_schedule', 10080);
+        $minutes = config('global.cache.event_schedule', 10080);
 
         return Cache::remember("event_schedule_{$Idx[0]}", now()->addMinutes($minutes), function () use ($Idx) {
             return self::whereIn("ScheduleDefineIdx", $Idx)->get();

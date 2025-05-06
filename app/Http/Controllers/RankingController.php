@@ -26,9 +26,9 @@ class RankingController extends Controller
         }else {
             $data = Char::getPlayerRanking();
         }
-        $config = config('global.ranking.menu');
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $config = config('ranking.menu');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.index', [
             'data' => $data,
@@ -42,8 +42,8 @@ class RankingController extends Controller
     public function player()
     {
         $data = Char::getPlayerRanking();
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.player', [
             'data' => $data,
@@ -55,7 +55,7 @@ class RankingController extends Controller
     public function guild()
     {
         $data = Guild::getGuildRanking();
-        $topImage = config('global.ranking.top_image');
+        $topImage = config('ranking.top_image');
 
         return view('ranking.ranking.guild', [
             'data' => $data,
@@ -66,9 +66,9 @@ class RankingController extends Controller
     public function unique()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
-        $uniqueList = config('global.ranking.uniques');
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $uniqueList = config('ranking.uniques');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.unique', [
             'data' => $data,
@@ -81,9 +81,9 @@ class RankingController extends Controller
     public function unique_monthly()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking(25, 1);
-        $uniqueList = config('global.ranking.uniques');
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $uniqueList = config('ranking.uniques');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.unique-monthly', [
             'data' => $data,
@@ -96,8 +96,8 @@ class RankingController extends Controller
     public function fortress_player()
     {
         $data = GuildMember::getFortressPlayerRanking();
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.fortress-player', [
             'data' => $data,
@@ -109,7 +109,7 @@ class RankingController extends Controller
     public function fortress_guild()
     {
         $data = Guild::getFortressGuildRanking();
-        $topImage = config('global.ranking.top_image');
+        $topImage = config('ranking.top_image');
 
         return view('ranking.ranking.fortress-guild', [
             'data' => $data,
@@ -120,8 +120,8 @@ class RankingController extends Controller
     public function honor()
     {
         $data = TrainingCampHonorRank::getHonorRanking();
-        $honorLevel = config('global.ranking.honor_level');
-        $characterRace = config('global.ranking.character_race');
+        $honorLevel = config('ranking.honor_level');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.honor', [
             'data' => $data,
@@ -132,15 +132,15 @@ class RankingController extends Controller
 
     public function job()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
-        $config = config('global.ranking.job_menu');
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
-        $jobType = config('global.ranking.job_type');
+        $config = config('ranking.job_menu');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
+        $jobType = config('ranking.job_type');
 
         return view('ranking.ranking.job', [
             'data' => $data,
@@ -153,14 +153,14 @@ class RankingController extends Controller
 
     public function job_all()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
-        $jobType = config('global.ranking.job_type');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
+        $jobType = config('ranking.job_type');
 
         return view('ranking.ranking.job-all', [
             'data' => $data,
@@ -172,13 +172,13 @@ class RankingController extends Controller
 
     public function job_hunter()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 3);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 1);
         }
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.job-hunter', [
             'data' => $data,
@@ -189,13 +189,13 @@ class RankingController extends Controller
 
     public function job_thieve()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 2);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 2);
         }
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.job-thieve', [
             'data' => $data,
@@ -206,13 +206,13 @@ class RankingController extends Controller
 
     public function job_trader()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 1);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 3);
         }
-        $topImage = config('global.ranking.top_image');
-        $characterRace = config('global.ranking.character_race');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
 
         return view('ranking.ranking.job-trader', [
             'data' => $data,
@@ -235,16 +235,16 @@ class RankingController extends Controller
             $inventorySet = $inventoryService->getInventorySet($charID, 13, 0);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
-            if (config('global.general.server.version') !== 'vSRO') {
+            if (config('global.server.version') !== 'vSRO') {
                 $inventoryJob = $inventoryService->getInventoryJob($charID);
             }
 
-            $uniqueList = config('global.ranking.uniques');
-            $characterImage = config('global.ranking.character_image');
-            $skillMastery = config('global.ranking.skill_mastery');
-            $jobType = config('global.ranking.job_type');
-            $characterRace = config('global.ranking.character_race');
-            $hwanLevel = config('global.ranking.hwan_level');
+            $uniqueList = config('ranking.uniques');
+            $characterImage = config('ranking.character_image');
+            $skillMastery = config('ranking.skill_mastery');
+            $jobType = config('ranking.job_type');
+            $characterRace = config('ranking.character_race');
+            $hwanLevel = config('ranking.hwan_level');
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -275,8 +275,8 @@ class RankingController extends Controller
             $data = Guild::getGuildRanking(1, $guildID)->first();
             $members = GuildMember::getGuildInfoMembers($guildID);
             $alliances = Guild::getGuildInfoAlliance($guildID);
-            $characterRace = config('global.ranking.character_race');
-            $guildAuthority = config('global.ranking.guild_authority');
+            $characterRace = config('ranking.character_race');
+            $guildAuthority = config('ranking.guild_authority');
 
             if ($data) {
                 return view('ranking.guild.index', [

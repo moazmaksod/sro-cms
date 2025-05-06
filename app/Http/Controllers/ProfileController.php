@@ -19,9 +19,9 @@ class ProfileController extends Controller
 {
     public function index(Request $request): View
     {
-        $characterImage = config('global.ranking.character_image');
-        $characterRace = config('global.ranking.character_race');
-        $vipLevel = config('global.ranking.vip_level');
+        $characterImage = config('ranking.character_image');
+        $characterRace = config('ranking.character_race');
+        $vipLevel = config('ranking.vip_level');
 
         return view('profile.index', [
             'user' => $request->user(),
@@ -70,7 +70,7 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        if (config('global.general.server.version') !== 'vSRO') {
+        if (config('global.server.version') !== 'vSRO') {
             DB::beginTransaction();
             try {
                 MuEmail::where('JID', $request->user()->jid)->update(['EmailAddr' => $request->user()->email]);

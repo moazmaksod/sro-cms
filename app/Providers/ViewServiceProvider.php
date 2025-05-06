@@ -23,17 +23,17 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with('pages', Pages::get());
             });
 
-            $languages = config('global.general.languages');
+            $languages = config('global.languages');
             View::composer(['layouts.header', 'layouts.navigation'], function ($view) use ($languages) {
                 $view->with('languages', $languages);
             });
 
-            $sliders = config('global.general.sliders');
+            $sliders = config('global.sliders');
             View::composer(['partials.carousel'], function ($view) use ($sliders) {
                 $view->with('sliders', $sliders);
             });
 
-            $footer = config('global.general.footer');
+            $footer = config('global.footer');
             View::composer(['layouts.footer'], function ($view) use ($footer) {
                 $view->with('footer', $footer);
             });
@@ -46,21 +46,21 @@ class ViewServiceProvider extends ServiceProvider
                 ]);
             });
 
-            $discord = config('global.widgets.discord');
+            $discord = config('widgets.discord');
             if($discord['enabled']) {
                 View::composer(['partials.discord'], function ($view) use ($discord) {
                     $view->with('discord', $discord);
                 });
             }
 
-            $serverInfo = config('global.widgets.server_info');
+            $serverInfo = config('widgets.server_info');
             if($serverInfo['enabled']) {
                 View::composer(['partials.server-info'], function ($view) use ($serverInfo) {
                     $view->with('serverInfo', $serverInfo);
                 });
             }
 
-            $eventScheduleConfig = config('global.widgets.event_schedule');
+            $eventScheduleConfig = config('widgets.event_schedule');
             if($eventScheduleConfig['enabled']) {
                 View::composer(['partials.event-schedule'], function ($view) use ($eventScheduleConfig) {
                     $view->with([
@@ -70,7 +70,7 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            $fortressWarConfig = config('global.widgets.fortress_war');
+            $fortressWarConfig = config('widgets.fortress_war');
             if($fortressWarConfig['enabled']) {
                 View::composer(['partials.fortress-war'], function ($view) use ($fortressWarConfig) {
                     $view->with([
@@ -80,7 +80,7 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            $globalsHistoryConfig = config('global.widgets.globals_history');
+            $globalsHistoryConfig = config('widgets.globals_history');
             if($globalsHistoryConfig['enabled']) {
                 View::composer(['partials.globals-history'], function ($view) use ($globalsHistoryConfig) {
                     $view->with([
@@ -90,8 +90,8 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            $uniqueHistoryConfig = config('global.widgets.unique_history');
-            $uniquesList = config('global.ranking.uniques');
+            $uniqueHistoryConfig = config('widgets.unique_history');
+            $uniquesList = config('ranking.uniques');
             if($uniqueHistoryConfig['enabled']) {
                 View::composer(['partials.unique-history'], function ($view) use ($uniqueHistoryConfig, $uniquesList) {
                     $view->with([
@@ -102,8 +102,8 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            $topPlayerConfig = config('global.widgets.top_player');
-            $topImage = config('global.ranking.top_image');
+            $topPlayerConfig = config('widgets.top_player');
+            $topImage = config('ranking.top_image');
             if($topPlayerConfig['enabled']) {
                 View::composer(['partials.top-player'], function ($view) use ($topPlayerConfig, $topImage) {
                     $view->with([
@@ -114,8 +114,8 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            $topGuildConfig = config('global.widgets.top_guild');
-            $topImage = config('global.ranking.top_image');
+            $topGuildConfig = config('widgets.top_guild');
+            $topImage = config('ranking.top_image');
             if($topGuildConfig['enabled']) {
                 View::composer(['partials.top-guild'], function ($view) use ($topGuildConfig, $topImage) {
                     $view->with([

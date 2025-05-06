@@ -55,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public static function getUserCount()
     {
-        $minutes = config('global.general.cache.account_info', 5);
+        $minutes = config('global.cache.account_info', 5);
 
         return Cache::remember('account_count', now()->addMinutes($minutes), function () {
             return self::count();
@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function tbUser()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             return $this->hasOne(TbUser::class, 'JID', 'jid');
         } else{
             return $this->hasOne(TbUser::class, 'PortalJID', 'jid');

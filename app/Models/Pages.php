@@ -20,7 +20,7 @@ class Pages extends Model
 
     public static function getPage($slug)
     {
-        $minutes = config('global.general.cache.pages', 10080);
+        $minutes = config('global.cache.pages', 10080);
 
         return Cache::remember("pages_view_{$slug}", now()->addMinutes($minutes), function () use ($slug) {
             return self::where('slug', $slug)->first();

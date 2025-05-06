@@ -109,7 +109,7 @@
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Settings') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.donate') }}">{{ __('Donate') }}</a></li>
-                                @if(config('global.general.server.version') !== 'vSRO')
+                                @if(config('global.server.version') !== 'vSRO')
                                     <li><a class="dropdown-item" href="{{ route('profile.silk-history') }}">{{ __('Silk History') }}</a></li>
                                 @endif
                                 @admin

@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
             'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
         ];
 
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
             $rules['email'][] = 'unique:' . TbUser::class . ',Email';
         } else {
@@ -61,7 +61,7 @@ class RegisteredUserController extends Controller
 
         DB::beginTransaction();
         try {
-            if (config('global.general.server.version') === 'vSRO') {
+            if (config('global.server.version') === 'vSRO') {
                 $tbUser = TbUser::setGameAccount($jid = null, $request->username, $request->password, $request->email, $request->ip());
                 $jid = $tbUser->JID;
 

@@ -56,7 +56,7 @@ class TbUser extends Model
     {
         parent::__construct($attributes);
 
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             $this->fillable = [
                 'StrUserID',
                 'Name',
@@ -91,7 +91,7 @@ class TbUser extends Model
 
     public static function setGameAccount($jid, $username, $email, $password, $ip)
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             return self::create([
                 'StrUserID' => strtolower($username),
                 'Name' => $username,
@@ -124,7 +124,7 @@ class TbUser extends Model
 
     public static function getTbUserCount()
     {
-        $minutes = config('global.general.cache.account_info', 5);
+        $minutes = config('global.cache.account_info', 5);
 
         return Cache::remember('account_info_ingame_count', now()->addMinutes($minutes), function () {
             return self::count();
@@ -158,7 +158,7 @@ class TbUser extends Model
 
     public function user()
     {
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             return $this->belongsTo(User::class, 'jid', 'JID');
         } else{
             return $this->belongsTo(User::class, 'jid', 'PortalJID');

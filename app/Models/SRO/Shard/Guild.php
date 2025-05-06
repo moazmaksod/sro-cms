@@ -29,7 +29,7 @@ class Guild extends Model
 
     public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
-        $minutes = config('global.general.cache.ranking_guild', 60);
+        $minutes = config('global.cache.ranking_guild', 60);
 
         return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes($minutes), function () use ($Name, $GuildID, $limit) {
             $query = self::select(
@@ -51,7 +51,7 @@ class Guild extends Model
                 ), 0) AS ItemPoints")
             );
 
-            if (config('global.general.server.version') !== 'vSRO') {
+            if (config('global.server.version') !== 'vSRO') {
                 $query->addSelect(DB::raw("CONVERT(VARCHAR(MAX), _GuildCrest.CrestBinary, 2) AS CrestIcon"));
             }
 
@@ -65,7 +65,7 @@ class Guild extends Model
                         ->where('_BindingOptionWithItem.bOptType', '=', 2);
                 });
 
-            if (config('global.general.server.version') !== 'vSRO') {
+            if (config('global.server.version') !== 'vSRO') {
                 $query->leftJoin('_GuildCrest', '_GuildCrest.GuildID', '=', '_Guild.ID');
             }
 
@@ -79,7 +79,7 @@ class Guild extends Model
                 ->when(!empty($Name), function ($query) use ($Name) {
                     $query->where('_Guild.Name', 'like', "%{$Name}%");
                 })
-                ->whereNotIn('_Guild.Name', config('global.ranking.hidden.guilds'));
+                ->whereNotIn('_Guild.Name', config('ranking.hidden.guilds'));
 
             $groupBy = [
                 '_Guild.ID',
@@ -89,7 +89,7 @@ class Guild extends Model
                 '_Guild.FoundationDate',
             ];
 
-            if (config('global.general.server.version') !== 'vSRO') {
+            if (config('global.server.version') !== 'vSRO') {
                 $groupBy[] = '_GuildCrest.CrestBinary';
             }
 
@@ -105,7 +105,7 @@ class Guild extends Model
 
     public static function getFortressGuildRanking($limit = 25)
     {
-        $minutes = config('global.general.cache.ranking_fortress_guild', 60);
+        $minutes = config('global.cache.ranking_fortress_guild', 60);
 
         return Cache::remember("ranking_fortress_guild_{$limit}", now()->addMinutes($minutes), function () use ($limit) {
             return self::select(
@@ -125,7 +125,7 @@ class Guild extends Model
 
     public static function getGuildIDByName($GuildName)
     {
-        $minutes = config('global.general.cache.guild_info', 1440);
+        $minutes = config('global.cache.guild_info', 1440);
 
         return Cache::remember("guild_info_name_{$GuildName}", now()->addMinutes($minutes), function () use ($GuildName) {
             return self::select('ID')->where('Name', $GuildName)->first()->ID ?? null;
@@ -134,7 +134,7 @@ class Guild extends Model
 
     public static function getGuildInfoAlliance($GuildID)
     {
-        $minutes = config('global.general.cache.guild_info', 1440);
+        $minutes = config('global.cache.guild_info', 1440);
 
         return Cache::remember("guild_info_alliance_{$GuildID}", now()->addMinutes($minutes), function () use ($GuildID) {
             return self::select('Name')

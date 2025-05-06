@@ -63,7 +63,7 @@ class Char extends Model
 
     public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')
     {
-        $minutes = config('global.general.cache.ranking_player', 60);
+        $minutes = config('global.cache.ranking_player', 60);
 
         return Cache::remember("ranking_player_{$limit}_{$CharID}_{$CharName}", now()->addMinutes($minutes), function () use ($CharName, $CharID, $limit) {
             $query = self::select(
@@ -89,7 +89,7 @@ class Char extends Model
                 ), 0) AS ItemPoints")
             );
 
-            if (config('global.general.server.version') === 'vSRO') {
+            if (config('global.server.version') === 'vSRO') {
                 $query->addSelect('_CharTrijob.JobType', '_CharTrijob.Level')
                     ->leftJoin('_CharTrijob', '_Char.CharID', '=', '_CharTrijob.CharID');
             } else {
@@ -114,7 +114,7 @@ class Char extends Model
                 ->where('_Char.deleted', '=', 0)
                 ->when($CharID > 0, fn($q) => $q->where('_Char.CharID', $CharID))
                 ->when(!empty($CharName), fn($q) => $q->where('_Char.CharName16', 'like', "%{$CharName}%"))
-                ->whereNotIn('_Char.CharName16', config('global.ranking.hidden.characters'));
+                ->whereNotIn('_Char.CharName16', config('ranking.hidden.characters'));
 
             $groupBy = [
                 '_Char.CharID',
@@ -131,7 +131,7 @@ class Char extends Model
                 '_Char.Intellect',
             ];
 
-            if (config('global.general.server.version') === 'vSRO') {
+            if (config('global.server.version') === 'vSRO') {
                 $groupBy[] = '_CharTrijob.JobType';
                 $groupBy[] = '_CharTrijob.Level';
             } else {
@@ -150,7 +150,7 @@ class Char extends Model
 
     public static function getCharIDByName($CharName)
     {
-        $minutes = config('global.general.cache.character_info', 1440);
+        $minutes = config('global.cache.character_info', 1440);
 
         return Cache::remember("character_info_name_{$CharName}", now()->addMinutes($minutes), function () use ($CharName) {
             return self::select('CharID')->where('CharName16', $CharName)->first()->CharID ?? null;
@@ -159,7 +159,7 @@ class Char extends Model
 
     public static function getCharCount()
     {
-        $minutes = config('global.general.cache.character_info', 1440);
+        $minutes = config('global.cache.character_info', 1440);
 
         return Cache::remember('character_info_count', now()->addMinutes($minutes), function () {
             return self::count();
@@ -168,7 +168,7 @@ class Char extends Model
 
     public static function getGoldSum()
     {
-        $minutes = config('global.general.cache.character_info', 1440);
+        $minutes = config('global.cache.character_info', 1440);
 
         return Cache::remember('character_info_gold', now()->addMinutes($minutes), function () {
             return self::all()->sum('RemainGold');

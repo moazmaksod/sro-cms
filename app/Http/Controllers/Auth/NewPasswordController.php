@@ -54,7 +54,7 @@ class NewPasswordController extends Controller
 
                 DB::beginTransaction();
                 try {
-                    if (config('global.general.server.version') === 'vSRO') {
+                    if (config('global.server.version') === 'vSRO') {
                         TbUser::where('JID', $user->jid)->update(['password' => md5($request->password)]);
                     } else {
                         MuUser::where('JID', $user->jid)->update(['UserPwd' => md5($request->password)]);

@@ -37,7 +37,7 @@ class News extends Model
 
     public static function getPosts()
     {
-        $minutes = config('global.general.cache.news', 1440);
+        $minutes = config('global.cache.news', 1440);
 
         return Cache::remember("news", now()->addMinutes($minutes), function () {
             return self::where('active', '=', 1)->where('published_at', '<=', now())->orderBy('created_at', 'DESC')->get();
@@ -46,7 +46,7 @@ class News extends Model
 
     public static function getPost($slug)
     {
-        $minutes = config('global.general.cache.news', 1440);
+        $minutes = config('global.cache.news', 1440);
 
         return Cache::remember("news_view_{$slug}", now()->addMinutes($minutes), function () use ($slug) {
             return self::where('slug', $slug)->first();

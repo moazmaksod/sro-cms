@@ -11,7 +11,7 @@ class ScheduleService
     {
         $now = Carbon::now();
 
-        $config = config('global.widgets.event_schedule.names');
+        $config = config('widgets.event_schedule.names');
         $data = Schedule::getSchedules(array_keys($config));
         $grouped = $data->groupBy('ScheduleDefineIdx');
         $result = [];

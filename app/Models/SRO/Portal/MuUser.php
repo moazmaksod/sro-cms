@@ -75,7 +75,7 @@ class MuUser extends Model
 
     public function getJCash()
     {
-        $seconds = config('global.general.cache.account_info', 5);
+        $seconds = config('global.cache.account_info', 5);
 
         return Cache::remember("account_jcash_{$this->JID}", now()->addSeconds($seconds), function () {
             return collect(DB::select("

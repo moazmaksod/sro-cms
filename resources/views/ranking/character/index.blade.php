@@ -92,13 +92,13 @@
                                 <div class="" id="display-inventory-set">
                                     @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventorySet])
                                 </div>
-                                @if(config('global.general.server.version') !== 'vSRO')
+                                @if(config('global.server.version') !== 'vSRO')
                                     <div class="d-none" id="display-inventory-avatar">
                                         @include('ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $inventoryJob])
                                     </div>
                                 @endif
                                 <div class="" id="display-inventory-avatar-accessory">
-                                    @if(config('global.general.server.version') !== 'vSRO')
+                                    @if(config('global.server.version') !== 'vSRO')
                                         <button id="display-inventory-switch" data-type="set" class="btn btn-secondary position-absolute" style="top: -50px;">{{ __('Job Equip') }}</button>
                                     @endif
                                     <p class="mb-0" id="display-inventory-avatar-accessory-label">{{ __('Accessories') }}</p>

@@ -29,7 +29,7 @@ class UsersController extends Controller
 
     public function view(TbUser $user)
     {
-        $vipLevel = config('global.ranking.vip_level');
+        $vipLevel = config('ranking.vip_level');
         return view('admin.users.view', [
             'user' => $user,
             'vipLevel' => $vipLevel,
@@ -43,7 +43,7 @@ class UsersController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        if (config('global.general.server.version') === 'vSRO') {
+        if (config('global.server.version') === 'vSRO') {
             SkSilk::setSkSilk($user->JID, $validated['type'], $validated['amount']);
         } else {
             AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);

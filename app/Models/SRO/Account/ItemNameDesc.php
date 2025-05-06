@@ -55,14 +55,14 @@ class ItemNameDesc extends Model
 
     public function getTable()
     {
-        return config('global.general.server.version') === 'vSRO'
+        return config('global.server.version') === 'vSRO'
             ? 'dbo._ItemNameDesc'
             : 'dbo._Rigid_ItemNameDesc';
     }
 
     public static function getItemRealName($CodeName128): string
     {
-        $minutes = config('global.general.cache.character_info', 5);
+        $minutes = config('global.cache.character_info', 5);
 
         return Cache::remember("character_info_ItemNameDesc_{$CodeName128}", now()->addMinutes($minutes), static function () use ($CodeName128) {
             return self::select('ENG')->where('StrID', $CodeName128)->first()->ENG ?? $CodeName128;
