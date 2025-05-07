@@ -193,40 +193,42 @@ class InventoryService
     private function getBlueInfo($item): array
     {
         $magicAttributes = config('magopt');
-
         $blueStats = [];
-        $Wheel = ($item['MagParam1'] >= 4611686018427387904) ? 2 : 1;
 
-        for ($i = $Wheel; $i <= 12; $i++) {
+        $wheelStart = ($item['MagParam1'] ?? 0) >= 4611686018427387904 ? 2 : 1;
+        for ($i = $wheelStart; $i <= ($item['MagParamNum'] ?? 12); $i++) {
             $key = "MagParam{$i}";
 
-            if (!isset($item[$key]) || $item[$key] == 0) {
+            if (!isset($item[$key]) || $item[$key] <= 1) {
                 continue;
             }
 
-            $paramBinary = pack('Q', $item[$key]);
-            $value = unpack('L', substr($paramBinary, 0, 4))[1];
-            $id = unpack('L', substr($paramBinary, 4, 4))[1];
+            $hexParam = str_pad(dechex($item[$key]), 11, '0', STR_PAD_LEFT);
+            $valueHex = substr($hexParam, 0, 3);
+            $stateHex = substr($hexParam, 3);
 
-            if (isset($magicAttributes[$id])) {
-                $attribute = $magicAttributes[$id];
-                $blueStats[] = [
-                    'id' => $id,
-                    'code' => $attribute['name'],
-                    'name' => str_replace('%desc%', $value, $attribute['desc']),
-                    'mLevel' => $attribute['mLevel'],
-                    'value' => $value,
-                ];
+            $value = hexdec($valueHex);
+            $state = hexdec($stateHex);
+
+            if (!isset($magicAttributes[$state])) {
+                continue;
             }
+
+            $attribute = $magicAttributes[$state];
+            if ($attribute['name'] === 'MATTR_REPAIR') {
+                $value--;
+            }
+
+            $blueStats[] = [
+                'id' => $state,
+                'code' => $attribute['name'],
+                'name' => str_replace('%desc%', $value, $attribute['desc']),
+                'mValue' => $value,
+                'sortkey' => $attribute['sortkey'],
+            ];
         }
 
-        usort($blueStats, function ($a, $b) use ($magicAttributes) {
-            $idA = array_search($a, array_column($magicAttributes, 'desc'));
-            $idB = array_search($b, array_column($magicAttributes, 'desc'));
-
-            return $magicAttributes[$idA]['sortkey'] <=> $magicAttributes[$idB]['sortkey'];
-        });
-
+        usort($blueStats, fn($a, $b) => $a['sortkey'] <=> $b['sortkey']);
         return $blueStats;
     }
 
