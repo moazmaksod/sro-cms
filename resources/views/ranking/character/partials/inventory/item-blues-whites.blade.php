@@ -58,13 +58,13 @@
      @endif
 @endif
 
-{{--
 @if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
-    @isset($item['Gender'])
-        {{ $item['Gender'] }}<br />
-    @endisset
+    @if(!count(array_intersect([6, 4, 2], explode(',', $item['TypeID2']))))
+        @isset($item['Gender'])
+            {{ $item['Gender'] }}<br />
+        @endisset
+    @endif
 @endif
---}}
 
 @if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
     @isset($item['Country'])

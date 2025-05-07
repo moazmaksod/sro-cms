@@ -139,7 +139,7 @@ class InventoryService
         $info['ItemName'] = $this->getItemName($item);
         $info['OptLevel'] = $item['OptLevel'];
         $info['nOptValue'] = $item['nOptValue'] ?? 0;
-        $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'Europe';
+        $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'European';
         $info['Gender'] = $item['ReqGender'] == 0 ? 'Female' : 'Male';
         $info['SoxType'] = $this->getSoxType($item);
         $info['SoxName'] = $this->getSoxName($item);
@@ -330,7 +330,7 @@ class InventoryService
         }
 
         if (time() > $item['Data']) {
-            return '0Day 0Hour 0Minute';
+            return 'Awaken period is over';
         }
 
         $difference = $item['Data'] - time();

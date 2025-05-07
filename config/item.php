@@ -43,14 +43,6 @@ return [
             12 => 'Legend',
         ],
     ],
-    'sex' => [
-        0 => 'Female',
-        1 => 'Male',
-    ],
-    'country' => [
-        0 => 'Chinese',
-        1 => 'Europe',
-    ],
     'job_degree' => [
         1 => 'Lowest Quality',
         2 => 'Low Quality',
