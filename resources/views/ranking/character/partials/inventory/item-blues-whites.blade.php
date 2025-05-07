@@ -84,7 +84,7 @@
     <br />
 @endif
 
-@if(in_array((int) $item['TypeID2'], [4], true) && in_array((int) $item['TypeID3'], [13], true))
+@if(in_array((int) $item['TypeID2'], [4], true) || in_array((int) $item['TypeID3'], [13], true))
     <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
     <br />
 @endif
