@@ -1,6 +1,6 @@
 <div class="sro-item-detail {{ $item['ItemInfo']['SoxType'] != 'Normal' ? 'sro-item-special' : '' }}">
     <div class="item" data-itemInfo="1">
-        @if($item['ItemInfo']['SoxType'] != 'Normal')
+        @if($item['ItemInfo']['SoxType'] != 'Normal' && !in_array((int) $item['ItemInfo']['TypeID2'], [4], true))
         <img alt="" class="sro-item-special-seal" src="{{ asset('/images/seal.gif') }}" />
         @endif
         @if(file_exists(public_path($item['ImgPath'])))

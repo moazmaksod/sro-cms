@@ -1,6 +1,10 @@
 <img src="{{ asset('/images/com_itemsign.PNG') }}" class="img-clear" style="display: inline-block" alt="">
 
-@if($item['SoxType'] != 'Normal' || count($item['BlueInfo']) >= 1)
+@if(in_array((int) $item['TypeID2'], [4], true))
+    <span style="color:#50cecd;font-weight: bold;margin-left: 20px">
+        {{ $item['ItemName'] }} [+{{ $item['OptLevel'] }}]
+    </span>
+@elseif($item['SoxType'] != 'Normal' || count($item['BlueInfo']) >= 1)
     <span style="color:#{{ $item['SoxType'] != 'Normal' ? 'f2e43d' : '50cecd' }};font-weight: bold;margin-left: 20px">
         {{ $item['ItemName'] }} [+{{ $item['OptLevel'] + $item['nOptValue'] }}]
     </span>
@@ -12,11 +16,11 @@
 <br />
 <br />
 
-@if($item['SoxType'] != 'Normal')
+@if($item['SoxType'] != 'Normal' && !in_array((int) $item['TypeID2'], [4], true))
     <b style="color:#f2e43d;">{{ $item['SoxType'] }}</b><br />
 @endif
 
-@if($item['SoxName'])
+@if($item['SoxName'] && !in_array((int) $item['TypeID2'], [4], true))
     <span style="color:#53EE92;font-weight: bold;">{{ $item['SoxName'] }}</span><br />
 @endif
 

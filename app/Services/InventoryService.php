@@ -125,19 +125,19 @@ class InventoryService
     private function getItemInfo(array $item): array
     {
         $info = [
-            'ReqLevel1' => $item['ReqLevel1'] ?? null,
-            'ItemClass' => $item['ItemClass'] ?? null,
-            'MagParamNum' => $item['MagParamNum'] ?? null,
-            'MagParam1' => $item['MagParam1'] ?? null,
-            'MaxMagicOptCount' => $item['MaxMagicOptCount'] ?? null,
-            'TypeID1' => $item['TypeID1'] ?? null,
-            'TypeID2' => $item['TypeID2'] ?? null,
-            'TypeID3' => $item['TypeID3'] ?? null,
-            'TypeID4' => $item['TypeID4'] ?? null,
+            'ReqLevel1' => $item['ReqLevel1'],
+            'ItemClass' => $item['ItemClass'],
+            'MagParamNum' => $item['MagParamNum'],
+            'MagParam1' => $item['MagParam1'],
+            'MaxMagicOptCount' => $item['MaxMagicOptCount'],
+            'TypeID1' => $item['TypeID1'],
+            'TypeID2' => $item['TypeID2'],
+            'TypeID3' => $item['TypeID3'],
+            'TypeID4' => $item['TypeID4'],
         ];
 
         $info['ItemName'] = $this->getItemName($item);
-        $info['OptLevel'] = $item['OptLevel'];
+        $info['OptLevel'] = $item['OptLevel'] ?? 0;
         $info['nOptValue'] = $item['nOptValue'] ?? 0;
         $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'European';
         $info['Gender'] = $item['ReqGender'] == 0 ? 'Female' : 'Male';
