@@ -27,8 +27,8 @@
     @isset($item['Detail'])
         {{ __('Mounting part:') }} {{ $item['Detail'] }}<br />
     @endisset
-    @if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
-        @if(count(array_intersect([4], explode(',', $item['TypeID2']))))
+    @if(!in_array((int) $item['TypeID3'], [13, 14], true))
+        @if(in_array((int) $item['TypeID2'], [4], true))
             @isset($item['Degree'])
                 {{ __('Level:') }} {{ $item['JobDegree'] }}<br />
             @endisset
@@ -51,28 +51,26 @@
 @endif
 
 @if($item['ReqLevel1'])
-    @if(count(array_intersect([4], explode(',', $item['TypeID2']))))
+    @if(in_array((int) $item['TypeID2'], [4], true))
         {{ __('Job level:') }} {{ $item['ReqLevel1'] }}<br />
     @else
         {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
      @endif
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
-    @if(!count(array_intersect([6, 4, 2], explode(',', $item['TypeID2']))))
-        @isset($item['Gender'])
-            {{ $item['Gender'] }}<br />
-        @endisset
-    @endif
+@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [10], true))
+    @isset($item['Gender'])
+        {{ $item['Gender'] }}<br />
+    @endisset
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
     @isset($item['Country'])
         {{ $item['Country'] }}<br />
     @endisset
 @endif
 
-@if(count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+@if(in_array((int) $item['TypeID3'], [13, 14], true))
     @if($item['TypeID3'] == 14)
         {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
         <br />
@@ -81,26 +79,23 @@
     @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
     @else
-        {{ __('Dress worn by') }} {{ $item['ItemName'] }}<br />
+        {{ __('Dress worn by') }} <br />
     @endif
     <br />
 @endif
 
-@if(count(array_intersect([13], explode(',', $item['TypeID3']))))
-    <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
-    <br />
-@elseif(count(array_intersect([4], explode(',', $item['TypeID2']))))
+@if(in_array((int) $item['TypeID2'], [4], true) && in_array((int) $item['TypeID3'], [13], true))
     <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
     <br />
 @endif
 
-@if(count(array_intersect([13], explode(',', $item['TypeID3']))))
+@if(in_array((int) $item['TypeID3'], [13], true) && $item['MaxMagicOptCount'] != 0)
     @isset($item['Gender'])
         <br />{{ $item['Gender'] }}<br />
     @endisset
 @endif
 
-@if(count(array_intersect([14], explode(',', $item['TypeID3']))))
+@if(in_array((int) $item['TypeID3'], [14], true))
     <br />
     <span style="color:#efdaa4;">{{ __('Basic Option') }}</span><br />
     {{ __('MaximumHP 15% Increase') }}<br />
@@ -108,27 +103,25 @@
     <br />
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
-    @if(!count(array_intersect([4], explode(',', $item['TypeID2']))))
-        @if($item['MagParam1'] >= 4611686018427387904)
-            <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
-            <br />
-            @php $STR = 0 @endphp
-            @php $INT = 0 @endphp
-            @if($item['BlueInfo'])
-                @foreach($item['BlueInfo'] as $value)
-                    @if($value['code'] == 'MATTR_STR')
-                        @php $STR += $value['mValue'] @endphp
-                    @endif
-                    @if($value['code'] == 'MATTR_INT')
-                        @php $INT += $value['mValue'] @endphp
-                    @endif
-                @endforeach
+@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+    @if($item['MagParam1'] >= 4611686018427387904)
+        <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
+        <br />
+        @php $STR = 0 @endphp
+        @php $INT = 0 @endphp
+        @if($item['BlueInfo'])
+            @foreach($item['BlueInfo'] as $value)
+                @if($value['code'] == 'MATTR_STR')
+                    @php $STR += $value['mValue'] @endphp
+                @endif
+                @if($value['code'] == 'MATTR_INT')
+                    @php $INT += $value['mValue'] @endphp
+                @endif
+            @endforeach
 
-                <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['BlueInfo']) }}]</span><br />
-                <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $STR }}]</span><br />
-                <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $INT }}]</span><br />
-            @endif
+            <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['BlueInfo']) }}]</span><br />
+            <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $STR }}]</span><br />
+            <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $INT }}]</span><br />
         @endif
     @endif
 @endif
@@ -145,17 +138,15 @@
     @endforeach
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
-    @if(!count(array_intersect([4], explode(',', $item['TypeID2']))))
-        @if(!isset($item['nOptValue']))
-            {{ __('Able to use Advanced elixir.') }}
-        @else
-            <b>{{ __('Advanced elixir is in effect') }} [+{{ $item['nOptValue'] }}]</b>
-        @endif
+@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+    @if(!isset($item['nOptValue']))
+        {{ __('Able to use Advanced elixir.') }}
+    @else
+        <b>{{ __('Advanced elixir is in effect') }} [+{{ $item['nOptValue'] }}]</b>
     @endif
 @endif
 
-@if(count(array_intersect([14], explode(',', $item['TypeID3']))))
+@if(in_array((int) $item['TypeID3'], [14], true))
     <br/><span style="color:#efdaa4;font-weight:bold;">{{ __('Awaken period') }}</span><br/>
     @isset($item['TimeEnd'])
         {{ $item['TimeEnd'] }}<br/>
