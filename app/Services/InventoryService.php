@@ -228,7 +228,7 @@ class InventoryService
         $Variance = $item['Variance'] ?? 0;
 
         $calculatePercentage = function ($variance, $powerIndex) {
-            return floor(((($variance / pow(32, $powerIndex)) & 0x1F) * 3.23));
+            return (int) floor(((int) ($variance / pow(32, $powerIndex)) & 0x1F) * 3.23);
         };
 
         return [
