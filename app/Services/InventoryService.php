@@ -320,6 +320,20 @@ class InventoryService
                     $calculatePercentage($Variance, 2)
                 )
                 : '',
+            'PReinforceSet' => ($item['PDStr_L'] > 0)
+                ? sprintf(
+                    'Phy. reinforce %.1f (+%d%%)',
+                    (float)(($item['PDStr_L']) + (($item['PDStr_U'] - $item['PDStr_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
+                    $calculatePercentage($Variance, 1)
+                )
+                : '',
+            'MReinforceSet' => ($item['MDInt_L'] > 0)
+                ? sprintf(
+                    'Mag. reinforce %.1f (+%d%%)',
+                    (float)(($item['MDInt_L']) + (($item['MDInt_U'] - $item['MDInt_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
+                    $calculatePercentage($Variance, 2)
+                )
+                : '',
             'Pabsorp' => ($item['PAR_L'] > 0)
                 ? sprintf(
                     'Phy. absorption %.1f (+%d%%)',
