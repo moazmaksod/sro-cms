@@ -8,16 +8,6 @@ use App\Models\SRO\Shard\InventoryForAvatar;
 use App\Models\SRO\Shard\TradeEquipInventory;
 use Illuminate\Support\Facades\Log;
 
-enum ItemType: int
-{
-    case WEAPON = 6;
-    case SHIELD = 4;
-    case ACC = 5;
-    case SET = 2;
-    case DRESS = 13;
-    case DEVIL = 14;
-}
-
 class InventoryService
 {
     /**
