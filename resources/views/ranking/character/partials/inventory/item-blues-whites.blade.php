@@ -41,9 +41,10 @@
                 {{ __('Degree: :degree degrees', ['degree' => $item['Degree']]) }}<br />
             @endisset
         @endif
+
+        <br />
     @endif
 </span>
-<br />
 
 @if($item['WhiteInfo'])
     @foreach($item['WhiteInfo'] as $iKey => $sWhites)
@@ -83,7 +84,7 @@
     @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
     @else
-        {{ __('Dress worn by') }} <br />
+        {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
     @endif
     <br />
 @endif

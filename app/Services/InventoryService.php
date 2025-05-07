@@ -147,6 +147,7 @@ class InventoryService
         $info['JobDegree'] = config('item.job_degree')[$item['ItemClass']] ?? null;
         $info['Type'] = config('item.types')[$item['TypeID1']][$item['TypeID2']][$item['TypeID3']][$item['TypeID4']] ?? null;
         $info['Detail'] = config('item.detail')[$item['Slot']] ?? null;
+        $info['ItemDesc'] = config('itemdesc')[$item['DescStrID128']] ?? null;
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
