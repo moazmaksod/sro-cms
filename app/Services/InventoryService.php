@@ -320,6 +320,20 @@ class InventoryService
                     $calculatePercentage($Variance, 2)
                 )
                 : '',
+            'Pabsorp' => ($item['PAR_L'] > 0)
+                ? sprintf(
+                    'Phy. absorption %.1f (+%d%%)',
+                    round(($item['PAR_L'] + $item['PARInc'] * $OptLevel) + (($item['PAR_U'] - $item['PAR_L']) * $calculatePercentage($Variance, 0) / 100), 1),
+                    $calculatePercentage($Variance, 0)
+                )
+                : '',
+            'Mabsorp' => ($item['MAR_L'] > 0)
+                ? sprintf(
+                    'Mag. absorption %.1f (+%d%%)',
+                    round(($item['MAR_L'] + $item['MARInc'] * $OptLevel) + (($item['MAR_U'] - $item['MAR_L']) * $calculatePercentage($Variance, 1) / 100), 1),
+                    $calculatePercentage($Variance, 1)
+                )
+                : '',
         ];
     }
 
