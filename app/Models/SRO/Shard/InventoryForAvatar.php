@@ -46,20 +46,17 @@ class InventoryForAvatar extends Model
         'ItemID'
     ];
 
-    public static function getInventoryForAvatar($characterId): array
+    public static function getInventoryForAvatar($CharID)
     {
         $minutes = config('global.cache.character_info', 1440);
 
-        return Cache::remember("character_info_inventory_avatar_{$characterId}", now()->addMinutes($minutes), static function () use ($characterId) {
-            return self::where('CharID', '=', $characterId)
-            ->join('_Items as Items', 'Items.ID64', 'ItemID')
-            ->leftJoin('_BindingOptionWithItem as Binding', static function ($join) {
-                $join->on('Binding.nItemDBID', 'Items.ID64');
-                $join->where('Binding.nOptValue', '>', '0');
-            })
-            ->join('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
-            ->join('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
-            ->where('ItemID', '>', 1)
+        return Cache::remember("character_info_inventory_avatar_{$CharID}", now()->addMinutes($minutes), static function () use ($CharID) {
+            return self::join('_Items', '_Items.ID64', '_InventoryForAvatar.ItemID')
+            ->join('_RefObjCommon', '_Items.RefItemId', '_RefObjCommon.ID')
+            ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
+            ->where('CharID', '=', $CharID)
+            ->where('Slot', '<', 5)
+            ->where('Slot', '>=', 0)
             ->get()
             ->toArray();
         });

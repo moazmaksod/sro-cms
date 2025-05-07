@@ -595,4 +595,5 @@ return [
     3 => ['name' => 'MATTR_DEC_MAXDUR', 'desc' => 'Maximum Durability %desc% Reduce', 'mLevel' => 3, 'extension' => '', 'sortkey' => 0],
     2 => ['name' => 'MATTR_DEC_MAXDUR', 'desc' => 'Maximum Durability %desc% Reduce', 'mLevel' => 2, 'extension' => '', 'sortkey' => 0],
     1 => ['name' => 'MATTR_DEC_MAXDUR', 'desc' => 'Maximum Durability %desc% Reduce', 'mLevel' => 1, 'extension' => '', 'sortkey' => 0],
+    0 => ['name' => 'MATTR_DEC_MAXDUR', 'desc' => 'Maximum Durability %desc% Reduce', 'mLevel' => 0, 'extension' => '', 'sortkey' => 0],
 ];

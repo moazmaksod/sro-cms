@@ -1,26 +1,17 @@
 <?php
 
 return [
-    'slots' => [
-        0 => 'helm',
-        1 => 'chest' ,
-        2 => 'shoulders',
-        3 => 'gauntlet',
-        4 => 'pants',
-        5 => 'boots',
-        6 => 'weapon',
-        7 => 'shield',
-        8 => 'job',
-        9 => 'earring',
-        10 => 'necklace',
-        11 => 'lring',
-        12 => 'rring',
-    ],
     'sox_type' => [
-        3 => 'Seal of Heavy Storm',
-        2 => 'Seal of Star',
-        1 => 'Seal of Moon',
-        0 => 'Seal of Sun'
+        30 => [
+            'A_RARE' => 'Seal of Nova',
+            'SET_A_RARE' => 'Seal of Nova',
+            'SET_B_RARE' => 'Seal of Nova',
+        ],
+        0 => [
+            'A_RARE' => 'Seal of Star',
+            'B_RARE' => 'Seal of Moon',
+            'C_RARE' => 'Seal of Sun',
+        ],
     ],
     'sox_name' => [
         'SET_A_RARE' => [
@@ -60,105 +51,286 @@ return [
         0 => 'Chinese',
         1 => 'Europe',
     ],
-    'race' => [
-        'CH' => 'Chinese',
-        'EU' => 'European',
+    'job_degree' => [
+        1 => 'Lowest Quality',
+        2 => 'Low Quality',
+        3 => 'Medium Quality',
+        4 => 'High Quality',
     ],
-    'cloth_detail' => [
-        'FA' => 'Foot',
-        'HA' => 'Head',
-        'CA' => 'Head',
-        'SA' => 'Shoulder',
-        'BA' => 'Chest',
-        'LA' => 'Legs',
-        'AA' => 'Hands'
-    ],
-    'cloth_type' => [
-        'CH' => [
-            'CLOTHES' => 'Garment',
-            'HEAVY' => 'Armor',
-            'LIGHT' => 'Protector'
-        ],
-        'EU' => [
-            'CLOTHES' => 'Robe',
-            'HEAVY' => 'Heavy armor',
-            'LIGHT' => 'Light armor'
-        ]
-    ],
-    'weapon_type' => [
-        'CH' => [
-            'TBLADE' => 'Glavie',
-            'SPEAR' => 'Spear',
-            'SWORD' => 'Sword',
-            'BLADE' => 'Blade',
-            'BOW' => 'Bow',
-            'SHIELD' => 'Shield'
-        ],
-        'EU' => [
-            'AXE' => 'Dual axe',
-            'CROSSBOW' => 'Crossbow',
-            'DAGGER' => 'Dagger',
-            'DARKSTAFF' => 'Dark staff',
-            'HARP' => 'Harp',
-            'SHIELD' => 'Shield',
-            'STAFF' => 'Light staff',
-            'SWORD' => 'Onehand sword',
-            'TSTAFF' => 'Twohand staff',
-            'TSWORD' => 'Twohand sword'
-        ]
-    ],
-    'avatar_type' => [
-        0 => 'Avatar Flag',
-        1 => 'Avatar Attach',
-        2 => 'Avatar Hat',
-        4 => 'Avatar Dress',
-        9 => 'Devil spirit\'s'
-    ],
-    'job_detail' => [
+    'detail' => [
         0 => 'Head',
-        1 => 'Chest',
+        1 => 'Chest' ,
         2 => 'Shoulder',
         3 => 'Hands',
         4 => 'Legs',
         5 => 'Foot',
     ],
-    'job_degree' => [
-        1 => 'Lowest Quality',
-        2 => 'Low Quality',
-        3 => 'Medium Quality',
-    ],
-    'job_type' => [
-        2 => [
-            1 => 'Hunter Equipment (weapon)',
-        ],
-        1 => [
-            1 => 'Hunter Equipment (head)',
-            2 => 'Hunter Equipment (shoulder)',
-            3 => 'Hunter Equipment (tunic)',
-            4 => 'Hunter Equipment (pants)',
-            5 => 'Hunter Equipment (gloves)',
-            6 => 'Hunter Equipment (shoes)',
-        ],
-        3 => [
-            1 => 'Hunter Equipment (earrging)',
-            2 => 'Hunter Equipment (necklace)',
-            3 => 'Hunter Equipment (ring)',
-        ],
-        5 => [
-            1 => 'Thief Equipment (weapon)',
-        ],
-        4 => [
-            1 => 'Thief Equipment (head)',
-            2 => 'Thief Equipment (shoulder)',
-            3 => 'Thief Equipment (tunic)',
-            4 => 'Thief Equipment (pants)',
-            5 => 'Thief Equipment (gloves)',
-            6 => 'Thief Equipment (shoes)',
-        ],
-        6 => [
-            1 => 'Thief Equipment (earrging)',
-            2 => 'Thief Equipment (necklace)',
-            3 => 'Thief Equipment (ring)',
+    'types' => [
+        3 => [ // typeID1
+            1 => [ // typeID2
+                1 => [ // typeID3
+                    1 => 'Garment',
+                    2 => 'Garment',
+                    3 => 'Garment',
+                    4 => 'Garment',
+                    5 => 'Garment',
+                    6 => 'Garment',
+                ],
+                2 => [
+                    1 => 'Protector',
+                    2 => 'Protector',
+                    3 => 'Protector',
+                    4 => 'Protector',
+                    5 => 'Protector',
+                    6 => 'Protector',
+                ],
+                3 => [
+                    1 => 'Armor',
+                    2 => 'Armor',
+                    3 => 'Armor',
+                    4 => 'Armor',
+                    5 => 'Armor',
+                    6 => 'Armor',
+                ],
+                4 => [
+                    1 => 'Shield',
+                    2 => 'Shield',
+                ],
+                5 => [
+                    1 => 'Earring',
+                    2 => 'Necklace',
+                    3 => 'Ring',
+                ],
+                6 => [
+                    2 => 'Sword',
+                    3 => 'Blade',
+                    4 => 'Spear',
+                    5 => 'Glaive',
+                    6 => 'Bow',
+                    7 => 'Onehand sword',
+                    8 => 'Twohand sword',
+                    9 => 'Dual axe',
+                    10 => 'Dark staff',
+                    11 => 'Twohand staff',
+                    12 => 'Crossbow',
+                    13 => 'Dagger',
+                    14 => 'Harp',
+                    15 => 'Light staff',
+                    16 => 'Fortress Item',
+                ],
+                7 => [
+                    1 => 'Trader suit',
+                    2 => 'Theif suit',
+                    3 => 'Hunter suit',
+                    5 => 'PvP Suit',
+                    6 => 'Trader suit',
+                    7 => 'Hunter suit',
+                ],
+                9 => [
+                    1 => 'Robe',
+                    2 => 'Robe',
+                    3 => 'Robe',
+                    4 => 'Robe',
+                    5 => 'Robe',
+                    6 => 'Robe',
+                ],
+                10 => [
+                    1 => 'Light armor',
+                    2 => 'Light armor',
+                    3 => 'Light armor',
+                    4 => 'Light armor',
+                    5 => 'Light armor',
+                    6 => 'Light armor',
+                ],
+                11 => [
+                    1 => 'Heavy armor',
+                    2 => 'Heavy armor',
+                    3 => 'Heavy armor',
+                    4 => 'Heavy armor',
+                    5 => 'Heavy armor',
+                    6 => 'Heavy armor',
+                ],
+                12 => [
+                    1 => 'Earring',
+                    2 => 'Necklace',
+                    3 => 'Ring',
+                ],
+                13 => [
+                    1 => 'Avatar Hat',
+                    2 => 'Avatar Dress',
+                    3 => 'Avatar Accessory',
+                    4 => 'Avatar Flag',
+                ],
+                14 => [
+                    1 => "Devil's Spirit",
+                ],
+            ],
+            2 => [
+                1 => [
+                    1 => 'Summon scroll',
+                    2 => 'Summon scroll',
+                ],
+                2 => [
+                    0 => 'Transform item',
+                ],
+                3 => [
+                    1 => 'Magic cube',
+                ],
+            ],
+            3 => [
+                1 => [
+                    1 => 'Recovery pill',
+                    2 => 'Recovery pill',
+                    3 => 'Recovery pill',
+                    4 => 'COS item',
+                    6 => 'COS item',
+                    8 => 'Berserker regeneration pill',
+                    9 => 'COS item',
+                    10 => 'Repair kit',
+                    11 => 'Ringer Potion',
+                ],
+                2 => [
+                    1 => 'Universal pill',
+                    6 => 'Universal pill',
+                    7 => 'COS item',
+                ],
+                3 => [
+                    1 => 'Return Scroll',
+                    2 => 'Summon scroll',
+                    3 => 'Reverse Return scroll',
+                    4 => 'Stall Avatar',
+                    5 => 'Global Chat',
+                    6 => 'Fortress Item',
+                    7 => 'Fortress Item',
+                    8 => 'Fortress Item',
+                    9 => 'Fortress Item',
+                    10 => 'Time Service',
+                    11 => 'Skill Point',
+                    12 => 'Dungeon Entrance ticket',
+                    13 => 'Reset item',
+                    14 => 'strengthening Scroll',
+                    15 => 'Quest ticket',
+                ],
+                4 => [
+                    1 => 'Arrows/Bolts',
+                    2 => 'Arrows/Bolts',
+                ],
+                5 => [
+                    0 => 'Gold',
+                    1 => 'Money',
+                ],
+                6 => [
+                    1 => 'Fire cracker',
+                ],
+                8 => [
+                    0 => 'Special Event item',
+                    1 => 'Trading item',
+                    2 => 'Special Trading item',
+                    3 => 'Specialty Goods Box',
+                ],
+                9 => [
+                    0 => 'Quest Item',
+                    1 => 'Trading quest Item',
+                ],
+                10 => [
+                    1 => 'Elixir',
+                    2 => 'Lucky Powder',
+                    4 => 'Advanced Elixir',
+                    5 => 'strengthening Scroll',
+                    6 => 'Enhancer',
+                    7 => 'Enhancer',
+                    8 => 'Magic Proof Stone',
+                ],
+                11 => [
+                    1 => 'Alchemy Stone',
+                    2 => 'Attribute Stone',
+                    3 => 'Recipe',
+                    4 => 'Alchemy material',
+                    5 => 'Element',
+                    6 => 'Rondo',
+                    7 => 'Alchemy Stone',
+                    8 => 'Socket Stone',
+                    9 => 'Socket rondo',
+                    10 => 'Socket Recipe',
+                    11 => 'Recipe Item',
+                    12 => 'Production Material',
+                    13 => 'Alchemy Stone',
+                    14 => 'Upgrade Appliances',
+                    15 => 'Upgrade Appliances',
+                ],
+                12 => [
+                    1 => 'Guild Item',
+                    2 => 'Guild Item',
+                    3 => 'Guild Item',
+                    5 => 'talisman',
+                    6 => 'Premium Service Item',
+                    7 => 'Dimension Hole',
+                ],
+                13 => [
+                    0 => 'retrieve skill points',
+                    1 => 'expendables',
+                    4 => 'Time Service',
+                    5 => 'Time Service',
+                    6 => 'Resurrection Scroll',
+                    7 => 'Repair hammer',
+                    8 => 'Gender switch tool',
+                    9 => 'Skin changer',
+                    11 => 'strengthening Scroll',
+                    12 => 'COS item',
+                    14 => 'Time Service',
+                    15 => 'COS item',
+                    16 => 'Avatar item',
+                    17 => 'Slot expansion',
+                    18 => 'Indulgence',
+                    19 => 'Time Service',
+                    20 => 'Time Service',
+                    21 => 'Time Service',
+                    22 => 'Dungeon Entrance ticket',
+                    23 => 'Dungeon Entrance ticket',
+                ],
+                14 => [
+                    1 => 'Magic POP Card',
+                    2 => 'Item Exchange coupon',
+                ],
+                15 => [
+                    1 => 'Event Item',
+                    2 => 'Event Item',
+                ],
+            ],
+            4 => [
+                1 => [
+                    1 => 'Hunter Equipment (head)',
+                    2 => 'Hunter Equipment (shoulder)',
+                    3 => 'Hunter Equipment (tunic)',
+                    4 => 'Hunter Equipment (pants)',
+                    5 => 'Hunter Equipment (gloves)',
+                    6 => 'Hunter Equipment (shoes)',
+                ],
+                2 => [
+                    1 => 'Hunter Equipment (weapon)',
+                ],
+                3 => [
+                    1 => 'Hunter Equipment (earrging)',
+                    2 => 'Hunter Equipment (necklace)',
+                    3 => 'Hunter Equipment (ring)',
+                ],
+                4 => [
+                    1 => 'Thief Equipment (head)',
+                    2 => 'Thief Equipment (shoulder)',
+                    3 => 'Thief Equipment (tunic)',
+                    4 => 'Thief Equipment (pants)',
+                    5 => 'Thief Equipment (gloves)',
+                    6 => 'Thief Equipment (shoes)',
+                ],
+                5 => [
+                    1 => 'Thief Equipment (weapon)',
+                ],
+                6 => [
+                    1 => 'Thief Equipment (earrging)',
+                    2 => 'Thief Equipment (necklace)',
+                    3 => 'Thief Equipment (ring)',
+                ],
+            ],
         ],
     ],
 ];

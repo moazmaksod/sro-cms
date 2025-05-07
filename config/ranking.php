@@ -143,7 +143,7 @@ return [
         ],
     ],
     'hwan_level' => [
-        'CH' => [
+        0 => [
             1 => 'Captain',
             2 => 'General',
             3 => 'Senior General',
@@ -151,7 +151,7 @@ return [
             5 => 'Vice Lord',
             6 => 'General Lord',
         ],
-        'EU' => [
+        1 => [
             1 => 'Knight',
             2 => 'Baronet',
             3 => 'Baron',
@@ -358,5 +358,73 @@ return [
         14740 => "images/character/char_eu_woman11.png",
         14741 => "images/character/char_eu_woman12.png",
         14742 => "images/character/char_eu_woman13.png",
+    ],
+    'job_title' => [
+        // Race 0
+        0 => [
+            // JobType 1 (Traders)
+            1 => [
+                1 => 'Amateur Trader',
+                2 => 'Novice Trader',
+                3 => 'Exchange Merchant',
+                4 => 'Trade Merchant',
+                5 => 'Expert Merchant',
+                6 => 'Silkroad Merchant',
+                7 => 'Master Merchant',
+            ],
+            // JobType 3 (Hunters)
+            3 => [
+                1 => 'Amateur Hunter',
+                2 => 'Novice Hunter',
+                3 => 'Hunter',
+                4 => 'Silkroad Hunter',
+                5 => 'Expert Hunter',
+                6 => 'Elite Hunter',
+                7 => 'Master Hunter',
+            ],
+            // JobType 2 (Thieves)
+            2 => [
+                1 => 'Amateur Thief',
+                2 => 'Novice Thief',
+                3 => 'Thief',
+                4 => 'Silkroad Thief',
+                5 => 'Expert Thief',
+                6 => 'Elite Thief',
+                7 => 'Master Thief',
+            ],
+        ],
+        // Race 1
+        1 => [
+            // JobType 1 (Traders)
+            1 => [
+                1 => 'Trade Beginner',
+                2 => 'Merchant',
+                3 => 'Dealer',
+                4 => 'Trader',
+                5 => 'Rich Trader',
+                6 => 'Silk Caravan',
+                7 => 'Great Merchant',
+            ],
+            // JobType 3 (Hunters)
+            3 => [
+                1 => 'Beginner Hunter',
+                2 => 'Trader',
+                3 => 'Bodyguard',
+                4 => 'Hunter Leader',
+                5 => 'Guardian',
+                6 => 'Expert Hunter',
+                7 => 'Great Guardian',
+            ],
+            // JobType 2 (Thieves)
+            2 => [
+                1 => 'Amateur Thief',
+                2 => 'Bandit',
+                3 => 'Outlaw',
+                4 => 'Silkroad Thief',
+                5 => 'Sharp Bandit',
+                6 => 'Expert Bandit',
+                7 => 'Master Thief',
+            ],
+        ],
     ],
 ];

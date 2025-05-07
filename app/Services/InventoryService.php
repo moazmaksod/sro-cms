@@ -3,835 +3,350 @@
 namespace App\Services;
 
 use App\Models\SRO\Account\ItemNameDesc;
-use App\Models\SRO\Account\MagOptDesc;
 use App\Models\SRO\Shard\Inventory;
 use App\Models\SRO\Shard\InventoryForAvatar;
 use App\Models\SRO\Shard\TradeEquipInventory;
+use Illuminate\Support\Facades\Log;
+
+enum ItemType: int
+{
+    case WEAPON = 6;
+    case SHIELD = 4;
+    case ACC = 5;
+    case SET = 2;
+    case DRESS = 13;
+    case DEVIL = 14;
+}
 
 class InventoryService
 {
-    const WEAPON = 6;
-    const SHIELD = 4;
-    const ACC = 5;
-    const SET = 2;
-    const DRESS = 13;
-    const DEVIL = 14;
-
     /**
-     * @param $characterId
-     * @param $maxSlot
-     * @param $minSlot
+     * Get inventory items for a character within a slot range.
+     *
+     * @param int $CharID
      * @return array
      */
-    public function getInventorySet($characterId, $maxSlot, $minSlot): array
+    public function getInventorySet(int $CharID): array
     {
-        return $this->convertItemList(Inventory::getInventory($characterId, $maxSlot, $minSlot));
+        $inventory = Inventory::getInventory($CharID);
+        return $this->convertItemList($inventory);
     }
 
     /**
-     * @param $characterId
+     * Get avatar inventory for a character.
+     *
+     * @param int $CharID
      * @return array
      */
-    public function getInventoryAvatar($characterId): array
+    public function getInventoryAvatar(int $CharID): array
     {
-        return $this->convertItemList(InventoryForAvatar::getInventoryForAvatar($characterId));
+        $inventory = InventoryForAvatar::getInventoryForAvatar($CharID);
+        return $this->convertItemList($inventory);
     }
 
     /**
-     * @param $characterId
+     * Get job inventory for a character.
+     *
+     * @param int $CharID
      * @return array
      */
-    public function getInventoryJob($characterId): array
+    public function getInventoryJob(int $CharID): array
     {
-        return $this->convertItemList(TradeEquipInventory::getInventoryForJob($characterId));
+        $inventory = TradeEquipInventory::getInventoryForJob($CharID);
+        return $this->convertItemList($inventory);
     }
 
     /**
-     * @param $inventory
-     * @param bool $filter
+     * Convert raw inventory data into structured format.
+     *
+     * @param array|null $inventory
      * @return array
      */
-    public function convertItemList($inventory, $filter = false): array
+    public function convertItemList(?array $inventory): array
     {
-        $aSet = [];
         if (!$inventory) {
             return [];
         }
-        foreach ($inventory as $iKey => $aCurItem) {
-            $aSpecialInfo = [];
-            $aInfo = $aCurItem;
-            $aInfo['info'] = $this->getItemInfo($aCurItem);
-            $aInfo['blues'] = $this->getBluesStats($aCurItem, $aSpecialInfo);
-            $aInfo['whitestats'] = $this->getWhiteStats($aCurItem, $aSpecialInfo);
 
-            if (array_key_exists('Slot', $aInfo['info'])) {
-                //
-                $i = $aInfo['info']['Slot'];
-            } else {
-                $i = $aCurItem['Slot'] ?? $aCurItem['ID64'];
-            }
+        $convertedItems = [];
 
-            if (!isset($aCurItem['MaxStack'])) {
-                $aInfo['MaxStack'] = 0;
-            }
-
-            if ($aCurItem['MaxStack'] > 1) {
-                $aSet[$i]['amount'] = $aCurItem['Data'];
-                $aInfo['amount'] = $aCurItem['Data'];
-            } else {
-                $aSet[$i]['amount'] = false;
-                $aInfo['amount'] = 0;
-            }
-
-            $aSet[$i]['Slot'] = $i;
-            $aSet[$i]['Serial64'] = data_get($aInfo, 'Serial64', null);
-            $aSet[$i]['TypeID2'] = data_get($aInfo, 'TypeID2', 0);
-            $aSet[$i]['OptLevel'] = data_get($aInfo, 'OptLevel', 0);
-            $aSet[$i]['RefItemID'] = data_get($aCurItem, 'RefItemID', 0);
-            $aSet[$i]['special'] = data_get($aInfo['info'], 'sox', null);
-            $aSet[$i]['ItemID'] = data_get($aCurItem, 'ID64', 0);
-            $aSet[$i]['ItemName'] = data_get($aInfo['info'], 'WebName', 'Unknown');
-            $aSet[$i]['imgpath'] = $this->getItemIcon($aCurItem['AssocFileIcon128']);
-            $aSet[$i]['WebInventory'] = $aInfo['info'];
-
-            if ($filter) {
-                $aSet[$i]['CharID'] = $aCurItem['CharID'];
-                $aSet[$i]['CharName'] = $aCurItem['CharName16'];
-                $aSet[$i]['StorageState'] = $aCurItem['UserJID'];
-            }
+        foreach ($inventory as $item) {
             try {
-                $aSet[$i]['data'] = $aInfo;
+                $convertedItems[] = $this->processItem($item);
             } catch (\Throwable $e) {
-//                 Throw error
+                Log::error('Error processing inventory item', [
+                    'item' => $item,
+                    'error' => $e->getMessage(),
+                ]);
             }
         }
-        return $aSet;
+
+        return $convertedItems;
     }
 
     /**
-     * @param $aItem
+     * Process a single inventory item.
+     *
+     * @param array $item
+     * @return array
+     */
+    private function processItem(array $item): array
+    {
+        return [
+            'Slot' => $item['Slot'] ?? $item['ID64'],
+            'Amount' => $item['MaxStack'] > 1 ? $item['Data'] : 0,
+            'ImgPath' => $this->getItemIcon($item['AssocFileIcon128']),
+            'ItemInfo' => $this->getItemInfo($item),
+        ];
+    }
+
+    /**
+     * Get item name from configuration or fallback.
+     *
+     * @param array $item
      * @return string
      */
-    public function getItemIcon($aItem): string
+    private function getItemName(array $item): string
     {
-        $iconPath = $aItem;
-        $iconPath = str_replace('\\', '/', $iconPath);
+        return ItemNameDesc::getItemRealName($item['NameStrID128'] ?? 'Unknown');
+    }
 
-        if (substr($iconPath, -4) == '.ddj') {
-            $iconPath = sprintf('%s.png', substr($iconPath, 0, strlen($iconPath) - 4));
+    /**
+     * Get item icon path.
+     *
+     * @param string $assocFile
+     * @return string
+     */
+    private function getItemIcon(string $assocFile): string
+    {
+        $iconPath = str_replace('\\', '/', $assocFile);
+        if (str_ends_with($iconPath, '.ddj')) {
+            $iconPath = substr($iconPath, 0, -4) . '.png';
         }
-
         return sprintf('/images/sro/%s', $iconPath);
     }
 
     /**
-     * @param $aItem
+     * Get detailed item information.
+     *
+     * @param array $item
      * @return array
      */
-    protected function getItemInfo($aItem): array
+    private function getItemInfo(array $item): array
     {
-        $aData = [];
-        $aData['ReqLevel1'] = $aItem['ReqLevel1'];
-        $aData['CanSell'] = $aItem['CanSell'];
-        $aData['CanTrade'] = $aItem['CanTrade'];
-        $aData['CanBuy'] = $aItem['CanBuy'];
-        $aData['TypeID2'] = $aItem['TypeID2'];
-        $aData['TypeID3'] = $aItem['TypeID3'];
-        $aData['TypeID4'] = $aItem['TypeID4'];
-        $aData['Price'] = $aItem['Price']; // Npc Price
-        $aData['sox'] = null; // For Blade
-        $aData['OptLevel'] = data_get($aItem, 'OptLevel', 0);
-        $aData['Degree'] = data_get($aItem, 'ItemClass', '0'); // For Blade
-        $aData['WebName'] = ItemNameDesc::getItemRealName($aItem['NameStrID128']);
+        $info = [
+            'ReqLevel1' => $item['ReqLevel1'] ?? null,
+            'ItemClass' => $item['ItemClass'] ?? null,
+            'MagParamNum' => $item['MagParamNum'] ?? null,
+            'MagParam1' => $item['MagParam1'] ?? null,
+            'MaxMagicOptCount' => $item['MaxMagicOptCount'] ?? null,
+            'TypeID1' => $item['TypeID1'] ?? null,
+            'TypeID2' => $item['TypeID2'] ?? null,
+            'TypeID3' => $item['TypeID3'] ?? null,
+            'TypeID4' => $item['TypeID4'] ?? null,
+        ];
 
-        if (!in_array($aItem['TypeID2'], [1, 4])) {
-            return $aData;
-        }
+        $info['ItemName'] = $this->getItemName($item);
+        $info['OptLevel'] = $item['OptLevel'];
+        $info['nOptValue'] = $item['nOptValue'] ?? 0;
+        $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'Europe';
+        $info['Gender'] = $item['ReqGender'] == 0 ? 'Female' : 'Male';
+        $info['SoxType'] = $this->getSoxType($item);
+        $info['SoxName'] = $this->getSoxName($item);
+        $info['Degree'] = (int)ceil($item['ItemClass'] / 3) ?? null;
+        $info['JobDegree'] = config('item.job_degree')[$item['ItemClass']] ?? null;
+        $info['Type'] = config('item.types')[$item['TypeID1']][$item['TypeID2']][$item['TypeID3']][$item['TypeID4']] ?? null;
+        $info['Detail'] = config('item.detail')[$item['Slot']] ?? null;
+        $info['WhiteInfo'] = $this->getWhiteInfo($item);
+        $info['BlueInfo'] = $this->getBlueInfo($item);
+        $info['TimeEnd'] = $this->getTimeEnd($item);
 
-        $aStats = explode('_', $aItem['CodeName128']);
-        $aData['Race'] = config('item.race')[$aStats[1]] ?? null;
+        return $info;
+    }
 
-        if ($aItem['TypeID2'] == 4) {
-            if ($aItem['TypeID3'] > 0 && $aItem['TypeID4'] > 0) {
-                if (array_key_exists($aItem['TypeID3'], config('item.job_type'))) {
-                    if (array_key_exists($aItem['TypeID4'], config('item.job_type')[$aItem['TypeID3']])) {
-                        $aData['JobType'] = config('item.job_type')[$aItem['TypeID3']][$aItem['TypeID4']] ?? null;
+    private function getSoxType($item): ?string
+    {
+        foreach (config('item.sox_type') as $itemClassArr => $CodeNameArr) {
+            if ($item['ItemClass'] > $itemClassArr) {
+                foreach ($CodeNameArr as $key => $value) {
+                    if (str_contains($item['CodeName128'], $key)) {
+                        return $value;
                     }
                 }
             }
-
-            if (array_key_exists($aItem['Slot'], config('item.job_detail'))) {
-                $aData['JobDetail'] = config('item.job_detail')[$aItem['Slot']] ?? null;
-            }
-
-            if (array_key_exists($aItem['ItemClass'], config('item.job_degree'))) {
-                $aData['JobDegree'] = config('item.job_degree')[$aItem['ItemClass']] ?? null;
-            }
         }
 
-        if ($aItem['TypeID3'] == 14) {
-            $aTime = self::diffTime($aItem['Data'] - time());
-            $aData['devilTimeEnd'] = $aItem['Data'] === 0 ? '28Day' : ((time() > $aItem['Data']) ? '0Day 0Hour 0Minute' : $aTime['day'] . 'Day ' . $aTime['hour'] . 'Hour ' . $aTime['min'] . 'Minute');
-        }
+        return 'Normal';
+    }
 
-        if (isset($aStats[4], $aStats[5], $aStats[6])) {
-            $setKey = $aStats[4] . '_' . $aStats[5] . '_' . $aStats[6];
-
-            if (array_key_exists($setKey, config('item.sox_name'))) {
-                $aItem['RareName'] = config('item.sox_name')[$setKey][$aItem['Slot']];
+    private function getSoxName($item): ?string
+    {
+        foreach (config('item.sox_name') as $key => $values) {
+            if (str_contains($item['CodeName128'], $key)) {
+                return $values[$item['Slot']] ?? '';
             }
         }
 
-        switch ($aItem['TypeID3']) {
-            case self::WEAPON:
-                $aData['Type'] = config('item.weapon_type')[$aStats[1]][$aStats[2]] ?? '';
-                $aData['Degree'] = self::getDegree4ItemClass($aItem['ItemClass']);
-                $aData['sox'] = self::getSOXRate4ItemClass($aItem['ItemClass'], $aItem['Rarity']);
-                break;
-            case self::SHIELD:
-                //set
-                $aData['Type'] = config('item.weapon_type')[$aStats[1]][$aStats[2]] ?? '';
-                $aData['Degree'] = self::getDegree4ItemClass($aItem['ItemClass']);
-                $aData['sox'] = self::getSOXRate4ItemClass($aItem['ItemClass'], $aItem['Rarity']);
-                break;
-            case 12:
-            case self::ACC:
-                $aData['Type'] = $aStats[2];
-                $aData['Degree'] = self::getDegree4ItemClass($aItem['ItemClass']);
-                $aData['sox'] = self::getSOXRate4ItemClass($aItem['ItemClass'], $aItem['Rarity']);
-                break;
-            /**
-             * DEVIL
-             */
-            case self::DEVIL:
-                $aData['Type'] = 'Devil´s Spirit';
-                $aData['Degree'] = 'devil';
-                $aData['Sex'] = config('item.sex')[$aItem['ReqGender']];
-                $aTime = self::diffTime($aItem['Data'] - time());
-                $buffer = ((time() > $aItem['Data']) ? '0Day 0Hour 0Minute' : $aTime['day'] . 'Day ' . $aTime['hour'] . 'Hour ' . $aTime['min'] . 'Minute');
-                $aData['timeEnd'] = $aItem['Data'] === 0 ? '28Day' : $buffer;
-                $aData['Slot'] = 0;
-                break;
-            /**
-             * DRESS
-             */
-            case self::DRESS:
-                $aData['Type'] = config('item.avatar_type')[$aItem['MaxMagicOptCount']] ?? null;
-                //$aData['Type'] = $aStats[2] . ' ' . ((!isset($aStats[5]) || is_numeric($aStats[5])) ? 'dress' : $aStats[5]);
-                //$aData['Degree'] = $aStats[3];
-                $aData['Sex'] = config('item.sex')[$aItem['ReqGender']] ?? null;
-                $aData['Slot'] = $aItem['TypeID4'];
-                break;
-
-            default:
-                $aData['Degree'] = self::getDegree4ItemClass($aItem['ItemClass']);
-                if (isset(config('item.sex')[$aItem['ReqGender']])) {
-                    $aData['Sex'] = config('item.sex')[$aItem['ReqGender']];
-                }
-                if (isset(config('item.cloth_type')[$aStats[1]][$aStats[3]])) {
-                    $aData['Type'] = config('item.cloth_type')[$aStats[1]][$aStats[3]];
-                }
-                if (isset(config('item.cloth_detail')[$aStats[5]])) {
-                    $aData['Detail'] = config('item.cloth_detail')[$aStats[5]];
-                }
-                $aData['sox'] = self::getSOXRate4ItemClass($aItem['ItemClass'], $aItem['Rarity']);
-                break;
-        }
-
-        $aData['Type'] = array_key_exists('Type', $aData) ? ucfirst(strtolower($aData['Type'])) : '';
-        return $aData;
+        return '';
     }
 
-    /**
-     * @param $aRefData
-     * @return bool
-     */
-    public function isPet($aRefData): bool
+    private function getBlueInfo($item): array
     {
-        return $aRefData['TypeID2'] === 2 && $aRefData['TypeID3'] === 1;
-    }
+        $magicAttributes = config('magopt');
 
-    /**
-     * @param $iItemClass
-     * @return float
-     */
-    protected static function getDegree4ItemClass($iItemClass): float
-    {
-        $iDegree = $iItemClass / 3;
-        return ceil($iDegree);
-    }
+        $blueStats = [];
+        $Wheel = ($item['MagParam1'] >= 4611686018427387904) ? 2 : 1;
 
-    /**
-     * @param $iItemClass
-     * @param $iRarity
-     * @return mixed|string
-     */
-    protected static function getSOXRate4ItemClass($iItemClass, $iRarity)
-    {
-        if ($iRarity <= 1) {
-            return '';
-        }
+        for ($i = $Wheel; $i <= 12; $i++) {
+            $key = "MagParam{$i}";
 
-        $iDegree = self::getDegree4ItemClass($iItemClass);
-        $iSOXRate = (int)(($iDegree * 3) - $iItemClass);
-        $iSOXRate = ($iDegree === 12 && $iSOXRate === 2) ? 3 : $iSOXRate;
-        return config('item.sox_type')[$iSOXRate];
-    }
-
-    /**
-     * @param $iDifferenz
-     * @return array
-     */
-    public static function diffTime($iDifferenz): array
-    {
-        $iDay = floor($iDifferenz / (3600 * 24));
-        $iH = self::lengthCheck(floor($iDifferenz / 3600 % 24));
-        $iM = self::lengthCheck(floor($iDifferenz / 60 % 60));
-        $iS = self::lengthCheck(floor($iDifferenz % 60));
-
-        return [
-            'day' => $iDay,
-            'hour' => $iH,
-            'min' => $iM,
-            's' => $iS,
-        ];
-    }
-
-    /**
-     * @param $iInteger
-     * @return string
-     */
-    public static function lengthCheck($iInteger): string
-    {
-        return (strlen($iInteger) === 1) ? '0' . $iInteger : $iInteger;
-    }
-
-    /**
-     * @param $CodeName128
-     * @return mixed
-     */
-
-    /**
-     * @param $aItem
-     * @param $aSpecialInfo
-     * @return array
-     */
-    protected function getBluesStats($aItem, &$aSpecialInfo): array
-    {
-        //$_aMagOptLevel = MagOptDesc::getBlues($aItem,$aSpecialInfo);
-        $_aMagOptLevel = config('magopt');
-
-        $aBlues = [];
-        $aWheel = ($aItem['MagParam1'] >= 4611686018427387904) ? 2 : 1;
-
-        for ($i = $aWheel; $i <= $aItem['MagParamNum']; $i++) {
-            if (isset($aItem['MagParam' . $i]) && $aItem['MagParam' . $i] > 1) {
-                $aData = self::convertBlue($aItem['MagParam' . $i], $_aMagOptLevel, $aSpecialInfo);
-                if ($aData) {
-                    $aBlues[] = $aData;
-                }
-            }
-        }
-
-        $bBlues = [];
-        $counter = [];
-        foreach ($aBlues as $aBlue) {
-            if (!isset($counter[$aBlue['sortkey']])) {
-                $counter[$aBlue['sortkey']] = 0;
-                $sortkey = $aBlue['sortkey'];
-            } else {
-                $counter[$aBlue['sortkey']]++;
-                $sortkey = $aBlue['sortkey'] . '_' . $counter[$aBlue['sortkey']];
-            }
-
-            $bBlues[$sortkey] = $aBlue;
-        }
-
-        ksort($bBlues);
-        return $bBlues;
-    }
-
-    /**
-     * @param $iMagParam
-     * @param $_aMagOptLevel
-     * @param $aSpecialInfo
-     * @return array
-     */
-    protected static function convertBlue($iMagParam, $_aMagOptLevel, &$aSpecialInfo): array
-    {
-        if ($iMagParam === 65) {
-            $aSpecialInfo['MATTR_DUR'] = (isset($aSpecialInfo['MATTR_DUR'])) ? ($aSpecialInfo['MATTR_DUR'] + 400) : 400;
-            return [
-                'name' => 'Repair invalid (Maximum durability 400% increase)',
-                'color' => 'ff2f51',
-                'sortkey' => 0,
-                'extension' => '',
-                'id' => 0
-            ];
-        }
-        $hMagParam = (string)dechex($iMagParam);
-        $aString = str_split($hMagParam);
-        if (($iNumber = count($aString)) < 11) {
-            $iNumber++;
-            for ($i = $iNumber; $i <= 11; $i++) {
-                array_unshift($aString, 0);
-            }
-        }
-        $i = $aString[0] . $aString[1] . $aString[2];
-        $aData = str_split($i);
-
-        for ($i = 0; $i <= 5; $i++) {
-            unset($aString[$i]);
-        }
-
-        $iState = hexdec(implode('', $aString));
-        if (!isset($_aMagOptLevel[$iState])) {
-            return [
-
-            ];
-        }
-
-        // Durability Fix for 160%
-        if ($_aMagOptLevel[$iState]['name'] === 'MATTR_DUR') {
-            $iValue = implode('', $aData);
-        } else {
-            $iValue = implode('', $aData);
-        }
-
-        $iValue = hexdec($iValue);
-        if ($_aMagOptLevel[$iState]['name'] === 'MATTR_REPAIR') {
-            $iValue--;
-        }
-        $aSpecialInfo[$_aMagOptLevel[$iState]['name']] = (isset($aSpecialInfo[$_aMagOptLevel[$iState]['name']])) ? ($aSpecialInfo[$_aMagOptLevel[$iState]['name']] + $iValue) : $iValue;
-
-        $cBlues =  [
-            'id' => $iState,
-            'code' => $_aMagOptLevel[$iState]['name'],
-            'name' => str_replace('%desc%', $iValue, $_aMagOptLevel[$iState]['desc']),
-            'color' => $_aMagOptLevel[$iState]['name'] === 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd',
-            'mValue' => $iValue,
-            'mLevel' => $_aMagOptLevel[$iState]['mLevel'],
-            'sortkey' => $_aMagOptLevel[$iState]['sortkey'],
-        ];
-
-        return $cBlues;
-    }
-
-    /**
-     * @param $aItem
-     * @param $aSpecialInfo
-     * @return array
-     */
-    protected function getWhiteStats($aItem, $aSpecialInfo): array
-    {
-        if (!in_array($aItem['TypeID2'], [1, 4]) || in_array($aItem['TypeID3'], [7, 13, 14])) {
-            return [];
-        }
-        $aWhiteStats = [];
-        $iBinar = self::bin($aItem['Variance']);
-        $aStats = strrev($iBinar);
-        $aStats = str_split($aStats, 5);
-        foreach ($aStats as $iBinar) {
-            $iDezimal = bindec(strrev($iBinar));
-            if ($iDezimal === 0) {
-                $aWhiteStats[] = 0;
+            if (!isset($item[$key]) || $item[$key] == 0) {
                 continue;
             }
-            $aWhiteStats[] = (int)($iDezimal * 100 / 31);
-        }
-        return self::convertToStats($aItem, $aWhiteStats, $aSpecialInfo);
-    }
 
-    /**
-     * @param $int
-     * @return string
-     */
-    protected static function bin($int): string
-    {
-        $i = 0;
-        $binair = '';
-        while ($int >= (2 ** $i)) {
-            $i++;
-        }
+            $paramBinary = pack('Q', $item[$key]);
+            $value = unpack('L', substr($paramBinary, 0, 4))[1];
+            $id = unpack('L', substr($paramBinary, 4, 4))[1];
 
-        if ($i !== 0) {
-            --$i;
-        }
-
-        while ($i >= 0) {
-            if ($int - (2 ** $i) < 0) {
-                $binair = '0' . $binair;
-            } else {
-                $binair = '1' . $binair;
-                $int -= (2 ** $i);
-            }
-            $i--;
-        }
-        return strrev($binair);
-    }
-
-    /**
-     * @param $aItem
-     * @param $aWhiteStats
-     * @param $aSpecialInfo
-     * @return array
-     */
-    protected static function convertToStats($aItem, $aWhiteStats, $aSpecialInfo): array
-    {
-        for ($i = 0; $i <= 6; $i++) {
-            $aWhiteStats[$i] = $aWhiteStats[$i] ?? 0;
-        }
-
-        $aItem['nOptValue'] = $aItem['nOptValue'] ?? 0;
-
-        if ($aItem['TypeID2'] == 1) {
-            switch ($aItem['TypeID3']) {
-                case self::WEAPON:
-                    $aStats = [
-                        0 => 'Phy. atk. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAttackMin_L'],
-                                    $aItem['PAttackMin_U'],
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' ~ ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAttackMax_L'],
-                                    $aItem['PAttackMax_U'],
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[4] . '%)',
-                        1 => 'Mag. atk. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAttackMin_L'],
-                                    $aItem['MAttackMin_U'],
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' ~ ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAttackMax_L'],
-                                    $aItem['MAttackMax_U'],
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[5] . '%)',
-                        2 => 'Durability ' . $aItem['Data'] . '/' . self::getDuraMaxValue(self::getValue(
-                                $aItem['Dur_L'],
-                                $aItem['Dur_U'],
-                                $aWhiteStats[0]
-                            ), $aSpecialInfo) . ' (+' . $aWhiteStats[0] . '%)',
-                        3 => 'Attack rating ' . self::calcOPTValue(
-                                self::getBlueValue(
-                                    self::getValue(
-                                        $aItem['HR_L'],
-                                        $aItem['HR_U'],
-                                        $aWhiteStats[3]
-                                    ),
-                                    $aSpecialInfo['MATTR_HR'] ?? 0
-                                ),
-                                $aItem['HRInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[3] . '%)',
-                        4 => 'Critical ' . self::getValue(
-                                $aItem['CHR_L'],
-                                $aItem['CHR_U'],
-                                $aWhiteStats[6]
-                            ) . ' (+' . $aWhiteStats[6] . '%)',
-                        5 => 'Phy. reinforce ' . self::getValue(
-                                $aItem['PAStrMin_L'],
-                                $aItem['PAStrMin_U'],
-                                $aWhiteStats[1]
-                            ) / 10 . ' % ~ ' . self::getValue(
-                                $aItem['PAStrMax_L'],
-                                $aItem['PAStrMax_U'],
-                                $aWhiteStats[1]
-                            ) / 10 . ' % (+' . $aWhiteStats[1] . '%)',
-                        6 => 'Mag. reinforce ' . self::getValue(
-                                $aItem['MAInt_Min_L'],
-                                $aItem['MAInt_Min_U'],
-                                $aWhiteStats[2]
-                            ) / 10 . ' % ~ ' . self::getValue(
-                                $aItem['MAInt_Max_L'],
-                                $aItem['MAInt_Max_U'],
-                                $aWhiteStats[2]
-                            ) / 10 . ' % (+' . $aWhiteStats[2] . '%)'
-                    ];
-                    if ($aItem['PAttackMin_L'] === 0) {
-                        unset($aStats[0], $aStats[5]);
-                        $aStats[4] = 'Critical 2 (+100%)';
-                    }
-                    if ($aItem['MAttackMin_L'] === 0) {
-                        unset($aStats[1], $aStats[6]);
-                    }
-                    break;
-                case self::SHIELD:
-                    $aStats = [
-                        0 => 'Phy. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PD_L'] * 10,
-                                    $aItem['PD_U'] * 10,
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[4] . '%)',
-                        1 => 'Mag. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MD_L'] * 10,
-                                    $aItem['MD_U'] * 10,
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[5] . '%)',
-                        2 => 'Durability ' . $aItem['Data'] . '/' . self::getDuraMaxValue(self::getValue(
-                                $aItem['Dur_L'],
-                                $aItem['Dur_U'],
-                                $aWhiteStats[0]
-                            ), $aSpecialInfo) . ' (+' . $aWhiteStats[0] . '%)',
-                        3 => 'Blocking rate ' . self::getValue(
-                                $aItem['BR_L'],
-                                $aItem['BR_U'],
-                                $aWhiteStats[3]
-                            ) . ' (+' . $aWhiteStats[3] . '%)',
-                        4 => 'Phy. reinforce ' . self::getValue(
-                                $aItem['PDStr_L'],
-                                $aItem['PDStr_U'],
-                                $aWhiteStats[1]
-                            ) / 10 . ' % (+' . $aWhiteStats[1] . '%)',
-                        5 => 'Mag. reinforce ' . self::getValue(
-                                $aItem['MDInt_L'],
-                                $aItem['MDInt_U'],
-                                $aWhiteStats[2]
-                            ) / 10 . ' % (+' . $aWhiteStats[2] . '%)'
-                    ];
-                    break;
-                case 12:
-                case self::ACC:
-                    $aStats = [
-                        0 => 'Phy. absorption ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAR_L'] * 10,
-                                    $aItem['PAR_U'] * 10,
-                                    $aWhiteStats[0]
-                                ),
-                                $aItem['PARInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[0] . '%)',
-                        1 => 'Mag. absorption ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAR_L'] * 10,
-                                    $aItem['MAR_U'] * 10,
-                                    $aWhiteStats[1]
-                                ),
-                                $aItem['MARInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[1] . '%)'
-                    ];
-                    break;
-                default:
-                    $aStats = [
-                        0 => 'Phy. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PD_L'] * 10,
-                                    $aItem['PD_U'] * 10,
-                                    $aWhiteStats[3]
-                                ),
-                                $aItem['PDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[3] . '%)',
-                        1 => 'Mag. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MD_L'] * 10,
-                                    $aItem['MD_U'] * 10,
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['MDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[4] . '%)',
-                        2 => 'Durability ' . $aItem['Data'] . '/' . self::getDuraMaxValue(self::getValue(
-                                $aItem['Dur_L'],
-                                $aItem['Dur_U'],
-                                $aWhiteStats[0]
-                            ), $aSpecialInfo) . ' (+' . $aWhiteStats[0] . '%)',
-                        3 => 'Parry rate ' . self::calcOPTValue(
-                                self::getBlueValue(
-                                    self::getValue(
-                                        $aItem['ER_L'],
-                                        $aItem['ER_U'],
-                                        $aWhiteStats[5]
-                                    ),
-                                    $aSpecialInfo['MATTR_ER'] ?? 0
-                                ),
-                                $aItem['ERInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[5] . '%)',
-                        4 => 'Phy. reinforce ' . self::getValue(
-                                $aItem['PDStr_L'],
-                                $aItem['PDStr_U'],
-                                $aWhiteStats[1]
-                            ) / 10 . ' % (+' . $aWhiteStats[1] . '%)',
-                        5 => 'Mag. reinforce ' . self::getValue(
-                                $aItem['MDInt_L'],
-                                $aItem['MDInt_U'],
-                                $aWhiteStats[2]
-                            ) / 10 . ' % (+' . $aWhiteStats[2] . '%)'
-                    ];
-                    break;
-            }
-        }elseif($aItem['TypeID2'] == 4) {
-            switch ($aItem['TypeID3']) {
-                case 1:
-                    $aStats = [
-                        0 => 'Phy. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PD_L'] * 10,
-                                    $aItem['PD_U'] * 10,
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[4] . '%)',
-                        1 => 'Mag. def. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MD_L'] * 10,
-                                    $aItem['MD_U'] * 10,
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MDInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[5] . '%)',
-                    ];
-                    break;
-                case 2:
-                    $aStats = [
-                        0 => 'Phy. atk. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAttackMin_L'],
-                                    $aItem['PAttackMin_U'],
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' ~ ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAttackMax_L'],
-                                    $aItem['PAttackMax_U'],
-                                    $aWhiteStats[4]
-                                ),
-                                $aItem['PAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[4] . '%)',
-                        1 => 'Mag. atk. pwr. ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAttackMin_L'],
-                                    $aItem['MAttackMin_U'],
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' ~ ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAttackMax_L'],
-                                    $aItem['MAttackMax_U'],
-                                    $aWhiteStats[5]
-                                ),
-                                $aItem['MAttackInc'],
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) . ' (+' . $aWhiteStats[5] . '%)',
-                    ];
-                    break;
-                case 3:
-                    $aStats = [
-                        0 => 'Phy. absorption ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['PAR_L'] * 10,
-                                    $aItem['PAR_U'] * 10,
-                                    $aWhiteStats[0]
-                                ),
-                                $aItem['PARInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[0] . '%)',
-                        1 => 'Mag. absorption ' . self::calcOPTValue(
-                                self::getValue(
-                                    $aItem['MAR_L'] * 10,
-                                    $aItem['MAR_U'] * 10,
-                                    $aWhiteStats[1]
-                                ),
-                                $aItem['MARInc'] * 10,
-                                ((int)$aItem['nOptValue'] + (int)$aItem['OptLevel'])
-                            ) / 10 . ' (+' . $aWhiteStats[1] . '%)'
-                    ];
-                    break;
-                default:
-
+            if (isset($magicAttributes[$id])) {
+                $attribute = $magicAttributes[$id];
+                $blueStats[] = [
+                    'id' => $id,
+                    'code' => $attribute['name'],
+                    'name' => str_replace('%desc%', $value, $attribute['desc']),
+                    'mLevel' => $attribute['mLevel'],
+                    'value' => $value,
+                ];
             }
         }
-        return $aStats ?? [];
+
+        usort($blueStats, function ($a, $b) use ($magicAttributes) {
+            $idA = array_search($a, array_column($magicAttributes, 'desc'));
+            $idB = array_search($b, array_column($magicAttributes, 'desc'));
+
+            return $magicAttributes[$idA]['sortkey'] <=> $magicAttributes[$idB]['sortkey'];
+        });
+
+        return $blueStats;
     }
 
-    /**
-     * @param $iValue
-     * @param $iBonus
-     * @param $iOptLvl
-     * @return float
-     */
-    protected static function calcOPTValue($iValue, $iBonus, $iOptLvl): float
+    private function getWhiteInfo($item): array
     {
-        return round($iValue + $iBonus * $iOptLvl);
+        $OptLevel = $item['OptLevel'] ?? 0;
+        $Variance = $item['Variance'] ?? 0;
+
+        $calculatePercentage = function ($variance, $powerIndex) {
+            return floor(((($variance / pow(32, $powerIndex)) & 0x1F) * 3.23));
+        };
+
+        return [
+            'PAtack' => ($item['PAttackMin_L'] > 0 && $item['PAttackMax_L'] > 0)
+                ? sprintf(
+                    'Phy. atk. pwr. %d ~ %d (+%d%%)',
+                    round(($item['PAttackMin_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMin_U'] - $item['PAttackMin_L']) * $calculatePercentage($Variance, 4) / 100)),
+                    round(($item['PAttackMax_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMax_U'] - $item['PAttackMax_L']) * $calculatePercentage($Variance, 4) / 100)),
+                    $calculatePercentage($Variance, 4)
+                )
+                : '',
+            'MAtack' => ($item['MAttackMin_L'] > 0 && $item['MAttackMax_L'] > 0)
+                ? sprintf(
+                    'Mag. atk. pwr. %d ~ %d (+%d%%)',
+                    (int)(($item['MAttackMin_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMin_U'] - $item['MAttackMin_L']) * $calculatePercentage($Variance, 5) / 100)),
+                    (int)(($item['MAttackMax_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMax_U'] - $item['MAttackMax_L']) * $calculatePercentage($Variance, 5) / 100)),
+                    $calculatePercentage($Variance, 5)
+                )
+                : '',
+            'PDefance' => ($item['PD_L'] > 0)
+                ? sprintf(
+                    'Phy. def. pwr. %.1f (+%d%%)',
+                    round(($item['PD_L'] + $item['PDInc'] * $OptLevel) + (($item['PD_U'] - $item['PD_L']) * $calculatePercentage($Variance, 3) / 100), 1),
+                    $calculatePercentage($Variance, 3)
+                )
+                : '',
+            'MDefance' => ($item['MD_L'] > 0)
+                ? sprintf(
+                    'Mag. def. pwr. %.1f (+%d%%)',
+                    round(($item['MD_L'] + $item['MDInc'] * $OptLevel) + (($item['MD_U'] - $item['MD_L']) * $calculatePercentage($Variance, 4) / 100), 1),
+                    $calculatePercentage($Variance, 4)
+                )
+                : '',
+            'Durability' => ($item['Dur_U'] > 0)
+                ? sprintf(
+                    'Durability %d/%d (+%d%%)',
+                    $item['Data'],
+                    $item['Data'],
+                    $calculatePercentage($Variance, 0)
+                )
+                : '',
+            'BlockRate' => ($item['BR_L'] > 0)
+                ? sprintf(
+                    'Block Rate %d (+%d%%)',
+                    (int)(($item['BR_L']) + (($item['BR_U'] - $item['BR_L']) * $calculatePercentage($Variance, 3) / 100)),
+                    $calculatePercentage($Variance, 3)
+                )
+                : '',
+            'AtackDist' => ($item['Range'] > 0)
+                ? sprintf(
+                    'Attack distance %.1f m',
+                    $item['Range'] / 10
+                )
+                : '',
+            'AtackRate' => ($item['HR_L'] > 0)
+                ? sprintf(
+                    'Attack rate %d (+%d%%)',
+                    (int)(($item['HR_L'] + $item['HRInc'] * $OptLevel) + (($item['HR_U'] - $item['HR_L']) * $calculatePercentage($Variance, 3) / 100)),
+                    $calculatePercentage($Variance, 3)
+                )
+                : '',
+            'Critical' => ($item['CHR_L'] > 0)
+                ? sprintf(
+                    'Critical %d (+%d%%)',
+                    (int)(($item['CHR_L']) + (($item['CHR_U'] - $item['CHR_L']) * $calculatePercentage($Variance, 6) / 100)),
+                    $calculatePercentage($Variance, 6)
+                )
+                : '',
+            'ParryRate' => ($item['ER_L'] > 0)
+                ? sprintf(
+                    'Parry rate %d (+%d%%)',
+                    (int)(($item['ER_L'] + $item['ERInc'] * $OptLevel) + (($item['ER_U'] - $item['ER_L']) * $calculatePercentage($Variance, 5) / 100)),
+                    $calculatePercentage($Variance, 5)
+                )
+                : '',
+            'PReinforceWep' => ($item['PAStrMin_L'] > 0 && $item['PAStrMax_L'] > 0)
+                ? sprintf(
+                    'Phy. reinforce %.1f ~ %.1f (+%d%%)',
+                    (float)(($item['PAStrMin_L']) + (($item['PAStrMin_U'] - $item['PAStrMin_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
+                    (float)(($item['PAStrMax_L']) + (($item['PAStrMax_U'] - $item['PAStrMax_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
+                    $calculatePercentage($Variance, 1)
+                )
+                : '',
+            'MReinforceWep' => ($item['MAInt_Min_L'] > 0 && $item['MAInt_Max_L'] > 0)
+                ? sprintf(
+                    'Mag. reinforce %.1f ~ %.1f (+%d%%)',
+                    (float)(($item['MAInt_Min_L']) + (($item['MAInt_Min_U'] - $item['MAInt_Min_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
+                    (float)(($item['MAInt_Max_L']) + (($item['MAInt_Max_U'] - $item['MAInt_Max_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
+                    $calculatePercentage($Variance, 2)
+                )
+                : '',
+        ];
     }
 
-    /**
-     * @param $iMin
-     * @param $iMax
-     * @param $iProzent
-     * @return float
-     */
-    protected static function getValue($iMin, $iMax, $iProzent): float
+    public function getTimeEnd(array $item): string
     {
-        return round($iMin + ((($iMax - $iMin) / 100) * $iProzent));
-    }
-
-    /**
-     * @param $iValue
-     * @param $aSpecialInfo
-     * @return float
-     */
-    protected static function getDuraMaxValue($iValue, $aSpecialInfo): float
-    {
-        if (isset($aSpecialInfo['MATTR_DUR'])) {
-            $iValue = self::getBlueValue($iValue, $aSpecialInfo['MATTR_DUR']);
+        if ($item['Data'] === 0) {
+            return '28Day';
         }
-        if (isset($aSpecialInfo['MATTR_DEC_MAXDUR'])) {
-            $iValue = self::getBlueValueNegative($iValue, $aSpecialInfo['MATTR_DEC_MAXDUR']);
+
+        if (time() > $item['Data']) {
+            return '0Day 0Hour 0Minute';
         }
-        return $iValue;
-    }
 
-    /**
-     * @param $iValue
-     * @param $iProzent
-     * @return float
-     */
-    protected static function getBlueValue($iValue, $iProzent): float
-    {
-        return round($iValue + (($iValue / 100) * $iProzent));
-    }
+        $difference = $item['Data'] - time();
+        $days = floor($difference / (3600 * 24));
+        $hours = $this->lengthCheck(floor($difference / 3600 % 24));
+        $minutes = $this->lengthCheck(floor($difference / 60 % 60));
+        $seconds = $this->lengthCheck(floor($difference % 60));
 
-    /**
-     * @param $iValue
-     * @param $iProzent
-     * @return float
-     */
-    protected static function getBlueValueNegative($iValue, $iProzent): float
-    {
-        return round($iValue - ($iValue / 100 * $iProzent));
+        return "{$days}Day {$hours}Hour {$minutes}Minute";
     }
 }

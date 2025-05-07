@@ -232,7 +232,7 @@ class RankingController extends Controller
             $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
             $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
 
-            $inventorySet = $inventoryService->getInventorySet($charID, 13, 0);
+            $inventorySet = $inventoryService->getInventorySet($charID);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
             if (config('global.server.version') !== 'vSRO') {
@@ -275,6 +275,7 @@ class RankingController extends Controller
             $data = Guild::getGuildRanking(1, $guildID)->first();
             $members = GuildMember::getGuildInfoMembers($guildID);
             $alliances = Guild::getGuildInfoAlliance($guildID);
+
             $characterRace = config('ranking.character_race');
             $guildAuthority = config('ranking.guild_authority');
 

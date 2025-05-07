@@ -1,109 +1,106 @@
-<img src="{{ asset('/images/com_itemsign.PNG') }}" class="img-clear" style="display: inline-block">
+<img src="{{ asset('/images/com_itemsign.PNG') }}" class="img-clear" style="display: inline-block" alt="">
 
-@if($item['info']['sox'] || count($item['blues']) >= 1)
-    <span style="color:#{{ $item['info']['sox'] ? 'f2e43d' : '50cecd' }};font-weight: bold;margin-left: 20px">
-        {{ $item['info']['WebName'] }} {{ (($item['OptLevel'] + $item['nOptValue']) > 0) ? '[+' . ($item['OptLevel'] + $item['nOptValue']) . ']' : ''}}
+@if($item['SoxType'] != 'Normal' || count($item['BlueInfo']) >= 1)
+    <span style="color:#{{ $item['SoxType'] != 'Normal' ? 'f2e43d' : '50cecd' }};font-weight: bold;margin-left: 20px">
+        {{ $item['ItemName'] }} [+{{ $item['OptLevel'] + $item['nOptValue'] }}]
     </span>
 @else
     <span style="font-weight: bold;margin-left: 20px">
-        {{ $item['info']['WebName'] }}
+        {{ $item['ItemName'] }}
     </span>
 @endif
 <br />
 <br />
 
-@if($item['info']['sox'])
-    <b style="color:#f2e43d;">{{ $item['info']['sox'] }}</b><br />
+@if($item['SoxType'] != 'Normal')
+    <b style="color:#f2e43d;">{{ $item['SoxType'] }}</b><br />
 @endif
 
-@isset($item['RareName'])
-    <span style="color:#53EE92;font-weight: bold;">{{ $item['RareName'] }}</span><br />
-@endisset
+@if($item['SoxName'])
+    <span style="color:#53EE92;font-weight: bold;">{{ $item['SoxName'] }}</span><br />
+@endif
 
 <span style="color:#efdaa4;">
-    @if(count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
-        @isset($item['info']['JobType'])
-            {{ __('Sort of item:') }} {{ $item['info']['JobType'] }}<br />
-        @endisset
-    @else
-        @isset($item['info']['Type'])
-            {{ __('Sort of item:') }} {{ $item['info']['Type'] }}<br />
-        @endisset
-    @endif
-    @if(!count(array_intersect([13, 14], explode(',', $item['info']['TypeID3']))))
-        @if(count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
-            @isset($item['info']['JobDetail'])
-                {{ __('Mounting part:') }} {{ $item['info']['JobDetail'] }}<br />
-            @endisset
-            @isset($item['info']['JobDegree'])
-                {{ __('Level:') }} {{ $item['info']['JobDegree'] }}<br />
+    @isset($item['Type'])
+        {{ __('Sort of item:') }} {{ $item['Type'] }}<br />
+    @endisset
+    @isset($item['Detail'])
+        {{ __('Mounting part:') }} {{ $item['Detail'] }}<br />
+    @endisset
+    @if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+        @if(count(array_intersect([4], explode(',', $item['TypeID2']))))
+            @isset($item['Degree'])
+                {{ __('Level:') }} {{ $item['JobDegree'] }}<br />
             @endisset
         @else
-            @isset($item['info']['Detail'])
-                {{ __('Mounting part:') }} {{ $item['info']['Detail'] }}<br />
-            @endisset
-            @isset($item['info']['Degree'])
-                {{ __('Degree: :degree degrees', ['degree' => $item['info']['Degree']]) }}<br />
+            @isset($item['Degree'])
+                {{ __('Degree: :degree degrees', ['degree' => $item['Degree']]) }}<br />
             @endisset
         @endif
     @endif
 </span>
 <br />
 
-@if($item['whitestats'])
-    @foreach($item['whitestats'] as $iKey => $sWhites)
-        {{ $sWhites }} <br />
+@if($item['WhiteInfo'])
+    @foreach($item['WhiteInfo'] as $iKey => $sWhites)
+        @if(!empty($sWhites))
+            {{ $sWhites }}<br />
+        @endif
     @endforeach
     <br />
 @endif
 
-@if($item['info']['ReqLevel1'])
-    @if(count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
-        {{ __('Job level:') }} {{ $item['info']['ReqLevel1'] }}<br />
+@if($item['ReqLevel1'])
+    @if(count(array_intersect([4], explode(',', $item['TypeID2']))))
+        {{ __('Job level:') }} {{ $item['ReqLevel1'] }}<br />
     @else
-        {{ __('Reqiure level:') }} {{ $item['info']['ReqLevel1'] }}<br />
+        {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
      @endif
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['info']['TypeID3']))))
-    @isset($item['info']['Sex'])
-        {{ $item['info']['Sex'] }}<br />
+{{--
+@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+    @isset($item['Gender'])
+        {{ $item['Gender'] }}<br />
+    @endisset
+@endif
+--}}
+
+@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+    @isset($item['Country'])
+        {{ $item['Country'] }}<br />
     @endisset
 @endif
 
-@isset($item['info']['Race'])
-    {{ $item['info']['Race'] }}<br />
-@endisset
-
-@if(count(array_intersect([13, 14], explode(',', $item['info']['TypeID3']))))
-    @if($item['info']['TypeID3'] == 14)
+@if(count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+    @if($item['TypeID3'] == 14)
         {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
         <br />
         <br />
         {{ __('When awakened, the Awakening Time is counted down.') }}
-    @elseif($item['info']['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
+    @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
     @else
-        {{ __('Dress worn by') }} {{ $item['info']['WebName'] }}<br />
+        {{ __('Dress worn by') }} {{ $item['ItemName'] }}<br />
     @endif
     <br />
 @endif
 
-@if(count(array_intersect([13], explode(',', $item['info']['TypeID3']))))
+@if(count(array_intersect([13], explode(',', $item['TypeID3']))))
     <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
     <br />
-@elseif(count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
+@elseif(count(array_intersect([4], explode(',', $item['TypeID2']))))
     <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
     <br />
 @endif
 
-@if(count(array_intersect([13], explode(',', $item['info']['TypeID3']))))
-    @isset($item['info']['Sex'])
-        <br />{{ $item['info']['Sex'] }}<br />
+@if(count(array_intersect([13], explode(',', $item['TypeID3']))))
+    @isset($item['Gender'])
+        <br />{{ $item['Gender'] }}<br />
     @endisset
 @endif
 
-@if(count(array_intersect([14], explode(',', $item['info']['TypeID3']))))
+@if(count(array_intersect([14], explode(',', $item['TypeID3']))))
     <br />
     <span style="color:#efdaa4;">{{ __('Basic Option') }}</span><br />
     {{ __('MaximumHP 15% Increase') }}<br />
@@ -111,41 +108,46 @@
     <br />
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['info']['TypeID3']))))
-    @if(!count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
+@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+    @if(!count(array_intersect([4], explode(',', $item['TypeID2']))))
         @if($item['MagParam1'] >= 4611686018427387904)
             <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
             <br />
-            @php $aSTRCount = 0 @endphp
-            @php $aINTCount = 0 @endphp
-            @if($item['blues'])
-                @foreach($item['blues'] as $aBlues)
-                    @if($aBlues['code'] == 'MATTR_STR')
-                        @php $aSTRCount += $aBlues['mValue'] @endphp
+            @php $STR = 0 @endphp
+            @php $INT = 0 @endphp
+            @if($item['BlueInfo'])
+                @foreach($item['BlueInfo'] as $value)
+                    @if($value['code'] == 'MATTR_STR')
+                        @php $STR += $value['mValue'] @endphp
                     @endif
-                    @if($aBlues['code'] == 'MATTR_INT')
-                        @php $aINTCount += $aBlues['mValue'] @endphp
+                    @if($value['code'] == 'MATTR_INT')
+                        @php $INT += $value['mValue'] @endphp
                     @endif
                 @endforeach
 
-                <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['blues']) }}]</span><br />
-                <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $aSTRCount }}]</span><br />
-                <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $aINTCount }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['BlueInfo']) }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $STR }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $INT }}]</span><br />
             @endif
         @endif
     @endif
 @endif
 
-@if($item['blues'])
+@if($item['BlueInfo'])
     <br />
-    @foreach($item['blues'] as $aBlues)
-        <b style="color:#{{ $aBlues['color'] }}">{{ $aBlues['name'] }} @if(isset($item['mLevel']) && $item['mLevel'] > 0) (+{{ round($aBlues['mValue'] / $aBlues['mLevel']) * 100 }}%) @endif</b><br />
+    @foreach($item['BlueInfo'] as $value)
+        @if($value['id'] === 65)
+            <b style="color:#ff2f51">Repair invalid (Maximum durability 400% increase)</b><br />
+        @else
+            {{--<b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} @if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 / 100 }}%) @endif</b><br />--}}
+            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }}</b><br />
+        @endif
     @endforeach
 @endif
 
-@if(!count(array_intersect([13, 14], explode(',', $item['info']['TypeID3']))))
-    @if(!count(array_intersect([4], explode(',', $item['info']['TypeID2']))))
-        @if(!$item['nOptValue'])
+@if(!count(array_intersect([13, 14], explode(',', $item['TypeID3']))))
+    @if(!count(array_intersect([4], explode(',', $item['TypeID2']))))
+        @if(!isset($item['nOptValue']))
             {{ __('Able to use Advanced elixir.') }}
         @else
             <b>{{ __('Advanced elixir is in effect') }} [+{{ $item['nOptValue'] }}]</b>
@@ -153,9 +155,9 @@
     @endif
 @endif
 
-@if(count(array_intersect([14], explode(',', $item['info']['TypeID3']))))
+@if(count(array_intersect([14], explode(',', $item['TypeID3']))))
     <br/><span style="color:#efdaa4;font-weight:bold;">{{ __('Awaken period') }}</span><br/>
-    @isset($item['info']['devilTimeEnd'])
-        {{ $item['info']['devilTimeEnd'] }}<br/>
+    @isset($item['TimeEnd'])
+        {{ $item['TimeEnd'] }}<br/>
     @endisset
 @endif

@@ -44,9 +44,9 @@
             <td style="color: #ffc345">
                 @if($data->HwanLevel > 0)
                     @if($data->RefObjID > 2000)
-                        [{{ $hwanLevel['EU'][$data->HwanLevel] ?? 'Unknown' }}]
+                        [{{ $hwanLevel[1][$data->HwanLevel] ?? 'Unknown' }}]
                     @else
-                        [{{ $hwanLevel['CH'][$data->HwanLevel] ?? 'Unknown' }}]
+                        [{{ $hwanLevel[2][$data->HwanLevel] ?? 'Unknown' }}]
                     @endif
                 @endif
             </td>

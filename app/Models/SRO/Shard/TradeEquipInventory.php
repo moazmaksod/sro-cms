@@ -46,20 +46,20 @@ class TradeEquipInventory extends Model
         'ItemID'
     ];
 
-    public static function getInventoryForJob($characterId): array
+    public static function getInventoryForJob($CharID)
     {
         $minutes = config('global.cache.character_info', 1440);
 
-        return Cache::remember("character_info_inventory_job_{$characterId}", now()->addMinutes($minutes), static function () use ($characterId) {
-            return self::where('CharID', '=', $characterId)
-            ->join('_Items as Items', 'Items.ID64', 'ItemID')
-            ->leftJoin('_BindingOptionWithItem as Binding', static function ($join) {
-                $join->on('Binding.nItemDBID', 'Items.ID64');
-                $join->where('Binding.nOptValue', '>', '0');
+        return Cache::remember("character_info_inventory_job_{$CharID}", now()->addMinutes($minutes), static function () use ($CharID) {
+            return self::join('_Items', '_Items.ID64', '_TradeEquipInventory.ItemID')
+            ->join('_RefObjCommon', '_Items.RefItemId', '_RefObjCommon.ID')
+            ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
+            ->leftJoin('_BindingOptionWithItem', static function ($join) {
+                $join->on('_BindingOptionWithItem.nItemDBID', '_Items.ID64');
             })
-            ->join('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
-            ->join('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
-            ->where('ItemID', '>', 1)
+            ->where('CharID', '=', $CharID)
+            ->where('Slot', '<', 13)
+            ->where('Slot', '>=', 0)
             ->get()
             ->toArray();
         });
