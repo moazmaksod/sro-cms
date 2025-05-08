@@ -63,12 +63,16 @@ class LoginRequest extends FormRequest
                 $email = $tbUser->muUser->muEmail->EmailAddr;
             }
 
-            User::create([
-                'jid' => $jid,
-                'username' => $this->get('username'),
-                'email' => $email,
-                'password' => Hash::make($this->get('password')),
-            ]);
+            $user = User::firstOrCreate(
+                ['username' => $this->get('username')],
+                [
+                    'jid' => $jid,
+                    'email' => $email,
+                    'password' => Hash::make($this->get('password')),
+                ]
+            );
+
+            Auth::login($user, $this->boolean('remember'));
         }
 
         RateLimiter::clear($this->throttleKey());
