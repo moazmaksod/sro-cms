@@ -104,6 +104,10 @@ function loadCheck()
 
 function paginatorAjax(element, urlData)
 {
+    if (location.protocol === 'https:' && urlData.startsWith('http://')) {
+        urlData = urlData.replace('http://', 'https://');
+    }
+
     ajaxReload();
     jQuery(element).html('<i class="fas fa-spinner fa-spin"></i>');
     xhr = jQuery.ajax({
