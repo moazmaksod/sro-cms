@@ -69,7 +69,7 @@ return [
         ],
     ],
     'event_schedule' => [
-        'enabled' => true,
+        'enabled' => false,
         'names' => [
             10 => 'Roc',
             9 => 'Medusa',

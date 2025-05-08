@@ -6,6 +6,8 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
+use App\Models\Voucher;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,6 +49,40 @@ class ProfileController extends Controller
             'user' => $request->user(),
             'data' => $data,
         ]);
+    }
+
+    public function vouchers(Request $request): View
+    {
+        return view('profile.vouchers', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function redeem_vouchers(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $voucher = Voucher::where('code', $request->code)->first();
+
+        if (!$voucher) {
+            return redirect()->back()->with('error', 'Invalid voucher code.');
+        }
+
+        if ($voucher->status) {
+            return redirect()->back()->with('error', 'This voucher has already been used.');
+        }
+
+        if ($voucher->valid_date && Carbon::now()->greaterThan($voucher->valid_date)) {
+            return redirect()->back()->with('error', 'This voucher has expired.');
+        }
+
+        $user = Auth::user();
+        AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
+        $voucher->update(['user_id' => $user->jid, 'status' => true]);
+
+        return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }
 
     /**

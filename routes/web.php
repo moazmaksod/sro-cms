@@ -43,6 +43,8 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/edit', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/silk-history', [ProfileController::class, 'silk_history'])->name('profile.silk-history');
+    Route::get('/profile/vouchers', [ProfileController::class, 'vouchers'])->name('profile.vouchers');
+    Route::post('/profile/vouchers', [ProfileController::class, 'redeem_vouchers'])->name('profile.vouchers.redeem');
 
     require __DIR__.'/donate.php';
 });

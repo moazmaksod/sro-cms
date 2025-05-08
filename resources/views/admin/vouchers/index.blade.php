@@ -1,0 +1,73 @@
+@extends('admin.layouts.app')
+@section('title', __('Vouchers'))
+
+@section('content')
+    <div class="container">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Vouchers</h1>
+
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <form method="POST" action="{{ route('admin.vouchers.store') }}" class="mb-4">
+                        @csrf
+
+                        <input type="number" name="amount" placeholder="Enter silk number" class="form-control mb-2" required>
+                        <select class="form-select mb-2" name="type" aria-label="Default select example">
+                            <option value="0">Normal</option>
+                            <option value="3">Premium</option>
+                        </select>
+                        <input type="datetime-local" name="valid_date" placeholder="Valid Date Until" class="mb-2">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Generate Voucher</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="table-responsive small">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Expire Date</th>
+                    <th scope="col">Used By</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($data as $value)
+                    <tr>
+                        <td>{{ $value->code }}</td>
+                        <td>{{ $value->amount }}</td>
+                        <td>{{ $value->type == 0 ? 'Normal' : 'Premium' }}</td>
+                        <td>{{ $value->valid_date ? $value->valid_date->format('Y-m-d H:i:s') : 'No Expiration' }}</td>
+                        <td>{{ $value->user->username ?? 'None' }}</td>
+                        <td>
+                            @if($value->status)
+                                <span class="text-success">Used<span>
+                            @else
+                                <span class="text-danger">Unused</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.vouchers.destroy', $value->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete voucher?')">Delete</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No Records Found!</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endsection

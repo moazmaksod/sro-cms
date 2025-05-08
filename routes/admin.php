@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PagesController;
@@ -48,5 +49,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::put('/pages/{pages}', [PagesController::class, 'update'])->name('pages.update');
         Route::get('/pages/{pages}/delete', [PagesController::class, 'delete'])->name('pages.delete');
         Route::delete('/pages/{pages}', [PagesController::class, 'destroy'])->name('pages.destroy');
+
+        Route::get('vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
+        Route::post('vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
+        Route::get('/vouchers/{voucher}/destroy', [VoucherController::class, 'destroy'])->name('vouchers.destroy');
     });
 });
