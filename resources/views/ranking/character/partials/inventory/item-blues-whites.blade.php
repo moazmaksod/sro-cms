@@ -28,10 +28,11 @@
     @isset($item['Type'])
         {{ __('Sort of item:') }} {{ $item['Type'] }}<br />
     @endisset
-    @isset($item['Detail'])
-        {{ __('Mounting part:') }} {{ $item['Detail'] }}<br />
-    @endisset
+
     @if(!in_array((int) $item['TypeID3'], [13, 14], true))
+        @isset($item['Detail'])
+            {{ __('Mounting part:') }} {{ $item['Detail'] }}<br />
+        @endisset
         @if(in_array((int) $item['TypeID2'], [4], true))
             @isset($item['Degree'])
                 {{ __('Level:') }} {{ $item['JobDegree'] }}<br />
@@ -86,6 +87,11 @@
     @else
         {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
     @endif
+    <br />
+@endif
+
+@if(!in_array((int) $item['TypeID2'], [4], true) && in_array((int) $item['TypeID3'], [13], true) && in_array((int) $item['TypeID4'], [2], true))
+    <span style="color:#efdaa4;">{{ __('Attachment:') }} {{ $item['ChildItemCount'] == 1 ? 'Able to equip' : 'Unable to equip' }}</span>
     <br />
 @endif
 

@@ -130,6 +130,7 @@ class InventoryService
             'MagParamNum' => $item['MagParamNum'],
             'MagParam1' => $item['MagParam1'],
             'MaxMagicOptCount' => $item['MaxMagicOptCount'],
+            'ChildItemCount' => $item['ChildItemCount'],
             'TypeID1' => $item['TypeID1'],
             'TypeID2' => $item['TypeID2'],
             'TypeID3' => $item['TypeID3'],
