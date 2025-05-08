@@ -134,12 +134,7 @@
 @if($item['BlueInfo'])
     <br />
     @foreach($item['BlueInfo'] as $value)
-        @if($value['id'] === 65)
-            <b style="color:#ff2f51">Repair invalid (Maximum durability 400% increase)</b><br />
-        @else
-            {{--<b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} @if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 / 100 }}%) @endif</b><br />--}}
-            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }}</b><br />
-        @endif
+        <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} {{--@if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 }}%) @endif--}}</b><br />
     @endforeach
 @endif
 

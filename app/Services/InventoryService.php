@@ -137,6 +137,7 @@ class InventoryService
         ];
 
         $info['ItemName'] = $this->getItemName($item);
+        $info['ItemDesc'] = config('itemdesc')[$item['DescStrID128']] ?? null;
         $info['OptLevel'] = $item['OptLevel'] ?? 0;
         $info['nOptValue'] = $item['nOptValue'] ?? 0;
         $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'European';
@@ -147,7 +148,6 @@ class InventoryService
         $info['JobDegree'] = config('item.job_degree')[$item['ItemClass']] ?? null;
         $info['Type'] = config('item.types')[$item['TypeID1']][$item['TypeID2']][$item['TypeID3']][$item['TypeID4']] ?? null;
         $info['Detail'] = config('item.detail')[$item['Slot']] ?? null;
-        $info['ItemDesc'] = config('itemdesc')[$item['DescStrID128']] ?? null;
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
@@ -186,11 +186,28 @@ class InventoryService
         $magicAttributes = config('magopt');
         $blueStats = [];
 
+        $excludedAttributes = [
+            'MATTR_PET_RESIST_FEAR',
+            'MATTR_PET_RESIST_SLEEP',
+        ];
+
         $wheelStart = ($item['MagParam1'] ?? 0) >= 4611686018427387904 ? 2 : 1;
         for ($i = $wheelStart; $i <= ($item['MagParamNum'] ?? 12); $i++) {
             $key = "MagParam{$i}";
 
             if (!isset($item[$key]) || $item[$key] <= 1) {
+                continue;
+            }
+
+            if ($item[$key] === 65) {
+                $blueStats[] = [
+                    'id' => 0,
+                    'code' => 'MATTR_DUR',
+                    'name' => 'Repair invalid (Maximum durability 400% increase)',
+                    'mValue' => 400,
+                    'mLevel' => 0,
+                    'sortkey' => 0,
+                ];
                 continue;
             }
 
@@ -206,6 +223,10 @@ class InventoryService
             }
 
             $attribute = $magicAttributes[$state];
+            if (in_array($attribute['name'], $excludedAttributes, true)) {
+                continue;
+            }
+
             if ($attribute['name'] === 'MATTR_REPAIR') {
                 $value--;
             }
@@ -214,7 +235,8 @@ class InventoryService
                 'id' => $state,
                 'code' => $attribute['name'],
                 'name' => str_replace('%desc%', $value, $attribute['desc']),
-                'mValue' => $value,
+                'value' => $value,
+                'mLevel' => $attribute['mLevel'],
                 'sortkey' => $attribute['sortkey'],
             ];
         }
