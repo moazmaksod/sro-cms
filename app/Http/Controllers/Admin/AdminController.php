@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DonateLog;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Shard\Char;
@@ -23,5 +24,11 @@ class AdminController extends Controller
             'totalGold' => $totalGold,
             'totalSilk' => $totalSilk,
         ]);
+    }
+
+    public function donate_logs()
+    {
+        $data = DonateLog::all();
+        return view('admin.donate-logs', compact('data'));
     }
 }

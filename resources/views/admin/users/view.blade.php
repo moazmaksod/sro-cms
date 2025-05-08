@@ -120,9 +120,9 @@
 
                                     <div class="col-md-10">
                                         <select class="form-select" name="type" aria-label="Default select example">
-                                            <option value="own">Normal</option>
-                                            <option value="gift">Gift</option>
-                                            <option value="point">Point</option>
+                                            <option value="0">Normal</option>
+                                            <option value="1">Gift</option>
+                                            <option value="2">Point</option>
                                         </select>
 
                                         @error('category')

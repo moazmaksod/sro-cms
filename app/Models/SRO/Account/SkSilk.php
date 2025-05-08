@@ -49,9 +49,9 @@ class SkSilk extends Model
     public static function setSkSilk($jid, $type, $amount)
     {
         $types = [
-            'own' => 'silk_own',
-            'gift' => 'silk_gift',
-            'point' => 'silk_point'
+            '0' => 'silk_own',
+            '1' => 'silk_gift',
+            '2' => 'silk_point'
         ];
 
         return self::where('JID', $jid)->increment($types[$type], $amount);

@@ -81,11 +81,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(News::class);
     }
 
-    public function voucher()
-    {
-        return $this->hasMany(Voucher::class);
-    }
-
     public function role()
     {
         return $this->hasOne(UserRole::class);

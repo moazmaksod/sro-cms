@@ -24,9 +24,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <svg class="bi" aria-hidden="true"><use xlink:href="#people"/></svg>
-                    {{ __('Users') }}
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.pages.index') ? 'active' : '' }}" href="{{ route('admin.pages.index') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#graph-up"/></svg>
+                    {{ __('Pages') }}
                 </a>
             </li>
             <li class="nav-item">
@@ -36,9 +36,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.pages.index') ? 'active' : '' }}" href="{{ route('admin.pages.index') }}">
-                    <svg class="bi" aria-hidden="true"><use xlink:href="#graph-up"/></svg>
-                    {{ __('Pages') }}
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#people"/></svg>
+                    {{ __('Donate Logs') }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#people"/></svg>
+                    {{ __('Users') }}
                 </a>
             </li>
         </ul>

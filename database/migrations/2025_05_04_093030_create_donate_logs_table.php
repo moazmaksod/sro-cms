@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('donate_log', function (Blueprint $table) {
+        Schema::create('donate_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('method');
             $table->string('transaction_id');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('donate_log');
+        Schema::dropIfExists('donate_logs');
     }
 };

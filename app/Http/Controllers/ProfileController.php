@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\DonateLog;
+use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -79,7 +82,14 @@ class ProfileController extends Controller
         }
 
         $user = Auth::user();
-        AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
+
+        if (config('global.server.version') === 'vSRO') {
+            SkSilk::setSkSilk($user->jid, $voucher->type, $voucher->amount);
+        } else {
+            AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
+        }
+
+        DonateLog::setDonateLog('Voucher', (string) Str::uuid(), 'true', 0, $voucher->amount, "User:{$user->username} Has Redeemed:{$voucher->code}", $user->jid, $request->ip());
         $voucher->update(['user_id' => $user->jid, 'status' => true]);
 
         return redirect()->back()->with('success', 'Voucher redeemed successfully!');
