@@ -13,7 +13,7 @@
                 <tr>
                     <th scope="col">Method</th>
                     <th scope="col">Transaction ID</th>
-                    <th scope="col">Username</th>
+                    <th scope="col">User JID</th>
                     <th scope="col">User IP</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Silk</th>
@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $value->method }}</td>
                         <td>{{ $value->transaction_id }}</td>
-                        <td>{{ $value->user->username }}</td>
+                        <td>{{ $value->jid }}</td>
                         <td>{{ $value->ip }}</td>
                         <td>{{ $value->amount }}</td>
                         <td>{{ $value->value }}</td>

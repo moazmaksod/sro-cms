@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DonateLog;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -48,6 +50,8 @@ class UsersController extends Controller
         } else {
             AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
         }
+
+        DonateLog::setDonateLog('AdminPanel', Str::uuid(), 'true', 0, $validated['amount'], "Admin:{auth()->user()->username} Sent:{$validated['amount']} Silk", $user->JID, $request->ip());
 
         return back()->with('success', 'Silk have been Sent!');
     }
