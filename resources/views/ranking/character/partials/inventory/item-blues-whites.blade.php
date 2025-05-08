@@ -2,11 +2,11 @@
 
 @if(in_array((int) $item['TypeID2'], [4], true))
     <span style="color:#50cecd;font-weight: bold;margin-left: 20px">
-        {{ $item['ItemName'] }} [+{{ $item['OptLevel'] }}]
+        {{ $item['ItemName'] }} {{ ($item['OptLevel'] > 0) ? '(+' . $item['OptLevel'] . ')' : ''}}
     </span>
 @elseif($item['SoxType'] != 'Normal' || count($item['BlueInfo']) >= 1)
     <span style="color:#{{ $item['SoxType'] != 'Normal' ? 'f2e43d' : '50cecd' }};font-weight: bold;margin-left: 20px">
-        {{ $item['ItemName'] }} [+{{ $item['OptLevel'] + $item['nOptValue'] }}]
+        {{ $item['ItemName'] }} {{ (($item['OptLevel'] + $item['nOptValue']) > 0) ? '(+' . ($item['OptLevel'] + $item['nOptValue']) . ')' : ''}}
     </span>
 @else
     <span style="font-weight: bold;margin-left: 20px">

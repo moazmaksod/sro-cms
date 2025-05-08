@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            <td>{{ $data->NickName16 }}</td>
+            <td>{{ $data->NickName16 ?? __('None') }}</td>
         </tr>
         <tr>
             <td>{{ __('Guild:') }}</td>
@@ -44,9 +44,9 @@
             <td style="color: #ffc345">
                 @if($data->HwanLevel > 0)
                     @if($data->RefObjID > 2000)
-                        [{{ $hwanLevel[1][$data->HwanLevel] ?? 'Unknown' }}]
+                        [{{ $hwanLevel[1][$data->HwanLevel] ?? __('None') }}]
                     @else
-                        [{{ $hwanLevel[2][$data->HwanLevel] ?? 'Unknown' }}]
+                        [{{ $hwanLevel[2][$data->HwanLevel] ?? __('None') }}]
                     @endif
                 @endif
             </td>

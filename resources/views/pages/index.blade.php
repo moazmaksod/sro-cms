@@ -9,8 +9,8 @@
     <div class="container">
         @forelse($data as $value)
             <div class="card mb-4">
-                @if ($value->featured_image)
-                    <img src="{{ Storage::url($value->featured_image) }}" class="card-img-top" alt="...">
+                @if ($value->image)
+                    <img src="{{ $value->image }}" class="card-img-top" alt="...">
                 @endif
                 <div class="card-header">
                     <a href="{{ route('pages.post.show', ['slug' => $value->slug]) }}" class="text-decoration-none">
