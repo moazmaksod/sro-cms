@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\DonateLog;
 use App\Models\SRO\Account\SkSilk;
+use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
@@ -34,65 +35,6 @@ class ProfileController extends Controller
             'characterRace' => $characterRace,
             'vipLevel' => $vipLevel,
         ]);
-    }
-
-    public function donate(Request $request): View
-    {
-        return view('profile.donate', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    public function silk_history(Request $request): View
-    {
-        $page = $request->get('page', 1);
-        $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $page);
-
-        return view('profile.silk-history', [
-            'user' => $request->user(),
-            'data' => $data,
-        ]);
-    }
-
-    public function vouchers(Request $request): View
-    {
-        return view('profile.vouchers', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    public function redeem_vouchers(Request $request)
-    {
-        $request->validate([
-            'code' => 'required|string',
-        ]);
-
-        $voucher = Voucher::where('code', $request->code)->first();
-
-        if (!$voucher) {
-            return redirect()->back()->with('error', 'Invalid voucher code.');
-        }
-
-        if ($voucher->status) {
-            return redirect()->back()->with('error', 'This voucher has already been used.');
-        }
-
-        if ($voucher->valid_date && Carbon::now()->greaterThan($voucher->valid_date)) {
-            return redirect()->back()->with('error', 'This voucher has expired.');
-        }
-
-        $user = Auth::user();
-
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, $voucher->type, $voucher->amount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
-        }
-
-        DonateLog::setDonateLog('Voucher', (string) Str::uuid(), 'true', 0, $voucher->amount, "User:{$user->username} Has Redeemed:{$voucher->code}", $user->jid, $request->ip());
-        $voucher->update(['user_id' => $user->jid, 'status' => true]);
-
-        return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }
 
     /**
@@ -157,5 +99,72 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+    public function donate(Request $request): View
+    {
+        return view('profile.donate', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function silk_history(Request $request): View
+    {
+        $page = $request->get('page', 1);
+        $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $page);
+
+        return view('profile.silk-history', [
+            'user' => $request->user(),
+            'data' => $data,
+        ]);
+    }
+
+    public function passcode(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        $tbUser = TbUser::where('password', md5($request->password))->first();
+        if ($tbUser) {
+            DB::connection('account')->statement("DELETE FROM SILKROAD_R_ACCOUNT.._SecondaryPassword WHERE UserJID = ?", [$tbUser->JID]);
+            return redirect()->back()->with('passcode_success', 'Your secondary password has been reset successfully!');
+        }
+
+        return redirect()->back()->with('passcode_error', 'Invalid password provided. Please try again.');
+    }
+    public function redeem(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $voucher = Voucher::where('code', $request->code)->first();
+
+        if (!$voucher) {
+            return redirect()->back()->with('error', 'Invalid voucher code.');
+        }
+
+        if ($voucher->status) {
+            return redirect()->back()->with('error', 'This voucher has already been used.');
+        }
+
+        if ($voucher->valid_date && Carbon::now()->greaterThan($voucher->valid_date)) {
+            return redirect()->back()->with('error', 'This voucher has expired.');
+        }
+
+        $user = Auth::user();
+
+        if (config('global.server.version') === 'vSRO') {
+            SkSilk::setSkSilk($user->jid, $voucher->type, $voucher->amount);
+        } else {
+            AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
+        }
+
+        DonateLog::setDonateLog('Voucher', (string) Str::uuid(), 'true', 0, $voucher->amount, "User:{$user->username} Has Redeemed:{$voucher->code}", $user->jid, $request->ip());
+        $voucher->update(['user_id' => $user->jid, 'status' => true]);
+
+        return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }
 }

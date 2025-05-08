@@ -12,5 +12,11 @@
         <div>
             {{--@include('profile.partials.delete-user-form')--}}
         </div>
+        <div class="mb-4">
+            @include('profile.partials.reset-passcode')
+        </div>
+        <div class="mb-4">
+            @include('profile.partials.redeem-voucher')
+        </div>
     </div>
 @endsection
