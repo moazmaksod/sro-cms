@@ -4,29 +4,37 @@
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Vouchers</h1>
+            <div>
+                <h1 class="h2">Vouchers</h1>
+                <p>Click to generate a new voucher with the provided details.</p>
+            </div>
 
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group me-2">
-                    <form method="POST" action="{{ route('admin.vouchers.store') }}" class="mb-4">
-                        @csrf
+                    <div class="card p-3 mb-4">
+                        <div class="card-body">
+                            <h4 class="text-center">Generate Voucher</h4>
+                            <form method="POST" action="{{ route('admin.vouchers.store') }}" class="mb-4">
+                                @csrf
 
-                        <input type="number" name="amount" placeholder="Enter silk number" class="form-control mb-2" required>
-                        @if(config('global.server.version') === 'vSRO')
-                        <select class="form-select mb-2" name="type" aria-label="Default select example">
-                            <option value="0">Normal</option>
-                            <option value="1">Gift</option>
-                            <option value="2">Point</option>
-                        </select>
-                        @else
-                        <select class="form-select mb-2" name="type" aria-label="Default select example">
-                            <option value="0">Normal</option>
-                            <option value="3">Premium</option>
-                        </select>
-                        @endif
-                        <input type="datetime-local" name="valid_date" placeholder="Valid Date Until" class="mb-2">
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">Generate Voucher</button>
-                    </form>
+                                <input type="number" name="amount" placeholder="Enter silk number" class="form-control mb-2" required>
+                                @if(config('global.server.version') === 'vSRO')
+                                <select class="form-select mb-2" name="type" aria-label="Default select example">
+                                    <option value="0">Normal</option>
+                                    <option value="1">Gift</option>
+                                    <option value="2">Point</option>
+                                </select>
+                                @else
+                                <select class="form-select mb-2" name="type" aria-label="Default select example">
+                                    <option value="0">Normal</option>
+                                    <option value="3">Premium</option>
+                                </select>
+                                @endif
+                                <input type="datetime-local" name="valid_date" placeholder="Valid Date Until" class="mb-2">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Generate Voucher</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
