@@ -201,7 +201,7 @@ class InventoryService
             }
         }
 
-        return null;
+        return 0;
     }
 
     public function getTimeEnd(array $item): string
