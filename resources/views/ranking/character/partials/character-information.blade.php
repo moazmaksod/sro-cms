@@ -7,7 +7,11 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            <td>{{ $data->NickName16 ?? __('None') }}</td>
+            @if(!empty($data->NickName16))
+                <td>{{ $data->NickName16 }}</td>
+            @else
+                <td>{{ __('None') }}</td>
+            @endif
         </tr>
         <tr>
             <td>{{ __('Guild:') }}</td>
@@ -48,6 +52,8 @@
                     @else
                         [{{ $hwanLevel[2][$data->HwanLevel] ?? '' }}]
                     @endif
+                @else
+                    []
                 @endif
             </td>
         </tr>
