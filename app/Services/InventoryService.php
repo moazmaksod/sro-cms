@@ -125,6 +125,7 @@ class InventoryService
     private function getItemInfo(array $item): array
     {
         $info = [
+            'CodeName128' => $item['CodeName128'],
             'ReqLevel1' => $item['ReqLevel1'],
             'ItemClass' => $item['ItemClass'],
             'MagParamNum' => $item['MagParamNum'],
@@ -149,6 +150,7 @@ class InventoryService
         $info['JobDegree'] = config('item.job_degree')[$item['ItemClass']] ?? null;
         $info['Type'] = config('item.types')[$item['TypeID1']][$item['TypeID2']][$item['TypeID3']][$item['TypeID4']] ?? null;
         $info['Detail'] = config('item.detail')[$item['Slot']] ?? null;
+        $info['Param1'] = $item['Param1'] == 604800 ? 5 : ($item['Param1'] == 2419200 ? 30 : 25);
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
@@ -375,11 +377,13 @@ class InventoryService
         }
 
         $difference = $item['Data'] - time();
-        $days = floor($difference / (3600 * 24));
-        $hours = $this->lengthCheck(floor($difference / 3600 % 24));
-        $minutes = $this->lengthCheck(floor($difference / 60 % 60));
-        $seconds = $this->lengthCheck(floor($difference % 60));
+        $days = intdiv($difference, 3600 * 24);
+        $difference %= 3600 * 24;
+        $hours = intdiv($difference, 3600);
+        $difference %= 3600;
+        $minutes = intdiv($difference, 60);
+        $seconds = $difference % 60;
 
-        return "{$days}Day {$hours}Hour {$minutes}Minute";
+        return sprintf('%dDay %02dHour %02dMinute', $days, $hours, $minutes);
     }
 }
