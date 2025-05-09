@@ -30,10 +30,7 @@ class CrestService
         }
 
         imageflip($img, IMG_FLIP_VERTICAL);
-        header('Content-Type: image/png');
-        imagepng($img);
-        imagedestroy($img);
 
-        return true;
+        return $img;
     }
 }

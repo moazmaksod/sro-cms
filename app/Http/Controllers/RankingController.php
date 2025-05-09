@@ -299,6 +299,12 @@ class RankingController extends Controller
             abort(400, 'Invalid crest data.');
         }
 
-        return CrestService::generateGuildCrest($hex);
+        $img = CrestService::generateGuildCrest($hex);
+
+        return response()->stream(function () use ($img) {
+            header('Content-Type: image/png');
+            imagepng($img);
+            imagedestroy($img);
+        });
     }
 }
