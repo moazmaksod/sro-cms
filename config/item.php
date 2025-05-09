@@ -57,6 +57,14 @@ return [
         4 => 'Legs',
         5 => 'Foot',
     ],
+    'devil_type' => [
+        'NASRUN' => 5,
+        'NASRUN_BASIC' => 25,
+        'NASRUN_BLUE' => 25,
+        'NASRUN_RED' => 25,
+        'NASRUN_UNIQUE' => 30,
+        'NASRUN_YELLOW' => 25,
+    ],
     'types' => [
         3 => [ // typeID1
             1 => [ // typeID2

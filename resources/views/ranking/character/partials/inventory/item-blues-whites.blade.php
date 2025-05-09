@@ -109,14 +109,14 @@
 @if(in_array((int) $item['TypeID3'], [14], true))
     <br />
     <span style="color:#efdaa4;">{{ __('Basic Option') }}</span><br />
-    {{ __('MaximumHP :max% Increase', ['max' => $item['Param1']]) }}<br />
-    {{ __('MaximumMP :max% Increase', ['max' => $item['Param1']]) }}<br />
+    {{ __('MaximumHP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
+    {{ __('MaximumMP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
     <br />
 @endif
 
-@if(in_array((int) $item['TypeID3'], [14], true) && $item['Param1'] != 604800)
+@if(in_array((int) $item['TypeID3'], [14], true) && $item['DevilMaxHP'] > 5)
     <span style="color:#efdaa4;">{{ __('Additional magic Option') }}</span><br />
-    <span style="color:#53EE92;">{{ __('Blocking rate :rate Increase', ['rate' => floor(($item['Param1'] / 100) * 10)]) }}</span><br />
+    <span style="color:#53EE92;">{{ __('Blocking rate :rate Increase', ['rate' => floor(($item['DevilMaxHP'] / 100) * 10)]) }}</span><br />
     <br />
 @endif
 

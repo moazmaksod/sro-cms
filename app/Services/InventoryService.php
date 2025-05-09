@@ -132,6 +132,7 @@ class InventoryService
             'MagParam1' => $item['MagParam1'],
             'MaxMagicOptCount' => $item['MaxMagicOptCount'],
             'ChildItemCount' => $item['ChildItemCount'],
+            'Data' => $item['Data'],
             'TypeID1' => $item['TypeID1'],
             'TypeID2' => $item['TypeID2'],
             'TypeID3' => $item['TypeID3'],
@@ -150,7 +151,7 @@ class InventoryService
         $info['JobDegree'] = config('item.job_degree')[$item['ItemClass']] ?? null;
         $info['Type'] = config('item.types')[$item['TypeID1']][$item['TypeID2']][$item['TypeID3']][$item['TypeID4']] ?? null;
         $info['Detail'] = config('item.detail')[$item['Slot']] ?? null;
-        $info['Param1'] = $item['Param1'] == 604800 ? 5 : ($item['Param1'] == 2419200 ? 30 : 25);
+        $info['DevilMaxHP'] = $this->getDevilMaxHP($item);
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
@@ -160,9 +161,10 @@ class InventoryService
 
     private function getSoxType($item): ?string
     {
-        foreach (config('item.sox_type') as $itemClassArr => $CodeNameArr) {
-            if ($item['ItemClass'] > $itemClassArr) {
-                foreach ($CodeNameArr as $key => $value) {
+        $config = config('item.sox_type');
+        foreach ($config as $itemClass => $CodeName) {
+            if ($item['ItemClass'] > $itemClass) {
+                foreach ($CodeName as $key => $value) {
                     if (str_contains($item['CodeName128'], $key)) {
                         return $value;
                     }
@@ -175,7 +177,8 @@ class InventoryService
 
     private function getSoxName($item): ?string
     {
-        foreach (config('item.sox_name') as $key => $values) {
+        $config = config('item.sox_name');
+        foreach ($config as $key => $values) {
             if (str_contains($item['CodeName128'], $key)) {
                 return $values[$item['Slot']] ?? '';
             }
@@ -184,18 +187,56 @@ class InventoryService
         return '';
     }
 
+
+    private function getDevilMaxHP($item): ?int
+    {
+        $config = config('item.devil_type');
+        uksort($config, function ($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
+        foreach ($config as $key => $value) {
+            if (str_contains($item['CodeName128'], $key)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    public function getTimeEnd(array $item): string
+    {
+        if ($item['Data'] === 0) {
+            return '28Day';
+        }
+
+        if (time() > $item['Data']) {
+            return 'Awaken period is over';
+        }
+
+        $difference = $item['Data'] - time();
+        $days = intdiv($difference, 3600 * 24);
+        $difference %= 3600 * 24;
+        $hours = intdiv($difference, 3600);
+        $difference %= 3600;
+        $minutes = intdiv($difference, 60);
+        $seconds = $difference % 60;
+
+        return sprintf('%dDay %02dHour %02dMinute', $days, $hours, $minutes);
+    }
+
     private function getBlueInfo($item): array
     {
-        $MagOpts = config('magopt');
+        $config = config('magopt');
         $blueInfo = [];
 
-        $excludedMagOpt = [
+        $exclude = [
             'MATTR_PET_RESIST_FEAR',
             'MATTR_PET_RESIST_SLEEP',
         ];
 
-        $wheelStart = ($item['MagParam1'] ?? 0) >= 4611686018427387904 ? 2 : 1;
-        for ($i = $wheelStart; $i <= ($item['MagParamNum'] ?? 12); $i++) {
+        $start = ($item['MagParam1'] ?? 0) >= 4611686018427387904 ? 2 : 1; //is_wheeled
+        for ($i = $start; $i <= ($item['MagParamNum'] ?? 12); $i++) {
             $key = "MagParam{$i}";
 
             if (!isset($item[$key]) || $item[$key] <= 1) {
@@ -211,25 +252,25 @@ class InventoryService
             $id = hexdec(substr($hexParam, 3));
             $value = hexdec(substr($hexParam, 0, 3));
 
-            if (!isset($MagOpts[$id])) {
+            if (!isset($config[$id])) {
                 continue;
             }
 
-            if (in_array($MagOpts[$id]['name'], $excludedMagOpt, true)) {
+            if (in_array($config[$id]['name'], $exclude, true)) {
                 continue;
             }
 
-            if ($MagOpts[$id]['name'] === 'MATTR_REPAIR') {
+            if ($config[$id]['name'] === 'MATTR_REPAIR') {
                 $value--;
             }
 
             $blueInfo[] = [
                 'id' => $id,
-                'code' => $MagOpts[$id]['name'],
-                'name' => str_replace('%desc%', $value, $MagOpts[$id]['desc']),
+                'code' => $config[$id]['name'],
+                'name' => str_replace('%desc%', $value, $config[$id]['desc']),
                 'value' => $value,
-                'mLevel' => $MagOpts[$id]['mLevel'],
-                'sortkey' => $MagOpts[$id]['sortkey'],
+                'mLevel' => $config[$id]['mLevel'],
+                'sortkey' => $config[$id]['sortkey'],
             ];
         }
 
@@ -364,26 +405,5 @@ class InventoryService
                 )
                 : '',
         ];
-    }
-
-    public function getTimeEnd(array $item): string
-    {
-        if ($item['Data'] === 0) {
-            return '28Day';
-        }
-
-        if (time() > $item['Data']) {
-            return 'Awaken period is over';
-        }
-
-        $difference = $item['Data'] - time();
-        $days = intdiv($difference, 3600 * 24);
-        $difference %= 3600 * 24;
-        $hours = intdiv($difference, 3600);
-        $difference %= 3600;
-        $minutes = intdiv($difference, 60);
-        $seconds = $difference % 60;
-
-        return sprintf('%dDay %02dHour %02dMinute', $days, $hours, $minutes);
     }
 }
