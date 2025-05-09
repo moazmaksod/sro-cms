@@ -184,10 +184,10 @@ class InventoryService
 
     private function getBlueInfo($item): array
     {
-        $magicAttributes = config('magopt');
-        $blueStats = [];
+        $MagOpts = config('magopt');
+        $blueInfo = [];
 
-        $excludedAttributes = [
+        $excludedMagOpt = [
             'MATTR_PET_RESIST_FEAR',
             'MATTR_PET_RESIST_SLEEP',
         ];
@@ -201,7 +201,7 @@ class InventoryService
             }
 
             if ($item[$key] === 65) {
-                $blueStats[] = [
+                $blueInfo[] = [
                     'id' => 0,
                     'code' => 'MATTR_DUR',
                     'name' => 'Repair invalid (Maximum durability 400% increase)',
@@ -213,37 +213,33 @@ class InventoryService
             }
 
             $hexParam = str_pad(dechex($item[$key]), 11, '0', STR_PAD_LEFT);
-            $valueHex = substr($hexParam, 0, 3);
-            $stateHex = substr($hexParam, 3);
+            $id = hexdec(substr($hexParam, 3));
+            $value = hexdec(substr($hexParam, 0, 3));
 
-            $value = hexdec($valueHex);
-            $state = hexdec($stateHex);
-
-            if (!isset($magicAttributes[$state])) {
+            if (!isset($MagOpts[$id])) {
                 continue;
             }
 
-            $attribute = $magicAttributes[$state];
-            if (in_array($attribute['name'], $excludedAttributes, true)) {
+            if (in_array($MagOpts[$id]['name'], $excludedMagOpt, true)) {
                 continue;
             }
 
-            if ($attribute['name'] === 'MATTR_REPAIR') {
+            if ($MagOpts[$id]['name']['name'] === 'MATTR_REPAIR') {
                 $value--;
             }
 
-            $blueStats[] = [
-                'id' => $state,
-                'code' => $attribute['name'],
-                'name' => str_replace('%desc%', $value, $attribute['desc']),
+            $blueInfo[] = [
+                'id' => $id,
+                'code' => $MagOpts[$id]['name'],
+                'name' => str_replace('%desc%', $value, $MagOpts[$id]['desc']),
                 'value' => $value,
-                'mLevel' => $attribute['mLevel'],
-                'sortkey' => $attribute['sortkey'],
+                'mLevel' => $MagOpts[$id]['mLevel'],
+                'sortkey' => $MagOpts[$id]['sortkey'],
             ];
         }
 
-        usort($blueStats, fn($a, $b) => $a['sortkey'] <=> $b['sortkey']);
-        return $blueStats;
+        usort($blueInfo, fn($a, $b) => $a['sortkey'] <=> $b['sortkey']);
+        return $blueInfo;
     }
 
     private function getWhiteInfo($item): array
@@ -251,39 +247,39 @@ class InventoryService
         $OptLevel = $item['OptLevel'] ?? 0;
         $Variance = $item['Variance'] ?? 0;
 
-        $calculatePercentage = function ($variance, $powerIndex) {
-            return (int) floor(((int) ($variance / pow(32, $powerIndex)) & 0x1F) * 3.23);
+        $percentage = function ($variance, $index) {
+            return (int) floor(((int) ($variance / pow(32, $index)) & 0x1F) * 3.23);
         };
 
         return [
             'PAtack' => ($item['PAttackMin_L'] > 0 && $item['PAttackMax_L'] > 0)
                 ? sprintf(
                     'Phy. atk. pwr. %d ~ %d (+%d%%)',
-                    round(($item['PAttackMin_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMin_U'] - $item['PAttackMin_L']) * $calculatePercentage($Variance, 4) / 100)),
-                    round(($item['PAttackMax_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMax_U'] - $item['PAttackMax_L']) * $calculatePercentage($Variance, 4) / 100)),
-                    $calculatePercentage($Variance, 4)
+                    round(($item['PAttackMin_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMin_U'] - $item['PAttackMin_L']) * $percentage($Variance, 4) / 100)),
+                    round(($item['PAttackMax_L'] + $item['PAttackInc'] * $OptLevel) + (($item['PAttackMax_U'] - $item['PAttackMax_L']) * $percentage($Variance, 4) / 100)),
+                    $percentage($Variance, 4)
                 )
                 : '',
             'MAtack' => ($item['MAttackMin_L'] > 0 && $item['MAttackMax_L'] > 0)
                 ? sprintf(
                     'Mag. atk. pwr. %d ~ %d (+%d%%)',
-                    (int)(($item['MAttackMin_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMin_U'] - $item['MAttackMin_L']) * $calculatePercentage($Variance, 5) / 100)),
-                    (int)(($item['MAttackMax_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMax_U'] - $item['MAttackMax_L']) * $calculatePercentage($Variance, 5) / 100)),
-                    $calculatePercentage($Variance, 5)
+                    (int)(($item['MAttackMin_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMin_U'] - $item['MAttackMin_L']) * $percentage($Variance, 5) / 100)),
+                    (int)(($item['MAttackMax_L'] + $item['MAttackInc'] * $OptLevel) + (($item['MAttackMax_U'] - $item['MAttackMax_L']) * $percentage($Variance, 5) / 100)),
+                    $percentage($Variance, 5)
                 )
                 : '',
             'PDefance' => ($item['PD_L'] > 0)
                 ? sprintf(
                     'Phy. def. pwr. %.1f (+%d%%)',
-                    round(($item['PD_L'] + $item['PDInc'] * $OptLevel) + (($item['PD_U'] - $item['PD_L']) * $calculatePercentage($Variance, 3) / 100), 1),
-                    $calculatePercentage($Variance, 3)
+                    round(($item['PD_L'] + $item['PDInc'] * $OptLevel) + (($item['PD_U'] - $item['PD_L']) * $percentage($Variance, 3) / 100), 1),
+                    $percentage($Variance, 3)
                 )
                 : '',
             'MDefance' => ($item['MD_L'] > 0)
                 ? sprintf(
                     'Mag. def. pwr. %.1f (+%d%%)',
-                    round(($item['MD_L'] + $item['MDInc'] * $OptLevel) + (($item['MD_U'] - $item['MD_L']) * $calculatePercentage($Variance, 4) / 100), 1),
-                    $calculatePercentage($Variance, 4)
+                    round(($item['MD_L'] + $item['MDInc'] * $OptLevel) + (($item['MD_U'] - $item['MD_L']) * $percentage($Variance, 4) / 100), 1),
+                    $percentage($Variance, 4)
                 )
                 : '',
             'Durability' => ($item['Dur_U'] > 0)
@@ -291,14 +287,14 @@ class InventoryService
                     'Durability %d/%d (+%d%%)',
                     $item['Data'],
                     $item['Data'],
-                    $calculatePercentage($Variance, 0)
+                    $percentage($Variance, 0)
                 )
                 : '',
             'BlockRate' => ($item['BR_L'] > 0)
                 ? sprintf(
                     'Block Rate %d (+%d%%)',
-                    (int)(($item['BR_L']) + (($item['BR_U'] - $item['BR_L']) * $calculatePercentage($Variance, 3) / 100)),
-                    $calculatePercentage($Variance, 3)
+                    (int)(($item['BR_L']) + (($item['BR_U'] - $item['BR_L']) * $percentage($Variance, 3) / 100)),
+                    $percentage($Variance, 3)
                 )
                 : '',
             'AtackDist' => ($item['Range'] > 0)
@@ -310,66 +306,66 @@ class InventoryService
             'AtackRate' => ($item['HR_L'] > 0)
                 ? sprintf(
                     'Attack rate %d (+%d%%)',
-                    (int)(($item['HR_L'] + $item['HRInc'] * $OptLevel) + (($item['HR_U'] - $item['HR_L']) * $calculatePercentage($Variance, 3) / 100)),
-                    $calculatePercentage($Variance, 3)
+                    (int)(($item['HR_L'] + $item['HRInc'] * $OptLevel) + (($item['HR_U'] - $item['HR_L']) * $percentage($Variance, 3) / 100)),
+                    $percentage($Variance, 3)
                 )
                 : '',
             'Critical' => ($item['CHR_L'] > 0)
                 ? sprintf(
                     'Critical %d (+%d%%)',
-                    (int)(($item['CHR_L']) + (($item['CHR_U'] - $item['CHR_L']) * $calculatePercentage($Variance, 6) / 100)),
-                    $calculatePercentage($Variance, 6)
+                    (int)(($item['CHR_L']) + (($item['CHR_U'] - $item['CHR_L']) * $percentage($Variance, 6) / 100)),
+                    $percentage($Variance, 6)
                 )
                 : '',
             'ParryRate' => ($item['ER_L'] > 0)
                 ? sprintf(
                     'Parry rate %d (+%d%%)',
-                    (int)(($item['ER_L'] + $item['ERInc'] * $OptLevel) + (($item['ER_U'] - $item['ER_L']) * $calculatePercentage($Variance, 5) / 100)),
-                    $calculatePercentage($Variance, 5)
+                    (int)(($item['ER_L'] + $item['ERInc'] * $OptLevel) + (($item['ER_U'] - $item['ER_L']) * $percentage($Variance, 5) / 100)),
+                    $percentage($Variance, 5)
                 )
                 : '',
             'PReinforceWep' => ($item['PAStrMin_L'] > 0 && $item['PAStrMax_L'] > 0)
                 ? sprintf(
                     'Phy. reinforce %.1f ~ %.1f (+%d%%)',
-                    (float)(($item['PAStrMin_L']) + (($item['PAStrMin_U'] - $item['PAStrMin_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
-                    (float)(($item['PAStrMax_L']) + (($item['PAStrMax_U'] - $item['PAStrMax_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
-                    $calculatePercentage($Variance, 1)
+                    (float)(($item['PAStrMin_L']) + (($item['PAStrMin_U'] - $item['PAStrMin_L']) * $percentage($Variance, 1) / 100)) / 10,
+                    (float)(($item['PAStrMax_L']) + (($item['PAStrMax_U'] - $item['PAStrMax_L']) * $percentage($Variance, 1) / 100)) / 10,
+                    $percentage($Variance, 1)
                 )
                 : '',
             'MReinforceWep' => ($item['MAInt_Min_L'] > 0 && $item['MAInt_Max_L'] > 0)
                 ? sprintf(
                     'Mag. reinforce %.1f ~ %.1f (+%d%%)',
-                    (float)(($item['MAInt_Min_L']) + (($item['MAInt_Min_U'] - $item['MAInt_Min_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
-                    (float)(($item['MAInt_Max_L']) + (($item['MAInt_Max_U'] - $item['MAInt_Max_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
-                    $calculatePercentage($Variance, 2)
+                    (float)(($item['MAInt_Min_L']) + (($item['MAInt_Min_U'] - $item['MAInt_Min_L']) * $percentage($Variance, 2) / 100)) / 10,
+                    (float)(($item['MAInt_Max_L']) + (($item['MAInt_Max_U'] - $item['MAInt_Max_L']) * $percentage($Variance, 2) / 100)) / 10,
+                    $percentage($Variance, 2)
                 )
                 : '',
             'PReinforceSet' => ($item['PDStr_L'] > 0)
                 ? sprintf(
                     'Phy. reinforce %.1f (+%d%%)',
-                    (float)(($item['PDStr_L']) + (($item['PDStr_U'] - $item['PDStr_L']) * $calculatePercentage($Variance, 1) / 100)) / 10,
-                    $calculatePercentage($Variance, 1)
+                    (float)(($item['PDStr_L']) + (($item['PDStr_U'] - $item['PDStr_L']) * $percentage($Variance, 1) / 100)) / 10,
+                    $percentage($Variance, 1)
                 )
                 : '',
             'MReinforceSet' => ($item['MDInt_L'] > 0)
                 ? sprintf(
                     'Mag. reinforce %.1f (+%d%%)',
-                    (float)(($item['MDInt_L']) + (($item['MDInt_U'] - $item['MDInt_L']) * $calculatePercentage($Variance, 2) / 100)) / 10,
-                    $calculatePercentage($Variance, 2)
+                    (float)(($item['MDInt_L']) + (($item['MDInt_U'] - $item['MDInt_L']) * $percentage($Variance, 2) / 100)) / 10,
+                    $percentage($Variance, 2)
                 )
                 : '',
             'Pabsorp' => ($item['PAR_L'] > 0)
                 ? sprintf(
                     'Phy. absorption %.1f (+%d%%)',
-                    round(($item['PAR_L'] + $item['PARInc'] * $OptLevel) + (($item['PAR_U'] - $item['PAR_L']) * $calculatePercentage($Variance, 0) / 100), 1),
-                    $calculatePercentage($Variance, 0)
+                    round(($item['PAR_L'] + $item['PARInc'] * $OptLevel) + (($item['PAR_U'] - $item['PAR_L']) * $percentage($Variance, 0) / 100), 1),
+                    $percentage($Variance, 0)
                 )
                 : '',
             'Mabsorp' => ($item['MAR_L'] > 0)
                 ? sprintf(
                     'Mag. absorption %.1f (+%d%%)',
-                    round(($item['MAR_L'] + $item['MARInc'] * $OptLevel) + (($item['MAR_U'] - $item['MAR_L']) * $calculatePercentage($Variance, 1) / 100), 1),
-                    $calculatePercentage($Variance, 1)
+                    round(($item['MAR_L'] + $item['MARInc'] * $OptLevel) + (($item['MAR_U'] - $item['MAR_L']) * $percentage($Variance, 1) / 100), 1),
+                    $percentage($Variance, 1)
                 )
                 : '',
         ];

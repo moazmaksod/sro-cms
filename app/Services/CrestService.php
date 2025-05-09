@@ -4,7 +4,7 @@ namespace App\Services;
 
 class CrestService
 {
-    public static function generateGuildCrest(string $hex, ?string $outputPath = null, int $width = 16, int $height = 16)
+    public static function generateGuildCrest(string $hex, int $width = 16, int $height = 16)
     {
         $palette = config('palette');
 
@@ -30,17 +30,10 @@ class CrestService
         }
 
         imageflip($img, IMG_FLIP_VERTICAL);
-
-        if ($outputPath) {
-            $result = imagepng($img, $outputPath);
-            imagedestroy($img);
-            return $result;
-        }
-
         header('Content-Type: image/png');
         imagepng($img);
         imagedestroy($img);
 
-        return $img;
+        return true;
     }
 }
