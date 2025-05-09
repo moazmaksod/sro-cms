@@ -79,7 +79,7 @@ return [
     ],
     'hidden' => [
         'characters' => [
-            '[GM]Eva2',
+            '[GM]Eva',
             '[GM]m1xawy',
         ],
         'guilds' => [

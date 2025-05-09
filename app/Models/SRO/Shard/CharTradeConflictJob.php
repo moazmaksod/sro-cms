@@ -55,6 +55,8 @@ class CharTradeConflictJob extends Model
             ->where('_Char.deleted', 0)
             ->where('_Char.CharID', '>', 0)
             ->where('_UserTradeConflictJob.JobType', '!=', 0)
+            ->where('_Char.NickName16', '!=', '')
+            ->whereNotNull('_Char.NickName16')
             ->when($type > 0, function ($query) use ($type) {
                 $query->where('_UserTradeConflictJob.JobType', '=', $type);
             })
