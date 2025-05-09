@@ -201,14 +201,7 @@ class InventoryService
             }
 
             if ($item[$key] === 65) {
-                $blueInfo[] = [
-                    'id' => 0,
-                    'code' => 'MATTR_DUR',
-                    'name' => 'Repair invalid (Maximum durability 400% increase)',
-                    'mValue' => 400,
-                    'mLevel' => 0,
-                    'sortkey' => 0,
-                ];
+                $blueInfo[] = ['id' => 0, 'code' => 'MATTR_DUR', 'name' => 'Repair invalid (Maximum durability 400% increase)', 'value' => 400, 'mLevel' => 0, 'sortkey' => 0];
                 continue;
             }
 
@@ -224,7 +217,7 @@ class InventoryService
                 continue;
             }
 
-            if ($MagOpts[$id]['name']['name'] === 'MATTR_REPAIR') {
+            if ($MagOpts[$id]['name'] === 'MATTR_REPAIR') {
                 $value--;
             }
 
