@@ -35,7 +35,7 @@ class DonateService
             ],
             "purchase_units" => [
                 [
-                    "invoice_id" => uniqid(),
+                    "invoice_id" => (string) Str::uuid(),
                     "amount" => [
                         "currency_code" => strtoupper($config['currency']),
                         "value" => $price
@@ -46,23 +46,19 @@ class DonateService
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'PayPal-Request-Id' => uniqid(),
+            'PayPal-Request-Id' => (string) Str::uuid(),
             'Authorization' => "Bearer $accessToken",
         ])->post($config['endpoint'].'/v2/checkout/orders', $body);
 
         if ($response->successful()) {
-            $responseData = $response->json();
-
-            $approvalLink = collect($responseData['links'])->firstWhere('rel', 'payer-action');
+            $approvalLink = collect($response->json('links'))->firstWhere('rel', 'payer-action');
 
             if ($approvalLink && isset($approvalLink['href'])) {
                 return redirect()->away($approvalLink['href']);
-            } else {
-                return back()->withErrors(['paypal' => 'Order created but approval link not found!',]);
             }
-        } else {
-            return back()->withErrors(['paypal' => 'Failed to create order!',])->withInput();
         }
+
+        return back()->withErrors(['paypal' => 'Failed to create order!'])->withInput();
     }
 
     public function handlePaypalCallback(Request $request)
@@ -77,16 +73,18 @@ class DonateService
 
         $captureResponse = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'PayPal-Request-Id' => uniqid(),
+            'PayPal-Request-Id' => (string) Str::uuid(),
             'Authorization' => "Bearer $accessToken",
         ])->get($config['endpoint']."/v2/checkout/orders/{$token}");
 
         if ($captureResponse->successful()) {
             $responseData = $captureResponse->json();
+            $purchasePrice = isset($responseData['purchase_units'][0]['amount']['value'])
+                ? floatval($responseData['purchase_units'][0]['amount']['value'])
+                : null;
 
-            $purchasePrice = (int) $responseData['purchase_units'][0]['amount']['value'] ?? null;
             if (!$purchasePrice) {
-                return back()->withErrors(['paypal' => 'Payment capture failed: Missing purchase price.'])->withInput();
+                return back()->withErrors(['paypal' => 'Payment capture failed: Missing price.'])->withInput();
             }
 
             $package = collect($config['package'])->firstWhere('price', $purchasePrice);
@@ -95,17 +93,28 @@ class DonateService
             }
 
             $user = Auth::user();
+
             if (config('global.server.version') === 'vSRO') {
                 SkSilk::setSkSilk($user->jid, 0, $package['value']);
             } else {
                 AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
             }
 
-            DonateLog::setDonateLog('PayPal', (string) Str::uuid(), 'true', $purchasePrice, $package['value'], "User:{$user->username} purchased {$package['name']} for \${$purchasePrice}.", $user->jid, $request->ip());
+            DonateLog::setDonateLog(
+                'PayPal',
+                (string) Str::uuid(),
+                'true',
+                $purchasePrice,
+                $package['value'],
+                "User:{$user->username} purchased {$package['name']} for \${$purchasePrice}.",
+                $user->jid,
+                $request->ip()
+            );
+
             return redirect()->route('profile.donate')->with('success', 'Payment captured successfully!');
-        } else {
-            return back()->withErrors(['paypal' => 'Failed to capture payment!',])->withInput();
         }
+
+        return back()->withErrors(['paypal' => 'Failed to capture payment!'])->withInput();
     }
 
     private function getPaypalAccessToken()
@@ -114,17 +123,19 @@ class DonateService
         $clientId = $config['client_id'];
         $clientSecret = $config['secret'];
 
-        $authResponse = Http::withBasicAuth($clientId, $clientSecret)
-            ->asForm()
-            ->post($config['endpoint'].'/v1/oauth2/token', [
-                'grant_type' => 'client_credentials',
-            ]);
+        return cache()->remember('paypal_access_token', 540, function () use ($clientId, $clientSecret, $config) {
+            $authResponse = Http::withBasicAuth($clientId, $clientSecret)
+                ->asForm()
+                ->post($config['endpoint'].'/v1/oauth2/token', [
+                    'grant_type' => 'client_credentials',
+                ]);
 
-        if ($authResponse->failed()) {
-            throw new \Exception('Failed to retrieve PayPal access token: ' . $authResponse->json()['error_description']);
-        }
+            if ($authResponse->failed()) {
+                throw new \Exception('Failed to retrieve PayPal access token: ' . $authResponse->json()['error_description']);
+            }
 
-        return $authResponse->json()['access_token'];
+            return $authResponse->json()['access_token'];
+        });
     }
 
     public function processBinance($amount)
