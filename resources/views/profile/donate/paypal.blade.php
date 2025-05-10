@@ -6,6 +6,22 @@
         <div class="row text-center">
             <div class="card">
                 <div class="card-body row">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @forelse($data['package'] as $value)
                         <div class="col-md-3">
                             <div class="card mb-4 rounded-3 shadow-sm">
