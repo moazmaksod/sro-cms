@@ -9,16 +9,19 @@ return [
         'image' => 'images/donate/paypal.png',
         //'endpoint' => 'https://api-m.paypal.com', // for prod only
         'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox only
-        //'client_id' => 'YOUR_PAYPAL_CLIENT_ID',
-        //'secret' => 'YOUR_PAYPAL_CLIENT_SECRET',
-        'client_id' => 'AaYLzy9OwZ6YgBlrQrzo29JVDGx2JhLlSUMBCpMn3skY9YRUcZggpCHUjosA4aCYahbdu-raUEWjuk_4',
-        'secret' => 'EBL3s9IuRHw3ZLJQWNavaapx_K1OSfULp1vBSlvWo2vpIkeWdMRAFy52ZRtEl0OHaMBcmyY5y9F1cQSH',
+        'client_id' => 'YOUR_PAYPAL_CLIENT_ID',
+        'secret' => 'YOUR_PAYPAL_CLIENT_SECRET',
         'webhook_id' => '',
         'package' => [
             [
                 'name' => '500 Silk',
                 'price' => 5,
                 'value' => 500,
+            ],
+            [
+                'name' => '1000 Silk',
+                'price' => 10,
+                'value' => 1000,
             ],
             [
                 'name' => '2500 Silk',
