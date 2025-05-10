@@ -40,7 +40,7 @@
     </table>
 </div>
 
-<form method="GET" action="{{ route('ranking') }}" class="mb-4">
+<form method="GET" action="{{ route('ranking.index') }}" class="mb-4">
     <input type="hidden" name="type" value="guild">
     <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search guild...') }}" class="form-control d-inline w-auto">
     <button type="submit" class="btn btn-sm btn-outline-secondary">{{ __('Search') }}</button>

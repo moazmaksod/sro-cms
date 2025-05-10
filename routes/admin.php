@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('dashboard')->name('admin.')->group(function() {
-        Route::get('/', [AdminController::class, 'index'])->name('home');
+        Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::get('/donate-logs', [AdminController::class, 'donate_logs'])->name('donate.logs');
 
         //Settings
@@ -51,6 +51,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/pages/{pages}/delete', [PagesController::class, 'delete'])->name('pages.delete');
         Route::delete('/pages/{pages}', [PagesController::class, 'destroy'])->name('pages.destroy');
 
+        //Voucher
         Route::get('vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
         Route::post('vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
         Route::get('/vouchers/{voucher}/destroy', [VoucherController::class, 'destroy'])->name('vouchers.destroy');

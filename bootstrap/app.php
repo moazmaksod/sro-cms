@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            '/callback/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

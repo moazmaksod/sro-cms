@@ -8,7 +8,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url('/') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }} px-2 text-white">{{ __('Home') }}</a></li>
                 <li><a href="{{ route('pages.download') }}" class="nav-link {{ request()->routeIs('pages.download') ? 'active' : '' }} px-2 text-white">{{ __('Download') }}</a></li>
-                <li><a href="{{ route('ranking') }}" class="nav-link {{ request()->routeIs('ranking') ? 'active' : '' }} px-2 text-white">{{ __('Ranking') }}</a></li>
+                <li><a href="{{ route('ranking.index') }}" class="nav-link {{ request()->routeIs('ranking') ? 'active' : '' }} px-2 text-white">{{ __('Ranking') }}</a></li>
 
                 <li class="dropdown">
                     <a href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Search') }}</a>
@@ -102,11 +102,11 @@
                 @if (Route::has('login'))
                     @auth
                         <div class="dropdown">
-                            <a href="{{ route('profile') }}" class="d-block text-decoration-none dropdown-toggle px-3 py-1 text-white" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="{{ route('profile.index') }}" class="d-block text-decoration-none dropdown-toggle px-3 py-1 text-white" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-user"></i> {{ Auth::user()->username }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profile.index') }}">{{ __('Account') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Settings') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.donate') }}">{{ __('Donate') }}</a></li>
                                 @if(config('global.server.version') !== 'vSRO')
@@ -114,7 +114,7 @@
                                 @endif
                                 @admin
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ route('admin.home') }}">{{ __('Admin panel') }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.index') }}">{{ __('Admin panel') }}</a></li>
                                 @endadmin
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
