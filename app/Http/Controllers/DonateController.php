@@ -21,7 +21,12 @@ class DonateController extends Controller
             return redirect()->back()->withErrors('Payment method not found or disabled.');
         }
 
-        return view('profile.donate.show', compact('config', 'method'));
+        $viewPath = "profile.donate.{$method}";
+        if (!view()->exists($viewPath)) {
+            return redirect()->back()->withErrors(['error' => 'View file for the payment method is missing.']);
+        }
+
+        return view($viewPath, ['data' => $config]);
     }
 
     public function process($method, Request $request, DonateService $donateService)

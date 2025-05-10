@@ -8,6 +8,7 @@ use App\Models\SRO\Portal\AphChangedSilk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class DonateService
@@ -138,13 +139,68 @@ class DonateService
         });
     }
 
-    public function processBinance(Request $request)
+    public function processMaxicard(Request $request)
     {
-        return null;
-    }
+        $config = config('donate.maxicard');
+        $apiUser = $config['key'];
+        $apiPass = $config['secret'];
+        $postUrl = $config['url'];
 
-    public function handleBinanceCallback(Request $request)
-    {
-        return null;
+        $request->validate([
+            'code' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
+        ]);
+
+        if (!$apiUser || !$apiPass || !$postUrl) {
+            throw new \Exception('API credentials are missing.');
+        }
+
+        $xml = "<APIRequest><params>
+                    <username>{$apiUser}</username>
+                    <password>{$apiPass}</password>
+                    <cmd>epinadd</cmd>
+                    <epinusername>" . Auth::user()->username . "</epinusername>
+                    <epincode>{$request->code}</epincode>
+                    <epinpass>{$request->password}</epinpass>
+                </params></APIRequest>";
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ])->post($postUrl, ['data' => urlencode($xml)]);
+
+        if ($response->failed()) {
+            Log::error('Maxicard API Request Failed', ['response' => $response->body()]);
+            throw new \Exception('Failed to communicate with Maxicard API.');
+        }
+
+        $response = simplexml_load_string($response->body());
+
+        if (isset($response->params->durum) && trim($response->params->durum) === 'ok') {
+            $amount = intval(preg_replace('/[^0-9]/', '', $response->params->tutar));
+            $orderNumber = trim($response->params->siparis_no);
+
+            $user = Auth::user();
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $amount);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $amount);
+            }
+
+            DonateLog::setDonateLog(
+                'Maxicard',
+                (string) Str::uuid(),
+                'true',
+                $amount,
+                $amount,
+                "User:{$user->username} purchased Silk for {$amount} using Maxicard. Order Number: {$orderNumber}.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return redirect()->route('profile.donate')->with('success', 'Maxicard payment processed successfully!');
+        } else {
+            $error = $response->params->durum ?? 'Unknown error';
+            return redirect()->route('profile.donate')->with('error', "Payment failed: {$error}");
+        }
     }
 }
