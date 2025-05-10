@@ -138,18 +138,13 @@ class DonateService
         });
     }
 
-    public function processBinance($amount)
+    public function processBinance(Request $request)
     {
-        return [
-            'status' => 'success',
-            'gateway' => 'binance',
-            'amount' => $amount,
-            'currency' => 'USDT',
-        ];
+        return null;
     }
 
     public function handleBinanceCallback(Request $request)
     {
-        return response()->json(['status' => 'Binance callback received']);
+        return null;
     }
 }
