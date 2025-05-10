@@ -15,7 +15,7 @@ class DonateService
 {
     public function processPaypal(Request $request)
     {
-        $price = number_format($request->input('price', 5), 2, '.', '');
+        $price = number_format($request->input('price'), 2, '.', '');
 
         if (!is_numeric($price) || $price <= 0) {
             return back()->withErrors(['price' => 'Invalid price provided.']);
@@ -62,7 +62,7 @@ class DonateService
         return back()->withErrors(['paypal' => 'Failed to create order!'])->withInput();
     }
 
-    public function handlePaypalCallback(Request $request)
+    public function callbackPaypal(Request $request)
     {
         $request->validate([
             'token' => 'required|string',
@@ -80,10 +80,8 @@ class DonateService
 
         if ($captureResponse->successful()) {
             $responseData = $captureResponse->json();
-            $purchasePrice = isset($responseData['purchase_units'][0]['amount']['value'])
-                ? floatval($responseData['purchase_units'][0]['amount']['value'])
-                : null;
 
+            $purchasePrice = isset($responseData['purchase_units'][0]['amount']['value']) ? floatval($responseData['purchase_units'][0]['amount']['value']) : null;
             if (!$purchasePrice) {
                 return back()->withErrors(['paypal' => 'Payment capture failed: Missing price.'])->withInput();
             }
@@ -94,7 +92,6 @@ class DonateService
             }
 
             $user = Auth::user();
-
             if (config('global.server.version') === 'vSRO') {
                 SkSilk::setSkSilk($user->jid, 0, $package['value']);
             } else {
@@ -112,10 +109,10 @@ class DonateService
                 $request->ip()
             );
 
-            return redirect()->route('profile.donate')->with('success', 'Payment captured successfully!');
+            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
         }
 
-        return back()->withErrors(['paypal' => 'Failed to capture payment!'])->withInput();
+        return back()->withErrors(['paypal' => 'Failed to processes payment!'])->withInput();
     }
 
     private function getPaypalAccessToken()
@@ -147,39 +144,52 @@ class DonateService
         $postUrl = $config['url'];
 
         $request->validate([
-            'code' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'code' => 'required',
+            'password' => 'required',
         ]);
 
+        $user = Auth::user();
+
         if (!$apiUser || !$apiPass || !$postUrl) {
-            throw new \Exception('API credentials are missing.');
+            return back()->withErrors(['maxicard' => 'API credentials are missing.'])->withInput();
         }
 
-        $xml = "<APIRequest><params>
+        $xml = "<APIRequest>
+                <params>
                     <username>{$apiUser}</username>
                     <password>{$apiPass}</password>
                     <cmd>epinadd</cmd>
-                    <epinusername>" . Auth::user()->username . "</epinusername>
+                    <epinusername>{$user->jid}</epinusername>
                     <epincode>{$request->code}</epincode>
                     <epinpass>{$request->password}</epinpass>
-                </params></APIRequest>";
+                </params>
+            </APIRequest>";
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->post($postUrl, ['data' => urlencode($xml)]);
+        $response = Http::send('post', $postUrl, [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                "Cache-Control" => "no-cache",
+            ],
+            'form_params' => [
+                'data' => urlencode($xml)
+            ],
+        ]);
 
         if ($response->failed()) {
-            Log::error('Maxicard API Request Failed', ['response' => $response->body()]);
-            throw new \Exception('Failed to communicate with Maxicard API.');
+            return back()->withErrors(['maxicard' => 'Failed to communicate with Maxicard API.'])->withInput();
         }
 
-        $response = simplexml_load_string($response->body());
+        $responseObject = simplexml_load_string($response->body());
 
-        if (isset($response->params->durum) && trim($response->params->durum) === 'ok') {
-            $amount = intval(preg_replace('/[^0-9]/', '', $response->params->tutar));
-            $orderNumber = trim($response->params->siparis_no);
+        if(trim($responseObject->params->durum) == 'ok' && intval(trim($responseObject->params->siparis_no)) > 0) {
+            $commission = preg_replace('/[^0-9\.]/', '', trim($responseObject->params->komisyon));
+            $orderNumber = intval(trim($responseObject->params->siparis_no));
+            $amount = intval(preg_replace('/[^0-9]/', '', $responseObject->params->tutar));
 
-            $user = Auth::user();
+            if (!$amount || $amount <= 0) {
+                return back()->withErrors(['maxicard' => 'This epin is invalid, Please try a valid one.'])->withInput();
+            }
+
             if (config('global.server.version') === 'vSRO') {
                 SkSilk::setSkSilk($user->jid, 0, $amount);
             } else {
@@ -197,10 +207,10 @@ class DonateService
                 $request->ip()
             );
 
-            return redirect()->route('profile.donate')->with('success', 'Maxicard payment processed successfully!');
-        } else {
-            $error = $response->params->durum ?? 'Unknown error';
-            return redirect()->route('profile.donate')->with('error', "Payment failed: {$error}");
+            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+        }else {
+            $errorCode = trim($responseObject->params->durum);
+            return back()->withErrors(['maxicard' => "Payment failed: {$errorCode}"])->withInput();
         }
     }
 }

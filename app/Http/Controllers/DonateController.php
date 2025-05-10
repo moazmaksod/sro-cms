@@ -10,10 +10,10 @@ class DonateController extends Controller
     public function index()
     {
         $data = config('donate');
-        return view('profile.donate.donate', compact('data'));
+        return view('profile.donate.index', compact('data'));
     }
 
-    public function show($method, Request $request)
+    public function show($method)
     {
         $config = config("donate.{$method}");
 
@@ -37,10 +37,6 @@ class DonateController extends Controller
             return redirect()->back()->withErrors('Payment method not found or disabled.');
         }
 
-        $request->validate([
-            'price' => 'required|numeric|min:0.01',
-        ]);
-
         if (method_exists($donateService, "process" . ucfirst($method))) {
             return $donateService->{"process" . ucfirst($method)}($request);
         }
@@ -56,8 +52,8 @@ class DonateController extends Controller
             return redirect()->back()->withErrors('Payment method not found or disabled.');
         }
 
-        if (method_exists($donateService, "handle" . ucfirst($method) . "Callback")) {
-            return $donateService->{"handle" . ucfirst($method) . "Callback"}($request);
+        if (method_exists($donateService, "callback" . ucfirst($method))) {
+            return $donateService->{"callback" . ucfirst($method)}($request);
         }
 
         return redirect()->back()->withErrors('Invalid payment method.');

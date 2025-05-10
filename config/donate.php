@@ -37,8 +37,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/maxicard.png',
         'url' => 'https://www.maxigame.org/epin/yukle.php',
-        'key' => '',
-        'secret' => '',
+        'key' => 'd0f3b35596de1624f79a21f43298b34a',
+        'secret' => 'q@We45XL',
         'package' => [
             [
                 'name' => '100 Silk',
