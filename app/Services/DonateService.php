@@ -255,8 +255,6 @@ class DonateService
     public function processHipopay(Request $request)
     {
         $config = config('donate.hipopay');
-        $api_key = $config['key'];
-        $api_secret = $config['secret'];
 
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
@@ -264,7 +262,7 @@ class DonateService
         }
 
         $user = Auth::user();
-        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$api_key,$api_secret ,true));
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
 
         $payload = [
             'api_key' => $config['key'],
@@ -306,6 +304,37 @@ class DonateService
         $payload = file_get_contents('php://input');
         $data = json_decode($payload, true);
 
-        Log::error('Hipopay Callback: Payment failed or invalid.', $data);
+        $user = Auth::user();
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
+
+        if (isset($data['hash']) && $data['hash'] === $hash) {
+            if (isset($data['status']) && $data['status'] == 'success') {
+                $package = collect($config['package'])->firstWhere('price', intval($data['payment_total']));
+                if (!$package) {
+                    return back()->withErrors(['hipopay' => 'Invalid package price.'])->withInput();
+                }
+
+                if (config('global.server.version') === 'vSRO') {
+                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
+                } else {
+                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+                }
+
+                DonateLog::setDonateLog(
+                    'HipoPay',
+                    (string) Str::uuid(),
+                    'true',
+                    $package['price'],
+                    $package['value'],
+                    "User:{$user->username} purchased Silk for {$package['price']} using HipoPay.",
+                    $user->jid,
+                    $request->ip()
+                );
+
+                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+            }
+        }
+
+        return back()->withErrors(['hipopay' => "Payment Failed: {$data['message']}"])->withInput();
     }
 }
