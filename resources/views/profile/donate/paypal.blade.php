@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('Donate'))
+@section('title', __('Paypal'))
 
 @section('content')
     <div class="container">

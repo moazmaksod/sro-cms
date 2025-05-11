@@ -8,7 +8,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url('/') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }} px-2 text-white">{{ __('Home') }}</a></li>
                 <li><a href="{{ route('pages.download') }}" class="nav-link {{ request()->routeIs('pages.download') ? 'active' : '' }} px-2 text-white">{{ __('Download') }}</a></li>
-                <li><a href="{{ route('ranking.index') }}" class="nav-link {{ request()->routeIs('ranking') ? 'active' : '' }} px-2 text-white">{{ __('Ranking') }}</a></li>
+                <li><a href="{{ route('ranking.index') }}" class="nav-link {{ request()->routeIs('ranking.index') ? 'active' : '' }} px-2 text-white">{{ __('Ranking') }}</a></li>
 
                 <li class="dropdown">
                     <a href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Search') }}</a>
