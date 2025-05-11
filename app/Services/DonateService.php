@@ -80,7 +80,7 @@ class DonateService
         if ($captureResponse->successful()) {
             $responseData = $captureResponse->json();
 
-            if ($responseData['status'] === 'COMPLETED') {
+            if ($responseData['status'] === 'COMPLETED' || $responseData['status'] === 'APPROVED') {
                 $package = collect($config['package'])->firstWhere('price', $responseData['purchase_units'][0]['amount']['value']);
                 if (!$package) {
                     return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
