@@ -19,8 +19,8 @@ class DonateService
         $config = config('donate.paypal');
 
         $accessToken = $this->getPaypalAccessToken();
-        if (!$accessToken) {
-            return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token. Please try again later.'])->withInput();
+        if (!$accessToken || !is_string($accessToken)) {
+            return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token.'])->withInput();
         }
 
         $body = [
@@ -58,7 +58,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['paypal' => "Payment Failed: {$response->json()['error_description']}"])->withInput();
+        return back()->withErrors(['paypal' => "Payment Failed: {$response['error_description']}"])->withInput();
     }
 
     public function callbackPaypal(Request $request)
@@ -70,6 +70,9 @@ class DonateService
         $config = config('donate.paypal');
         $token = $request->get('token');
         $accessToken = $this->getPaypalAccessToken();
+        if (!$accessToken || !is_string($accessToken)) {
+            return response('Failed to retrieve PayPal access token.', 500);
+        }
 
         $captureResponse = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -95,7 +98,7 @@ class DonateService
 
                 DonateLog::setDonateLog(
                     'PayPal',
-                    (string)Str::uuid(),
+                    $responseData['id'],
                     'true',
                     $package['price'],
                     $package['value'],
@@ -108,7 +111,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['paypal' => "Payment Failed: {$captureResponse->json()['error_description']}"])->withInput();
+        return back()->withErrors(['paypal' => "Payment Failed: {$captureResponse['error_description']}"])->withInput();
     }
 
     private function getPaypalAccessToken()
@@ -186,11 +189,11 @@ class DonateService
 
                 DonateLog::setDonateLog(
                     'Maxicard',
-                    (string) Str::uuid(),
+                    $orderNumber,
                     'true',
                     $package['price'],
                     $package['value'],
-                    "User:{$user->username} purchased Silk for {$package['price']} using Maxicard. Order Number: {$orderNumber}.",
+                    "User:{$user->username} purchased Silk for {$package['price']} using Maxicard.",
                     $user->jid,
                     $request->ip()
                 );
@@ -227,7 +230,7 @@ class DonateService
         if ($response->successful()) {
             $responseData = $response->json();
 
-            if ($responseData['success'] === true) {
+            if (isset($responseData['success']) && $responseData['success'] === true) {
                 $package = collect($config['package'])->firstWhere('price', intval($responseData['data']['total_sales']));
                 if (!$package) {
                     return back()->withErrors(['hipocard' => 'Invalid package price.'])->withInput();
@@ -242,7 +245,7 @@ class DonateService
 
                 DonateLog::setDonateLog(
                     'Hipocard',
-                    (string) Str::uuid(),
+                    uniqid().rand(100,999),
                     'true',
                     $package['price'],
                     $package['value'],
@@ -255,7 +258,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipocard' => "Payment failed: {$response->json()['message']}"])->withInput();
+        return back()->withErrors(['hipocard' => "Payment failed: " .isset($response['message']) ?? 'An error occurred'])->withInput();
     }
 
     public function processHipopay(Request $request)
@@ -272,6 +275,7 @@ class DonateService
 
         $payload = [
             'api_key' => $config['key'],
+            'api_secret' => $config['secret'],
             'user_id' => $user->jid,
             'username' => $user->username,
             'email' => $user->email,
@@ -291,7 +295,7 @@ class DonateService
         if ($response->successful()) {
             $responseData = $response->json();
 
-            if ($responseData['success'] === true) {
+            if (isset($response['success']) && $responseData['success'] === true) {
                 $paymentUrl = $responseData['data']['payment_url'] ?? null;
 
                 if ($paymentUrl) {
@@ -300,7 +304,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipopay' => "Payment Failed: {$response->json()['message']}"])->withInput();
+        return back()->withErrors(['hipopay' => "Payment Failed: " .isset($response['message']) ?? 'An error occurred'])->withInput();
     }
 
     public function callbackHipopay(Request $request)
@@ -323,10 +327,15 @@ class DonateService
             return response('Invalid Hash', 400);
         }
 
+        $transaction_id = DonateLog::where('transaction_id', $data['transaction_id'])->where('status', 'true')->first();
+        if ($transaction_id) {
+            return response('This transaction has already been processed successfully.', 409);
+        }
+
         if ($data['status'] === 'success') {
             $package = collect($config['package'])->firstWhere('price', intval($data['payment_total']));
             if (!$package) {
-                return response('Invalid package price', 204);
+                return response('Invalid package price', 422);
             }
 
             if (config('global.server.version') === 'vSRO') {
@@ -337,7 +346,7 @@ class DonateService
 
             DonateLog::setDonateLog(
                 'HipoPay',
-                (string) Str::uuid(),
+                $data['transaction_id'],
                 'true',
                 $package['price'],
                 $package['value'],
@@ -349,7 +358,6 @@ class DonateService
             return response('OK', 200);
         }
 
-        //Log::warning('HipoPay Callback: Payment not successful', ['data' => $data]);
         return response('Payment not successful', 422);
     }
 }
