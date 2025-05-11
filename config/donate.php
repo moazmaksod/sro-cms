@@ -9,8 +9,8 @@ return [
         'image' => 'images/donate/paypal.png',
         //'endpoint' => 'https://api-m.paypal.com', // for prod only
         'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox only
-        'client_id' => 'YOUR_PAYPAL_CLIENT_ID',
-        'secret' => 'YOUR_PAYPAL_CLIENT_SECRET',
+        'client_id' => 'AaYLzy9OwZ6YgBlrQrzo29JVDGx2JhLlSUMBCpMn3skY9YRUcZggpCHUjosA4aCYahbdu-raUEWjuk_4',
+        'secret' => 'EBL3s9IuRHw3ZLJQWNavaapx_K1OSfULp1vBSlvWo2vpIkeWdMRAFy52ZRtEl0OHaMBcmyY5y9F1cQSH',
         'webhook_id' => '',
         'package' => [
             [
@@ -37,8 +37,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/maxicard.png',
         'url' => 'https://www.maxigame.org/epin/yukle.php',
-        'key' => 'YOUR_MAXICARD_API_KEY',
-        'secret' => 'YOUR_MAXICARD_API_PASSWORD',
+        'key' => 'd0f3b35596de1624f79a21f43298b34a',
+        'secret' => 'q@We45XL',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -88,9 +88,9 @@ return [
         'route' => 'hipocard',
         'currency' => 'TL',
         'image' => 'images/donate/hipocard.png',
-        'url' => 'https://www.hipopotamya.com/api/hipocard/epins',
-        'key' => 'YOUR_HIPOCARD_API_KEY',
-        'secret' => 'YOUR_HIPOCARD_API_PASSWORD',
+        'url' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins',
+        'key' => 'HIPOCARDSENDBOXAPIKEY00000000001',
+        'secret' => 'HIPOCARD',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -141,9 +141,9 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
         'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token',
-        'api-key' => '6E69DLCCZ1D85DFCNBES92F9Y5I',
-        'secret-key' => 'QD2XBKAFO4UN',
-        'commission_type' => 1,
+        'key' => 'K3IE5AMEGK4BV9DBASED6A89180',
+        'secret' => 'J8Z3091D5ED8',
+        'commission_type' => '1',
         'package' => [
             [
                 'name' => '500 Silk',

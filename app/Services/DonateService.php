@@ -53,7 +53,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['paypal' => "Failed to create order! {$response->json()['error_description']}"])->withInput();
+        return back()->withErrors(['paypal' => "Payment Failed: {$response->json()['error_description']}"])->withInput();
     }
 
     public function callbackPaypal(Request $request)
@@ -101,13 +101,15 @@ class DonateService
             return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
         }
 
-        return back()->withErrors(['paypal' => "Failed to processes payment! {$captureResponse->json()['error_description']}"])->withInput();
+        return back()->withErrors(['paypal' => "Payment Failed: {$captureResponse->json()['error_description']}"])->withInput();
     }
 
     private function getPaypalAccessToken()
     {
         $config = config('donate.paypal');
-        return cache()->remember('paypal_access_token', 540, function () use ($config) {
+        $accessToken = cache()->get('paypal_access_token');
+
+        if (!$accessToken) {
             $authResponse = Http::withBasicAuth($config['client_id'], $config['secret'])
                 ->asForm()
                 ->post($config['endpoint'].'/v1/oauth2/token', [
@@ -118,8 +120,11 @@ class DonateService
                 return back()->withErrors(['paypal' => "Failed to retrieve PayPal access token! {$authResponse->json()['error_description']}"])->withInput();
             }
 
-            return $authResponse->json()['access_token'];
-        });
+            $accessToken = $authResponse->json()['access_token'];
+            cache()->put('paypal_access_token', $accessToken, 540);
+        }
+
+        return $accessToken;
     }
 
     public function processMaxicard(Request $request)
@@ -207,7 +212,7 @@ class DonateService
         ];
 
         $response = Http::withHeaders([
-            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
             'api-key' => $config['key'],
             'api-secret' => $config['secret'],
         ])->post($config['url'], $payload);
@@ -249,10 +254,6 @@ class DonateService
 
     public function processHipopay(Request $request)
     {
-        $request->validate([
-            'price' => 'required|integer',
-        ]);
-
         $config = config('donate.hipopay');
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
@@ -260,27 +261,25 @@ class DonateService
         }
 
         $user = Auth::user();
-        $calculateHash = base64_encode(hash_hmac('sha256', $user->jid.$user->email.$user->username.$config['api-key'], $config['secret-key'], true));
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.$user->email.$user->username.$config['key'],$config['secret'] ,true));
 
         $payload = [
-            'api_key' => $config['api-key'],
+            'api_key' => $config['key'],
             'user_id' => $user->jid,
             'username' => $user->username,
             'email' => $user->email,
-            'ip_address' => $request->ip(),
-            'hash' => $calculateHash,
+            'ip_address' => $request->ip() == '::1' ? '127.0.0.1' : $request->ip(),
+            'hash' => $hash,
             'pro' => true,
             "product" => [
                 'name' => $package['name'],
                 'price' => $package['price'] * 100,
-                'reference_id' =>  (string) Str::uuid(),
+                'reference_id' =>  uniqid().rand(100,999),
                 'commission_type' => $config['commission_type'],
             ],
         ];
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-        ])->post($config['url'], $payload);
+        $response = Http::asForm()->post($config['url'], $payload);
 
         if ($response->successful()) {
             $responseData = $response->json();
@@ -294,7 +293,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipopay' => "Failed to create payment session! {$response->json()['message']}"])->withInput();
+        return back()->withErrors(['hipopay' => "Payment Failed: {$response->json()['message']}"])->withInput();
     }
 
     public function callbackHipopay(Request $request)
@@ -303,38 +302,6 @@ class DonateService
         $payload = file_get_contents('php://input');
         $data = json_decode($payload, true);
 
-        if (isset($data['status']) && $data['status'] === 'success') {
-            $amount = $data['amount'] / 100;
-            $referenceId = $data['reference_id'] ?? null;
-
-            $package = collect($config['package'])->firstWhere('price', $amount);
-            if (!$package) {
-                Log::error('Hipopay Callback: Invalid package price.', $data);
-                return response()->json(['status' => 'error', 'message' => 'Invalid package price.'], 400);
-            }
-
-            $user = Auth::user();
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-            }
-
-            DonateLog::setDonateLog(
-                'Hipopay',
-                (string) Str::uuid(),
-                'true',
-                $amount,
-                $package['value'],
-                "User:{$user->username} purchased Silk for {$package['value']} using Hipopay. Reference ID: {$referenceId}.",
-                $user->jid,
-                $request->ip()
-            );
-
-            return response()->json(['status' => 'success', 'message' => 'Payment processed successfully.'], 200);
-        }
-
         Log::error('Hipopay Callback: Payment failed or invalid.', $data);
-        return response()->json(['status' => 'error', 'message' => 'Payment failed or invalid.'], 400);
     }
 }
