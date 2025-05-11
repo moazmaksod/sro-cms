@@ -143,7 +143,7 @@ return [
         'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token',
         'key' => 'K3IE5AMEGK4BV9DBASED6A89180',
         'secret' => 'J8Z3091D5ED8',
-        'commission_type' => '1',
+        'commission_type' => 1,
         'package' => [
             [
                 'name' => '500 Silk',

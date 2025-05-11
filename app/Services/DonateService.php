@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DonateLog;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Portal\AphChangedSilk;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -16,7 +17,11 @@ class DonateService
     public function processPaypal(Request $request)
     {
         $config = config('donate.paypal');
+
         $accessToken = $this->getPaypalAccessToken();
+        if (!$accessToken) {
+            return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token. Please try again later.'])->withInput();
+        }
 
         $body = [
             "intent" => "CAPTURE",
@@ -75,30 +80,32 @@ class DonateService
         if ($captureResponse->successful()) {
             $responseData = $captureResponse->json();
 
-            $package = collect($config['package'])->firstWhere('price', $responseData['purchase_units'][0]['amount']['value']);
-            if (!$package) {
-                return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+            if ($responseData['status'] === 'COMPLETED') {
+                $package = collect($config['package'])->firstWhere('price', $responseData['purchase_units'][0]['amount']['value']);
+                if (!$package) {
+                    return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+                }
+
+                $user = Auth::user();
+                if (config('global.server.version') === 'vSRO') {
+                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
+                } else {
+                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+                }
+
+                DonateLog::setDonateLog(
+                    'PayPal',
+                    (string)Str::uuid(),
+                    'true',
+                    $package['price'],
+                    $package['value'],
+                    "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
+                    $user->jid,
+                    $request->ip()
+                );
+
+                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
             }
-
-            $user = Auth::user();
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-            }
-
-            DonateLog::setDonateLog(
-                'PayPal',
-                (string) Str::uuid(),
-                'true',
-                $package['price'],
-                $package['value'],
-                "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
-                $user->jid,
-                $request->ip()
-            );
-
-            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
         }
 
         return back()->withErrors(['paypal' => "Payment Failed: {$captureResponse->json()['error_description']}"])->withInput();
@@ -167,7 +174,7 @@ class DonateService
 
                 $package = collect($config['package'])->firstWhere('price', intval(preg_replace('/[^0-9]/', '', $responseObject->params->tutar)));
                 if (!$package) {
-                    return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+                    return back()->withErrors(['maxicard' => 'Invalid package price.'])->withInput();
                 }
 
                 $user = Auth::user();
@@ -202,14 +209,14 @@ class DonateService
             'password' => 'required',
         ]);
 
-        $config = config('donate.hipocard');
-
         $payload = [
             'epin_code' => $request->code,
             'epin_secret' => $request->password,
             'player_name' => Auth::user()->username,
             'used_ip' => $request->ip(),
         ];
+
+        $config = config('donate.hipocard');
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -220,8 +227,7 @@ class DonateService
         if ($response->successful()) {
             $responseData = $response->json();
 
-            if (isset($responseData['success']) && $responseData['success'] === true) {
-
+            if ($responseData['success'] === true) {
                 $package = collect($config['package'])->firstWhere('price', intval($responseData['data']['total_sales']));
                 if (!$package) {
                     return back()->withErrors(['hipocard' => 'Invalid package price.'])->withInput();
@@ -266,11 +272,10 @@ class DonateService
 
         $payload = [
             'api_key' => $config['key'],
-            'api_secret' => $config['secret'],
             'user_id' => $user->jid,
             'username' => $user->username,
             'email' => $user->email,
-            'ip_address' => $request->ip() == '::1' ? '127.0.0.1' : $request->ip(),
+            'ip_address' => $request->ip(),
             'hash' => $hash,
             'pro' => true,
             "product" => [
@@ -286,7 +291,7 @@ class DonateService
         if ($response->successful()) {
             $responseData = $response->json();
 
-            if (isset($responseData['success']) && $responseData['success'] === true) {
+            if ($responseData['success'] === true) {
                 $paymentUrl = $responseData['data']['payment_url'] ?? null;
 
                 if ($paymentUrl) {
@@ -304,37 +309,40 @@ class DonateService
         $payload = file_get_contents('php://input');
         $data = json_decode($payload, true);
 
-        $user = Auth::user();
+        $user = User::where('jid', $data['user_id'])->first();
         $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
 
-        if (isset($data['hash']) && $data['hash'] === $hash) {
-            if (isset($data['status']) && $data['status'] == 'success') {
-                $package = collect($config['package'])->firstWhere('price', intval($data['payment_total']));
-                if (!$package) {
-                    return back()->withErrors(['hipopay' => 'Invalid package price.'])->withInput();
-                }
-
-                if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
-                } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-                }
-
-                DonateLog::setDonateLog(
-                    'HipoPay',
-                    (string) Str::uuid(),
-                    'true',
-                    $package['price'],
-                    $package['value'],
-                    "User:{$user->username} purchased Silk for {$package['price']} using HipoPay.",
-                    $user->jid,
-                    $request->ip()
-                );
-
-                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
-            }
+        if ($data['hash'] !== $hash) {
+            return response('Invalid Hash', 400);
         }
 
-        return back()->withErrors(['hipopay' => "Payment Failed: {$data['message']}"])->withInput();
+        if ($data['status'] === 'success') {
+            $package = collect($config['package'])->firstWhere('price', intval($data['payment_total']));
+            if (!$package) {
+                return response('Invalid package price', 204);
+            }
+
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $package['value']);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+            }
+
+            DonateLog::setDonateLog(
+                'HipoPay',
+                (string) Str::uuid(),
+                'true',
+                $package['price'],
+                $package['value'],
+                "User:{$user->username} purchased Silk for {$package['price']} using HipoPay.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return response('OK', 200);
+        }
+
+        //Log::warning('HipoPay Callback: Payment not successful', ['data' => $data]);
+        return response('', 204);
     }
 }
