@@ -5,8 +5,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 'throttle'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
     Route::prefix('profile')->name('profile.')->group(function() {
-        Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/edit', [ProfileController::class, 'update'])->name('update');
         Route::delete('/edit', [ProfileController::class, 'destroy'])->name('destroy');

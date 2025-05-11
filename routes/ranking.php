@@ -3,8 +3,8 @@
 use App\Http\Controllers\RankingController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking');
 Route::prefix('ranking')->name('ranking.')->group(function() {
-    Route::get('/', [RankingController::class, 'index'])->name('index');
     Route::any('/player', [RankingController::class, 'player'])->name('player');
     Route::any('/guild', [RankingController::class, 'guild'])->name('guild');
     Route::any('/unique', [RankingController::class, 'unique'])->name('unique');
