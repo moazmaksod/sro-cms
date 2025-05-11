@@ -37,6 +37,9 @@
                                         <button type="submit" class="btn btn-primary">{{ __('Buy Now') }}</button>
                                     </form>
                                 </div>
+                                <div class="card-footer">
+                                    Bonus: {{ $value['bonus'] }} Silk
+                                </div>
                             </div>
                         </div>
                     @empty

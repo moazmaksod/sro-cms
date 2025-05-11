@@ -91,9 +91,9 @@ class DonateService
 
                 $user = Auth::user();
                 if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
+                    SkSilk::setSkSilk($user->jid, 0, $package['value'] + ($package['bonus'] ?? 0));
                 } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value'] + ($package['bonus'] ?? 0));
                 }
 
                 DonateLog::setDonateLog(
@@ -101,7 +101,7 @@ class DonateService
                     $responseData['id'],
                     'true',
                     $package['price'],
-                    $package['value'],
+                    $package['value'] + ($package['bonus'] ?? 0),
                     "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
                     $user->jid,
                     $request->ip()
