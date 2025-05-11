@@ -258,7 +258,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipocard' => "Payment failed: " .isset($response['message']) ?? 'An error occurred'])->withInput();
+        return back()->withErrors(['hipocard' => "Payment failed: " .isset($response['message']) ? $response['message'] : 'An error occurred'])->withInput();
     }
 
     public function processHipopay(Request $request)
@@ -304,7 +304,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipopay' => "Payment Failed: " .isset($response['message']) ?? 'An error occurred'])->withInput();
+        return back()->withErrors(['hipopay' => "Payment Failed: " .(isset($response['message']) ? $response['message'] : 'An error occurred')])->withInput();
     }
 
     public function callbackHipopay(Request $request)
