@@ -71,7 +71,7 @@ class DonateService
         $token = $request->get('token');
         $accessToken = $this->getPaypalAccessToken();
         if (!$accessToken || !is_string($accessToken)) {
-            return response('Failed to retrieve PayPal access token.', 500);
+            return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token.'])->withInput();
         }
 
         $captureResponse = Http::withHeaders([
