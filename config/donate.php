@@ -141,7 +141,7 @@ return [
         'route' => 'hipopay',
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
-        'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token',
+        'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token', //callback url: http://localhost/callback/hipopay
         'key' => '',
         'secret' => '',
         'commission_type' => 1,

@@ -268,7 +268,7 @@ class DonateService
         }
 
         $user = Auth::user();
-        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
+        $hash = base64_encode(hash_hmac('sha256', $user->jid . trim($user->email) . $user->username . $config['key'], $config['secret'], true));
 
         $payload = [
             'api_key' => $config['key'],
@@ -308,11 +308,18 @@ class DonateService
         $config = config('donate.hipopay');
         $payload = file_get_contents('php://input');
         $data = json_decode($payload, true);
+        if (!$data) {
+            return response('Invalid payload', 400);
+        }
 
         $user = User::where('jid', $data['user_id'])->first();
-        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
+        if (!$user) {
+            return response('User not found', 404);
+        }
 
-        if ($data['hash'] !== $hash) {
+        $hash = base64_encode(hash_hmac('sha256',$user->jid . trim($user->email) . $user->username . $config['key'], $config['secret'], true));
+
+        if (!hash_equals($data['hash'], $hash)) {
             return response('Invalid Hash', 400);
         }
 
@@ -343,6 +350,6 @@ class DonateService
         }
 
         //Log::warning('HipoPay Callback: Payment not successful', ['data' => $data]);
-        return response('', 204);
+        return response('Payment not successful', 422);
     }
 }
