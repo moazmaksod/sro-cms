@@ -16,9 +16,8 @@ class DonateService
     public function processPaypal(Request $request)
     {
         $price = number_format($request->input('price'), 2, '.', '');
-
         if (!is_numeric($price) || $price <= 0) {
-            return back()->withErrors(['price' => 'Invalid price provided.']);
+            throw new \Exception('Invalid price provided.');
         }
 
         $config = config('donate.paypal');
@@ -83,12 +82,12 @@ class DonateService
 
             $purchasePrice = isset($responseData['purchase_units'][0]['amount']['value']) ? floatval($responseData['purchase_units'][0]['amount']['value']) : null;
             if (!$purchasePrice) {
-                return back()->withErrors(['paypal' => 'Payment capture failed: Missing price.'])->withInput();
+                throw new \Exception('Payment capture failed: Missing price.');
             }
 
             $package = collect($config['package'])->firstWhere('price', $purchasePrice);
             if (!$package) {
-                return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+                throw new \Exception('Invalid package price.');
             }
 
             $user = Auth::user();
@@ -118,18 +117,15 @@ class DonateService
     private function getPaypalAccessToken()
     {
         $config = config('donate.paypal');
-        $clientId = $config['client_id'];
-        $clientSecret = $config['secret'];
-
-        return cache()->remember('paypal_access_token', 540, function () use ($clientId, $clientSecret, $config) {
-            $authResponse = Http::withBasicAuth($clientId, $clientSecret)
+        return cache()->remember('paypal_access_token', 540, function () use ($config) {
+            $authResponse = Http::withBasicAuth($config['client_id'], $config['secret'])
                 ->asForm()
                 ->post($config['endpoint'].'/v1/oauth2/token', [
                     'grant_type' => 'client_credentials',
                 ]);
 
             if ($authResponse->failed()) {
-                throw new \Exception('Failed to retrieve PayPal access token: ' . $authResponse->json()['error_description']);
+                throw new \Exception('Failed to retrieve PayPal access token.');
             }
 
             return $authResponse->json()['access_token'];
@@ -139,9 +135,6 @@ class DonateService
     public function processMaxicard(Request $request)
     {
         $config = config('donate.maxicard');
-        $apiUser = $config['key'];
-        $apiPass = $config['secret'];
-        $postUrl = $config['url'];
 
         $request->validate([
             'code' => 'required',
@@ -150,14 +143,14 @@ class DonateService
 
         $user = Auth::user();
 
-        if (!$apiUser || !$apiPass || !$postUrl) {
+        if (!$config['key'] || !$config['secret'] || !$config['url']) {
             throw new \Exception('API credentials are missing.');
         }
 
         $xml = "<APIRequest>
                 <params>
-                    <username>{$apiUser}</username>
-                    <password>{$apiPass}</password>
+                    <username>{$config['key']}</username>
+                    <password>{$config['secret']}</password>
                     <cmd>epinadd</cmd>
                     <epinusername>{$user->jid}</epinusername>
                     <epincode>{$request->code}</epincode>
@@ -165,7 +158,7 @@ class DonateService
                 </params>
             </APIRequest>";
 
-        $response = Http::send('post', $postUrl, [
+        $response = Http::send('post', $config['url'], [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
                 "Cache-Control" => "no-cache",
@@ -180,12 +173,11 @@ class DonateService
         }
 
         $responseObject = simplexml_load_string($response->body());
-
         if(trim($responseObject->params->durum) == 'ok' && intval(trim($responseObject->params->siparis_no)) > 0) {
-            $commission = preg_replace('/[^0-9\.]/', '', trim($responseObject->params->komisyon));
             $orderNumber = intval(trim($responseObject->params->siparis_no));
-            $amount = intval(preg_replace('/[^0-9]/', '', $responseObject->params->tutar));
+            $commission = preg_replace('/[^0-9\.]/', '', trim($responseObject->params->komisyon));
 
+            $amount = intval(preg_replace('/[^0-9]/', '', $responseObject->params->tutar));
             if (!$amount || $amount <= 0) {
                 return back()->withErrors(['maxicard' => 'This epin is invalid, Please try a valid one.'])->withInput();
             }
@@ -221,8 +213,6 @@ class DonateService
             'password' => 'required',
         ]);
 
-        $user = Auth::user();
-
         if (!$config['url'] || !$config['key'] || !$config['secret']) {
             throw new \Exception('API credentials are missing.');
         }
@@ -230,7 +220,7 @@ class DonateService
         $payload = [
             'epin_code' => $request->code,
             'epin_secret' => $request->password,
-            'player_name' => $user->username,
+            'player_name' => Auth::user()->username,
             'used_ip' => $request->ip(),
         ];
 
@@ -245,15 +235,13 @@ class DonateService
         }
 
         $responseData = $response->json();
-
         if (isset($responseData['success']) && $responseData['success'] === true) {
-            $amount = intval($responseData['data']['total_sales']);
-
-            $package = collect($config['package'])->firstWhere('price', $amount);
+            $package = collect($config['package'])->firstWhere('price', intval($responseData['data']['total_sales']));
             if (!$package) {
-                return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+                throw new \Exception('Invalid package price.');
             }
 
+            $user = Auth::user();
             if (config('global.server.version') === 'vSRO') {
                 SkSilk::setSkSilk($user->jid, 0, $package['value']);
             } else {
@@ -264,9 +252,9 @@ class DonateService
                 'Hipocard',
                 (string) Str::uuid(),
                 'true',
-                $amount,
+                $package['price'],
                 $package['value'],
-                "User:{$user->username} purchased Silk for {$amount} using Hipocard.",
+                "User:{$user->username} purchased Silk for {$package['price']} using Hipocard.",
                 $user->jid,
                 $request->ip()
             );
