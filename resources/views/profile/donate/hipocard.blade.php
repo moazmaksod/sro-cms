@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('MaxiCard'))
+@section('title', __('HipoCard'))
 
 @section('content')
     <div class="container">

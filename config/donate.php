@@ -141,8 +141,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
         'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token',
-        'api-key' => 'YOUR_HIPOPAY_API_KEY',
-        'secret-key' => 'YOUR_HIPOPAY_API_PASSWORD',
+        'api-key' => '6E69DLCCZ1D85DFCNBES92F9Y5I',
+        'secret-key' => 'QD2XBKAFO4UN',
         'commission_type' => 1,
         'package' => [
             [
