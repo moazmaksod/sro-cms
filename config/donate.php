@@ -30,6 +30,49 @@ return [
             ],
         ],
     ],
+    'fawaterk' => [
+        'enabled' => true,
+        'name' => 'Fawaterk',
+        'route' => 'fawaterk',
+        'currency' => 'USD',
+        'image' => 'images/donate/fawaterk.png',
+        'endpoint' => 'https://api.fawaterk.com/invoice',
+        'key' => '', // Your Fawaterk API Key
+        'secret' => '', // Your Fawaterk Secret Key
+        'package' => [
+            [
+                'name' => '100 Silk',
+                'price' => 1.00,
+                'value' => 100,
+            ],
+            [
+                'name' => '500 Silk',
+                'price' => 5.00,
+                'value' => 500,
+            ],
+        ],
+    ],
+    'coinbase' => [
+        'enabled' => true,
+        'name' => 'Coinbase',
+        'route' => 'coinbase',
+        'currency' => 'USD',
+        'image' => 'images/donate/coinbase.png',
+        'endpoint' => 'https://api.commerce.coinbase.com/charges',
+        'api_key' => '', // Your Coinbase API Key
+        'package' => [
+            [
+                'name' => '100 Silk',
+                'price' => 1.00,
+                'value' => 100,
+            ],
+            [
+                'name' => '500 Silk',
+                'price' => 5.00,
+                'value' => 500,
+            ],
+        ],
+    ],
     'maxicard' => [
         'enabled' => true,
         'name' => 'Maxigame Card',

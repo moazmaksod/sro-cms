@@ -137,6 +137,152 @@ class DonateService
         return $accessToken;
     }
 
+    public function processFawaterk(Request $request)
+    {
+        $config = config('donate.fawaterk');
+
+        $invoiceData = [
+            'merchant_code' => $config['key'],
+            'amount' => $request->input('price'),
+            'currency' => $config['currency'],
+            'customer_name' => Auth::user()->username,
+            'customer_email' => Auth::user()->email,
+        ];
+
+        $response = Http::post($config['endpoint'], $invoiceData);
+
+        if ($response->successful()) {
+            $paymentUrl = $response->json()['payment_url'] ?? null;
+
+            if ($paymentUrl) {
+                return redirect()->away($paymentUrl);
+            }
+        }
+
+        return back()->withErrors(['fawaterk' => 'Payment Failed!'])->withInput();
+    }
+
+    public function callbackFawaterk(Request $request)
+    {
+        $config = config('donate.fawaterk');
+
+        $data = $request->all();
+
+        if ($data['status'] === 'success') {
+            $package = collect($config['package'])->firstWhere('price', $data['amount']);
+            if (!$package) {
+                return response('Invalid package price', 422);
+            }
+
+            $user = Auth::user();
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $package['value']);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+            }
+
+            DonateLog::setDonateLog(
+                'Fawaterk',
+                $data['invoice_id'],
+                'true',
+                $package['price'],
+                $package['value'],
+                "User:{$user->username} purchased {$package['name']} using Fawaterk.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+        }
+
+        return response('Payment not successful', 422);
+    }
+
+    public function processCoinbase(Request $request)
+    {
+        $config = config('donate.coinbase');
+
+        $package = collect($config['package'])->firstWhere('price', $request->input('price'));
+        if (!$package) {
+            return back()->withErrors(['coinbase' => 'Invalid package selected.'])->withInput();
+        }
+
+        $chargeData = [
+            'name' => 'Donation',
+            'description' => "Purchase {$package['name']}",
+            'pricing_type' => 'fixed_price',
+            'local_price' => [
+                'amount' => $package['price'],
+                'currency' => $config['currency'],
+            ],
+            'metadata' => [
+                'user_id' => Auth::user()->id,
+                'package_value' => $package['value'],
+            ],
+        ];
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'X-CC-Api-Key' => $config['api_key'],
+            'X-CC-Version' => '2018-03-22',
+        ])->post($config['endpoint'], $chargeData);
+
+        if ($response->successful()) {
+            $paymentUrl = $response->json()['data']['hosted_url'] ?? null;
+
+            if ($paymentUrl) {
+                return redirect()->away($paymentUrl);
+            }
+        }
+
+        return back()->withErrors(['coinbase' => 'Payment Failed!'])->withInput();
+    }
+
+    public function callbackCoinbase(Request $request)
+    {
+        $payload = $request->all();
+        $signature = $request->header('X-CC-Webhook-Signature');
+
+        $config = config('donate.coinbase');
+        $computedSignature = hash_hmac('sha256', json_encode($payload), $config['api_key']);
+
+        if (!hash_equals($signature, $computedSignature)) {
+            return response('Invalid webhook signature', 400);
+        }
+
+        if ($payload['event']['type'] === 'charge:confirmed') {
+            $metadata = $payload['event']['data']['metadata'];
+            $packageValue = $metadata['package_value'];
+            $userId = $metadata['user_id'];
+
+            $user = User::find($userId);
+            if (!$user) {
+                return response('User not found', 404);
+            }
+
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $packageValue);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $packageValue);
+            }
+
+            DonateLog::setDonateLog(
+                'Coinbase',
+                $payload['event']['data']['id'],
+                'true',
+                $payload['event']['data']['pricing']['local']['amount'],
+                $packageValue,
+                "User:{$user->username} purchased Silk using Coinbase.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return response('Webhook processed successfully', 200);
+        }
+
+        return response('Event not handled', 422);
+    }
+
     public function processMaxicard(Request $request)
     {
         $request->validate([
@@ -310,8 +456,7 @@ class DonateService
     public function callbackHipopay(Request $request)
     {
         $config = config('donate.hipopay');
-        $payload = file_get_contents('php://input');
-        $data = json_decode($payload, true);
+        $data = $request->all();
         if (!$data) {
             return response('Invalid payload', 400);
         }
