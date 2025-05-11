@@ -151,7 +151,7 @@ class DonateService
         $user = Auth::user();
 
         if (!$apiUser || !$apiPass || !$postUrl) {
-            return back()->withErrors(['maxicard' => 'API credentials are missing.'])->withInput();
+            throw new \Exception('API credentials are missing.');
         }
 
         $xml = "<APIRequest>
@@ -176,7 +176,7 @@ class DonateService
         ]);
 
         if ($response->failed()) {
-            return back()->withErrors(['maxicard' => 'Failed to communicate with Maxicard API.'])->withInput();
+            throw new \Exception('Failed to communicate with Maxicard API.');
         }
 
         $responseObject = simplexml_load_string($response->body());
@@ -209,8 +209,71 @@ class DonateService
 
             return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
         }else {
-            $errorCode = trim($responseObject->params->durum);
-            return back()->withErrors(['maxicard' => "Payment failed: {$errorCode}"])->withInput();
+            return back()->withErrors(['maxicard' => "Payment failed: {$responseObject->params->durum}"])->withInput();
+        }
+    }
+
+    public function processHipocard(Request $request)
+    {
+        $config = config('donate.hipocard');
+        $request->validate([
+            'code' => 'required',
+            'password' => 'required',
+        ]);
+
+        $user = Auth::user();
+
+        if (!$config['url'] || !$config['key'] || !$config['secret']) {
+            throw new \Exception('API credentials are missing.');
+        }
+
+        $payload = [
+            'epin_code' => $request->code,
+            'epin_secret' => $request->password,
+            'player_name' => $user->username,
+            'used_ip' => $request->ip(),
+        ];
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'api-key' => $config['key'],
+            'api-secret' => $config['secret'],
+        ])->post($config['url'], $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('Failed to communicate with the Hipopotamya API.');
+        }
+
+        $responseData = $response->json();
+
+        if (isset($responseData['success']) && $responseData['success'] === true) {
+            $amount = intval($responseData['data']['total_sales']);
+
+            $package = collect($config['package'])->firstWhere('price', $amount);
+            if (!$package) {
+                return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
+            }
+
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $package['value']);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+            }
+
+            DonateLog::setDonateLog(
+                'Hipocard',
+                (string) Str::uuid(),
+                'true',
+                $amount,
+                $package['value'],
+                "User:{$user->username} purchased Silk for {$amount} using Hipocard.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+        } else {
+            return back()->withErrors(['hipocard' => "Payment failed: {$responseData['message']}"])->withInput();
         }
     }
 }

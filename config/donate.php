@@ -88,9 +88,12 @@ return [
         'route' => 'hipocard',
         'currency' => 'TL',
         'image' => 'images/donate/hipocard.png',
-        'url' => 'https://www.hipopotamya.com/api/hipocard/epins',
-        'key' => '',
-        'secret' => '',
+        //'url' => 'https://www.hipopotamya.com/api/hipocard/epins',
+        //'key' => '0D8UO8G6ZE2M21U5Z70BM6VAC4N09390',
+        //'secret' => '7F0C08JD',
+        'url' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins',
+        'key' => 'HIPOCARDSENDBOXAPIKEY00000000001',
+        'secret' => 'HIPOCARD',
         'package' => [
             [
                 'name' => '100 Silk',
