@@ -37,8 +37,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/maxicard.png',
         'url' => 'https://www.maxigame.org/epin/yukle.php',
-        'key' => 'd0f3b35596de1624f79a21f43298b34a',
-        'secret' => 'q@We45XL',
+        'key' => 'YOUR_MAXICARD_API_KEY',
+        'secret' => 'YOUR_MAXICARD_API_PASSWORD',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -88,12 +88,9 @@ return [
         'route' => 'hipocard',
         'currency' => 'TL',
         'image' => 'images/donate/hipocard.png',
-        //'url' => 'https://www.hipopotamya.com/api/hipocard/epins',
-        //'key' => '0D8UO8G6ZE2M21U5Z70BM6VAC4N09390',
-        //'secret' => '7F0C08JD',
-        'url' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins',
-        'key' => 'HIPOCARDSENDBOXAPIKEY00000000001',
-        'secret' => 'HIPOCARD',
+        'url' => 'https://www.hipopotamya.com/api/hipocard/epins',
+        'key' => 'YOUR_HIPOCARD_API_KEY',
+        'secret' => 'YOUR_HIPOCARD_API_PASSWORD',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -144,8 +141,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
         'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token',
-        'api-key' => '',
-        'secret-key' => '',
+        'api-key' => 'YOUR_HIPOPAY_API_KEY',
+        'secret-key' => 'YOUR_HIPOPAY_API_PASSWORD',
         'commission_type' => 1,
         'package' => [
             [
