@@ -255,16 +255,20 @@ class DonateService
     public function processHipopay(Request $request)
     {
         $config = config('donate.hipopay');
+        $api_key = $config['key'];
+        $api_secret = $config['secret'];
+
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
             return back()->withErrors(['hipopay' => 'Invalid package selected.'])->withInput();
         }
 
         $user = Auth::user();
-        $hash = base64_encode(hash_hmac('sha256',$user->jid.$user->email.$user->username.$config['key'],$config['secret'] ,true));
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$api_key,$api_secret ,true));
 
         $payload = [
             'api_key' => $config['key'],
+            'api_secret' => $config['secret'],
             'user_id' => $user->jid,
             'username' => $user->username,
             'email' => $user->email,
