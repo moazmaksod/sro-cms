@@ -33,15 +33,17 @@ return [
             ],
         ],
     ],
-    'fawaterk' => [
+    'coinpayments' => [
         'enabled' => true,
-        'name' => 'Fawaterk',
-        'route' => 'fawaterk',
-        'currency' => 'USD',
-        'image' => 'images/donate/fawaterk.png',
-        'endpoint' => 'https://api.fawaterk.com/invoice',
-        'key' => '', // Your Fawaterk API Key
-        'secret' => '', // Your Fawaterk Secret Key
+        'name' => 'CoinPayments',
+        'route' => 'coinpayments',
+        'currency' => 'USDT',
+        'image' => 'images/donate/coinpayments.png',
+        'endpoint' => 'https://www.coinpayments.net/api.php', // CoinPayments API endpoint
+        'merchant_id' => '', // Your CoinPayments Merchant ID
+        'public_key' => '6c79ab35d6104ead9054fbdd56b56224', // Your CoinPayments Public Key
+        'private_key' => 'hAK6kKetch14r/YmwWJ7oi6CT9DpAubE4swzWDarpWM=', // Your CoinPayments Private Key
+        'ipn_secret' => '', // IPN secret for verifying callbacks
         'package' => [
             [
                 'name' => '100 Silk',
@@ -55,14 +57,16 @@ return [
             ],
         ],
     ],
-    'coinbase' => [
+    'fawaterk' => [
         'enabled' => true,
-        'name' => 'Coinbase',
-        'route' => 'coinbase',
-        'currency' => 'USD',
-        'image' => 'images/donate/coinbase.png',
-        'endpoint' => 'https://api.commerce.coinbase.com/charges',
-        'api_key' => '', // Your Coinbase API Key
+        'name' => 'Fawaterk',
+        'route' => 'fawaterk',
+        'currency' => 'EGP',
+        'image' => 'images/donate/fawaterk.png',
+        //'endpoint' => 'https://app.fawaterk.com/api/v2/createInvoiceLink',
+        'endpoint' => 'https://staging.fawaterk.com/api/v2/createInvoiceLink',
+        'key' => 'e40438ddced1c398954b160405cdd82f0d4fa1fb671ed4595e',
+        'secret' => 'FAWATERAK.1354',
         'package' => [
             [
                 'name' => '100 Silk',

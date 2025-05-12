@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('Coinbase'))
+@section('title', __('CoinPayments'))
 
 @section('content')
     <div class="container">
