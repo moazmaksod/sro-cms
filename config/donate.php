@@ -17,19 +17,31 @@ return [
                 'name' => '500 Silk',
                 'price' => 5,
                 'value' => 500,
-                'bonus' => 50,
             ],
             [
                 'name' => '1000 Silk',
                 'price' => 10,
                 'value' => 1000,
-                'bonus' => 50,
             ],
             [
                 'name' => '2500 Silk',
                 'price' => 25,
                 'value' => 2500,
-                'bonus' => 50,
+            ],
+            [
+                'name' => '5000 Silk',
+                'price' => 50,
+                'value' => 5000,
+            ],
+            [
+                'name' => '7500 Silk',
+                'price' => 75,
+                'value' => 7500,
+            ],
+            [
+                'name' => '10000 Silk',
+                'price' => 100,
+                'value' => 10000,
             ],
         ],
     ],
@@ -55,6 +67,36 @@ return [
                 'price' => 5.00,
                 'value' => 500,
             ],
+            [
+                'name' => '1000 Silk',
+                'price' => 10.00,
+                'value' => 1000,
+            ],
+            [
+                'name' => '2500 Silk',
+                'price' => 25.00,
+                'value' => 2500,
+            ],
+            [
+                'name' => '5000 Silk',
+                'price' => 50.00,
+                'value' => 5000,
+            ],
+            [
+                'name' => '7500 Silk',
+                'price' => 75.00,
+                'value' => 7500,
+            ],
+            [
+                'name' => '10000 Silk',
+                'price' => 100.00,
+                'value' => 10000,
+            ],
+            [
+                'name' => '25000 Silk',
+                'price' => 250.00,
+                'value' => 25000,
+            ],
         ],
     ],
     'fawaterk' => [
@@ -77,6 +119,36 @@ return [
                 'name' => '500 Silk',
                 'price' => 5.00,
                 'value' => 500,
+            ],
+            [
+                'name' => '1000 Silk',
+                'price' => 10.00,
+                'value' => 1000,
+            ],
+            [
+                'name' => '2500 Silk',
+                'price' => 25.00,
+                'value' => 2500,
+            ],
+            [
+                'name' => '5000 Silk',
+                'price' => 50.00,
+                'value' => 5000,
+            ],
+            [
+                'name' => '7500 Silk',
+                'price' => 75.00,
+                'value' => 7500,
+            ],
+            [
+                'name' => '10000 Silk',
+                'price' => 100.00,
+                'value' => 10000,
+            ],
+            [
+                'name' => '25000 Silk',
+                'price' => 250.00,
+                'value' => 25000,
             ],
         ],
     ],
@@ -197,14 +269,44 @@ return [
         'commission_type' => 1,
         'package' => [
             [
+                'name' => '100 Silk',
+                'price' => 1,
+                'value' => 100,
+            ],
+            [
                 'name' => '500 Silk',
                 'price' => 5,
                 'value' => 500,
             ],
             [
+                'name' => '1000 Silk',
+                'price' => 10,
+                'value' => 1000,
+            ],
+            [
                 'name' => '2500 Silk',
                 'price' => 25,
                 'value' => 2500,
+            ],
+            [
+                'name' => '5000 Silk',
+                'price' => 50,
+                'value' => 5000,
+            ],
+            [
+                'name' => '7500 Silk',
+                'price' => 75,
+                'value' => 7500,
+            ],
+            [
+                'name' => '10000 Silk',
+                'price' => 100,
+                'value' => 10000,
+            ],
+            [
+                'name' => '25000 Silk',
+                'price' => 250,
+                'value' => 25000,
             ],
         ],
     ],
