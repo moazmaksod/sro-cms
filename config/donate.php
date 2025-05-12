@@ -37,12 +37,12 @@ return [
         'enabled' => true,
         'name' => 'CoinPayments',
         'route' => 'coinpayments',
-        'currency' => 'USDT',
+        'currency' => 'USD',
         'image' => 'images/donate/coinpayments.png',
-        'endpoint' => 'https://www.coinpayments.net/api.php',
+        'endpoint' => 'https://api.coinpayments.com',
         'merchant_id' => '',
-        'public_key' => '6c79ab35d6104ead9054fbdd56b56224',
-        'private_key' => 'tEdl2dD8a0dxzPrrfd9PngyR8KtSk47jT/7v3EHss0U=',
+        'client_id' => '6c79ab35d6104ead9054fbdd56b56224',
+        'client_secret' => 'tEdl2dD8a0dxzPrrfd9PngyR8KtSk47jT/7v3EHss0U=',
         'ipn_secret' => '',
         'package' => [
             [

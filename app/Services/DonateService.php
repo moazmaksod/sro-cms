@@ -140,48 +140,65 @@ class DonateService
     public function processCoinPayments(Request $request)
     {
         $config = config('donate.coinpayments');
-
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
             return back()->withErrors(['coinpayments' => 'Invalid package selected.'])->withInput();
         }
 
-        $user = Auth::user();
-
         $payload = [
-            'version' => 1,
-            'cmd' => 'create_transaction',
-            'key' => $config['public_key'],
-            'amount' => $package['price'],
-            'currency1' => $config['currency'],
-            'currency2' => $config['currency'],
-            'buyer_email' => $user->email,
-            'custom' => $user->jid,
-            'item_name' => $package['name'],
-            'format' => 'json',
+            "currency" => $config['currency'],
+            "clientId" => $config['client_id'],
+            "invoiceId" => (string) Str::uuid(),
+            "items" => [
+                [
+                    "name" => $package['name'],
+                    "quantity" => [
+                        "value" => 1,
+                        "type" => 2
+                    ],
+                    "amount" => "{$package['price']}"
+                ]
+            ],
+            "amount" => [
+                "breakdown" => [
+                    "subtotal" => "{$package['price']}",
+                ],
+                "total" => "{$package['price']}",
+            ],
+            "payment" => [
+                "refundEmail" => "info@test.com"
+            ],
+            "email" => Auth::user()->email,
         ];
 
-        $hmac = hash_hmac('sha512', http_build_query($payload), $config['private_key']);
+        $apiUrl = $config['endpoint'] . '/api/v2/merchant/invoices';
+        $currentDate = now()->setTimezone('UTC')->format('Y-m-d\TH:i:s');
+        $signatureString = implode('', [chr(239), chr(187), chr(191), 'POST', $apiUrl, $config['client_id'], $currentDate, json_encode($payload)]);
+        $signature = base64_encode(hash_hmac('sha256', $signatureString, $config['client_secret'], true));
 
         $response = Http::withHeaders([
-            'HMAC' => $hmac,
-        ])->asForm()->post($config['endpoint'], $payload);
+            'Content-Type' => 'application/json',
+            'X-CoinPayments-Client' => $config['client_id'],
+            'X-CoinPayments-Timestamp' => $currentDate,
+            'X-CoinPayments-Signature' => $signature,
+        ])->post($apiUrl, $payload);
 
         if ($response->successful()) {
             $result = $response->json();
 
-            if (isset($result['result']['status']) && $result['result']['status'] == 1) {
-                return redirect()->away($result['result']['checkout_url']);
+            if (isset($result['invoices'][0]['checkoutLink'])) {
+                $checkoutLink = $result['invoices'][0]['checkoutLink'];
+
+                return redirect()->away($checkoutLink);
             }
         }
 
-        return back()->withErrors(['coinpayments' => 'Payment failed: ' . ($result['error'] ?? 'Unknown error')])->withInput();
+        return back()->withErrors(['coinpayments' => 'Payment failed: ' . ($result['result']['error'] ?? 'Unknown error')])->withInput();
     }
 
     public function callbackCoinPayments(Request $request)
     {
         $config = config('donate.coinpayments');
-
         $hmac = hash_hmac('sha512', file_get_contents('php://input'), $config['ipn_secret']);
         if ($request->header('HMAC') !== $hmac) {
             return response('Invalid HMAC signature', 400);
@@ -189,10 +206,9 @@ class DonateService
 
         $data = $request->all();
 
-        if ($data['status'] >= 100 || $data['status'] == 2) {
+        if (isset($data['status']) && ($data['status'] >= 100 || $data['status'] == 2)) {
             $user = User::find($data['custom']);
             $package = collect($config['package'])->firstWhere('price', $data['amount1']);
-
             if (!$user || !$package) {
                 return response('Invalid user or package', 400);
             }
