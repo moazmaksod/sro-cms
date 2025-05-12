@@ -41,8 +41,8 @@ return [
         'image' => 'images/donate/coinpayments.png',
         'endpoint' => 'https://api.coinpayments.com',
         'merchant_id' => '',
-        'client_id' => '6c79ab35d6104ead9054fbdd56b56224',
-        'client_secret' => 'tEdl2dD8a0dxzPrrfd9PngyR8KtSk47jT/7v3EHss0U=',
+        'client_id' => '',
+        'client_secret' => '',
         'ipn_secret' => '',
         'package' => [
             [
