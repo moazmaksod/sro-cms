@@ -41,8 +41,8 @@ return [
         'image' => 'images/donate/coinpayments.png',
         'endpoint' => 'https://www.coinpayments.net/api.php',
         'merchant_id' => '',
-        'public_key' => '',
-        'private_key' => '',
+        'public_key' => '6c79ab35d6104ead9054fbdd56b56224',
+        'private_key' => 'tEdl2dD8a0dxzPrrfd9PngyR8KtSk47jT/7v3EHss0U=',
         'ipn_secret' => '',
         'package' => [
             [
