@@ -227,12 +227,8 @@ class DonateService
 
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package || $request->input('price') < 5) {
-            return back()->withErrors(['coinpayments' => 'Invalid package selected.'])->withInput();
+            return back()->withErrors(['fawaterk' => 'Invalid package selected.'])->withInput();
         }
-
-        //'success_url' => route('profile.donate'),
-        //'fail_url' => route('profile.donate'),
-        //'callback_url' => route('callback', ['method' => 'fawaterk']),
 
         $invoiceData = [
             'cartTotal' => $package['price'],
@@ -258,7 +254,7 @@ class DonateService
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $config['key'],
-        ])->post($config['endpoint'], $invoiceData);
+        ])->post($config['endpoint'] . '/api/v2/createInvoiceLink', $invoiceData);
 
         if ($response->successful()) {
             $paymentUrl = $response['data']['url'] ?? null;
@@ -279,7 +275,7 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['fawaterk' => "Payment failed: {$response['message']}"])->withInput();
+        return back()->withErrors(['fawaterk' => "Payment failed: " .isset($response['message']) && !is_array($response['message']) ? $response['message'] : 'An error occurred'])->withInput();
     }
 
     public function callbackFawaterk(Request $request)
