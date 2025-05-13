@@ -83,7 +83,7 @@
     <script>
         $(document).ready(function () {
             $('[data-method]').on('click', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
                 const method = $(this).data('method');
 
                 $('[data-method]').removeClass('selected');
@@ -98,7 +98,7 @@
             });
 
             $(document).on('click', '#content-donate .card', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
 
                 const price = $(this).data('price');
                 const name = $(this).data('name');
