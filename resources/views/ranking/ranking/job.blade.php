@@ -3,23 +3,32 @@
         <div class="d-inline-block mb-4 mx-2">
             @foreach($config as $value)
                 @if($value['enabled'])
-                    <button class="btn btn-secondary ranking-main-button-job rounded-0 me-2 mb-2 btn-sm" data-link="{{ route($value['route']) }}">{{ __($value['name']) }}</button>
+                    <button class="btn btn-secondary rounded-0 me-2 mb-2 btn-sm" data-link-job="{{ route($value['route']) }}">{{ __($value['name']) }}</button>
                 @endif
             @endforeach
         </div>
     </div>
 
     <div class="col-md-12">
-        <div id="content-replace-job">
+        <div id="content-ranking-job">
             @include('ranking.ranking.job-all')
         </div>
     </div>
 </div>
-
 <script>
-    jQuery('.ranking-main-button-job').click(function() {
-        jQuery('.ranking-main-button-job').removeClass('active');
-        paginatorAjax('#content-replace-job', jQuery(this).data('link'));
-        jQuery(this).addClass('active');
+    $(document).ready(function () {
+        $('[data-link-job]').on('click', function (e) {
+            e.preventDefault();
+            const link = $(this).data('link-job');
+
+            $('[data-link-job]').removeClass('selected');
+            $(this).addClass('selected');
+
+            $.get(`${link}`, function (res) {
+                $('#content-ranking-job').html(res);
+            }).fail(function () {
+                $('#content-ranking-job').html('<div class="alert alert-danger">Failed to load Job Ranking.</div>');
+            });
+        });
     });
 </script>

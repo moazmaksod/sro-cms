@@ -22,36 +22,43 @@
                 @endif
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <p>Select Payment Method</p>
-                        @php $i = 1; @endphp
-                        @foreach($data as $key => $method)
-                            @if($method['enabled'])
-                                <div class="card mb-2 {{ $i == 1 ? 'selected' : '' }}" role="button" data-method="{{ $key }}" style="">
-                                    <img src="{{ asset($method['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $method['name'] }}">
-                                    <div class="card-body text-center">
-                                        <strong>{{ $method['name'] }}</strong><br>
-                                        <small class="text-muted">{{ __('Currency:') }} {{ $method['currency'] }}</small>
+                        <div class="d-flex flex-column">
+                            @php $i = 1; @endphp
+                            @foreach($data as $key => $method)
+                                @if($method['enabled'])
+                                    <div class="card m-2 d-flex {{ $i == 1 ? 'selected' : '' }}" role="button" data-method="{{ $key }}" style="">
+                                        <img src="{{ asset($method['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $method['name'] }}">
+                                        <div class="card-body text-center">
+                                            <strong>{{ $method['name'] }}</strong><br>
+                                        </div>
                                     </div>
-                                </div>
-                                @php $i++; @endphp
-                            @endif
-                        @endforeach
+                                    @php $i++; @endphp
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
 
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <p>Select Package</p>
-                        <div id="package-section">
-                            @php
-                                $method = null;
-                                foreach ($data as $key => $value) {
-                                    if ($value['enabled']) {
-                                        $method = $key;
-                                        break;
-                                    }
-                                }
-                            @endphp
+                        <div id="content-donate">
+                            @php $method = array_key_first(array_filter($data, fn($v) => $v['enabled'])); @endphp
                             @include('profile.donate.' . $method, ['data' => $data[$method]])
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <p>Order Details</p>
+                        <div id="content-donate-details">
+                            <form action="{{ route('profile.donate.process', ['method' => $method]) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="price" value="0">
+                                <hr>
+                                <p class="package-name text-muted mb-0 mt-2">Package: none</p>
+                                <p class="package-price mb-0">Total amount: 0 USD</p>
+                                <hr>
+                                <button type="submit" class="btn w-100 btn-primary">{{ __('Buy Now') }}</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -61,11 +68,11 @@
 @endsection
 @push('styles')
     <style>
-        .card[data-method].selected {
+        .card[data-method].selected, .card[data-price].selected {
             border: 1px solid #0d6efd;
             box-shadow: 0 0 10px rgba(13, 110, 253, 0.4);
         }
-        .card[data-method]:hover, #package-section .card:hover {
+        .card[data-method]:hover, #content-donate .card:hover {
             border: 1px solid #0d6efd;
             box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
             cursor: pointer;
@@ -75,17 +82,35 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('[data-method]').on('click', function () {
+            $('[data-method]').on('click', function (e) {
+                e.preventDefault();
                 const method = $(this).data('method');
 
-                $('[data-method]').removeClass('selected'); // remove from all
-                $(this).addClass('selected'); // add to clicked
+                $('[data-method]').removeClass('selected');
+                $(this).addClass('selected');
 
                 $.get(`/profile/donate/${method}`, function (res) {
-                    $('#package-section').html(res);
+                    $('#content-donate').html(res);
+                    $('#content-donate-details form').attr('action', `/profile/donate/${method}/process`);
                 }).fail(function () {
-                    $('#package-section').html('<div class="alert alert-danger">Failed to load package options.</div>');
+                    $('#content-donate').html('<div class="alert alert-danger">Failed to load package options.</div>');
                 });
+            });
+
+            $(document).on('click', '#content-donate .card', function (e) {
+                e.preventDefault();
+
+                const price = $(this).data('price');
+                const name = $(this).data('name');
+                const currency = $(this).data('currency');
+
+                $('#content-donate .card').removeClass('selected');
+                $(this).addClass('selected');
+
+                $('input[name=price]').val(price);
+
+                $('#content-donate-details .package-name').text(`Package: ${name}`);
+                $('#content-donate-details .package-price').text(`Total amount: ${price} ${currency}`);
             });
         });
     </script>
