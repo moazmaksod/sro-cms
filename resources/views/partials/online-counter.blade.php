@@ -1,6 +1,6 @@
 <div class="card mb-4">
     <div class="card-body text-center">
-        <p class="mb-0">{{ __('Server Time:') }} <span id="idTimerClock">{{ date('h:i:s A') }}</span></p>
+        <p class="mb-0">{{ __('Server Time:') }} <span id="idTimerClock">{{ date('H:i:s') }}</span></p>
         <p>{{ __('Online Players:') }} {{ $onlinePlayer+$fakePlayer }} / {{ $maxPlayer }}</p>
 
         @php $progress = ceil(($onlinePlayer+$fakePlayer)*100/$maxPlayer); @endphp

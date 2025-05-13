@@ -7,9 +7,9 @@
             @csrf
 
             <div class="row mb-3">
-                <label for="code" class="col-md-4 col-form-label text-md-end">{{ __('E-Pin Code') }}</label>
+                <label for="code" class="col-md-12 col-form-label text-md-left">{{ __('E-Pin Code') }}</label>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" required>
 
                     @error('code')
@@ -21,9 +21,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('E-Pin Password') }}</label>
+                <label for="password" class="col-md-12 col-form-label text-md-left">{{ __('E-Pin Password') }}</label>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <input id="password" type="text" class="form-control @error('password') is-invalid @enderror" name="password" required>
 
                     @error('password')

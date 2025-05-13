@@ -46,7 +46,7 @@ return [
         ],
     ],
     'coinpayments' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'CoinPayments',
         'route' => 'coinpayments',
         'currency' => 'USD',
@@ -153,7 +153,7 @@ return [
         ],
     ],
     'maxicard' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'Maxigame Card',
         'route' => 'maxicard',
         'currency' => 'TL',
@@ -205,7 +205,7 @@ return [
         ],
     ],
     'hipocard' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'Hipopotamya Card',
         'route' => 'hipocard',
         'currency' => 'TL',

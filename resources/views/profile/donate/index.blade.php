@@ -54,7 +54,7 @@
                                 @csrf
                                 <input type="hidden" name="price" value="0">
                                 <hr>
-                                <p class="package-name text-muted mb-0 mt-2">Package: none</p>
+                                <p class="package-name text-muted mb-0 mt-2">Select a package</p>
                                 <p class="package-price mb-0">Total amount: 0 USD</p>
                                 <hr>
                                 <button type="submit" class="btn w-100 btn-primary">{{ __('Buy Now') }}</button>
@@ -89,17 +89,29 @@
                 $('[data-method]').removeClass('selected');
                 $(this).addClass('selected');
 
+                $('#content-donate-details form').attr('action', `/profile/donate/${method}/process`);
+
                 $.get(`/profile/donate/${method}`, function (res) {
                     $('#content-donate').html(res);
-                    $('#content-donate-details form').attr('action', `/profile/donate/${method}/process`);
+
+                    $('input[name=price]').val(0);
+                    $('#content-donate-details .package-name').text('Select a package');
+                    $('#content-donate-details .package-price').text('Total amount: 0 USD');
                 }).fail(function () {
                     $('#content-donate').html('<div class="alert alert-danger">Failed to load package options.</div>');
                 });
+
+                if (['maxicard', 'hipocard'].includes(method)) {
+                    $('#content-donate-details button[type=submit]').prop('disabled', true).text('Not Available');
+                } else {
+                    $('#content-donate-details button[type=submit]').prop('disabled', false).text('Buy Now');
+                }
             });
 
             $(document).on('click', '#content-donate .card', function (e) {
                 //e.preventDefault();
 
+                const method = $('[data-method].selected').data('method');
                 const price = $(this).data('price');
                 const name = $(this).data('name');
                 const currency = $(this).data('currency');
