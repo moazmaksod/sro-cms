@@ -142,10 +142,10 @@
                             <div class="card-body">
                                 <div class="small mb-2 font-cinzel">{!! $config[$value->category] !!} {{ $value->published_at->format("M j, Y") }}</div>
                                 <a href="{{ route('pages.post.show', ['slug' => $value->slug]) }}" class="text-decoration-none">
-                                    <h3 class="card-title fw-bold font-cinzel h5">{{ $value->title }}</h3>
+                                    <h3 class="card-title fw-bold font-cinzel h5">{{ \Illuminate\Support\Str::words(strip_tags($value->title), 3, '...') }}</h3>
                                 </a>
                                 <div class="card-text">
-                                    {!! $value->content !!}
+                                    {{ \Illuminate\Support\Str::words(strip_tags($value->content), 20, '...') }}
                                 </div>
                                 <a href="{{ route('pages.post.show', ['slug' => $value->slug]) }}" class="text-decoration-none font-cinzel mt-4">
                                     Read More →
