@@ -55,6 +55,10 @@ return [
             'flag' => 'cn',
         ],
     ],
+    'homepage' => [
+        'type' => 'landing', //blog or landing
+        'news_limit' => 3,
+    ],
     'sliders' => [
         0 => [
             'title' => 'Example headline',

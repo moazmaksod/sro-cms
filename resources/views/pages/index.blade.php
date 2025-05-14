@@ -10,7 +10,7 @@
         @forelse($data as $value)
             <div class="card mb-4">
                 @if ($value->image)
-                    <img src="{{ $value->image }}" class="card-img-top" alt="...">
+                    <img src="{{ $value->image }}" class="card-img-top object-fit-cover" alt="..." style="height: 200px;">
                 @endif
                 <div class="card-header">
                     <a href="{{ route('pages.post.show', ['slug' => $value->slug]) }}" class="text-decoration-none">

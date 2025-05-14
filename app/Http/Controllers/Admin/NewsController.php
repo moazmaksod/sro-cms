@@ -26,14 +26,13 @@ class NewsController extends Controller
         $validated = $request->validate([
             'title' => 'required|string',
             'category' => 'required|in:news,event,update',
+            'image' => 'string|nullable',
             'published_at' => 'required|date',
             'content' => 'required',
         ]);
 
         $validated['author_id'] = auth()->user()->id;
-        $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
-        $validated['slug'] = Str::slug($validated['title']);
-
+        $validated['slug'] = Str::slug($validated['title']).'-'.time();
         News::create($validated);
 
         return redirect()->route('admin.news.index')->with('success', 'News created successfully!');
@@ -49,12 +48,12 @@ class NewsController extends Controller
         $validated = $request->validate([
             'title' => 'required|string',
             'category' => 'required|in:news,event,update',
+            'image' => 'string|nullable',
             'published_at' => 'required|date',
             'content' => 'required',
         ]);
 
-        $validated['title'] = preg_replace('/\s+/', ' ', trim($validated['title']));
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = Str::slug($validated['title']).'-'.time();
         $news->update($validated);
 
         return redirect()->route('admin.news.index')->with('success', 'News updated successfully.');

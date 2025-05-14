@@ -35,11 +35,7 @@
         </div>
     @show
 
-    <div class="container">
-        <div class="row">
-            @yield('content')
-        </div>
-    </div><!-- /.container -->
+    @yield('content')
 
     @include('layouts.footer')
 </main>
