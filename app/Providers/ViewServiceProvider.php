@@ -20,7 +20,7 @@ class ViewServiceProvider extends ServiceProvider
     {
         try {
             View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
-                $view->with('pages', Pages::get());
+                $view->with('pages', Pages::getPageNames());
             });
 
             $languages = config('global.languages');
