@@ -1,3 +1,8 @@
+@if(config('global.homepage.type') === 'landing')
+    @include('pages.landing')
+    @php exit; @endphp
+@endif
+
 @extends('layouts.app')
 @section('title', __('Home'))
 

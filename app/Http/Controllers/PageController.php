@@ -20,12 +20,6 @@ class PageController extends Controller
         $data = News::getPosts();
         $config = config('global.news_category');
 
-        if (config('global.homepage.type') === 'landing') {
-            if (view()->exists('pages.landing')) {
-                return view('pages.landing', compact('data', 'config'));
-            }
-        }
-
         return view('pages.index', compact('data', 'config'));
     }
 
