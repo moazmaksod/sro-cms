@@ -129,10 +129,10 @@
         @if($item['BlueInfo'])
             @foreach($item['BlueInfo'] as $value)
                 @if($value['code'] == 'MATTR_STR')
-                    @php $STR += $value['mValue'] @endphp
+                    @php $STR += $value['value'] @endphp
                 @endif
                 @if($value['code'] == 'MATTR_INT')
-                    @php $INT += $value['mValue'] @endphp
+                    @php $INT += $value['value'] @endphp
                 @endif
             @endforeach
 
