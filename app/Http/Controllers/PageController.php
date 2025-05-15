@@ -21,13 +21,12 @@ class PageController extends Controller
         $config = config('global.news_category');
 
         if (config('global.homepage.type') === 'landing') {
-            return view('pages.landing', compact('data', 'config'));
+            if (view()->exists('pages.landing')) {
+                return view('pages.landing', compact('data', 'config'));
+            }
         }
 
-        return view('pages.index', [
-            'data' => $data,
-            'config' => $config,
-        ]);
+        return view('pages.index', compact('data', 'config'));
     }
 
     public function post($slug)
