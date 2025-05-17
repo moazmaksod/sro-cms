@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin');
+    Route::get('/admin/index', [AdminController::class, 'index'])->name('admin');
 
     Route::prefix('admin')->name('admin.')->group(function() {
         Route::get('/donate-logs', [AdminController::class, 'donate_logs'])->name('donate.logs');
