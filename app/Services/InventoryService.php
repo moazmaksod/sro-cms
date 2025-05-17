@@ -132,6 +132,7 @@ class InventoryService
             'MagParam1' => $item['MagParam1'],
             'MaxMagicOptCount' => $item['MaxMagicOptCount'],
             'ChildItemCount' => $item['ChildItemCount'],
+            'Slot' => $item['Slot'],
             'Data' => $item['Data'],
             'TypeID1' => $item['TypeID1'],
             'TypeID2' => $item['TypeID2'],
@@ -141,6 +142,7 @@ class InventoryService
 
         $info['ItemName'] = $this->getItemName($item);
         $info['ItemDesc'] = config('itemdesc')[$item['DescStrID128']] ?? null;
+        $info['Amount'] = $item['MaxStack'] > 1 ? $item['Data'] : 0;
         $info['OptLevel'] = $item['OptLevel'] ?? 0;
         $info['nOptValue'] = $item['nOptValue'] ?? 0;
         $info['Country'] = $item['Country'] == 0 ? 'Chinese' : 'European';

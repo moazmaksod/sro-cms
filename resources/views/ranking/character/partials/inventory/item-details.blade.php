@@ -9,7 +9,7 @@
         <img alt="" src="{{ asset('/images/sro/icon_default.png') }}">
         @endif
         @if($item['Amount'])
-        <span class="amount">{{ $item['Amount'] }}</span>
+        <span class="amount" style="position: absolute; font-size: 9px">{{ $item['Amount'] }}</span>
         @endif
     </div>
     <?php if ($item) : ?>

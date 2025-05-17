@@ -37,7 +37,7 @@
             @isset($item['Degree'])
                 {{ __('Level:') }} {{ $item['JobDegree'] }}<br />
             @endisset
-        @else
+        @elseif(!in_array((int) $item['TypeID4'], [1, 2], true))
             @isset($item['Degree'])
                 {{ __('Degree: :degree degrees', ['degree' => $item['Degree']]) }}<br />
             @endisset
@@ -70,13 +70,13 @@
     @endisset
 @endif
 
-@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true) && !in_array((int) $item['TypeID4'], [1, 2], true))
     @isset($item['Country'])
         {{ $item['Country'] }}<br />
     @endisset
 @endif
 
-@if(in_array((int) $item['TypeID3'], [13, 14], true))
+@if(in_array((int) $item['TypeID3'], [13, 14], true) || in_array((int) $item['TypeID4'], [1, 2], true))
     @if($item['TypeID3'] == 14)
         {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
         <br />
@@ -84,8 +84,12 @@
         {{ __('When awakened, the Awakening Time is counted down.') }}
     @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
-    @else
+    @elseif($item['TypeID3'] == 13)
         {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
+    @elseif($item['TypeID4'] == 1 || $item['TypeID4'] == 2)
+        {{ $item['ItemDesc'] ?? 'A quiver of 10,000 arrows.' }} <br />
+    @else
+        {{ $item['ItemDesc'] }} <br />
     @endif
     <br />
 @endif
@@ -150,7 +154,7 @@
     @endforeach
 @endif
 
-@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true) && !in_array((int) $item['TypeID4'], [1, 2], true))
     @if(!isset($item['nOptValue']))
         {{ __('Able to use Advanced elixir.') }}
     @else
@@ -163,4 +167,10 @@
     @isset($item['TimeEnd'])
         {{ $item['TimeEnd'] }}<br/>
     @endisset
+@endif
+
+@if(in_array((int) $item['TypeID4'], [1, 2], true))
+    @if($item['Amount'])
+        Quantity {{ $item['Amount'] }}<br/>
+    @endif
 @endif

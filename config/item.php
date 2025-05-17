@@ -62,8 +62,13 @@ return [
         'NASRUN_BASIC' => 25,
         'NASRUN_BLUE' => 25,
         'NASRUN_RED' => 25,
-        'NASRUN_UNIQUE' => 30,
         'NASRUN_YELLOW' => 25,
+        'NASRUN_UNIQUE' => 30,
+        'AMALRUN' => 5,
+        'AMALRUN_BLUE' => 25,
+        'AMALRUN_WHITE' => 25,
+        'AMALRUN_YELLOW' => 25,
+        'AMALRUN_UNIQUE' => 30,
     ],
     'types' => [
         3 => [ // typeID1
