@@ -37,7 +37,7 @@
             @isset($item['Degree'])
                 {{ __('Level:') }} {{ $item['JobDegree'] }}<br />
             @endisset
-        @elseif(!in_array((int) $item['TypeID4'], [1, 2], true))
+        @elseif(!in_array((int) $item['TypeID2'], [3], true))
             @isset($item['Degree'])
                 {{ __('Degree: :degree degrees', ['degree' => $item['Degree']]) }}<br />
             @endisset
@@ -70,13 +70,13 @@
     @endisset
 @endif
 
-@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true) && !in_array((int) $item['TypeID4'], [1, 2], true))
+@if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
     @isset($item['Country'])
         {{ $item['Country'] }}<br />
     @endisset
 @endif
 
-@if(in_array((int) $item['TypeID3'], [13, 14], true) || in_array((int) $item['TypeID4'], [1, 2], true))
+@if(in_array((int) $item['TypeID3'], [13, 14], true) || in_array((int) $item['TypeID2'], [3], true))
     @if($item['TypeID3'] == 14)
         {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
         <br />
@@ -154,7 +154,7 @@
     @endforeach
 @endif
 
-@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true) && !in_array((int) $item['TypeID4'], [1, 2], true))
+@if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
     @if(!isset($item['nOptValue']))
         {{ __('Able to use Advanced elixir.') }}
     @else
@@ -169,8 +169,8 @@
     @endisset
 @endif
 
-@if(in_array((int) $item['TypeID4'], [1, 2], true))
+@if(in_array((int) $item['TypeID2'], [3], true))
     @if($item['Amount'])
-        Quantity {{ $item['Amount'] }}<br/>
+        {{ __('Quantity') }} {{ $item['Amount'] }}<br/>
     @endif
 @endif
