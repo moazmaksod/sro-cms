@@ -89,7 +89,7 @@ class TbUser extends Model
         }
     }
 
-    public static function setGameAccount($jid, $username, $email, $password, $ip)
+    public static function setGameAccount($jid, $username, $password, $email, $ip)
     {
         if (config('global.server.version') === 'vSRO') {
             return self::create([
