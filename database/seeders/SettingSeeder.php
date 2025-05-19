@@ -78,5 +78,13 @@ class SettingSeeder extends Seeder
             ['key' => 'register_confirm'],
             ['value' => 0,]
         );
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'duplicate_email'],
+            ['value' => 1,]
+        );
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'agree_terms'],
+            ['value' => 1,]
+        );
     }
 }

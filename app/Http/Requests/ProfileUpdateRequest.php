@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
 
                 function ($attribute, $value, $fail) {
                     if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email')) {
-                        $exists = DB::table('TbUser')
+                        $exists = DB::connection('account')->table('TbUser')
                             ->where('Email', $value)
                             ->where('JID', '!=', $this->user()->jid)
                             ->exists();
