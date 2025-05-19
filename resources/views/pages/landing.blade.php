@@ -3,8 +3,10 @@
 
 @php
     $onlinePlayer = App\Models\SRO\Account\ShardCurrentUser::getOnlineCounter();
-    $contentConfig = Illuminate\Support\Facades\DB::connection('shard')->select("SELECT * FROM _contentconfig");
-    $contentConfig = collect($contentConfig)->pluck('Value', 'CodeName128')->toArray();
+    if (config('global.server.version') === 'vSRO') {
+        $contentConfig = Illuminate\Support\Facades\DB::connection('shard')->select("SELECT * FROM _contentconfig");
+        $contentConfig = collect($contentConfig)->pluck('Value', 'CodeName128')->toArray();
+    }
 @endphp
 
 @section('hero')
@@ -43,7 +45,7 @@
                             <span class="text-light font-cinzel"><span class="text-warning">{{ $onlinePlayer }}</span> Players Online</span>
                         </div>
                         <div class="vr bg-warning opacity-25 d-none d-sm-block" style="height: 24px;"></div>
-                        <div class="text-light font-cinzel"><span class="text-warning">{{ $contentConfig['EXP_RATIO'] }}x</span> EXP Rate</div>
+                        <div class="text-light font-cinzel"><span class="text-warning">{{ $contentConfig['EXP_RATIO'] ?? '1x' }}x</span> EXP Rate</div>
                     </div>
                 </div>
             </div>
@@ -68,11 +70,11 @@
                     <div class="text-silk-light font-cinzel">Registered Accounts</div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="display-5 fw-bold font-cinzel text-white mb-2">{{ $contentConfig['EXP_RATIO'] }}x</div>
+                    <div class="display-5 fw-bold font-cinzel text-white mb-2">{{ $contentConfig['EXP_RATIO'] ?? '1x' }}x</div>
                     <div class="text-silk-light font-cinzel">EXP Rate</div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="display-5 fw-bold font-cinzel text-white mb-2">{{ $contentConfig['DROP_ITEM_RATIO'] }}x</div>
+                    <div class="display-5 fw-bold font-cinzel text-white mb-2">{{ $contentConfig['DROP_ITEM_RATIO'] ?? '1x' }}x</div>
                     <div class="text-silk-light font-cinzel">Drop Rate</div>
                 </div>
             </div>
