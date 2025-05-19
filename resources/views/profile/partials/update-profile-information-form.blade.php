@@ -2,12 +2,10 @@
     <div class="card-header">{{ __('Profile Information') }}</div>
 
     <div class="card-body">
-        <form
-            id="send-verification"
-            class="d-none"
-            method="post"
-            action="{{ route('verification.send') }}"
-        >
+        <form id="send-verification" class="d-none" method="post" action="{{ route('verification.send') }}">
+            @csrf
+        </form>
+        <form id="send-code" class="d-none" method="post" action="{{ route('profile.code-send') }}">
             @csrf
         </form>
         <form method="POST" action="{{ route('profile.update') }}">
@@ -34,11 +32,11 @@
 
             <div class="row mb-3">
                 <label for="email" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Email') }}
+                    {{ __('Current Email') }}
                 </label>
 
                 <div class="col-md-6">
-                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" required autocomplete="email">
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" required disabled autocomplete="email">
 
                     @error('email')
                     <span class="invalid-feedback" role="alert">
@@ -63,6 +61,51 @@
                             @endif
                         </div>
                     @endif
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <label for="code" class="col-md-4 col-form-label text-md-end">
+                    {{ __('Code') }}
+                </label>
+
+                <div class="col-md-6">
+                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code', $user->code) }}" required>
+
+                    @error('code')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+
+                    <div class="mt-2">
+                        <p class="mb-0">
+                            <button form="send-code" class="btn btn-link p-0">
+                                {{ __('Send code') }}
+                            </button>
+                        </p>
+
+                        @if (session('status') === 'verification-code-sent')
+                            <div class="alert alert-success mt-2">Code sent to your current email.</div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="code" class="col-md-4 col-form-label text-md-end">
+                    {{ __('New Email') }}
+                </label>
+
+                <div class="col-md-6">
+                    <input id="new_email" type="email" class="form-control @error('new_email') is-invalid @enderror" name="new_email" value="{{ old('new_email', $user->new_email) }}" required>
+
+                    @error('new_email')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
             </div>
 

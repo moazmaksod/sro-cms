@@ -263,7 +263,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="duplicate_email" class="col-md-2 col-form-label text-md-end">{{ __('Duplicate Email') }}</label>
+                <label for="duplicate_email" class="col-md-2 col-form-label text-md-end">{{ __('Duplicate Email (vSRO)') }}</label>
 
                 <div class="col-md-10">
                     <div class="form-check">

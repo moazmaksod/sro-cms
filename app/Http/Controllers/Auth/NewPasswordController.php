@@ -8,7 +8,6 @@ use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\User;
-use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -61,10 +60,11 @@ class NewPasswordController extends Controller
                         TbUser::where('PortalJID', $user->jid)->update(['password' => md5($request->password)]);
                     }
 
-                } catch (Exception $e) {
+                    DB::commit();
+
+                } catch (\Exception $e) {
                     DB::rollBack();
                 }
-                DB::commit();
 
                 $user->forceFill([
                     'password' => Hash::make($request->password),

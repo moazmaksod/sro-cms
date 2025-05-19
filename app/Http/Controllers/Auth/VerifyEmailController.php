@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\SRO\Portal\MuhAlteredInfo;
-use Exception;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
@@ -28,10 +27,11 @@ class VerifyEmailController extends Controller
                 try {
                     MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
 
-                } catch (Exception $e) {
+                    DB::commit();
+
+                } catch (\Exception $e) {
                     DB::rollBack();
                 }
-                DB::commit();
             }
 
             event(new Verified($request->user()));

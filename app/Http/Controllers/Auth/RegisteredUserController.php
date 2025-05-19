@@ -46,22 +46,19 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:70'],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
+            'terms' => [Rule::requiredIf(fn () => config('settings.agree_terms', true)), 'accepted'],
         ];
-
-        if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) == 0) {
-            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
-        }
 
         if (config('global.server.version') === 'vSRO') {
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
+        }elseif (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) == 0) {
+            $rules['email'][] = 'unique:' . User::class . ',email';
+            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
         } else {
             $rules['username'][] = 'unique:' . MuUser::class . ',UserID';
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
+            $rules['email'][] = 'unique:' . User::class . ',email';
             $rules['email'][] = 'unique:' . MuEmail::class . ',EmailAddr';
-        }
-
-        if (config('settings.agree_terms')) {
-            $rules['terms'] = 'accepted';
         }
 
         $request->validate($rules);
@@ -99,11 +96,12 @@ class RegisteredUserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-        } catch (Exception $e) {
+            DB::commit();
+
+        } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['username' => [$e->getMessage()]]);
         }
-        DB::commit();
 
         event(new Registered($user));
 

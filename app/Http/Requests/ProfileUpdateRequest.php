@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +18,16 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $newEmailRules = ['required', 'email'];
+
+        if (config('settings.duplicate_email', 1) == 0) {
+            $newEmailRules[] = Rule::unique(User::class)->ignore($this->user()->id);
+        }
+
         return [
+            'name' => ['string', 'max:255'],
+            'code' => ['required', 'string'],
+            'new_email' => $newEmailRules,
             'email' => [
                 'required',
                 'string',

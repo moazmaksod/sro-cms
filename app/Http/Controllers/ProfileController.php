@@ -11,15 +11,16 @@ use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
 use App\Models\Voucher;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
 
 class ProfileController extends Controller
 {
@@ -52,32 +53,47 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        //$request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        //if ($request->user()->isDirty('email')) {
+        //    $request->user()->email_verified_at = null;
+        //}
+
+        $user = $request->user();
+        $newEmail = $request->input('new_email');
+        $code = $request->input('code');
+
+        $tokenRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
+
+        if (!$tokenRecord || !Hash::check($code, $tokenRecord->token) || Carbon::parse($tokenRecord->created_at)->addMinutes(30)->isPast()) {
+            return back()->withErrors(['code' => 'The provided code is invalid or expired.']);
         }
 
         DB::beginTransaction();
         try {
+            $user->email = $newEmail;
+            $user->email_verified_at = null;
+            $user->save();
+
             if (config('global.server.version') === 'vSRO') {
-                TbUser::where('JID', $request->user()->jid)->update(['Email' => $request->user()->email]);
+                TbUser::where('JID', $user->jid)->update(['Email' => $newEmail]);
             }else {
-                MuEmail::where('JID', $request->user()->jid)->update(['EmailAddr' => $request->user()->email]);
+                MuEmail::where('JID', $user->jid)->update(['EmailAddr' => $newEmail]);
                 if (config('settings.register_confirm')) {
-                    MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailAddr' => $request->user()->email, 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
+                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $newEmail, 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
                 } else {
-                    MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailAddr' => $request->user()->email, 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
+                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $newEmail, 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
                 }
             }
 
-        } catch (Exception $e) {
+            DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+
+            DB::commit();
+
+        } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['email' => ["Something went wrong, Please try again later."]]);
         }
-        DB::commit();
-
-        $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -103,6 +119,22 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
+    public function send_code(Request $request)
+    {
+        $user = $request->user();
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            ['token' => Hash::make($token), 'created_at' => now()]
+        );
+
+        Mail::raw("Your verification code is: $token", function ($message) use ($user) {
+            $message->to($user->email)->subject('Email Change Verification Code');
+        });
+
+        return back()->with('status', 'verification-code-sent');
+    }
 
     public function donate(Request $request): View
     {

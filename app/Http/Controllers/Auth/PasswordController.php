@@ -35,10 +35,11 @@ class PasswordController extends Controller
                 TbUser::where('PortalJID', $request->user()->jid)->update(['password' => md5($request->password)]);
             }
 
+            DB::commit();
+
         } catch (Exception $e) {
             DB::rollBack();
         }
-        DB::commit();
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),

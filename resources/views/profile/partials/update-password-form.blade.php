@@ -9,6 +9,7 @@
             @csrf
             @method('put')
 
+            <!--
             <div class="row mb-3">
                 <label for="password" class="col-md-4 col-form-label text-md-end">
                     {{ __('Current Password') }}
@@ -22,6 +23,31 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                </div>
+            </div>
+            -->
+
+            <div class="row mb-3">
+                <label for="code" class="col-md-4 col-form-label text-md-end">
+                    {{ __('Code') }}
+                </label>
+
+                <div class="col-md-6">
+                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code', $user->code) }}" required>
+
+                    @error('code')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+
+                    <div class="mt-2">
+                        <p class="mb-0">
+                            <button form="send-code" class="btn btn-link p-0">
+                                {{ __('Send code') }}
+                            </button>
+                        </p>
+                    </div>
                 </div>
             </div>
 
