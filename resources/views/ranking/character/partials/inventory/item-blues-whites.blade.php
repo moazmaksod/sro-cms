@@ -1,4 +1,4 @@
-<img src="{{ asset('/images/com_itemsign.PNG') }}" class="img-clear" style="display: inline-block" alt="">
+<img src="{{ asset('/images/com_itemsign.png') }}" class="img-clear" style="display: inline-block" alt="">
 
 @if(in_array((int) $item['TypeID2'], [4], true))
     <span style="color:#50cecd;font-weight: bold;margin-left: 20px">
