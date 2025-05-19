@@ -26,7 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
 
                 function ($attribute, $value, $fail) {
-                    if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email')) {
+                    if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) === 0) {
                         $exists = DB::connection('account')->table('dbo.TB_User')
                             ->where('Email', $value)
                             ->where('JID', '!=', $this->user()->jid)
