@@ -5,8 +5,9 @@
         <div class="mb-3">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </div>
-        <form id="send-code" class="d-none" method="post" action="{{ route('profile.code-send') }}">
+        <form id="send-code-password" class="d-none" method="post" action="{{ route('profile.code-send') }}">
             @csrf
+            <input type="hidden" name="send-code-name" value="send-code-password">
         </form>
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
@@ -46,10 +47,14 @@
 
                     <div class="mt-2">
                         <p class="mb-0">
-                            <button form="send-code" class="btn btn-link p-0">
+                            <button form="send-code-password" class="btn btn-link p-0">
                                 {{ __('Send Verification code') }}
                             </button>
                         </p>
+
+                        @if (session('status') === 'send-code-password')
+                            <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
+                        @endif
                     </div>
                 </div>
             </div>

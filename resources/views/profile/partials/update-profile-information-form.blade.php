@@ -5,8 +5,9 @@
         <form id="send-verification" class="d-none" method="post" action="{{ route('verification.send') }}">
             @csrf
         </form>
-        <form id="send-code" class="d-none" method="post" action="{{ route('profile.code-send') }}">
+        <form id="send-code-email" class="d-none" method="post" action="{{ route('profile.code-send') }}">
             @csrf
+            <input type="hidden" name="send-code-name" value="send-code-email">
         </form>
         <form method="POST" action="{{ route('profile.update') }}">
             @csrf
@@ -81,12 +82,12 @@
 
                     <div class="mt-2">
                         <p class="mb-0">
-                            <button form="send-code" class="btn btn-link p-0">
+                            <button form="send-code-email" class="btn btn-link p-0">
                                 {{ __('Send Verification code') }}
                             </button>
                         </p>
 
-                        @if (session('status') === 'verification-code-sent')
+                        @if (session('status') === 'send-code-email')
                             <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
                         @endif
                     </div>
