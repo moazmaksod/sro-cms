@@ -65,16 +65,15 @@
                 </div>
             </div>
 
-
             <div class="row mb-3">
-                <label for="verify_code" class="col-md-4 col-form-label text-md-end">
+                <label for="verify_code_email" class="col-md-4 col-form-label text-md-end">
                     {{ __('Verification Code') }}
                 </label>
 
                 <div class="col-md-6">
-                    <input id="verify_code" type="text" class="form-control @error('verify_code') is-invalid @enderror" name="verify_code" value="{{ old('verify_code', $user->verify_code) }}" required>
+                    <input id="verify_code_email" type="text" class="form-control @error('verify_code_email') is-invalid @enderror" name="verify_code_email" value="{{ old('verify_code_email', $user->verify_code_email) }}" required>
 
-                    @error('verify_code')
+                    @error('verify_code_email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

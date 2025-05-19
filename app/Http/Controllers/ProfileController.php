@@ -62,8 +62,8 @@ class ProfileController extends Controller
         $user = $request->user();
         $codeRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
 
-        if (!$codeRecord || !($request->input('verify_code') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['verify_code' => 'The provided verification code is invalid or expired.']);
+        if (!$codeRecord || !($request->input('verify_code_email') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+            return back()->withErrors(['verify_code_email' => 'The provided verification code is invalid or expired.']);
         }
 
         DB::beginTransaction();

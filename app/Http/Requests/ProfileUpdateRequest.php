@@ -26,7 +26,7 @@ class ProfileUpdateRequest extends FormRequest
 
         return [
             'name' => ['string', 'max:255'],
-            'code' => ['required', 'string'],
+            'verify_code_email' => ['required', 'string'],
             'new_email' => $newEmailRules,
             'email' => [
                 'string',

@@ -25,13 +25,13 @@ class PasswordController extends Controller
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['current_password'],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
-            'verify_code' => ['required', 'string'],
+            'verify_code_password' => ['required', 'string'],
         ]);
 
         $codeRecord = DB::table('password_reset_tokens')->where('email', $request->user()->email)->first();
 
-        if (!$codeRecord || !($request->input('verify_code') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['verify_code' => 'The provided verification code is invalid or expired.']);
+        if (!$codeRecord || !($request->input('verify_code_password') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+            return back()->withErrors(['verify_code_password' => 'The provided verification code is invalid or expired.']);
         }
 
         DB::beginTransaction();
@@ -42,6 +42,8 @@ class PasswordController extends Controller
                 MuUser::where('JID', $request->user()->jid)->update(['UserPwd' => md5($request->password)]);
                 TbUser::where('PortalJID', $request->user()->jid)->update(['password' => md5($request->password)]);
             }
+
+            DB::table('password_reset_tokens')->where('email', $request->user()->email)->delete();
 
             DB::commit();
 
