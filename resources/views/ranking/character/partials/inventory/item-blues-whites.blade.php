@@ -155,7 +155,7 @@
 @endif
 
 @if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
-    @if(!isset($item['nOptValue']))
+    @if(!$item['nOptValue'])
         {{ __('Able to use Advanced elixir.') }}
     @else
         <b>{{ __('Advanced elixir is in effect') }} [+{{ $item['nOptValue'] }}]</b>
