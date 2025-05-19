@@ -239,7 +239,7 @@ class RankingController extends Controller
                 $inventoryJob = $inventoryService->getInventoryJob($charID);
             }
 
-            if (config('global.server.version') !== 'vSRO') {
+            if (config('global.server.version') === 'vSRO') {
                 $characterImage = config('ranking.character_image_vsro');
             }else {
                 $characterImage = config('ranking.character_image');
