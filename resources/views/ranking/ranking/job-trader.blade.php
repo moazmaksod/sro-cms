@@ -28,9 +28,9 @@
                         @endif
                         <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->NickName16 }}</a>
                     </td>
-                    <td>{{ $value->JobLevel }}</td>
-                    <td>{{ $value->KillCount }}</td>
-                    <td>{{ $value->ReputationPoint }}</td>
+                    <td>{{ $value->JobLevel ?? $value->Level }}</td>
+                    <td>{{ $value->KillCount ?? 0 }}</td>
+                    <td>{{ $value->ReputationPoint ?? $value->Exp }}</td>
                 </tr>
                 @php $i++ @endphp
             @empty

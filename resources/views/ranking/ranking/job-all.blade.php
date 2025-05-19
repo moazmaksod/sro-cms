@@ -33,9 +33,9 @@
                         <img src="{{ asset($jobType[$value->JobType]['small_image']) }}" alt=""/>
                         {{ $jobType[$value->JobType]['name'] }}
                     </td>
-                    <td>{{ $value->JobLevel }}</td>
-                    <td>{{ $value->KillCount }}</td>
-                    <td>{{ $value->ReputationPoint }}</td>
+                    <td>{{ $value->JobLevel ?? $value->Level }}</td>
+                    <td>{{ $value->KillCount ?? 0 }}</td>
+                    <td>{{ $value->ReputationPoint ?? $value->Exp }}</td>
                 </tr>
                 @php $i++ @endphp
             @empty
