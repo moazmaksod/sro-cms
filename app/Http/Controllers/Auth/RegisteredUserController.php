@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
             'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
         ];
 
-        if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) === 0) {
+        if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) == 0) {
             $rules['email'][] = 'unique:' . TbUser::class . ',Email';
         }
 
