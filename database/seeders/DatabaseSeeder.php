@@ -21,12 +21,12 @@ class DatabaseSeeder extends Seeder
 
 
         if (config('global.server.version') === 'vSRO') {
-            $this->call(ItemNameSeeder::class);
             $this->call(LogInstanceWorldInfo::class);
             $this->call(LogChatMessage::class);
+            $this->call(ItemNameSeeder::class);
         }
 
-        $this->call(MagOptSeeder::class);
+        //$this->call(MagOptSeeder::class);
         $this->call(SettingSeeder::class);
     }
 }

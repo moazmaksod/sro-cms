@@ -14,8 +14,13 @@ class ItemNameSeeder extends Seeder
      */
     public function run()
     {
-        DB::connection('account')->unprepared(
-            file_get_contents('database/seeders/_ItemNameDesc.sql')
-        );
+        $files = [
+            'database/seeders/_ItemNameDesc.sql',
+            'database/seeders/_ItemNameDesc_data.sql',
+        ];
+
+        foreach ($files as $file) {
+            DB::connection('account')->unprepared(file_get_contents($file));
+        }
     }
 }
