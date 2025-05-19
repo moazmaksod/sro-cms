@@ -122,7 +122,12 @@
 
                 $('input[name=price]').val(price);
 
-                $('#content-donate-details button[type=submit]').prop('disabled', false);
+                if (['maxicard', 'hipocard'].includes(method)) {
+                    $('#content-donate-details button[type=submit]').prop('disabled', true).text('Not Available');
+                } else {
+                    $('#content-donate-details button[type=submit]').prop('disabled', false);
+                }
+
                 $('#content-donate-details .package-name').text(`Package: ${name}`);
                 $('#content-donate-details .package-price').text(`Total amount: ${price} ${currency}`);
             });
