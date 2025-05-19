@@ -18,9 +18,11 @@
 
                                 <ul class="list-unstyled d-flex">
                                     @foreach($build as $value)
-                                        <li class="me-1">
-                                            <img src="{{ asset($skillMastery[$value->MasteryID]['image']) }}" title="{{ $skillMastery[$value->MasteryID]['name'] }}" alt="">
-                                        </li>
+                                        @if(isset($skillMastery[$value->MasteryID]))
+                                            <li class="me-1">
+                                                <img src="{{ asset($skillMastery[$value->MasteryID]['image']) }}" title="{{ $skillMastery[$value->MasteryID]['name'] }}" alt="">
+                                            </li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             </div>
