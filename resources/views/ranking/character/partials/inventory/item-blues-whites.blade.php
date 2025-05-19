@@ -64,7 +64,7 @@
      @endif
 @endif
 
-@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [10], true))
+@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [1, 10], true))
     @isset($item['Gender'])
         {{ $item['Gender'] }}<br />
     @endisset
