@@ -16,7 +16,7 @@ class ItemNameSeeder extends Seeder
     {
         $files = [
             'database/seeders/_ItemNameDesc.sql',
-            'database/seeders/_ItemNameDesc_data.sql',
+            'database/seeders/_ItemNameDesc_Data.sql',
         ];
 
         foreach ($files as $file) {
