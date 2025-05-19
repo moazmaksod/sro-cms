@@ -114,7 +114,7 @@ class AphChangedSilk extends Model
 
         return Cache::remember('account_info_silk_sum', now()->addMinutes($minutes), function () {
             try {
-                return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->value('total');
+                return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->where('SilkType', 3)->where('AvailableStatus', 'Y')->value('total');
             } catch (\Exception $e) {
                 return 0;
             }
