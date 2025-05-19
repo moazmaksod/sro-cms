@@ -988,7 +988,7 @@ INSERT INTO [dbo].[_ItemNameDesc] VALUES
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_PROB_UP_A_05', 'No Name'),
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_PROB_UP_A_06', 'No Name'),
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_PROB_UP_A_07', 'No Name');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_RECIPE_ACCESSARY_B', 'No Name'),
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_RECIPE_ARMOR_B', 'No Name'),
     (N'SN_ITEM_ETC_ARCHEMY_LEVEL_REINFORCE_RECIPE_SHIELD_B', 'No Name'),
@@ -1898,7 +1898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_BLOODKHEPRI2', N'Blood Khepri Hind Leg'),
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_BLOOD_HYENA1', N'Blood Hyena Blood'),
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_BLOOD_HYENA2', N'Blood Hyena Claw');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_BLOOD_SAND_MAN1', N'Blood Sandman Belt'),
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_BLOOD_SAND_MAN2', N'Blood Sandman Sack'),
     (N'SN_ITEM_ETC_ARCHEMY_MATERIAL_SD_CAMELSPIDER1', N'Camel Spider Hide'),
@@ -2898,7 +2898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_A', N'Socket Stone of Eruption (Least)'),
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_B', N'Socket Stone of Eruption (Lesser)'),
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_C', N'Socket Stone of Eruption (Normal)');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_D', N'Socket Stone of Eruption (Greater)'),
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_E', N'Socket Stone of Eruption (Greatest)'),
     (N'SN_ITEM_ETC_SOCKET_STONE_KB_F', N'Socket Stone of Eruption (Supreme)'),
@@ -3898,7 +3898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_MALL_KARA_AVATAR_W_2012_NEW_ARABIA', N'Arabia Dress 2012 (F)'),
     (N'SN_ITEM_MALL_KARA_AVATAR_W_2012_NEW_ARABIA_ATTACH', N'Arabia Accessory 2012 (F)'),
     (N'SN_ITEM_MALL_KARA_AVATAR_W_2012_NEW_ARABIA_HAT', N'Arabia Hat 2012 (F)');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_MALL_MABT_CH_M_BANDIT_BLACKTIGER_HA', N'Bandit''s Black tiger hat (Man)'),
     (N'SN_ITEM_MALL_MABT_CH_M_BANDIT_TIGER_HA', N'Bandit''s tiger hat (Man)'),
     (N'SN_ITEM_MALL_MABT_CH_M_BANDIT_WHITETIGER_HA', N'Bandit''s White tiger hat (Man)'),
@@ -4898,7 +4898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_QNO_TQ_STONEBOARD_4_02', N'Normal Stone Tablets'),
     (N'SN_ITEM_QNO_TQ_STONEBOARD_4_03', N'Fake head of Hyun Lang'),
     (N'SN_ITEM_QNO_TQ_STONEBOARD_5_01', N'Purified Stone Tablet');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_QNO_TQ_STONEBOARD_5_02', N'Scroll of Advanced defense gender switch'),
     (N'SN_ITEM_QNO_TQ_WINDMONSTER_1_01', N'Tomb Snake Devil Shells'),
     (N'SN_ITEM_QNO_TRADE_AM_SPECIAL_1_01', N'Rehto''s delivery box'),
@@ -5898,7 +5898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_MALL_TITLE_SCROLL_169', N'Empty Title Scroll'),
     (N'SN_ITEM_MALL_TITLE_SCROLL_170', N'Empty Title Scroll'),
     (N'SN_ITEM_MALL_TITLE_SCROLL_171', N'Empty Title Scroll');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_MALL_TITLE_SCROLL_172', N'Empty Title Scroll'),
     (N'SN_ITEM_MALL_TITLE_SCROLL_173', N'Empty Title Scroll'),
     (N'SN_ITEM_MALL_TITLE_SCROLL_174', N'Empty Title Scroll'),
@@ -6898,7 +6898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_BLADE_03_A', N'Mhong tribe Cutting Blade'),
     (N'SN_ITEM_CH_BLADE_03_B', N'Kang tribe Cutting Blade'),
     (N'SN_ITEM_CH_BLADE_03_C', N'Hun tribe Cutting Blade');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_BLADE_04_A', N'Iron General Blade'),
     (N'SN_ITEM_CH_BLADE_04_B', N'Silver General Blade'),
     (N'SN_ITEM_CH_BLADE_04_C', N'ld General Blade'),
@@ -7898,7 +7898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_EARRING_08_C', N'Deep Black Pearl Earring'),
     (N'SN_ITEM_CH_EARRING_09_A', N'Hundred Nights Gem Earring'),
     (N'SN_ITEM_CH_EARRING_09_B', N'Thousand Nights Gem Earring');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_EARRING_09_C', N'Ten Thousand Nights Gem Earring'),
     (N'SN_ITEM_CH_EARRING_10_A', N'Bright Tiger''s Eye Earring'),
     (N'SN_ITEM_CH_EARRING_10_B', N'Luster Tiger''s Eye Earring'),
@@ -8898,7 +8898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_SHIELD_05_C_RARE', N'Silver Shield'),
     (N'SN_ITEM_CH_SHIELD_06_A_RARE', N'Guard Shield'),
     (N'SN_ITEM_CH_SHIELD_06_B_RARE', N'Guard Shield');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_SHIELD_06_C_RARE', N'Guard Shield'),
     (N'SN_ITEM_CH_SHIELD_07_A_RARE', N'Jecheonseong''s Shield'),
     (N'SN_ITEM_CH_SHIELD_07_B_RARE', N'Jecheonseong''s Shield'),
@@ -9898,7 +9898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_TRADE_THIEF_SHOES_D_DA_MAGIC', N'Aura of Leafy Shade for Thieves (Common)'),
     (N'SN_ITEM_TRADE_THIEF_SHOES_D_PA_RARE', N'Splendor of Leafy Shade for Thieves (Physical)'),
     (N'SN_ITEM_TRADE_THIEF_SHOES_D_MA_RARE', N'Splendor of Leafy Shade for Thieves (Magic)');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_TRADE_THIEF_SHOES_D_DA_RARE', N'Splendor of Leafy Shade for Thieves (Common)'),
     (N'SN_ITEM_TRADE_THIEF_SHOES_E_PA', N'Seal of Continent for Thieves (Physical)'),
     (N'SN_ITEM_TRADE_THIEF_SHOES_E_MA', N'Seal of Continent for Thieves (Magic)'),
@@ -10898,7 +10898,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_EU_LIGHT_02_FA_A', N'Pisces Light Boots'),
     (N'SN_ITEM_EU_LIGHT_02_FA_B', N'Cygnus Light Boots'),
     (N'SN_ITEM_EU_LIGHT_02_FA_C', N'Lacerta Light Boots');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_EU_LIGHT_03_FA_A', N'Gemini Iron Boots'),
     (N'SN_ITEM_EU_LIGHT_03_FA_B', N'Andromeda Iron Boots'),
     (N'SN_ITEM_EU_LIGHT_03_FA_C', N'Aquila Iron Boots'),
@@ -11899,7 +11899,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_EU_HEAVY_11_FA_B_RARE', N'Devil Greave'),
     (N'SN_ITEM_EU_HEAVY_11_FA_C_RARE', N'Devil Greave'),
     (N'SN_ITEM_EU_HEAVY_12_FA_A_RARE', N'Heaven Greave');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_EU_HEAVY_12_FA_B_RARE', N'Heaven Greave'),
     (N'SN_ITEM_EU_HEAVY_12_FA_C_RARE', N'Heaven Greave'),
     (N'SN_ITEM_EU_LIGHT_01_HA_A_RARE', N'Savage Sallet'),
@@ -12900,7 +12900,7 @@ INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_LIGHT_15_AA_C_RARE', N'Tigris Bracer'),
     (N'SN_ITEM_CH_LIGHT_15_FA_A_RARE', N'Tigris Boots'),
     (N'SN_ITEM_CH_LIGHT_15_FA_B_RARE', N'Tigris Boots');
-INSERT INTO [dbo].[_ItemPoolName] ([NameStrID], [RealName]) VALUES
+INSERT INTO [dbo].[_ItemNameDesc] ([NameStrID], [RealName]) VALUES
     (N'SN_ITEM_CH_LIGHT_15_FA_C_RARE', N'Tigris Boots'),
     (N'SN_ITEM_CH_CLOTHES_15_HA_A_RARE', N'Fortis Hat'),
     (N'SN_ITEM_CH_CLOTHES_15_HA_B_RARE', N'Fortis Hat'),
