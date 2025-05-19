@@ -130,7 +130,7 @@ class ProfileController extends Controller
             $message->to($user->email)->subject('Email Change Verification Code');
         });
 
-        return back()->with('status', $request->input('send-code-name'));
+        return back()->with('status', $request->input('send-verify-code-name'));
     }
 
     public function donate(Request $request): View
