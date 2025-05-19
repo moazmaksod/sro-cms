@@ -5,9 +5,9 @@
         <div class="mb-3">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </div>
-        <form id="send-code-password" class="d-none" method="post" action="{{ route('profile.code-send') }}">
+        <form id="send-verify-code-password" class="d-none" method="post" action="{{ route('profile.code-send') }}">
             @csrf
-            <input type="hidden" name="send-code-name" value="send-code-password">
+            <input type="hidden" name="send-verify-code-name" value="send-verify-code-password">
         </form>
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
@@ -32,27 +32,27 @@
             -->
 
             <div class="row mb-3">
-                <label for="code" class="col-md-4 col-form-label text-md-end">
+                <label for="verify_code" class="col-md-4 col-form-label text-md-end">
                     {{ __('Verification Code') }}
                 </label>
 
                 <div class="col-md-6">
-                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code', $user->code) }}" required>
+                    <input id="verify_code" type="text" class="form-control @error('verify_code') is-invalid @enderror" name="verify_code" value="{{ old('verify_code', $user->verify_code) }}" required>
 
-                    @error('code')
+                    @error('verify_code')
                     <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
 
                     <div class="mt-2">
                         <p class="mb-0">
-                            <button form="send-code-password" class="btn btn-link p-0">
+                            <button form="send-verify-code-password" class="btn btn-link p-0">
                                 {{ __('Send Verification code') }}
                             </button>
                         </p>
 
-                        @if (session('status') === 'send-code-password')
+                        @if (session('status') === 'send-verify-code-password')
                             <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
                         @endif
                     </div>

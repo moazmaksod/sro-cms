@@ -60,10 +60,10 @@ class ProfileController extends Controller
         //}
 
         $user = $request->user();
-        $tokenRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
+        $codeRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
 
-        if (!$tokenRecord || !($request->input('code') === $tokenRecord->token) || Carbon::parse($tokenRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['code' => 'The provided verification code is invalid or expired.']);
+        if (!$codeRecord || !($request->input('verify_code') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+            return back()->withErrors(['verify_code' => 'The provided verification code is invalid or expired.']);
         }
 
         DB::beginTransaction();
@@ -89,7 +89,7 @@ class ProfileController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['email' => ["Something went wrong, Please try again later."]]);
+            return back()->withErrors(['new_email' => ["Something went wrong, Please try again later."]]);
         }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
@@ -168,10 +168,10 @@ class ProfileController extends Controller
     public function redeem(Request $request)
     {
         $request->validate([
-            'code' => 'required|string',
+            'voucher_code' => 'required|string',
         ]);
 
-        $voucher = Voucher::where('code', $request->code)->first();
+        $voucher = Voucher::where('code', $request->voucher_code)->first();
 
         if (!$voucher) {
             return redirect()->back()->with('error', 'Invalid voucher code.');

@@ -14,17 +14,17 @@
             @csrf
 
             <div class="row mb-3">
-                <label for="code" class="col-md-4 col-form-label text-md-end">
+                <label for="voucher_code" class="col-md-4 col-form-label text-md-end">
                     {{ __('Voucher Code:') }}
                 </label>
 
                 <div class="col-md-6">
-                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" placeholder="Enter Voucher Code" required>
+                    <input id="voucher_code" type="text" class="form-control @error('voucher_code') is-invalid @enderror" name="voucher_code" placeholder="Enter Voucher Code" required>
 
-                    @error('code')
+                    @error('voucher_code')
                     <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
             </div>
