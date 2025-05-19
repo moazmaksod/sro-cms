@@ -60,29 +60,26 @@ class ProfileController extends Controller
         //}
 
         $user = $request->user();
-        $newEmail = $request->input('new_email');
-        $code = $request->input('code');
-
         $tokenRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
 
-        if (!$tokenRecord || !Hash::check($code, $tokenRecord->token) || Carbon::parse($tokenRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['code' => 'The provided code is invalid or expired.']);
+        if (!$tokenRecord || !Hash::check($request->input('code'), $tokenRecord->token) || Carbon::parse($tokenRecord->created_at)->addMinutes(30)->isPast()) {
+            return back()->withErrors(['code' => 'The provided verification code is invalid or expired.']);
         }
 
         DB::beginTransaction();
         try {
-            $user->email = $newEmail;
+            $user->email = $request->input('new_email');
             $user->email_verified_at = null;
             $user->save();
 
             if (config('global.server.version') === 'vSRO') {
-                TbUser::where('JID', $user->jid)->update(['Email' => $newEmail]);
+                TbUser::where('JID', $user->jid)->update(['Email' => $request->input('new_email')]);
             }else {
-                MuEmail::where('JID', $user->jid)->update(['EmailAddr' => $newEmail]);
+                MuEmail::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email')]);
                 if (config('settings.register_confirm')) {
-                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $newEmail, 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
+                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email'), 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
                 } else {
-                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $newEmail, 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
+                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email'), 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
                 }
             }
 
@@ -122,14 +119,14 @@ class ProfileController extends Controller
     public function send_code(Request $request)
     {
         $user = $request->user();
-        $token = Str::random(64);
+        $code = Str::random(6);
 
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $user->email],
-            ['token' => Hash::make($token), 'created_at' => now()]
+            ['token' => $code, 'created_at' => now()]
         );
 
-        Mail::raw("Your verification code is: $token", function ($message) use ($user) {
+        Mail::raw("Your verification code is: $code", function ($message) use ($user) {
             $message->to($user->email)->subject('Email Change Verification Code');
         });
 

@@ -67,7 +67,7 @@
 
             <div class="row mb-3">
                 <label for="code" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Code') }}
+                    {{ __('Verification Code') }}
                 </label>
 
                 <div class="col-md-6">
@@ -82,12 +82,12 @@
                     <div class="mt-2">
                         <p class="mb-0">
                             <button form="send-code" class="btn btn-link p-0">
-                                {{ __('Send code') }}
+                                {{ __('Send Verification code') }}
                             </button>
                         </p>
 
                         @if (session('status') === 'verification-code-sent')
-                            <div class="alert alert-success mt-2">Code sent to your current email.</div>
+                            <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
                         @endif
                     </div>
                 </div>
