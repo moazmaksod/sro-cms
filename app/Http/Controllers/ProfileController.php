@@ -119,7 +119,7 @@ class ProfileController extends Controller
     public function send_code(Request $request)
     {
         $user = $request->user();
-        $code = Str::random(6);
+        $code = random_int(100000, 999999);
 
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $user->email],
