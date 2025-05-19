@@ -12,9 +12,11 @@
         <div>
             {{--@include('profile.partials.delete-user-form')--}}
         </div>
-        <div class="mb-4">
-            @include('profile.partials.reset-passcode')
-        </div>
+        @if(config('global.server.version') !== 'vSRO')
+            <div class="mb-4">
+                @include('profile.partials.reset-passcode')
+            </div>
+        @endif
         <div class="mb-4">
             @include('profile.partials.redeem-voucher')
         </div>
