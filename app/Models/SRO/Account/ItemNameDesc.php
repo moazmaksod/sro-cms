@@ -65,6 +65,9 @@ class ItemNameDesc extends Model
         $minutes = config('global.cache.character_info', 5);
 
         return Cache::remember("character_info_ItemNameDesc_{$CodeName128}", now()->addMinutes($minutes), static function () use ($CodeName128) {
+            if (config('global.server.version') === 'vSRO') {
+                return self::select('RealName')->where('NameStrID', $CodeName128)->first()->RealName ?? $CodeName128;
+            }
             return self::select('ENG')->where('StrID', $CodeName128)->first()->ENG ?? $CodeName128;
         });
     }
