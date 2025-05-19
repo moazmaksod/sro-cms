@@ -64,12 +64,7 @@
      @endif
 @endif
 
-{{ $item['TypeID1'] }}<br />
-{{ $item['TypeID2'] }}<br />
-{{ $item['TypeID3'] }}<br />
-{{ $item['TypeID4'] }}<br />
-
-@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [1, 10], true))
+@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [1, 9, 10], true))
     @isset($item['Gender'])
         {{ $item['Gender'] }}<br />
     @endisset
