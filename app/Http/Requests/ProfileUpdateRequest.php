@@ -29,7 +29,6 @@ class ProfileUpdateRequest extends FormRequest
             'code' => ['required', 'string'],
             'new_email' => $newEmailRules,
             'email' => [
-                'required',
                 'string',
                 'lowercase',
                 'email',
