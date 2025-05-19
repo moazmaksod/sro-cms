@@ -57,7 +57,7 @@
                                 <p class="package-name text-muted mb-0 mt-2">Select a package</p>
                                 <p class="package-price mb-0">Total amount: 0 USD</p>
                                 <hr>
-                                <button type="submit" class="btn w-100 btn-primary">{{ __('Buy Now') }}</button>
+                                <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
                             </form>
                         </div>
                     </div>
@@ -95,6 +95,7 @@
                     $('#content-donate').html(res);
 
                     $('input[name=price]').val(0);
+                    $('#content-donate-details button[type=submit]').prop('disabled', true);
                     $('#content-donate-details .package-name').text('Select a package');
                     $('#content-donate-details .package-price').text('Total amount: 0 USD');
                 }).fail(function () {
@@ -121,6 +122,7 @@
 
                 $('input[name=price]').val(price);
 
+                $('#content-donate-details button[type=submit]').prop('disabled', false);
                 $('#content-donate-details .package-name').text(`Package: ${name}`);
                 $('#content-donate-details .package-price').text(`Total amount: ${price} ${currency}`);
             });
