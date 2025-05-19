@@ -262,6 +262,38 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <label for="duplicate_email" class="col-md-2 col-form-label text-md-end">{{ __('Duplicate Email') }}</label>
+
+                <div class="col-md-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="duplicate_email" value="{{ old('duplicate_email', config('settings.duplicate_email') == 1) ? '1' : '0' }}" id="duplicate_email" {{ config('settings.duplicate_email') == 1 ? 'checked' : '' }}>
+                    </div>
+
+                    @error('duplicate_email')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="agree_terms" class="col-md-2 col-form-label text-md-end">{{ __('Agree Terms') }}</label>
+
+                <div class="col-md-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="agree_terms" value="{{ old('agree_terms', config('settings.agree_terms') == 1) ? '1' : '0' }}" id="agree_terms" {{ config('settings.agree_terms') == 1 ? 'checked' : '' }}>
+                    </div>
+
+                    @error('agree_terms')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="row mb-0">
                 <div class="col-md-10 offset-md-2">
                     <button type="submit" class="btn btn-primary">
@@ -289,6 +321,20 @@
 
         register_confirm_checkbox.addEventListener('change', function () {
             register_confirm_checkbox.value = this.checked ? '1' : '0';
+        });
+    </script>
+    <script>
+        const duplicate_email_checkbox = document.getElementById('duplicate_email');
+
+        duplicate_email_checkbox.addEventListener('change', function () {
+            duplicate_email_checkbox.value = this.checked ? '1' : '0';
+        });
+    </script>
+    <script>
+        const agree_terms_checkbox = document.getElementById('agree_terms');
+
+        agree_terms_checkbox.addEventListener('change', function () {
+            agree_terms_checkbox.value = this.checked ? '1' : '0';
         });
     </script>
 @endpush

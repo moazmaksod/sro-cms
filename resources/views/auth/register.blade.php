@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    @if (env('NOCAPTCHA_ENABLE', false))
+                    @if(env('NOCAPTCHA_ENABLE', false))
                         <!-- google recaptch -->
                         <div class="form-group row mb-3">
                             <div class="col-md-12">
@@ -71,6 +71,22 @@
                                     </span>
                                 @enderror
                             </div>
+                        </div>
+                    @endif
+
+                    @if(config('settings.agree_terms'))
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" name="terms" id="terms" {{ old('terms') ? 'checked' : '' }} required>
+
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" target="_blank">terms and conditions</a>
+                            </label>
+
+                            @error('terms')
+                            <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     @endif
 

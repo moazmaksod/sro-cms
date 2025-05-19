@@ -48,13 +48,20 @@ class RegisteredUserController extends Controller
             'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
         ];
 
+        if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email')) {
+            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
+        }
+
         if (config('global.server.version') === 'vSRO') {
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
-            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
         } else {
             $rules['username'][] = 'unique:' . MuUser::class . ',UserID';
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
             $rules['email'][] = 'unique:' . MuEmail::class . ',EmailAddr';
+        }
+
+        if (config('settings.agree_terms')) {
+            $rules['terms'] = 'accepted';
         }
 
         $request->validate($rules);
