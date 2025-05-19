@@ -3,7 +3,7 @@
 
 @php
     $onlinePlayer = App\Models\SRO\Account\ShardCurrentUser::getOnlineCounter();
-    if (config('global.server.version') === 'vSRO') {
+    if (config('global.server.version') === 'iSRO') {
         $contentConfig = Illuminate\Support\Facades\DB::connection('shard')->select("SELECT * FROM _contentconfig");
         $contentConfig = collect($contentConfig)->pluck('Value', 'CodeName128')->toArray();
     }
