@@ -25,7 +25,7 @@
                                 @endif
                                 <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
                                 <p>{{ __('Lv:') }} {{ $value->CurLevel }}</p>
-                                <p>{{ __('Gold:') }} {{ number_format($value->RemainGold , 0, ',', '.')}}</p>
+                                <p>{{ __('Gold:') }} {{ number_format($value->RemainGold , 0, ',')}}</p>
                             </div>
                         </div>
                     </div>
