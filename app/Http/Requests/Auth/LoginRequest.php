@@ -57,10 +57,10 @@ class LoginRequest extends FormRequest
 
             if (config('global.server.version') === 'vSRO') {
                 $jid = $tbUser->JID;
-                $email = $tbUser->Email;
+                $email = $tbUser->Email ?? "{$jid}@mail.com";
             } else {
                 $jid = $tbUser->PortalJID;
-                $email = $tbUser->muUser->muEmail->EmailAddr;
+                $email = $tbUser->muUser->muEmail->EmailAddr ?? "{$jid}@mail.com";
             }
 
             $user = User::firstOrCreate(
