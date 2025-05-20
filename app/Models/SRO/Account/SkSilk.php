@@ -54,6 +54,11 @@ class SkSilk extends Model
             '2' => 'silk_point'
         ];
 
+        self::firstOrCreate(
+            ['JID' => $jid],
+            ['silk_own' => 0, 'silk_gift' => 0, 'silk_point' => 0]
+        );
+
         return self::where('JID', $jid)->increment($types[$type], $amount);
     }
 }
