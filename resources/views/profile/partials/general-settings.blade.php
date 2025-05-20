@@ -12,7 +12,7 @@
             @csrf
 
             <div class="row mb-3">
-                <label for="item_stats" class="col-md-4 col-form-label text-md-end">{{ __('Item Stats') }}</label>
+                <label for="item_stats" class="col-md-4 col-form-label text-md-end">{{ __('Hide Item Stats') }}</label>
 
                 <div class="col-md-6">
                     <div class="form-check">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="job_name" class="col-md-4 col-form-label text-md-end">{{ __('Job Name') }}</label>
+                <label for="job_name" class="col-md-4 col-form-label text-md-end">{{ __('Hide Job Name') }}</label>
 
                 <div class="col-md-6">
                     <div class="form-check">

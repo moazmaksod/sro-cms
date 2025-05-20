@@ -124,7 +124,7 @@
     <br />
 @endif
 
-@if(config("settings.item_stats_jid_{$userJID}", 1) == 0)
+@if(!config("settings.item_stats_jid_{$userJID}"))
     @if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
         @if($item['MagParam1'] >= 4611686018427387904)
             <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>

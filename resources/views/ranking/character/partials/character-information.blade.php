@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            @if(config("settings.job_name_jid_{$userJID}", 1) == 0)
+            @if(!config("settings.job_name_jid_{$userJID}"))
                 @if(!empty($data->NickName16))
                     <td>{{ $data->NickName16 }}</td>
                 @endif
