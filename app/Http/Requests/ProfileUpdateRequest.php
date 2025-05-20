@@ -18,25 +18,28 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $newEmailRules = ['required', 'email'];
-
-        if (config('settings.duplicate_email', 1) == 0) {
-            $newEmailRules[] = Rule::unique(User::class)->ignore($this->user()->id);
-        }
-
         return [
             'name' => ['string', 'max:255'],
-            'verify_code_email' => ['required', 'string'],
-            'new_email' => $newEmailRules,
-            'email' => [
+            'verify_code_email' => array_filter([
+                config('settings.update_type') == 'verify_code' ? 'required' : null,
+                'string'
+            ]),
+            'new_email' => array_filter([
+                config('settings.update_type') == 'verify_code' ? 'required' : null,
+                'email',
+                !config('settings.duplicate_email', 1) ? Rule::unique(User::class)->ignore($this->user()->id) : null
+            ]),
+
+            'email' => array_filter([
+                config('settings.update_type') !== 'verify_code' ? 'required' : null,
                 'string',
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
+                !config('settings.duplicate_email', 1) ? Rule::unique(User::class)->ignore($this->user()->id) : null,
 
                 function ($attribute, $value, $fail) {
-                    if (config('global.server.version') === 'vSRO' && config('settings.duplicate_email', 1) == 0) {
+                    if (config('global.server.version') === 'vSRO' && !config('settings.duplicate_email', 1)) {
                         $exists = DB::connection('account')->table('dbo.TB_User')
                             ->where('Email', $value)
                             ->where('JID', '!=', $this->user()->jid)
@@ -47,7 +50,7 @@ class ProfileUpdateRequest extends FormRequest
                         }
                     }
                 },
-            ],
+            ]),
         ];
     }
 }

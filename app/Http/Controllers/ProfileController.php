@@ -59,43 +59,48 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        //$request->user()->fill($request->validated());
+        if (config('settings.update_type') == 'verify_code') {
+            $email = $request->input('new_email');
+            $codeRecord = DB::table('password_reset_tokens')->where('email', $request->user()->email)->first();
 
-        //if ($request->user()->isDirty('email')) {
-        //    $request->user()->email_verified_at = null;
-        //}
+            if (!$codeRecord || !($request->input('verify_code_email') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+                return back()->withErrors(['verify_code_email' => 'The provided verification code is invalid or expired.']);
+            }
+        }else {
+            $email = $request->input('email');
+            $request->user()->fill($request->validated());
 
-        $user = $request->user();
-        $codeRecord = DB::table('password_reset_tokens')->where('email', $user->email)->first();
+            if ($request->user()->isDirty('email')) {
+                $request->user()->email_verified_at = null;
+            }
 
-        if (!$codeRecord || !($request->input('verify_code_email') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['verify_code_email' => 'The provided verification code is invalid or expired.']);
+            $request->user()->save();
         }
 
         DB::beginTransaction();
         try {
-            $user->email = $request->input('new_email');
-            $user->email_verified_at = null;
-            $user->save();
 
             if (config('global.server.version') === 'vSRO') {
-                TbUser::where('JID', $user->jid)->update(['Email' => $request->input('new_email')]);
+                TbUser::where('JID', $request->user()->jid)->update(['Email' => $email]);
             }else {
-                MuEmail::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email')]);
+                MuEmail::where('JID', $request->user()->jid)->update(['EmailAddr' => $email]);
+
                 if (config('settings.register_confirm')) {
-                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email'), 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
+                    MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailAddr' => $email, 'EmailReceptionStatus' => 'N', 'EmailCertificationStatus' => 'N']);
                 } else {
-                    MuhAlteredInfo::where('JID', $user->jid)->update(['EmailAddr' => $request->input('new_email'), 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
+                    MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailAddr' => $email, 'EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
                 }
             }
 
-            DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+            if (config('settings.update_type') == 'verify_code') {
+                DB::table('password_reset_tokens')->where('email', $request->user()->email)->delete();
+            }
 
             DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['new_email' => ["Something went wrong, Please try again later."]]);
+            return back()->withErrors(['email' => ["Something went wrong, Please try again later."]]);
         }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

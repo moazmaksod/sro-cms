@@ -23,15 +23,23 @@ class PasswordController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['current_password'],
+            'current_password' => array_filter([
+                !config('settings.update_type') == 'verify_code' ? 'required' : null,
+                'current_password'
+            ]),
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
-            'verify_code_password' => ['required', 'string'],
+            'verify_code_password' => array_filter([
+                config('settings.update_type') == 'verify_code' ? 'required' : null,
+                'string'
+            ]),
         ]);
 
-        $codeRecord = DB::table('password_reset_tokens')->where('email', $request->user()->email)->first();
+        if (config('settings.update_type') == 'verify_code') {
+            $codeRecord = DB::table('password_reset_tokens')->where('email', $request->user()->email)->first();
 
-        if (!$codeRecord || !($request->input('verify_code_password') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
-            return back()->withErrors(['verify_code_password' => 'The provided verification code is invalid or expired.']);
+            if (!$codeRecord || !($request->input('verify_code_password') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+                return back()->withErrors(['verify_code_password' => 'The provided verification code is invalid or expired.']);
+            }
         }
 
         DB::beginTransaction();
@@ -43,7 +51,9 @@ class PasswordController extends Controller
                 TbUser::where('PortalJID', $request->user()->jid)->update(['password' => md5($request->password)]);
             }
 
-            DB::table('password_reset_tokens')->where('email', $request->user()->email)->delete();
+            if (config('settings.update_type') == 'verify_code') {
+                DB::table('password_reset_tokens')->where('email', $request->user()->email)->delete();
+            }
 
             DB::commit();
 

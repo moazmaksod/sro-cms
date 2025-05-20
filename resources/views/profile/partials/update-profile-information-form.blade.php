@@ -33,11 +33,11 @@
 
             <div class="row mb-3">
                 <label for="email" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Current Email') }}
+                    {{ __('Email') }}
                 </label>
 
                 <div class="col-md-6">
-                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" required disabled autocomplete="email">
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" @if(config('settings.update_type') == 'verify_code') disabled @endif required autocomplete="email">
 
                     @error('email')
                     <span class="invalid-feedback" role="alert">
@@ -65,49 +65,51 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <label for="verify_code_email" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Verification Code') }}
-                </label>
+            @if(config('settings.update_type') == 'verify_code')
+                <div class="row mb-3">
+                    <label for="verify_code_email" class="col-md-4 col-form-label text-md-end">
+                        {{ __('Verification Code') }}
+                    </label>
 
-                <div class="col-md-6">
-                    <input id="verify_code_email" type="text" class="form-control @error('verify_code_email') is-invalid @enderror" name="verify_code_email" value="{{ old('verify_code_email', $user->verify_code_email) }}" required>
+                    <div class="col-md-6">
+                        <input id="verify_code_email" type="text" class="form-control @error('verify_code_email') is-invalid @enderror" name="verify_code_email" value="{{ old('verify_code_email', $user->verify_code_email) }}" required>
 
-                    @error('verify_code_email')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-
-                    <div class="mt-2">
-                        <p class="mb-0">
-                            <button form="send-verify-code-email" class="btn btn-link p-0">
-                                {{ __('Send Verification code') }}
-                            </button>
-                        </p>
-
-                        @if (session('status') === 'send-verify-code-email')
-                            <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label for="code" class="col-md-4 col-form-label text-md-end">
-                    {{ __('New Email') }}
-                </label>
-
-                <div class="col-md-6">
-                    <input id="new_email" type="email" class="form-control @error('new_email') is-invalid @enderror" name="new_email" value="{{ old('new_email', $user->new_email) }}" required>
-
-                    @error('new_email')
-                    <span class="invalid-feedback" role="alert">
+                        @error('verify_code_email')
+                        <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
-                    @enderror
+                        @enderror
+
+                        <div class="mt-2">
+                            <p class="mb-0">
+                                <button form="send-verify-code-email" class="btn btn-link p-0">
+                                    {{ __('Send Verification code') }}
+                                </button>
+                            </p>
+
+                            @if (session('status') === 'send-verify-code-email')
+                                <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="row mb-3">
+                    <label for="code" class="col-md-4 col-form-label text-md-end">
+                        {{ __('New Email') }}
+                    </label>
+
+                    <div class="col-md-6">
+                        <input id="new_email" type="email" class="form-control @error('new_email') is-invalid @enderror" name="new_email" value="{{ old('new_email', $user->new_email) }}" required>
+
+                        @error('new_email')
+                        <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
 
             <div class="row mb-0">
                 <div class="col-md-6 offset-md-4">

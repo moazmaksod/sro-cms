@@ -13,51 +13,51 @@
             @csrf
             @method('put')
 
-            <!--
-            <div class="row mb-3">
-                <label for="password" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Current Password') }}
-                </label>
+            @if(!config('settings.update_type') == 'verify_code')
+                <div class="row mb-3">
+                    <label for="password" class="col-md-4 col-form-label text-md-end">
+                        {{ __('Current Password') }}
+                    </label>
 
-                <div class="col-md-6">
-                    <input id="current_password" type="password" class="form-control @error('current_password', 'updatePassword') is-invalid @enderror" name="current_password" required autocomplete="current-password">
+                    <div class="col-md-6">
+                        <input id="current_password" type="password" class="form-control @error('current_password', 'updatePassword') is-invalid @enderror" name="current_password" required autocomplete="current-password">
 
-                    @error('current_password', 'updatePassword')
-                    <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-            -->
-
-            <div class="row mb-3">
-                <label for="verify_code_password" class="col-md-4 col-form-label text-md-end">
-                    {{ __('Verification Code') }}
-                </label>
-
-                <div class="col-md-6">
-                    <input id="verify_code_password" type="text" class="form-control @error('verify_code_password') is-invalid @enderror" name="verify_code_password" value="{{ old('verify_code_password', $user->verify_code_password) }}" required>
-
-                    @error('verify_code_password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-
-                    <div class="mt-2">
-                        <p class="mb-0">
-                            <button form="send-verify-code-password" class="btn btn-link p-0">
-                                {{ __('Send Verification code') }}
-                            </button>
-                        </p>
-
-                        @if (session('status') === 'send-verify-code-password')
-                            <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
-                        @endif
+                        @error('current_password', 'updatePassword')
+                        <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </div>
-            </div>
+            @else
+                <div class="row mb-3">
+                    <label for="verify_code_password" class="col-md-4 col-form-label text-md-end">
+                        {{ __('Verification Code') }}
+                    </label>
+
+                    <div class="col-md-6">
+                        <input id="verify_code_password" type="text" class="form-control @error('verify_code_password') is-invalid @enderror" name="verify_code_password" value="{{ old('verify_code_password', $user->verify_code_password) }}" required>
+
+                        @error('verify_code_password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+
+                        <div class="mt-2">
+                            <p class="mb-0">
+                                <button form="send-verify-code-password" class="btn btn-link p-0">
+                                    {{ __('Send Verification code') }}
+                                </button>
+                            </p>
+
+                            @if (session('status') === 'send-verify-code-password')
+                                <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="row mb-3">
                 <label for="password" class="col-md-4 col-form-label text-md-end">

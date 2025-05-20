@@ -10,6 +10,8 @@
             @if(!config("settings.job_name_jid_{$userJID}"))
                 @if(!empty($data->NickName16))
                     <td>{{ $data->NickName16 }}</td>
+                @else
+                    <td>{{ __('None') }}</td>
                 @endif
             @else
                 <td>{{ __('Hidden') }}</td>
