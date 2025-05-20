@@ -26,9 +26,14 @@ class ProfileController extends Controller
 {
     public function index(Request $request): View
     {
-        $characterImage = config('ranking.character_image');
         $characterRace = config('ranking.character_race');
         $vipLevel = config('ranking.vip_level');
+
+        if (config('global.server.version') === 'vSRO') {
+            $characterImage = config('ranking.character_image_vsro');
+        }else {
+            $characterImage = config('ranking.character_image');
+        }
 
         return view('profile.index', [
             'user' => $request->user(),
