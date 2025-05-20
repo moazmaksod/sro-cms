@@ -71,6 +71,10 @@ class SettingSeeder extends Seeder
             ['value' => 'Africa/Cairo',]
         );
         DB::table('settings')->updateOrInsert(
+            ['key' => 'update_type'],
+            ['value' => 'standard',]
+        );
+        DB::table('settings')->updateOrInsert(
             ['key' => 'disable_register'],
             ['value' => 0,]
         );

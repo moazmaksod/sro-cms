@@ -124,34 +124,40 @@
     <br />
 @endif
 
-@if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
-    @if($item['MagParam1'] >= 4611686018427387904)
-        <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
-        <br />
-        @php $STR = 0 @endphp
-        @php $INT = 0 @endphp
-        @if($item['BlueInfo'])
-            @foreach($item['BlueInfo'] as $value)
-                @if($value['code'] == 'MATTR_STR')
-                    @php $STR += $value['value'] @endphp
-                @endif
-                @if($value['code'] == 'MATTR_INT')
-                    @php $INT += $value['value'] @endphp
-                @endif
-            @endforeach
+@if(config("settings.item_stats_jid_{$userJID}", 1) == 0)
+    @if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+        @if($item['MagParam1'] >= 4611686018427387904)
+            <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
+            <br />
+            @php $STR = 0 @endphp
+            @php $INT = 0 @endphp
+            @if($item['BlueInfo'])
+                @foreach($item['BlueInfo'] as $value)
+                    @if($value['code'] == 'MATTR_STR')
+                        @php $STR += $value['value'] @endphp
+                    @endif
+                    @if($value['code'] == 'MATTR_INT')
+                        @php $INT += $value['value'] @endphp
+                    @endif
+                @endforeach
 
-            <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['BlueInfo']) }}]</span><br />
-            <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $STR }}]</span><br />
-            <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $INT }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('Wheels Count:') }} [{{ count($item['BlueInfo']) }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('STR Count:') }} [{{ $STR }}]</span><br />
+                <span style="color:#efdaa4;">{{ __('INT Count:') }} [{{ $INT }}]</span><br />
+            @endif
         @endif
     @endif
-@endif
 
-@if($item['BlueInfo'])
+    @if($item['BlueInfo'])
+        <br />
+        @foreach($item['BlueInfo'] as $value)
+            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} {{--@if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 }}%) @endif--}}</b><br />
+        @endforeach
+    @endif
+@else
     <br />
-    @foreach($item['BlueInfo'] as $value)
-        <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} {{--@if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 }}%) @endif--}}</b><br />
-    @endforeach
+    <span style="color:#ff2f51">{{ __('The Information Hidden by User') }}</span><br />
+    <br />
 @endif
 
 @if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))

@@ -7,10 +7,12 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            @if(!empty($data->NickName16))
-                <td>{{ $data->NickName16 }}</td>
+            @if(config("settings.job_name_jid_{$userJID}", 1) == 0)
+                @if(!empty($data->NickName16))
+                    <td>{{ $data->NickName16 }}</td>
+                @endif
             @else
-                <td>{{ __('None') }}</td>
+                <td>{{ __('Hidden') }}</td>
             @endif
         </tr>
         <tr>

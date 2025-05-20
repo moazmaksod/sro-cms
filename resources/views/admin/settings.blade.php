@@ -231,11 +231,29 @@
             </div>
 
             <div class="row mb-3">
+                <label for="update_type" class="col-md-2 col-form-label text-md-end">{{ __('Update Profile Type') }}</label>
+
+                <div class="col-md-10">
+                    <select class="form-select" name="update_type" aria-label="Default select example">
+                        <option value="standard" {{ config('settings.update_type') == 'standard' ? 'selected' : '' }}>Standard</option>
+                        <option value="verify_code" {{ config('settings.update_type') == 'verify_code' ? 'selected' : '' }}>Verification Code</option>
+                    </select>
+
+                    @error('update_type')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label for="disable_register" class="col-md-2 col-form-label text-md-end">{{ __('Disable Register') }}</label>
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="disable_register" value="{{ old('disable_register', config('settings.disable_register') == 1) ? '1' : '0' }}" id="disable_register" {{ config('settings.disable_register') == 1 ? 'checked' : '' }}>
+                        <input type="hidden" name="disable_register" value="0">
+                        <input class="form-check-input" type="checkbox" name="disable_register" value="1" id="disable_register" {{ config('settings.disable_register') ? 'checked' : '' }}>
                     </div>
 
                     @error('disable_register')
@@ -251,7 +269,8 @@
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="register_confirm" value="{{ old('register_confirm', config('settings.register_confirm') == 1) ? '1' : '0' }}" id="register_confirm" {{ config('settings.register_confirm') == 1 ? 'checked' : '' }}>
+                        <input type="hidden" name="register_confirm" value="0">
+                        <input class="form-check-input" type="checkbox" name="register_confirm" value="1" id="register_confirm" {{ config('settings.register_confirm') ? 'checked' : '' }}>
                     </div>
 
                     @error('register_confirm')
@@ -267,7 +286,8 @@
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="duplicate_email" value="{{ old('duplicate_email', config('settings.duplicate_email') == 1) ? '1' : '0' }}" id="duplicate_email" {{ config('settings.duplicate_email') == 1 ? 'checked' : '' }}>
+                        <input type="hidden" name="duplicate_email" value="0">
+                        <input class="form-check-input" type="checkbox" name="duplicate_email" value="1" id="duplicate_email" {{ config('settings.duplicate_email') ? 'checked' : '' }}>
                     </div>
 
                     @error('duplicate_email')
@@ -283,7 +303,8 @@
 
                 <div class="col-md-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="agree_terms" value="{{ old('agree_terms', config('settings.agree_terms') == 1) ? '1' : '0' }}" id="agree_terms" {{ config('settings.agree_terms') == 1 ? 'checked' : '' }}>
+                        <input type="hidden" name="agree_terms" value="0">
+                        <input class="form-check-input" type="checkbox" name="agree_terms" value="1" id="agree_terms" {{ config('settings.agree_terms') ? 'checked' : '' }}>
                     </div>
 
                     @error('agree_terms')
@@ -304,37 +325,3 @@
         </form>
     </div>
 @endsection
-
-@push('styles')
-
-@endpush
-@push('scripts')
-    <script>
-        const disable_register_checkbox = document.getElementById('disable_register');
-
-        disable_register_checkbox.addEventListener('change', function () {
-            disable_register_checkbox.value = this.checked ? '1' : '0';
-        });
-    </script>
-    <script>
-        const register_confirm_checkbox = document.getElementById('register_confirm');
-
-        register_confirm_checkbox.addEventListener('change', function () {
-            register_confirm_checkbox.value = this.checked ? '1' : '0';
-        });
-    </script>
-    <script>
-        const duplicate_email_checkbox = document.getElementById('duplicate_email');
-
-        duplicate_email_checkbox.addEventListener('change', function () {
-            duplicate_email_checkbox.value = this.checked ? '1' : '0';
-        });
-    </script>
-    <script>
-        const agree_terms_checkbox = document.getElementById('agree_terms');
-
-        agree_terms_checkbox.addEventListener('change', function () {
-            agree_terms_checkbox.value = this.checked ? '1' : '0';
-        });
-    </script>
-@endpush

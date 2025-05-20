@@ -20,13 +20,6 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        $checkboxes = ['disable_register', 'register_confirm', 'duplicate_email', 'agree_terms'];
-        foreach ($checkboxes as $checkbox) {
-            if (!$request->has($checkbox)) {
-                Setting::updateOrCreate(['key' => $checkbox], ['value' => 0]);
-            }
-        }
-
         return back()->with('success', 'Settings updated!');
     }
 

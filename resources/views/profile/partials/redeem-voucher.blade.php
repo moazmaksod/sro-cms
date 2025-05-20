@@ -2,12 +2,12 @@
     <div class="card-header">{{ __('Redeem Voucher') }}</div>
 
     <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        @if(session('voucher_success'))
+            <div class="alert alert-success">{{ session('voucher_success') }}</div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+        @if(session('voucher_error'))
+            <div class="alert alert-danger">{{ session('voucher_error') }}</div>
         @endif
 
         <form method="POST" action="{{ route('profile.redeem') }}">

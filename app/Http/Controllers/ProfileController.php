@@ -174,15 +174,15 @@ class ProfileController extends Controller
         $voucher = Voucher::where('code', $request->voucher_code)->first();
 
         if (!$voucher) {
-            return redirect()->back()->with('error', 'Invalid voucher code.');
+            return redirect()->back()->with('voucher_error', 'Invalid voucher code.');
         }
 
         if ($voucher->status) {
-            return redirect()->back()->with('error', 'This voucher has already been used.');
+            return redirect()->back()->with('voucher_error', 'This voucher has already been used.');
         }
 
         if ($voucher->valid_date && Carbon::now()->greaterThan($voucher->valid_date)) {
-            return redirect()->back()->with('error', 'This voucher has expired.');
+            return redirect()->back()->with('voucher_error', 'This voucher has expired.');
         }
 
         $user = Auth::user();
@@ -196,6 +196,6 @@ class ProfileController extends Controller
         DonateLog::setDonateLog('Voucher', (string) Str::uuid(), 'true', 0, $voucher->amount, "User:{$user->username} Has Redeemed:{$voucher->code}", $user->jid, $request->ip());
         $voucher->update(['user_id' => $user->jid, 'status' => true]);
 
-        return redirect()->back()->with('success', 'Voucher redeemed successfully!');
+        return redirect()->back()->with('voucher_success', 'Voucher redeemed successfully!');
     }
 }

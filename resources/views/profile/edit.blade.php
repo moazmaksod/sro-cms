@@ -18,6 +18,9 @@
             </div>
         @endif
         <div class="mb-4">
+            @include('profile.partials.general-settings')
+        </div>
+        <div class="mb-4">
             @include('profile.partials.redeem-voucher')
         </div>
     </div>

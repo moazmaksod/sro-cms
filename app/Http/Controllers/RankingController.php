@@ -11,6 +11,7 @@ use App\Models\SRO\Shard\CharTrijob;
 use App\Models\SRO\Shard\Guild;
 use App\Models\SRO\Shard\GuildMember;
 use App\Models\SRO\Shard\TrainingCampHonorRank;
+use App\Models\SRO\Shard\User;
 use App\Services\CrestService;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
@@ -250,6 +251,7 @@ class RankingController extends Controller
             $jobType = config('ranking.job_type');
             $characterRace = config('ranking.character_race');
             $hwanLevel = config('ranking.hwan_level');
+            $userJID = User::where('CharID', $charID)->first()->UserJID;
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -266,6 +268,7 @@ class RankingController extends Controller
                     'jobType' => $jobType,
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
+                    'userJID' => $userJID,
                 ]);
             }
         }
