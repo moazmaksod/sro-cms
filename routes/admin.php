@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/index', [AdminController::class, 'index'])->name('admin');
 
@@ -17,7 +19,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
         //Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::post('/settings/clear-cache', [SettingController::class, 'clear_cache'])->name('settings.clear-cache');
 
         //Users
