@@ -13,6 +13,8 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
         Route::delete('/edit', [ProfileController::class, 'destroy'])->name('destroy');
         Route::post('/edit/redeem', [ProfileController::class, 'redeem'])->name('redeem');
         Route::post('/edit/passcode', [ProfileController::class, 'passcode'])->name('passcode');
+        Route::post('/edit/settings', [ProfileController::class, 'update_settings'])->name('settings-update');
+
         Route::get('/silk-history', [ProfileController::class, 'silk_history'])->name('silk-history');
         Route::post('/send-code', [ProfileController::class, 'send_code'])->name('code-send');
 

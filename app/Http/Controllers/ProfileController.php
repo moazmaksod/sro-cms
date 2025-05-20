@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\DonateLog;
+use App\Models\Setting;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
@@ -136,6 +137,15 @@ class ProfileController extends Controller
         });
 
         return back()->with('status', $request->input('send-verify-code-name'));
+    }
+
+    public function update_settings(Request $request)
+    {
+        foreach ($request->all() as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return back()->with('success', 'Settings updated!');
     }
 
     public function donate(Request $request): View

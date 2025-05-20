@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('settings.update') }}">
+        <form method="POST" action="{{ route('profile.settings-update') }}">
             @csrf
 
             <div class="row mb-3">
