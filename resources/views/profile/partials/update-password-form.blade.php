@@ -13,7 +13,7 @@
             @csrf
             @method('put')
 
-            @if(!config('settings.update_type') == 'verify_code')
+            @if(config('settings.update_type') !== 'verify_code')
                 <div class="row mb-3">
                     <label for="password" class="col-md-4 col-form-label text-md-end">
                         {{ __('Current Password') }}

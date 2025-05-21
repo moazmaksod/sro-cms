@@ -24,7 +24,7 @@ class PasswordController extends Controller
     {
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => array_filter([
-                !config('settings.update_type') == 'verify_code' ? 'required' : null,
+                config('settings.update_type') != 'verify_code' ? 'required' : null,
                 'current_password'
             ]),
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
