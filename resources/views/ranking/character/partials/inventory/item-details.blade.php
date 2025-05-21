@@ -9,7 +9,7 @@
         @endif
         --}}
         @if(file_exists(public_path($item['ImgPath'])))
-        <img alt="" src="{{ asset(strtolower($item['ImgPath'])) }}" @if(config("settings.item_stats_jid_{$userJID}")) style="filter: blur(2px);" @endif>
+        <img alt="" src="{{ asset(strtolower($item['ImgPath'])) }}" @if(config("settings.item_stats_jid_{$userJID}")) style="filter: blur(2px); z-index: 5" @endif>
         @else
         <img alt="" src="{{ asset('/images/sro/icon_default.png') }}">
         @endif
