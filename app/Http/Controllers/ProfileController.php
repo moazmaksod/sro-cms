@@ -66,6 +66,10 @@ class ProfileController extends Controller
             if (!$codeRecord || !($request->input('verify_code_email') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
                 return back()->withErrors(['verify_code_email' => 'The provided verification code is invalid or expired.']);
             }
+
+            $request->user()->email = $email;
+            $request->user()->email_verified_at = null;
+            $request->user()->save();
         }else {
             $email = $request->input('email');
             $request->user()->fill($request->validated());
