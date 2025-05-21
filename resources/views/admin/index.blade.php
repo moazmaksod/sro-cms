@@ -49,7 +49,7 @@
         <div class="row">
             <widgetbot
                 server="1004443821570019338"
-                channel="1374482240427528254"
+                channel="1374476583900938311"
                 width="100%"
                 height="600"
             ></widgetbot>
