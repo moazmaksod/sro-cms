@@ -41,5 +41,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mt-3 mb-3 border-bottom">
+            <h1 class="h2">iSRO-CMS Updates</h1>
+        </div>
+
+        <div class="row">
+            <widgetbot
+                server="1004443821570019338"
+                channel="1374482240427528254"
+                width="100%"
+                height="600"
+            ></widgetbot>
+            <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+        </div>
     </div>
 @endsection
