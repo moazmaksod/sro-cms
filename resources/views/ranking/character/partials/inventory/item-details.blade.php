@@ -3,8 +3,13 @@
         @if($item['ItemInfo']['SoxType'] != 'Normal' && !in_array((int) $item['ItemInfo']['TypeID2'], [4], true))
         <img alt="" class="sro-item-special-seal" src="{{ asset('/images/seal.gif') }}" />
         @endif
+        {{--
+        @if(config("settings.item_stats_jid_{$userJID}"))
+        <img alt="" class="sro-item-special-seal" src="{{ asset('/images/sro/icon_disable.png') }}" />
+        @endif
+        --}}
         @if(file_exists(public_path($item['ImgPath'])))
-        <img alt="" src="{{ asset(strtolower($item['ImgPath'])) }}">
+        <img alt="" src="{{ asset(strtolower($item['ImgPath'])) }}" @if(config("settings.item_stats_jid_{$userJID}")) style="filter: blur(2px);" @endif>
         @else
         <img alt="" src="{{ asset('/images/sro/icon_default.png') }}">
         @endif
@@ -14,7 +19,11 @@
     </div>
     <?php if ($item) : ?>
     <div class="info">
-        @include('ranking.character.partials.inventory.item-blues-whites', ['item' => $item['ItemInfo']])
+        @if(!config("settings.item_stats_jid_{$userJID}"))
+            @include('ranking.character.partials.inventory.item-blues-whites', ['item' => $item['ItemInfo']])
+        @else
+            <span style="color:#ff2f51">{{ __('The Information Hidden by User') }}</span><br />
+        @endif
     </div>
     <?php endif; ?>
     <div class="clearfix"></div>

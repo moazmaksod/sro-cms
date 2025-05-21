@@ -1,4 +1,3 @@
-@if(!config("settings.item_stats_jid_{$userJID}"))
 <img src="{{ asset('/images/com_itemsign.png') }}" class="img-clear" style="display: inline-block" alt="">
 
 @if(in_array((int) $item['TypeID2'], [4], true))
@@ -175,10 +174,4 @@
     @if($item['Amount'])
         {{ __('Quantity') }} {{ $item['Amount'] }}<br/>
     @endif
-@endif
-
-@else
-    <br />
-    <span style="color:#ff2f51">{{ __('The Information Hidden by User') }}</span><br />
-    <br />
 @endif
