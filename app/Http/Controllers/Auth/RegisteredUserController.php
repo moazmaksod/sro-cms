@@ -45,8 +45,8 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
             'email' => ['required', 'string', 'email', 'max:70'],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
-            'g-recaptcha-response' => [Rule::requiredIf(fn () => env('NOCAPTCHA_ENABLE', false)), 'captcha'],
-            'terms' => [Rule::requiredIf(fn () => config('settings.agree_terms', 1)), 'accepted'],
+            'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
+            'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
         ];
 
         if (config('global.server.version') === 'vSRO') {
