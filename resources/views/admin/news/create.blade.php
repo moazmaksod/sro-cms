@@ -34,7 +34,7 @@
             </div>
 
             <div class="row mb-3">
-                <label for="category" class="col-md-2 col-form-label text-md-end">{{ __('Gategory') }}</label>
+                <label for="category" class="col-md-2 col-form-label text-md-end">{{ __('Category') }}</label>
 
                 <div class="col-md-10">
                     <select class="form-select" name="category" aria-label="Default select example">
