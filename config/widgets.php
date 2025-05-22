@@ -4,6 +4,7 @@ return [
     'discord' => [
         'enabled' => true,
         'server_id' => '1004443821570019338',
+        'channel_id' => '1374482240427528254',
         'theme' => 'dark', //dark, light
     ],
     'globals_history' => [

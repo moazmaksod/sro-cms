@@ -3,6 +3,7 @@
 
 @php
     $onlinePlayer = App\Models\SRO\Account\ShardCurrentUser::getOnlineCounter();
+    $discord = config('widgets.discord');
     if (config('global.server.version') !== 'vSRO') {
         $contentConfig = Illuminate\Support\Facades\DB::connection('shard')->select("SELECT * FROM _contentconfig");
         $contentConfig = collect($contentConfig)->pluck('Value', 'CodeName128')->toArray();
@@ -109,6 +110,33 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-black position-relative">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-texture opacity-5"></div>
+
+        <div class="container position-relative py-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold font-cinzel text-white mb-3">
+                    Our <span class="text-warning">Discord</span>
+                </h2>
+                <div class="mx-auto bg-warning mb-4" style="height: 2px; width: 80px;"></div>
+                <p class="text-light mx-auto" style="max-width: 700px;">
+                    Stay updated with the latest events, updates, and announcements from our server team.
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <widgetbot
+                    server="{{ $discord['server_id'] }}"
+                    channel="{{ $discord['channel_id'] }}"
+                    width="100%"
+                    height="600"
+                ></widgetbot>
+                <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
             </div>
         </div>
     </section>
