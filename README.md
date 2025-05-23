@@ -24,7 +24,7 @@ Whats new?-:
 - **[Documentation Link](#)**
 - **[Themes Store](https://mix-shop.tech/)**
 - **[iSRO Development Discord](https://discord.gg/HuJPdPSKA5)**
-- **[Mix-Store Discord](https://discord.gg/HKyTvTn5HV)**
+- **[Mix-Store Discord](https://discord.gg/4MqzAHGU4e)**
 - **[Youtube Channel](https://www.youtube.com/@m1xawy)**
 
 ## Installation Video
