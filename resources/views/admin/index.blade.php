@@ -44,6 +44,12 @@
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mt-3 mb-3 border-bottom">
             <h1 class="h2">iSRO-CMS Updates</h1>
+
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <a href="https://discord.gg/4MqzAHGU4e" target="_blank" class="btn btn-outline-warning">Join Discord</a>
+                </div>
+            </div>
         </div>
 
         <div class="row">
