@@ -83,7 +83,26 @@ class DonateService
         if ($captureResponse->successful()) {
             $responseData = $captureResponse->json();
 
-            if ($responseData['status'] === 'COMPLETED' || $responseData['status'] === 'APPROVED') {
+            if ($responseData['status'] === 'APPROVED') {
+                $captureOrderResponse = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                    'PayPal-Request-Id' => (string) Str::uuid(),
+                    'Authorization' => "Bearer $accessToken",
+                ])->post($config['endpoint'] . "/v2/checkout/orders/{$token}/capture");
+
+                if (!$captureOrderResponse->successful()) {
+                    return back()->withErrors(['paypal' => 'Failed to capture PayPal order.'])->withInput();
+                }
+
+                $captureData = $captureOrderResponse->json();
+                if ($captureData['status'] !== 'COMPLETED') {
+                    return back()->withErrors(['paypal' => 'Payment not completed after capture.'])->withInput();
+                }
+
+                $responseData = $captureData;
+            }
+
+            if ($responseData['status'] === 'COMPLETED') {
                 $package = collect($config['package'])->firstWhere('price', $responseData['purchase_units'][0]['amount']['value']);
                 if (!$package) {
                     return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
