@@ -19,11 +19,7 @@
     </div>
     <?php if ($item) : ?>
     <div class="info">
-        @if(!config("settings.item_stats_jid_{$userJID}"))
-            @include('ranking.character.partials.inventory.item-blues-whites', ['item' => $item['ItemInfo']])
-        @else
-            <span style="color:#ff2f51">{{ __('Item details are restricted by User') }}</span><br />
-        @endif
+        @include('ranking.character.partials.inventory.item-blues-whites', ['item' => $item['ItemInfo']])
     </div>
     <?php endif; ?>
     <div class="clearfix"></div>
