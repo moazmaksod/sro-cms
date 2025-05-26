@@ -56,76 +56,77 @@
         @endforeach
         <br />
     @endif
+@endif
 
-    @if($item['ReqLevel1'])
-        @if(in_array((int) $item['TypeID2'], [4], true))
-            {{ __('Job level:') }} {{ $item['ReqLevel1'] }}<br />
-        @else
-            {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
-         @endif
-    @endif
+@if($item['ReqLevel1'])
+    @if(in_array((int) $item['TypeID2'], [4], true))
+        {{ __('Job level:') }} {{ $item['ReqLevel1'] }}<br />
+    @else
+        {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
+     @endif
+@endif
 
-    @if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [1, 9, 10], true))
-        @isset($item['Gender'])
-            {{ $item['Gender'] }}<br />
-        @endisset
-    @endif
+@if(in_array((int) $item['TypeID2'], [1], true) && in_array((int) $item['TypeID3'], [1, 9, 10], true))
+    @isset($item['Gender'])
+        {{ $item['Gender'] }}<br />
+    @endisset
+@endif
 
-    @if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
-        @isset($item['Country'])
-            {{ $item['Country'] }}<br />
-        @endisset
-    @endif
+@if(!in_array((int) $item['TypeID2'], [3, 4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
+    @isset($item['Country'])
+        {{ $item['Country'] }}<br />
+    @endisset
+@endif
 
-    @if(in_array((int) $item['TypeID3'], [13, 14], true) || in_array((int) $item['TypeID2'], [3], true))
-        @if($item['TypeID3'] == 14)
-            {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
-            <br />
-            <br />
-            {{ __('When awakened, the Awakening Time is counted down.') }}
-        @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
-            {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
-        @elseif($item['TypeID3'] == 13)
-            {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
-        @elseif($item['TypeID4'] == 1 || $item['TypeID4'] == 2)
-            {{ $item['ItemDesc'] ?? 'A quiver of 10,000 arrows.' }} <br />
-        @else
-            {{ $item['ItemDesc'] }} <br />
-        @endif
+@if(in_array((int) $item['TypeID3'], [13, 14], true) || in_array((int) $item['TypeID2'], [3], true))
+    @if($item['TypeID3'] == 14)
+        {{ __('Basic stats (HP/MP) increase when equipped.  Also, upon awakening the bracelet and activating it, the outer appearance becomes extravagant and divine power becomes available to the wearer for a time.') }}
         <br />
-    @endif
-
-    @if(!in_array((int) $item['TypeID2'], [4], true) && in_array((int) $item['TypeID3'], [13], true) && in_array((int) $item['TypeID4'], [2], true))
-        <span style="color:#efdaa4;">{{ __('Attachment:') }} {{ $item['ChildItemCount'] == 1 ? 'Able to equip' : 'Unable to equip' }}</span>
         <br />
+        {{ __('When awakened, the Awakening Time is counted down.') }}
+    @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
+        {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
+    @elseif($item['TypeID3'] == 13)
+        {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
+    @elseif($item['TypeID4'] == 1 || $item['TypeID4'] == 2)
+        {{ $item['ItemDesc'] ?? 'A quiver of 10,000 arrows.' }} <br />
+    @else
+        {{ $item['ItemDesc'] }} <br />
     @endif
+    <br />
+@endif
 
-    @if(in_array((int) $item['TypeID2'], [4], true) || in_array((int) $item['TypeID3'], [13], true))
-        <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
-        <br />
-    @endif
+@if(!in_array((int) $item['TypeID2'], [4], true) && in_array((int) $item['TypeID3'], [13], true) && in_array((int) $item['TypeID4'], [2], true))
+    <span style="color:#efdaa4;">{{ __('Attachment:') }} {{ $item['ChildItemCount'] == 1 ? 'Able to equip' : 'Unable to equip' }}</span>
+    <br />
+@endif
 
-    @if(in_array((int) $item['TypeID3'], [13], true) && $item['MaxMagicOptCount'] != 0)
-        @isset($item['Gender'])
-            <br />{{ $item['Gender'] }}<br />
-        @endisset
-    @endif
+@if(in_array((int) $item['TypeID2'], [4], true) || in_array((int) $item['TypeID3'], [13], true))
+    <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
+    <br />
+@endif
 
-    @if(in_array((int) $item['TypeID3'], [14], true))
-        <br />
-        <span style="color:#efdaa4;">{{ __('Basic Option') }}</span><br />
-        {{ __('MaximumHP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
-        {{ __('MaximumMP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
-        <br />
-    @endif
+@if(in_array((int) $item['TypeID3'], [13], true) && $item['MaxMagicOptCount'] != 0)
+    @isset($item['Gender'])
+        <br />{{ $item['Gender'] }}<br />
+    @endisset
+@endif
 
-    @if(in_array((int) $item['TypeID3'], [14], true) && $item['DevilMaxHP'] > 5)
-        <span style="color:#efdaa4;">{{ __('Additional magic Option') }}</span><br />
-        <span style="color:#53EE92;">{{ __('Blocking rate :rate Increase', ['rate' => floor(($item['DevilMaxHP'] / 100) * 10)]) }}</span><br />
-        <br />
-    @endif
+@if(in_array((int) $item['TypeID3'], [14], true))
+    <br />
+    <span style="color:#efdaa4;">{{ __('Basic Option') }}</span><br />
+    {{ __('MaximumHP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
+    {{ __('MaximumMP :max% Increase', ['max' => $item['DevilMaxHP']]) }}<br />
+    <br />
+@endif
 
+@if(in_array((int) $item['TypeID3'], [14], true) && $item['DevilMaxHP'] > 5)
+    <span style="color:#efdaa4;">{{ __('Additional magic Option') }}</span><br />
+    <span style="color:#53EE92;">{{ __('Blocking rate :rate Increase', ['rate' => floor(($item['DevilMaxHP'] / 100) * 10)]) }}</span><br />
+    <br />
+@endif
 
+@if(!config("settings.item_stats_jid_{$userJID}"))
     @if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
         @if($item['MagParam1'] >= 4611686018427387904)
             <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
