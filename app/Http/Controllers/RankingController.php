@@ -222,6 +222,29 @@ class RankingController extends Controller
         ]);
     }
 
+    public function custom($type = 'player')
+    {
+        $functionName = $type . 'Ranking';
+
+        if (function_exists($functionName)) {
+            $data = $functionName();
+        } else {
+            abort(404, "Ranking type [$type] not found.");
+        }
+
+        $config = config('ranking.menu');
+        $topImage = config('ranking.top_image');
+        $characterRace = config('ranking.character_race');
+
+        return view('ranking.ranking.custom', [
+            'data' => $data,
+            'config' => $config,
+            'topImage' => $topImage,
+            'characterRace' => $characterRace,
+            'type' => $type,
+        ]);
+    }
+
     public function character_view($name, InventoryService $inventoryService)
     {
         $charID = Char::getCharIDByName($name);

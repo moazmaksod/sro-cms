@@ -9,7 +9,7 @@
                     <div class="d-inline-block text-center my-4 mx-3">
                         @foreach($config as $value)
                             @if($value['enabled'])
-                                <button class="btn btn-primary rounded-0 me-2 mb-2" data-link="{{ route($value['route']) }}">{{ __($value['name']) }}</button>
+                                <button class="btn btn-primary rounded-0 me-2 mb-2" data-link="{{ is_array($value['route'])? route($value['route']['name'], $value['route']['params'] ?? []): route($value['route']) }}">{{ __($value['name']) }}</button>
                             @endif
                         @endforeach
                     </div>
