@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Cache;
 
 $menu = config('ranking.menu');
 $menu['ranking-level'] = [ //ranking-pvp
-    'enabled' => true, //true or false
+    'enabled' => false, //true or false
     'name' => 'Level Ranking', //Pvp Ranking
     'image' => 'fa fa-users',
     'route' => ['name' => 'ranking.custom', 'params' => ['type' => 'levelRanking']], //'type' => 'pvpRanking'
