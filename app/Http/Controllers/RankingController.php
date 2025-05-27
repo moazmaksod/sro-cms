@@ -222,12 +222,10 @@ class RankingController extends Controller
         ]);
     }
 
-    public function custom($type = 'player')
+    public function custom($type = 'levelRanking')
     {
-        $functionName = $type . 'Ranking';
-
-        if (function_exists($functionName)) {
-            $data = $functionName();
+        if (function_exists($type)) {
+            $data = $type();
         } else {
             abort(404, "Ranking type [$type] not found.");
         }
