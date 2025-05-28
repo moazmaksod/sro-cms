@@ -40,6 +40,12 @@
                 $('[data-link]').removeClass('selected');
                 $(this).addClass('selected');
 
+                $('#content-ranking').html(`
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                </div>
+                `);
+
                 $.get(link, function (res) {
                     $('#content-ranking').html(res);
                 }).fail(function () {
