@@ -33,12 +33,14 @@
         $(document).ready(function () {
             $('[data-link]').on('click', function (e) {
                 e.preventDefault();
-                const link = $(this).data('link');
+
+                let link = $(this).data('link');
+                link = link.replace(/^http:/, 'https:');
 
                 $('[data-link]').removeClass('selected');
                 $(this).addClass('selected');
 
-                $.get(`${link}`, function (res) {
+                $.get(link, function (res) {
                     $('#content-ranking').html(res);
                 }).fail(function () {
                     $('#content-ranking').html('<div class="alert alert-danger">Failed to load Ranking.</div>');
