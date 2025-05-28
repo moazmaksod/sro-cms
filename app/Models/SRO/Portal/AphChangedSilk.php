@@ -2,6 +2,8 @@
 
 namespace App\Models\SRO\Portal;
 
+use App\Models\SRO\Account\TbUser;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -64,13 +66,13 @@ class AphChangedSilk extends Model
         return self::create([
             'JID' => $jid,
             'PTInvoiceID' => null,
-            'RemainedSilk' => $amount,
-            'ChangedSilk' => 0,
+            'RemainedSilk' => abs($amount),
+            'ChangedSilk' => $amount < 0 ? $amount : 0,
             'SilkType' => $type,
             'SellingTypeID' => 2,
             'ChangeDate' => now(),
             'AvailableDate' => now()->addYears(1),
-            'AvailableStatus' => 'Y',
+            'AvailableStatus' => $amount < 0 ? 'N' : 'Y',
         ]);
     }
 
