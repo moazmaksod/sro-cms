@@ -77,34 +77,38 @@ class LogInstanceWorldInfo extends Model
         });
     }
 
-    public static function getUniquesKill($limit = 25, $CharID = 0)
-    {
-        $uniqueList = array_keys(config('ranking.uniques'));
-        $minutes = config('global.cache.unique_history', 10);
+	public static function getUniquesKill($limit = 25, $CharID = 0, $includeSpawns = true)
+	{
+		$uniqueList = array_keys(config('ranking.uniques'));
+		$minutes = config('global.cache.unique_history', 10);
 
-        return Cache::remember("unique_history_{$limit}_{$CharID}", now()->addMinutes($minutes), function () use ($CharID, $limit, $uniqueList) {
-            return self::select([
-                    '_LogInstanceWorldInfo.CharID',
-                    '_Char.CharName16',
-                    '_Char.RefObjID',
-                    '_Char.CurLevel',
-                    '_LogInstanceWorldInfo.ValueCodeName128',
-                    '_LogInstanceWorldInfo.Value',
-                    '_LogInstanceWorldInfo.WorldID',
-                    '_RefRegion.wRegionID',
-                    '_RefRegion.AreaName',
-                    '_LogInstanceWorldInfo.EventTime'
-                ])
-                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
-                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefRegion', '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
-                ->whereIn('_LogInstanceWorldInfo.Value', $uniqueList)
-                ->whereIn('_LogInstanceWorldInfo.ValueCodeName128', ['KILL_UNIQUE_MONSTER', 'SPAWN_UNIQUE_MONSTER'])
-                ->when($CharID > 0, function ($query) use ($CharID) {
-                    $query->where('_LogInstanceWorldInfo.CharID', $CharID);
-                })
-                ->orderByDesc('_LogInstanceWorldInfo.EventTime')
-                ->limit($limit)
-                ->get();
-        });
-    }
+		return Cache::remember("unique_history_{$limit}_{$CharID}_{$includeSpawns}", now()->addMinutes($minutes), function () use ($CharID, $limit, $uniqueList, $includeSpawns) {
+			return self::select([
+					'_LogInstanceWorldInfo.CharID',
+					'_Char.CharName16',
+					'_Char.RefObjID',
+					'_Char.CurLevel',
+					'_LogInstanceWorldInfo.ValueCodeName128',
+					'_LogInstanceWorldInfo.Value',
+					'_LogInstanceWorldInfo.WorldID',
+					'_RefRegion.wRegionID',
+					'_RefRegion.AreaName',
+					'_LogInstanceWorldInfo.EventTime'
+				])
+				->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
+				->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefRegion', '_RefRegion.wRegionID', '=', '_LogInstanceWorldInfo.WorldID')
+				->whereIn('_LogInstanceWorldInfo.Value', $uniqueList)
+				->when($includeSpawns, function ($query) {
+					$query->whereIn('_LogInstanceWorldInfo.ValueCodeName128', ['KILL_UNIQUE_MONSTER', 'SPAWN_UNIQUE_MONSTER']);
+				}, function ($query) {
+					$query->where('_LogInstanceWorldInfo.ValueCodeName128', 'KILL_UNIQUE_MONSTER');
+				})
+				->when($CharID > 0, function ($query) use ($CharID) {
+					$query->where('_LogInstanceWorldInfo.CharID', $CharID);
+				})
+				->orderByDesc('_LogInstanceWorldInfo.EventTime')
+				->limit($limit)
+				->get();
+		});
+	}
 }
