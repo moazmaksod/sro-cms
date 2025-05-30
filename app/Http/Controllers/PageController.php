@@ -66,7 +66,7 @@ class PageController extends Controller
 
     public function uniques_advanced()
     {
-        $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0);
+        $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0, false);
         $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
         $config = config('ranking.uniques');
 
