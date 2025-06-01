@@ -19,7 +19,7 @@ class DonateService
         $config = config('donate.paypal');
 
         $accessToken = $this->getPaypalAccessToken();
-        if (!$accessToken || !is_string($accessToken)) {
+        if (!$accessToken) {
             return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token.'])->withInput();
         }
 
@@ -44,21 +44,27 @@ class DonateService
             ]
         ];
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'PayPal-Request-Id' => (string) Str::uuid(),
-            'Authorization' => "Bearer $accessToken",
-        ])->post($config['endpoint'].'/v2/checkout/orders', $body);
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'PayPal-Request-Id' => (string) Str::uuid(),
+                'Authorization' => "Bearer $accessToken",
+            ])->post($config['endpoint'].'/v2/checkout/orders', $body);
 
-        if ($response->successful()) {
-            $approvalLink = collect($response->json('links'))->firstWhere('rel', 'payer-action');
+            if ($response->successful()) {
+                $approvalLink = collect($response->json('links'))->firstWhere('rel', 'payer-action');
 
-            if ($approvalLink && isset($approvalLink['href'])) {
-                return redirect()->away($approvalLink['href']);
+                if ($approvalLink && isset($approvalLink['href'])) {
+                    return redirect()->away($approvalLink['href']);
+                }
             }
-        }
 
-        return back()->withErrors(['paypal' => "Payment Failed: {$response['error_description']}"])->withInput();
+            $errorMessage = $response->json('error_description') ?? 'Unknown PayPal error';
+            return back()->withErrors(['paypal' => "Payment Failed: {$errorMessage}"])->withInput();
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['paypal' => 'Payment processing failed. Please try again.'])->withInput();
+        }
     }
 
     public function callbackPaypal(Request $request)
@@ -69,21 +75,29 @@ class DonateService
 
         $config = config('donate.paypal');
         $token = $request->get('token');
+
         $accessToken = $this->getPaypalAccessToken();
-        if (!$accessToken || !is_string($accessToken)) {
+        if (!$accessToken) {
             return back()->withErrors(['paypal' => 'Failed to retrieve PayPal access token.'])->withInput();
         }
 
-        $captureResponse = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'PayPal-Request-Id' => (string) Str::uuid(),
-            'Authorization' => "Bearer $accessToken",
-        ])->get($config['endpoint']."/v2/checkout/orders/{$token}");
+        try {
+            // Get order details first
+            $captureResponse = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'PayPal-Request-Id' => (string) Str::uuid(),
+                'Authorization' => "Bearer $accessToken",
+            ])->get($config['endpoint']."/v2/checkout/orders/{$token}");
 
-        if ($captureResponse->successful()) {
+            if (!$captureResponse->successful()) {
+                $errorMessage = $captureResponse->json('error_description') ?? 'Failed to retrieve order details';
+                return back()->withErrors(['paypal' => "Payment Failed: {$errorMessage}"])->withInput();
+            }
+
             $responseData = $captureResponse->json();
 
             if ($responseData['status'] === 'APPROVED') {
+                // Capture the payment
                 $captureOrderResponse = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'PayPal-Request-Id' => (string) Str::uuid(),
@@ -91,28 +105,32 @@ class DonateService
                 ])->post($config['endpoint'] . "/v2/checkout/orders/{$token}/capture");
 
                 if (!$captureOrderResponse->successful()) {
-                    return back()->withErrors(['paypal' => 'Failed to capture PayPal order.'])->withInput();
+                    $errorMessage = $captureOrderResponse->json('error_description') ?? 'Failed to capture payment';
+                    return back()->withErrors(['paypal' => "Payment Failed: {$errorMessage}"])->withInput();
                 }
 
                 $captureData = $captureOrderResponse->json();
+
                 if ($captureData['status'] !== 'COMPLETED') {
-                    return back()->withErrors(['paypal' => 'Payment not completed after capture.'])->withInput();
+                    return back()->withErrors(['paypal' => 'Payment was not completed successfully.'])->withInput();
                 }
 
                 $responseData = $captureData;
             }
 
             if ($responseData['status'] === 'COMPLETED') {
-                $package = collect($config['package'])->firstWhere('price', $responseData['purchase_units'][0]['amount']['value']);
+                $amount = $responseData['purchase_units'][0]['amount']['value'];
+                $package = collect($config['package'])->firstWhere('price', $amount);
+
                 if (!$package) {
                     return back()->withErrors(['paypal' => 'Invalid package price.'])->withInput();
                 }
 
                 $user = Auth::user();
                 if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value'] + ($package['bonus'] ?? 0));
+                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
                 } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value'] + ($package['bonus'] ?? 0));
+                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
                 }
 
                 DonateLog::setDonateLog(
@@ -120,7 +138,7 @@ class DonateService
                     $responseData['id'],
                     'true',
                     $package['price'],
-                    $package['value'] + ($package['bonus'] ?? 0),
+                    $package['value'],
                     "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
                     $user->jid,
                     $request->ip()
@@ -128,9 +146,12 @@ class DonateService
 
                 return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
             }
-        }
 
-        return back()->withErrors(['paypal' => "Payment Failed: {$captureResponse['error_description']}"])->withInput();
+            return back()->withErrors(['paypal' => 'Payment was not completed successfully.'])->withInput();
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['paypal' => 'Payment processing failed. Please try again.'])->withInput();
+        }
     }
 
     private function getPaypalAccessToken()
@@ -139,18 +160,29 @@ class DonateService
         $accessToken = cache()->get('paypal_access_token');
 
         if (!$accessToken) {
-            $authResponse = Http::withBasicAuth($config['client_id'], $config['secret'])
-                ->asForm()
-                ->post($config['endpoint'].'/v1/oauth2/token', [
-                    'grant_type' => 'client_credentials',
-                ]);
+            try {
+                $authResponse = Http::withBasicAuth($config['client_id'], $config['secret'])
+                    ->asForm()
+                    ->post($config['endpoint'].'/v1/oauth2/token', [
+                        'grant_type' => 'client_credentials',
+                    ]);
 
-            if ($authResponse->failed()) {
-                return back()->withErrors(['paypal' => "Failed to retrieve PayPal access token! {$authResponse->json()['error_description']}"])->withInput();
+                if ($authResponse->failed()) {
+                    \Log::error('PayPal auth failed', ['response' => $authResponse->json()]);
+                    return null;
+                }
+
+                $responseData = $authResponse->json();
+                $accessToken = $responseData['access_token'];
+                $expiresIn = $responseData['expires_in'] ?? 3600;
+
+                // Cache token for slightly less than expiry time
+                cache()->put('paypal_access_token', $accessToken, $expiresIn - 60);
+
+            } catch (\Exception $e) {
+                \Log::error('PayPal auth exception', ['error' => $e->getMessage()]);
+                return null;
             }
-
-            $accessToken = $authResponse->json()['access_token'];
-            cache()->put('paypal_access_token', $accessToken, 540);
         }
 
         return $accessToken;
