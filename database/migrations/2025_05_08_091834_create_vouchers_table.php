@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->integer('amount');
             $table->integer('type')->default(0);
-            $table->datetime('valid_date')->change();
+            $table->datetime('valid_date');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
