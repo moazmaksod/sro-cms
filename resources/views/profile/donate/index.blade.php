@@ -84,12 +84,21 @@
         $(document).ready(function () {
             $('[data-method]').on('click', function (e) {
                 //e.preventDefault();
-                const method = $(this).data('method');
+                let method = $(this).data('method');
+                if (location.protocol === 'https:' && method.startsWith('http:')) {
+                    method = method.replace(/^http:/, 'https:');
+                }
 
                 $('[data-method]').removeClass('selected');
                 $(this).addClass('selected');
 
                 $('#content-donate-details form').attr('action', `/profile/donate/${method}/process`);
+
+                $('#content-donate').html(`
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                </div>
+                `);
 
                 $.get(`/profile/donate/${method}`, function (res) {
                     $('#content-donate').html(res);

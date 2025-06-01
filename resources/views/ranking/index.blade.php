@@ -35,7 +35,9 @@
                 e.preventDefault();
 
                 let link = $(this).data('link');
-                link = link.replace(/^http:/, 'https:');
+                if (location.protocol === 'https:' && link.startsWith('http:')) {
+                    link = link.replace(/^http:/, 'https:');
+                }
 
                 $('[data-link]').removeClass('selected');
                 $(this).addClass('selected');
