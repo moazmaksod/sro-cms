@@ -118,6 +118,8 @@ class TbUser extends Model
                 'sec_primary' => 3,
                 'sec_content' => 3,
                 'sec_grade' => 0,
+                'AccPlayTime' => 0,
+                'LatestUpdateTime_ToPlayTime' => 0,
             ]);
         }
     }

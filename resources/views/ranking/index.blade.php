@@ -9,7 +9,7 @@
                     <div class="d-inline-block text-center my-4 mx-3">
                         @foreach($config as $value)
                             @if($value['enabled'])
-                                <button class="btn btn-primary rounded-0 me-2 mb-2 {{ $value['route'] === 'ranking.player' ? 'selected' : '' }}" data-link="{{ is_array($value['route'])? route($value['route']['name'], $value['route']['params'] ?? []): route($value['route']) }}">{{ __($value['name']) }}</button>
+                                <button class="btn btn-primary rounded-0 me-2 mb-2 {{ $value['route'] === 'ranking.player' ? 'active' : '' }}" data-link="{{ is_array($value['route'])? route($value['route']['name'], $value['route']['params'] ?? []): route($value['route']) }}">{{ __($value['name']) }}</button>
                             @endif
                         @endforeach
                     </div>
@@ -39,8 +39,8 @@
                     link = link.replace(/^http:/, 'https:');
                 }
 
-                $('[data-link]').removeClass('selected');
-                $(this).addClass('selected');
+                $('[data-link]').removeClass('active');
+                $(this).addClass('active');
 
                 $('#content-ranking').html(`
                 <div style="text-align: center; padding: 20px;">
