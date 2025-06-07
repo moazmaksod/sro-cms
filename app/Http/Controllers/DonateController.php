@@ -58,4 +58,19 @@ class DonateController extends Controller
 
         return redirect()->back()->withErrors('Invalid payment method.');
     }
+
+    public function webhook($method, Request $request, DonateService $donateService)
+    {
+        $config = config("donate.{$method}");
+
+        if (!$config || !$config['enabled']) {
+            return redirect()->back()->withErrors('Payment method not found or disabled.');
+        }
+
+        if (method_exists($donateService, "webhook" . ucfirst($method))) {
+            return $donateService->{"webhook" . ucfirst($method)}($request);
+        }
+
+        return redirect()->back()->withErrors('Invalid payment method.');
+    }
 }

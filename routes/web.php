@@ -9,6 +9,7 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/download', [PageController::class, 'download'])->name('download');
 Route::get('/lang/{locale}', function ($locale) {if (in_array($locale, array_keys(config('global.languages')))) { Setting::updateOrCreate(['key' => 'locale'], ['value' => $locale]); } return redirect()->back(); })->name('lang.switch');
 Route::get('/callback/{method}', [DonateController::class, 'callback'])->name('callback');
+Route::get('/webhook/{method}', [DonateController::class, 'webhook'])->name('webhook');
 
 Route::get('/post/{slug}', [PageController::class, 'post'])->name('pages.post.show');
 Route::get('/page/{slug}', [PageController::class, 'page'])->name('pages.page.show');

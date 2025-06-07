@@ -188,6 +188,149 @@ class DonateService
         return $accessToken;
     }
 
+    public function processStripe(Request $request)
+    {
+        $config = config('donate.stripe');
+
+        if (!$config['enabled']) {
+            return back()->withErrors(['stripe' => 'Stripe payments are currently disabled.'])->withInput();
+        }
+
+        try {
+            $price = $request->input('price');
+            $package = collect($config['package'])->firstWhere('price', $price);
+
+            if (!$package) {
+                return back()->withErrors(['stripe' => 'Invalid package selected.'])->withInput();
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $config['secret_key'],
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])->asForm()->post($config['endpoint'].'/v1/checkout/sessions', [
+                'payment_method_types[]' => 'card',
+                'line_items[0][price_data][currency]' => strtolower($config['currency']),
+                'line_items[0][price_data][product_data][name]' => $package['name'],
+                'line_items[0][price_data][unit_amount]' => $price * 100,
+                'line_items[0][quantity]' => 1,
+                'mode' => 'payment',
+                'success_url' => route('callback', ['method' => 'stripe']) . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('profile.donate'),
+                'metadata[user_id]' => Auth::id(),
+                'metadata[package_price]' => $price,
+                'metadata[package_value]' => $package['value'],
+                'metadata[package_name]' => $package['name'],
+            ]);
+
+            if ($response->successful()) {
+                $session = $response->json();
+                return redirect()->away($session['url']);
+            }
+
+            $errorMessage = $response->json('error.message') ?? 'Unknown Stripe error';
+            return back()->withErrors(['stripe' => "Payment Failed: {$errorMessage}"])->withInput();
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['stripe' => 'Payment processing failed. Please try again.'])->withInput();
+        }
+    }
+
+    public function callbackStripe(Request $request)
+    {
+        $request->validate([
+            'session_id' => 'required|string',
+        ]);
+
+        $config = config('donate.stripe');
+        $sessionId = $request->get('session_id');
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $config['secret_key'],
+            ])->get($config['endpoint']."/v1/checkout/sessions/{$sessionId}");
+
+            if (!$response->successful()) {
+                $errorMessage = $response->json('error.message') ?? 'Failed to retrieve session details';
+                return back()->withErrors(['stripe' => "Payment Failed: {$errorMessage}"])->withInput();
+            }
+
+            $session = $response->json();
+
+            if ($session['payment_status'] === 'paid') {
+                $metadata = $session['metadata'];
+                $packagePrice = $metadata['package_price'];
+                $packageValue = $metadata['package_value'];
+                $packageName = $metadata['package_name'];
+                $userId = $metadata['user_id'];
+
+                if ($userId != Auth::id()) {
+                    return back()->withErrors(['stripe' => 'Invalid session user.'])->withInput();
+                }
+
+                $package = collect($config['package'])->firstWhere('price', $packagePrice);
+                if (!$package) {
+                    return back()->withErrors(['stripe' => 'Invalid package price.'])->withInput();
+                }
+
+                $user = Auth::user();
+                if (config('global.server.version') === 'vSRO') {
+                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
+                } else {
+                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+                }
+
+                DonateLog::setDonateLog(
+                    'Stripe',
+                    $session['id'],
+                    'true',
+                    $package['price'],
+                    $package['value'],
+                    "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
+                    $user->jid,
+                    $request->ip()
+                );
+
+                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+            }
+
+            return back()->withErrors(['stripe' => 'Payment was not completed successfully.'])->withInput();
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['stripe' => 'Payment processing failed. Please try again.'])->withInput();
+        }
+    }
+
+    public function webhookStripe(Request $request)
+    {
+        $config = config('donate.stripe');
+        $payload = $request->getContent();
+        $sigHeader = $request->header('stripe-signature');
+
+        try {
+            if ($config['webhook_secret']) {
+                $computedSignature = hash_hmac('sha256', $payload, $config['webhook_secret']);
+                if (!hash_equals($computedSignature, $sigHeader)) {
+                    return response('Invalid signature', 400);
+                }
+            }
+
+            $event = json_decode($payload, true);
+
+            if ($event['type'] === 'checkout.session.completed') {
+                $session = $event['data']['object'];
+
+                // Handle successful payment here if needed
+                \Log::info('Stripe webhook: Payment completed', ['session_id' => $session['id']]);
+            }
+
+            return response('OK', 200);
+
+        } catch (\Exception $e) {
+            \Log::error('Stripe webhook error', ['error' => $e->getMessage()]);
+            return response('Webhook error', 400);
+        }
+    }
+
     public function processCoinPayments(Request $request)
     {
         $config = config('donate.coinpayments');
