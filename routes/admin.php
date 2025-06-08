@@ -25,6 +25,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/users/{user}/view', [UsersController::class, 'view'])->name('users.view');
         Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
 
+        Route::put('/users/{user}/email', [UsersController::class, 'updateEmail'])->name('users.update.email');
+        Route::put('/users/{user}/password', [UsersController::class, 'updatePassword'])->name('users.update.password');
+
+        Route::post('/users/{user}/block', [UsersController::class, 'block'])->name('users.block');
+        Route::put('/users/{user}/unban', [UsersController::class, 'unban'])->name('users.unban');
+        
         //News
         Route::get('/news', [NewsController::class, 'index'])->name('news.index');
         Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');

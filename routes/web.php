@@ -23,3 +23,5 @@ require __DIR__.'/ranking.php';
 require __DIR__.'/profile.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
+
+Route::get('/fusion-simulator', [App\Http\Controllers\FusionSimulatorController::class, 'index'])->name('fusion-simulator.index');

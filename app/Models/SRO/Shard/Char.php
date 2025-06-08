@@ -191,4 +191,9 @@ class Char extends Model
     {
         return $this->belongsTo(User::class, 'CharID', 'CharID');
     }
+    
+    public function guild()
+    {
+        return $this->belongsTo(Guild::class, 'GuildID', 'ID');
+    }
 }
