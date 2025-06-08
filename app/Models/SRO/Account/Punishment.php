@@ -3,7 +3,9 @@
 namespace App\Models\SRO\Account;
 
 use Illuminate\Database\Eloquent\Model;
-
+#
+# This model represents punishments (reason)in the SRO account database.
+#
 class Punishment extends Model
 {
     protected $connection = 'account'; // Passe ggf. an

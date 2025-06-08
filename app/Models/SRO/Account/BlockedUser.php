@@ -3,7 +3,9 @@
 namespace App\Models\SRO\Account;
 
 use Illuminate\Database\Eloquent\Model;
-
+#
+# This model represents blocked users in the SRO account database.
+#
 class BlockedUser extends Model
 {
     protected $connection = 'account';

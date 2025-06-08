@@ -107,7 +107,9 @@ class UsersController extends Controller
 
         return back()->with('success', 'Password updated successfully!');
     }
-
+#
+#Start here with the block and unban methods
+#
     public function block(Request $request, TbUser $user)
     {
         $request->validate([
