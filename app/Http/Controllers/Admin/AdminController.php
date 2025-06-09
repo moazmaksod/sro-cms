@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DonateLog;
+use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Shard\Char;
@@ -16,7 +17,12 @@ class AdminController extends Controller
         $userCount = TbUser::getTbUserCount();
         $charCount = Char::getCharCount();
         $totalGold = Char::getGoldSum();
-        $totalSilk = AphChangedSilk::getSilkSum();
+
+        if (config('global.server.version') === 'vSRO') {
+            $totalSilk = SkSilk::getSilkSum();
+        } else {
+            $totalSilk = AphChangedSilk::getSilkSum();
+        }
 
         return view('admin.index', [
             'userCount' => $userCount,
