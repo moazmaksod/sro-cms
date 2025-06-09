@@ -235,9 +235,16 @@
                     </p>
 
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-4">
-                        <a href="{{ route('register') }}" class="btn btn-warning font-cinzel py-3 px-4">
-                            Create Account
-                        </a>
+                        @auth
+                            <a href="{{ route('profile') }}" class="btn btn-warning font-cinzel py-3 px-4">
+                                Account Panel
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="btn btn-warning font-cinzel py-3 px-4">
+                                Create Account
+                            </a>
+                        @endauth
+
                         <a href="{{ route('download') }}" class="btn btn-outline-warning font-cinzel py-3 px-4">
                             Download Client
                         </a>
