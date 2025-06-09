@@ -32,9 +32,15 @@
                     </p>
 
                     <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
-                        <a href="{{ route('register') }}" class="btn btn-warning font-cinzel py-3 px-4">
-                            Create Account
-                        </a>
+                        @auth
+                            <a href="{{ route('profile') }}" class="btn btn-warning font-cinzel py-3 px-4">
+                                Account Panel
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="btn btn-warning font-cinzel py-3 px-4">
+                                Create Account
+                            </a>
+                        @endauth
                         <a href="{{ route('download') }}" class="btn btn-outline-warning font-cinzel py-3 px-4">
                             Download Client
                         </a>
@@ -170,7 +176,21 @@
                                 </div>
                             @endif
                             <div class="card-body">
-                                <div class="small mb-2 font-cinzel">{!! $config[$value->category] !!} {{ $value->published_at->format("M j, Y") }}</div>
+                                <div class="small mb-2 font-cinzel">
+                                    @switch($value->category)
+                                        @case('news')
+                                            <span class="badge text-bg-warning">News</span>
+                                            @break
+                                        @case('update')
+                                            <span class="badge text-bg-primary">Update</span>
+                                            @break
+                                        @case('event')
+                                            <span class="badge text-bg-success">Event</span>
+                                            @break
+                                        @default
+                                            <span class="badge text-bg-warning">News</span>
+                                    @endswitch
+                                    {{ $value->published_at->format("M j, Y") }}</div>
                                 <a href="{{ route('pages.post.show', ['slug' => $value->slug]) }}" class="text-decoration-none">
                                     <h3 class="card-title fw-bold font-cinzel h5">{{ \Illuminate\Support\Str::words(strip_tags($value->title), 3, '...') }}</h3>
                                 </a>

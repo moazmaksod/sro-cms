@@ -35,6 +35,10 @@ class SettingSeeder extends Seeder
             ['value' => 'images/logo.png',]
         );
         DB::table('settings')->updateOrInsert(
+            ['key' => 'hero_background'],
+            ['value' => 'images/bg.jpg',]
+        );
+        DB::table('settings')->updateOrInsert(
             ['key' => 'max_level'],
             ['value' => 140,]
         );

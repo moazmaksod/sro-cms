@@ -22,7 +22,20 @@
                         <h5 class="card-title">{{ $value->title }}</h5>
                     </a>
                     <p class="card-text">
-                        {!! $config[$value->category] !!}
+                        @switch($value->category)
+                            @case('news')
+                                <span class="badge text-bg-warning">News</span>
+                                @break
+                            @case('update')
+                                <span class="badge text-bg-primary">Update</span>
+                                @break
+                            @case('event')
+                                <span class="badge text-bg-success">Event</span>
+                                @break
+                            @default
+                                <span class="badge text-bg-warning">News</span>
+                        @endswitch
+
                         {{ __('Published on') }} {{ $value->published_at->format("M j, Y") }}
                     </p>
                 </div>

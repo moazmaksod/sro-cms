@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', __('Profile'))
 
+@section('sidebar')
+    @include('profile.sidebar')
+@stop
+
 @section('content')
     <div class="container">
         <h3 class="">{{ __('Characters') }}</h3>
@@ -97,7 +101,7 @@
                                 <td>{{ $cash->ThreeMonthUsage ?? 0 }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">VIP</th>
+                                <th scope="row">{{ __('VIP') }}</th>
                                 <td>
                                     @isset(Auth::user()->muUser->muVIPInfo->VIPUserType)
                                         <img src="{{ asset($vipLevel['level'][Auth::user()->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">

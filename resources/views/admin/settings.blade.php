@@ -98,6 +98,20 @@
             </div>
 
             <div class="row mb-3">
+                <label for="hero_background" class="col-md-2 col-form-label text-md-end">{{ __('Background') }}</label>
+
+                <div class="col-md-10">
+                    <input id="hero_background" type="text" class="form-control @error('hero_background') is-invalid @enderror" name="hero_background" value="{{ $settings['hero_background'] ?? '' }}" placeholder="" required>
+
+                    @error('hero_background')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <label for="max_player" class="col-md-2 col-form-label text-md-end">{{ __('Max Online Player') }}</label>
 
                 <div class="col-md-10">

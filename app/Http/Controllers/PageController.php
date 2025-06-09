@@ -18,9 +18,7 @@ class PageController extends Controller
     public function index()
     {
         $data = News::getPosts();
-        $config = config('global.news_category');
-
-        return view('pages.index', compact('data', 'config'));
+        return view('pages.index', compact('data'));
     }
 
     public function post($slug)

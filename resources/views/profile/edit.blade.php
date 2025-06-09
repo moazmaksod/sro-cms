@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', __('Profile'))
 
+@section('sidebar')
+    @include('profile.sidebar')
+@stop
+
 @section('content')
     <div class="container">
         <div class="mb-4">

@@ -88,15 +88,6 @@ return [
             'btn_url' => '#',
         ],
     ],
-    'hero' => [
-        'background' => 'https://wallpapercave.com/wp/wp7441040.jpg',
-        'color' => '#fff',
-    ],
-    'news_category' => [
-        'news' => '<span class="badge text-bg-warning">News</span>',
-        'update' => '<span class="badge text-bg-primary">Update</span>',
-        'event' => '<span class="badge text-bg-success">Event</span>',
-    ],
     'footer' => [
         'general' => [
             0 => [

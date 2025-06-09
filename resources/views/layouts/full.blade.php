@@ -12,9 +12,9 @@
     <!-- SEO -->
     @include('partials.seo')
     <!-- Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" media="screen" rel="stylesheet" type="text/css" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" rel="stylesheet" />
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <!-- Inline Styles -->
     @stack('styles')
@@ -26,9 +26,9 @@
 <main>
     @section('hero')
         <div class="mb-5">
-            <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ config('global.hero.background', 'images/bg.jpg') }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
+            <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ asset(config('settings.hero_background', 'images/bg.jpg')) }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
                 <div class="container py-5">
-                    <h1 class="display-5 fw-bold text-body-emphasis" style="color: {{ config('global.hero.color', '#fff') }} !important;">@yield('title')</h1>
+                    <h1 class="display-5 text-white fw-bold text-body-emphasis">@yield('title')</h1>
                     <p class="col-lg-8 mx-auto lead"></p>
                 </div>
             </div>
@@ -41,7 +41,7 @@
 </main>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script defer src="{{ asset('js/bootstrap.bundle.min.js') }}" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 <script src="{{ asset('js/color-modes.js') }}"></script>
 <script src="{{ asset('js/function.js') }}"></script>
 
