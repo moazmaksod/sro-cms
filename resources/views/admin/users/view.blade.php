@@ -173,9 +173,23 @@
                                 @forelse($characters as $char)
                                     <tr>
                                         <td>{{ $char->CharID }}</td>
-                                        <td>{{ $char->CharName16 }}</td>
-                                        <td>{{ $char->guild->Name != 'DummyGuild' ? $char->guild->Name : 'No Guild' }}</td>
-                                        <td>{{ !empty($char->NickName16) ? $char->NickName16 : 'No Job' }}</td>
+                                        <td>
+                                            <a href="{{ route('ranking.character.view', ['name' => $char->CharName16]) }}" class="text-decoration-none">{{ $char->CharName16 }}</a>
+                                        </td>
+                                        <td>
+                                            @if($char->guild->Name != 'DummyGuild')
+                                                <a href="{{ route('ranking.guild.view', ['name' => $char->guild->Name]) }}" class="text-decoration-none">{{ $char->guild->Name }}</a>
+                                            @else
+                                                {{ __('None') }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if(!empty($char->NickName16))
+                                                {{ $char->NickName16 }}
+                                            @else
+                                                {{ __('None') }}
+                                            @endif
+                                        </td>
                                         <td>{{ number_format($char->RemainGold) }}</td>
                                         <td>{{ number_format($char->ExpOffset) }}</td>
                                         <td>{{ $char->CurLevel }}</td>
