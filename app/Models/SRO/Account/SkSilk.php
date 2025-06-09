@@ -3,6 +3,7 @@
 namespace App\Models\SRO\Account;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class SkSilk extends Model
 {
@@ -64,5 +65,18 @@ class SkSilk extends Model
         );
 
         return self::where('JID', $jid)->increment($types[$type], $amount);
+    }
+
+    public static function getSilkSum()
+    {
+        $minutes = config('global.cache.account_info', 5);
+
+        return Cache::remember('account_info_vsro_silk_sum', now()->addMinutes($minutes), function () {
+            try {
+                return self::selectRaw('SUM(CAST(silk_own AS BIGINT)) as total')->value('total');
+            } catch (\Exception $e) {
+                return 0;
+            }
+        });
     }
 }

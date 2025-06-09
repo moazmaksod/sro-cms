@@ -164,6 +164,7 @@ class TbUser extends Model
             return $this->belongsTo(User::class, 'jid', 'PortalJID');
         }
     }
+
     public function blockedUser()
     {
         return $this->hasOne(BlockedUser::class, 'UserJID', 'JID');
