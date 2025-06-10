@@ -9,6 +9,7 @@
                     <form method="POST" action="{{ route('register') }}">
                     @csrf
 
+                    <input type="hidden" name="code" value="{{ request()->query('invite') }}">
                     <div class="form-group row mb-3">
                         <label for="username" class="col-md-12 col-form-label text-md-left">{{ __('Username') }}</label>
 

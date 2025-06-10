@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -85,5 +86,34 @@ class User extends Authenticatable implements MustVerifyEmail
     public function role()
     {
         return $this->hasOne(UserRole::class);
+    }
+
+    public function invitesCreated()
+    {
+        return $this->hasMany(Invite::class, 'jid', 'jid');
+    }
+
+    public function invitesUsed()
+    {
+        return $this->hasMany(Invite::class, 'invited_jid', 'jid');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            if (!$user->invitesCreated()->exists()) {
+                do {
+                    $code = strtoupper(Str::random(8));
+                } while (Invite::where('code', $code)->exists());
+
+                Invite::create([
+                    'code' => $code,
+                    'jid' => $user->jid,
+                    'name' => $user->username,
+                ]);
+            }
+        });
     }
 }

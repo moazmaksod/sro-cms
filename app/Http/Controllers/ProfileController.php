@@ -222,4 +222,42 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('voucher_success', 'Voucher redeemed successfully!');
     }
+
+    public function invites()
+    {
+        $invite = auth()->user()->invitesCreated()->first();
+        $usedInvites = auth()->user()->invitesCreated()->whereNotNull('invited_jid')->with('invitedUser')->get();
+        $totalPoints = $usedInvites->sum('points');
+
+        return view('profile.invites', [
+            'invite' => $invite,
+            'usedInvites' => $usedInvites,
+            'totalPoints' => $totalPoints,
+        ]);
+    }
+
+    public function invite_redeem()
+    {
+        $user = Auth::user();
+
+        $invites = $user->invitesCreated()->whereNotNull('invited_jid')->get();
+        $totalPoints = $invites->sum('points');
+
+        if ($totalPoints < 25) {
+            return back()->with('error', 'You need at least 25 points to redeem.');
+        }
+
+        $silkAmount = $totalPoints;
+        if (config('global.server.version') === 'vSRO') {
+            SkSilk::setSkSilk($user->jid, 3, $silkAmount);
+        } else {
+            AphChangedSilk::setChangedSilk($user->jid, 3, $silkAmount);
+        }
+
+        foreach ($invites as $invite) {
+            $invite->update(['points' => 0]);
+        }
+
+        return back()->with('success', "$silkAmount Silk has been added to your account!");
+    }
 }

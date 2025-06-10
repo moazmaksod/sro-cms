@@ -38,6 +38,7 @@
                 @if(config('global.server.version') !== 'vSRO')
                     <a href="{{ route('profile.silk-history') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.silk-history') ? 'active' : '' }}">{{ __('Silk History') }}</a>
                 @endif
+                <a href="{{ route('profile.invites') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.invites') ? 'active' : '' }}">{{ __('Invites') }}</a>
                 <a href="{{ route('profile') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile') ? 'active' : '' }}">{{ __('Account') }}</a>
                 <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.edit') ? 'active' : '' }}">{{ __('Settings') }}</a>
                 @admin

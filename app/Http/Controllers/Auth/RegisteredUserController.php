@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invite;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -47,6 +49,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
             'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
+            'code' => ['nullable', 'string', 'exists:' . Invite::class],
         ];
 
         if (config('global.server.version') === 'vSRO') {
@@ -87,6 +90,19 @@ class RegisteredUserController extends Controller
                 //AphChangedSilk::setChangedSilk($jid, 1, 0);
                 //AphChangedSilk::setChangedSilk($jid, 3, 0);
                 TbUser::setGameAccount($jid, $request->username, $request->password, $request->email, $request->ip());
+            }
+
+            if ($request->filled('code')) {
+                $invite = Invite::where('code', $request->code)->first();
+                if ($invite) {
+                    Invite::create([
+                        'code' => $invite->code,
+                        'jid' => $invite->jid,
+                        'name' => $invite->name,
+                        'invited_jid' => $jid,
+                        'points' => 5,
+                    ]);
+                }
             }
 
             $user = User::create([

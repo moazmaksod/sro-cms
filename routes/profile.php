@@ -17,6 +17,8 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
 
         Route::get('/silk-history', [ProfileController::class, 'silk_history'])->name('silk-history');
         Route::post('/send-code', [ProfileController::class, 'send_code'])->name('code-send');
+        Route::get('/invites', [ProfileController::class, 'invites'])->name('invites');
+        Route::post('/invites-redeem', [ProfileController::class, 'invite_redeem'])->name('invites-redeem');
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
         Route::get('/donate/{method}', [DonateController::class, 'show'])->name('donate.show');
