@@ -37,18 +37,7 @@ class UsersController extends Controller
         $vipLevel = config('ranking.vip_level');
         $donationLogs = DonateLog::where('jid', $user->JID)->orderByDesc('created_at')->limit(10)->get();
         $characters = $user->shardUser()->orderByDesc('CurLevel')->get();
-
-        $activePunishment = Punishment::where('UserJID', $user->JID)
-            ->where('Type', 1)
-            ->where('BlockEndTime', '>', Carbon::now())
-            ->orderByDesc('BlockEndTime')
-            ->first();
-
-        $punishmentHistory = Punishment::where('UserJID', $user->JID)
-            ->where('Type', 1)
-            ->orderByDesc('BlockEndTime')
-            ->limit(5)
-            ->get();
+        $activePunishment = Punishment::where('UserJID', $user->JID)->where('Type', 1)->where('BlockEndTime', '>', Carbon::now())->orderByDesc('BlockEndTime')->first();
 
         return view('admin.users.view', [
             'user' => $user,
@@ -56,7 +45,6 @@ class UsersController extends Controller
             'donationLogs' => $donationLogs,
             'characters' => $characters,
             'activePunishment' => $activePunishment,
-            'punishmentHistory' => $punishmentHistory,
         ]);
     }
 
