@@ -61,7 +61,7 @@ return [
     ],
     'invites' => [
         'enabled' => true,
-        'reward_points' => 0, //5 Default, 0 = No eward
+        'reward_points' => 5, //5 Default, 0 = No eward
         'minimum_redeem' => 25,
     ],
     'sliders' => [
