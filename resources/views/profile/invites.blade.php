@@ -9,16 +9,6 @@
     <div class="container">
         <div class="card p-3">
             <div class="card-body">
-                @admin
-                    <div class="mb-3">
-                        <label for="inviteLink" class="form-label">GM Invite Link</label>
-                        <div class="input-group">
-                            <input type="text" id="inviteLink" class="form-control" value="{{ url('/register?invite=ELITEPVPERS') }}" readonly>
-                            <button class="btn btn-outline-primary" type="button" onclick="copyInviteLink()">Copy</button>
-                        </div>
-                    </div>
-                @endadmin
-
                 @if ($invite)
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
@@ -38,8 +28,8 @@
 
                     <div class="card d-flex justify-content-between align-items-center mb-3 mt-3 p-3">
                         <h5 class="mb-0">Total Invite Points: <span class="">{{ $totalPoints }}</span></h5>
-                        <p class="mt-0 text-muted">Minimum 25 points to redeem</p>
-                        @if ($totalPoints >= 25)
+                        <p class="mt-0 text-muted">Minimum {{ $minimumRedeem }} points to redeem</p>
+                        @if ($totalPoints >= $minimumRedeem)
                             <form method="POST" action="{{ route('profile.invites-redeem') }}">
                                 @csrf
                                 <button class="btn btn-primary">Redeem Points</button>

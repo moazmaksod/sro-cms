@@ -59,6 +59,11 @@ return [
         'type' => 'landing', //blog or landing
         'news_limit' => 3,
     ],
+    'invites' => [
+        'enabled' => true,
+        'reward_points' => 0, //5 Default, 0 = No eward
+        'minimum_redeem' => 25,
+    ],
     'sliders' => [
         0 => [
             'title' => 'Example headline',

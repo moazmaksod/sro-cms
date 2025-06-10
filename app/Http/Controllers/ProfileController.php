@@ -228,36 +228,39 @@ class ProfileController extends Controller
         $invite = auth()->user()->invitesCreated()->first();
         $usedInvites = auth()->user()->invitesCreated()->whereNotNull('invited_jid')->with('invitedUser')->get();
         $totalPoints = $usedInvites->sum('points');
+        $minimumRedeem = config('global.invites.minimum_redeem', 25);
 
         return view('profile.invites', [
             'invite' => $invite,
             'usedInvites' => $usedInvites,
             'totalPoints' => $totalPoints,
+            'minimumRedeem' => $minimumRedeem,
         ]);
     }
 
     public function invite_redeem()
     {
         $user = Auth::user();
-
+        $minimumRedeem = config('global.invites.minimum_redeem', 25);
         $invites = $user->invitesCreated()->whereNotNull('invited_jid')->get();
-        $totalPoints = $invites->sum('points');
 
-        if ($totalPoints < 25) {
-            return back()->with('error', 'You need at least 25 points to redeem.');
+        if(!config('global.invites.enabled', true)) {
+            return back()->with('error', "Redeemed invites disabled.");
+        }
+        if ($invites->sum('points') < $minimumRedeem) {
+            return back()->with('error', "You need at least {$minimumRedeem} points to redeem.");
         }
 
-        $silkAmount = $totalPoints;
         if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 3, $silkAmount);
+            SkSilk::setSkSilk($user->jid, 3, $invites->sum('points'));
         } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $silkAmount);
+            AphChangedSilk::setChangedSilk($user->jid, 3, $invites->sum('points'));
         }
 
         foreach ($invites as $invite) {
             $invite->update(['points' => 0]);
         }
 
-        return back()->with('success', "$silkAmount Silk has been added to your account!");
+        return back()->with('success', "{$invites->sum('points')} Silk has been added to your account!");
     }
 }

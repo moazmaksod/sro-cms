@@ -92,17 +92,29 @@ class RegisteredUserController extends Controller
                 TbUser::setGameAccount($jid, $request->username, $request->password, $request->email, $request->ip());
             }
 
-            if ($request->filled('code')) {
-                $invite = Invite::where('code', $request->code)->first();
-                if ($invite) {
-                    Invite::create([
-                        'code' => $invite->code,
-                        'jid' => $invite->jid,
-                        'name' => $invite->name,
-                        'invited_jid' => $jid,
-                        'points' => 5,
-                    ]);
+            if(config('global.invites.enabled', true)) {
+                if ($request->filled('code')) {
+                    $invite = Invite::where('code', $request->code)->first();
+                    if ($invite) {
+                        Invite::create([
+                            'code' => $invite->code,
+                            'jid' => $invite->jid,
+                            'name' => $invite->name,
+                            'invited_jid' => $jid,
+                            'points' => config('global.invites.reward_points', 0),
+                        ]);
+                    }
                 }
+
+                do {
+                    $code = strtoupper(Str::random(8));
+                } while (Invite::where('code', $code)->exists());
+
+                Invite::create([
+                    'code' => $code,
+                    'jid' => $jid,
+                    'name' => $request->username,
+                ]);
             }
 
             $user = User::create([

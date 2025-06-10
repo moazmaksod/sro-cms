@@ -97,23 +97,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Invite::class, 'invited_jid', 'jid');
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($user) {
-            if (!$user->invitesCreated()->exists()) {
-                do {
-                    $code = strtoupper(Str::random(8));
-                } while (Invite::where('code', $code)->exists());
-
-                Invite::create([
-                    'code' => $code,
-                    'jid' => $user->jid,
-                    'name' => $user->username,
-                ]);
-            }
-        });
-    }
 }
