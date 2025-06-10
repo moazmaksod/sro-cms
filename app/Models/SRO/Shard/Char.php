@@ -148,6 +148,37 @@ class Char extends Model
         });
     }
 
+    public static function getLevelRanking($limit = 25)
+    {
+        $minutes = config('global.cache.ranking_player', 60);
+
+        return Cache::remember("ranking_level_{$limit}", now()->addMinutes($minutes), function () use ($limit) {
+            $query = self::select(
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.CurLevel',
+                '_Char.RefObjID',
+                '_Guild.ID',
+                '_Guild.Name',
+            );
+            $query->join('_Guild', '_Char.GuildID', '=', '_Guild.ID')
+                ->where('_Char.deleted', '=', 0)
+                ->whereNotIn('_Char.CharName16', config('ranking.hidden.characters'));
+            $groupBy = [
+                '_Char.CharID',
+                '_Char.CharName16',
+                '_Char.CurLevel',
+                '_Char.RefObjID',
+                '_Guild.ID',
+                '_Guild.Name',
+            ];
+            $query->groupBy(...$groupBy)
+                ->orderByDesc('_Char.CurLevel')
+                ->limit($limit);
+            return $query->get();
+        });
+    }
+
     public static function getCharIDByName($CharName)
     {
         $minutes = config('global.cache.character_info', 1440);
@@ -191,7 +222,7 @@ class Char extends Model
     {
         return $this->belongsTo(User::class, 'CharID', 'CharID');
     }
-    
+
     public function guild()
     {
         return $this->belongsTo(Guild::class, 'GuildID', 'ID');
