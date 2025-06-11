@@ -99,16 +99,23 @@ class RegisteredUserController extends Controller
                     $invite = Referral::where('code', $request->invite)->first();
 
                     if ($invite) {
-                        if ($invite->ip !== $request->ip()) {
-                            if ($invite->fingerprint !== $request->fingerprint) {
-                                Referral::create([
-                                    'code' => $invite->code,
-                                    'name' => $invite->name,
-                                    'jid' => $invite->jid,
-                                    'invited_jid' => $jid,
-                                    'points' => config('global.referral.reward_points', 0),
-                                ]);
-                            }
+                        if ($invite->ip !== $request->ip() && $invite->fingerprint !== $request->fingerprint) {
+                            Referral::create([
+                                'code' => $invite->code,
+                                'name' => $invite->name,
+                                'jid' => $invite->jid,
+                                'invited_jid' => $jid,
+                                'points' => config('global.referral.reward_points', 0),
+                            ]);
+                        }else {
+                            Referral::create([
+                                'code' => $invite->code,
+                                'name' => $invite->name,
+                                'ip' => 'CHEATING',
+                                'jid' => $invite->jid,
+                                'invited_jid' => $jid,
+                                'points' => 0,
+                            ]);
                         }
                     }
                 }

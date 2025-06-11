@@ -49,6 +49,7 @@
                                     <th>Username</th>
                                     <th>Registered At</th>
                                     <th>Points</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -58,6 +59,13 @@
                                         <td>{{ $inviteLog->invitedUser->username ?? 'Unknown' }}</td>
                                         <td>{{ $inviteLog->invitedUser->created_at->format('Y-m-d H:i') ?? 'N/A' }}</td>
                                         <td>{{ $inviteLog->points }}</td>
+                                        <td>
+                                            @if($inviteLog->ip == 'CHEATING')
+                                                <span class="text-danger">Cheating</span>
+                                            @else
+                                                <span class="text-success">Success<span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
