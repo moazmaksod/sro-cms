@@ -10,7 +10,7 @@
             <div class="alert alert-danger">{{ session('passcode_error') }}</div>
         @endif
 
-        <form method="POST" action="{{ route('profile.passcode') }}">
+        <form method="POST" action="{{ route('profile.reset.secondary.password') }}">
             @csrf
 
             <div class="row mb-3">

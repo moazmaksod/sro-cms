@@ -3,16 +3,12 @@
 namespace App\Models;
 
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\SRO\Portal\MuUser;
-use App\Models\SRO\Portal\MuVIPInfo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -90,11 +86,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function invitesCreated()
     {
-        return $this->hasMany(Invite::class, 'jid', 'jid');
+        return $this->hasMany(Referral::class, 'jid', 'jid');
     }
 
     public function invitesUsed()
     {
-        return $this->hasMany(Invite::class, 'invited_jid', 'jid');
+        return $this->hasMany(Referral::class, 'invited_jid', 'jid');
     }
 }

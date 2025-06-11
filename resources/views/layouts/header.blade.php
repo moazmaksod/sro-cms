@@ -109,16 +109,10 @@
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Settings') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.donate') }}">{{ __('Donate') }}</a></li>
-                                @if(config('global.invites.enabled', true))
-                                    <li><a class="dropdown-item" href="{{ route('profile.invites') }}">{{ __('Invites') }}</a></li>
-                                @endif
-                                @if(config('global.server.version') !== 'vSRO')
-                                    <li><a class="dropdown-item" href="{{ route('profile.silk-history') }}">{{ __('Silk History') }}</a></li>
-                                @endif
-                                @admin
+                                @if(auth()->user()->role?->is_admin)
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ route('admin') }}">{{ __('Admin panel') }}</a></li>
-                                @endadmin
+                                @endif
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">

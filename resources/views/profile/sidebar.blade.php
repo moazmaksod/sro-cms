@@ -38,14 +38,13 @@
                 @if(config('global.server.version') !== 'vSRO')
                     <a href="{{ route('profile.silk-history') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.silk-history') ? 'active' : '' }}">{{ __('Silk History') }}</a>
                 @endif
-                @if(config('global.invites.enabled', true))
-                    <a href="{{ route('profile.invites') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.invites') ? 'active' : '' }}">{{ __('Invites') }}</a>
+                @if(config('global.referral.enabled', true))
+                    <a href="{{ route('profile.referral') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.referral') ? 'active' : '' }}">{{ __('Referral') }}</a>
                 @endif
+                <a href="{{ route('profile.voucher') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.voucher') ? 'active' : '' }}">{{ __('Voucher') }}</a>
+
                 <a href="{{ route('profile') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile') ? 'active' : '' }}">{{ __('Account') }}</a>
                 <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.edit') ? 'active' : '' }}">{{ __('Settings') }}</a>
-                @admin
-                    <a href="{{ route('admin') }}" class="btn btn-outline-success">{{ __('Admin panel') }}</a>
-                @endadmin
 
                 <a href="{{ route('logout') }}" class="btn btn-outline-danger" onclick="event.preventDefault();$('#logout-form').submit();">{{ __('Log Out') }}</a>
                 <form id="logout-form" method="POST" action="{{ route('logout') }}"> @csrf </form>

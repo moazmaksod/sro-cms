@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('Invites'))
+@section('title', __('Referral'))
 
 @section('sidebar')
     @include('profile.sidebar')
@@ -30,7 +30,7 @@
                         <h5 class="mb-0">Total Invite Points: <span class="">{{ $totalPoints }}</span></h5>
                         <p class="mt-0 text-muted">Minimum {{ $minimumRedeem }} points to redeem</p>
                         @if ($totalPoints >= $minimumRedeem)
-                            <form method="POST" action="{{ route('profile.invites-redeem') }}">
+                            <form method="POST" action="{{ route('profile.referral.redeem') }}">
                                 @csrf
                                 <button class="btn btn-primary">Redeem Points</button>
                             </form>
@@ -85,3 +85,35 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script>
+        const fpPromise = FingerprintJS.load();
+
+        fpPromise.then(fp => {
+            fp.get().then(result => {
+                const visitorId = result.visitorId;
+
+                fetch("{{ route('profile.referral.fingerprint') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        fingerprint: visitorId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving fingerprint:', error);
+                });
+            });
+        });
+    </script>
+@endpush

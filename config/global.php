@@ -59,7 +59,7 @@ return [
         'type' => 'landing', //blog or landing
         'news_limit' => 3,
     ],
-    'invites' => [
+    'referral' => [
         'enabled' => true,
         'reward_points' => 5, //5 Default, 0 = No eward
         'minimum_redeem' => 25,

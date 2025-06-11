@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Invite;
+use App\Models\Referral;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
@@ -49,7 +50,8 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
             'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
-            'code' => ['nullable', 'string', 'exists:' . Invite::class],
+            'invite' => ['nullable', 'string'],
+            'fingerprint' => ['nullable', 'string'],
         ];
 
         if (config('global.server.version') === 'vSRO') {
@@ -92,29 +94,24 @@ class RegisteredUserController extends Controller
                 TbUser::setGameAccount($jid, $request->username, $request->password, $request->email, $request->ip());
             }
 
-            if(config('global.invites.enabled', true)) {
-                if ($request->filled('code')) {
-                    $invite = Invite::where('code', $request->code)->first();
+            if (config('global.referral.enabled', true)) {
+                if ($request->filled('invite')) {
+                    $invite = Referral::where('code', $request->invite)->first();
+
                     if ($invite) {
-                        Invite::create([
-                            'code' => $invite->code,
-                            'jid' => $invite->jid,
-                            'name' => $invite->name,
-                            'invited_jid' => $jid,
-                            'points' => config('global.invites.reward_points', 0),
-                        ]);
+                        if ($invite->ip !== $request->ip()) {
+                            if ($invite->fingerprint !== $request->fingerprint) {
+                                Referral::create([
+                                    'code' => $invite->code,
+                                    'name' => $invite->name,
+                                    'jid' => $invite->jid,
+                                    'invited_jid' => $jid,
+                                    'points' => config('global.referral.reward_points', 0),
+                                ]);
+                            }
+                        }
                     }
                 }
-
-                do {
-                    $code = strtoupper(Str::random(8));
-                } while (Invite::where('code', $code)->exists());
-
-                Invite::create([
-                    'code' => $code,
-                    'jid' => $jid,
-                    'name' => $request->username,
-                ]);
             }
 
             $user = User::create([

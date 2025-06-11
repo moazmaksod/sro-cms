@@ -9,7 +9,9 @@
                     <form method="POST" action="{{ route('register') }}">
                     @csrf
 
-                    <input type="hidden" name="code" value="{{ request()->query('invite') }}">
+                    <input type="hidden" name="invite" value="{{ request()->query('invite') }}">
+                    <input type="hidden" name="fingerprint" id="fingerprint">
+
                     <div class="form-group row mb-3">
                         <label for="username" class="col-md-12 col-form-label text-md-left">{{ __('Username') }}</label>
 
@@ -111,3 +113,16 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script>
+        const fpPromise = FingerprintJS.load();
+
+        fpPromise.then(fp => {
+            fp.get().then(result => {
+                const visitorId = result.visitorId;
+                document.getElementById('fingerprint').value = visitorId;
+            });
+        });
+    </script>
+@endpush

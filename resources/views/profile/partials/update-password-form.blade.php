@@ -5,7 +5,7 @@
         <div class="mb-3">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </div>
-        <form id="send-verify-code-password" class="d-none" method="post" action="{{ route('profile.code-send') }}">
+        <form id="send-verify-code-password" class="d-none" method="post" action="{{ route('profile.resend.verify.code') }}">
             @csrf
             <input type="hidden" name="send-verify-code-name" value="send-verify-code-password">
         </form>
@@ -51,7 +51,7 @@
                                 </button>
                             </p>
 
-                            @if (session('status') === 'send-verify-code-password')
+                            @if (session('status') === 'resend-verify-code-password')
                                 <div class="alert alert-success mt-2">Verification Code sent to your current email.</div>
                             @endif
                         </div>

@@ -11,14 +11,18 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/edit', [ProfileController::class, 'update'])->name('update');
         Route::delete('/edit', [ProfileController::class, 'destroy'])->name('destroy');
-        Route::post('/edit/redeem', [ProfileController::class, 'redeem'])->name('redeem');
-        Route::post('/edit/passcode', [ProfileController::class, 'passcode'])->name('passcode');
-        Route::post('/edit/settings', [ProfileController::class, 'update_settings'])->name('settings-update');
 
-        Route::get('/silk-history', [ProfileController::class, 'silk_history'])->name('silk-history');
-        Route::post('/send-code', [ProfileController::class, 'send_code'])->name('code-send');
-        Route::get('/invites', [ProfileController::class, 'invites'])->name('invites');
-        Route::post('/invites-redeem', [ProfileController::class, 'invite_redeem'])->name('invites-redeem');
+        Route::post('/edit/settings', [ProfileController::class, 'updateSettings'])->name('settings.update');
+        Route::post('/edit/resend-verify-code', [ProfileController::class, 'resendVerifyCode'])->name('resend.verify.code');
+        Route::post('/edit/reset-secondary-password', [ProfileController::class, 'secondaryPasswordReset'])->name('reset.secondary.password');
+
+        Route::get('/voucher', [ProfileController::class, 'voucher'])->name('voucher');
+        Route::post('/voucher-redeem', [ProfileController::class, 'redeemVoucher'])->name('voucher.redeem');
+
+        Route::get('/referral', [ProfileController::class, 'referral'])->name('referral');
+        Route::post('/referral-redeem', [ProfileController::class, 'redeemReferral'])->name('referral.redeem');
+        Route::post('/referral-fingerprint', [ProfileController::class, 'fingerprintReferral'])->name('referral.fingerprint');
+        Route::get('/silk-history', [ProfileController::class, 'silkHistory'])->name('silk-history');
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
         Route::get('/donate/{method}', [DonateController::class, 'show'])->name('donate.show');

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invites', function (Blueprint $table) {
+        Schema::create('vote_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('name')->nullable();
-            $table->foreignId('jid')->nullable();
-            $table->foreignId('invited_jid')->nullable();
-            $table->integer('points')->default(0);
+            $table->integer('jid');
+            $table->integer('site')->nullable();
+            $table->string('ip')->nullable();
+            $table->string('fingerprint')->nullable();
+            $table->dateTime('expire');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invites');
+        Schema::dropIfExists('vote_logs');
     }
 };

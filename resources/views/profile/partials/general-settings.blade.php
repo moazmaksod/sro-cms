@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('profile.settings-update') }}">
+        <form method="POST" action="{{ route('profile.settings.update') }}">
             @csrf
 
             <div class="row mb-3">
@@ -16,8 +16,8 @@
 
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input type="hidden" name="item_stats_jid_{{ $user->jid }}" value="0">
-                        <input class="form-check-input" type="checkbox" name="item_stats_jid_{{ $user->jid }}" value="1" id="item_stats_jid_{{ $user->jid }}" {{ config("settings.item_stats_jid_{$user->jid}") ? 'checked' : '' }}>
+                        <input type="hidden" name="item_stats_jid_{{ $user->tbUser->JID }}" value="0">
+                        <input class="form-check-input" type="checkbox" name="item_stats_jid_{{ $user->tbUser->JID }}" value="1" id="item_stats_jid_{{ $user->tbUser->JID }}" {{ config("settings.item_stats_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
                     </div>
                 </div>
             </div>
@@ -27,8 +27,8 @@
 
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input type="hidden" name="job_name_jid_{{ $user->jid }}" value="0">
-                        <input class="form-check-input" type="checkbox" name="job_name_jid_{{ $user->jid }}" value="1" id="job_name_jid_{{ $user->jid }}" {{ config("settings.job_name_jid_{$user->jid}") ? 'checked' : '' }}>
+                        <input type="hidden" name="job_name_jid_{{ $user->tbUser->JID }}" value="0">
+                        <input class="form-check-input" type="checkbox" name="job_name_jid_{{ $user->tbUser->JID }}" value="1" id="job_name_jid_{{ $user->tbUser->JID }}" {{ config("settings.job_name_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
                     </div>
                 </div>
             </div>

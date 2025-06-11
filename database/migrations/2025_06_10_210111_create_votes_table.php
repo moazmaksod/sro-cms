@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vouchers', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->integer('amount');
-            $table->integer('type')->default(0);
-            $table->datetime('valid_date')->nullable();
-            $table->unsignedBigInteger('jid')->nullable();
-            $table->boolean('status')->default(false);
+            $table->string('title');
+            $table->text('url');
+            $table->string('ip');
+            $table->integer('reward');
+            $table->integer('timeout');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vouchers');
+        Schema::dropIfExists('votes');
     }
 };

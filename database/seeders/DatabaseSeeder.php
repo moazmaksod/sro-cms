@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
 
         //$this->call(MagOptSeeder::class);
         $this->call(SettingSeeder::class);
-        $this->call(InviteSeeder::class);
+        $this->call(ReferralSeeder::class);
+        $this->call(VoteSeeder::class);
     }
 }

@@ -62,7 +62,7 @@ class PageController extends Controller
         ]);
     }
 
-    public function uniques_advanced()
+    public function uniquesAdvanced()
     {
         $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0, false);
         $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);

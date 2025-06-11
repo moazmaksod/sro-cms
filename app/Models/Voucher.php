@@ -9,7 +9,7 @@ class Voucher extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'amount', 'type', 'valid_date', 'user_id', 'status'];
+    protected $fillable = ['code', 'amount', 'type', 'valid_date', 'jid', 'status'];
 
     protected $casts = [
         'valid_date' => 'datetime',

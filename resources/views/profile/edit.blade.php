@@ -18,14 +18,11 @@
         </div>
         @if(config('global.server.version') !== 'vSRO')
             <div class="mb-4">
-                @include('profile.partials.reset-passcode')
+                @include('profile.partials.reset-secondary-password')
             </div>
         @endif
         <div class="mb-4">
             @include('profile.partials.general-settings')
-        </div>
-        <div class="mb-4">
-            @include('profile.partials.redeem-voucher')
         </div>
     </div>
 @endsection

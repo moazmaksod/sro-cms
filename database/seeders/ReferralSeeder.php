@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class InviteSeeder extends Seeder
+class ReferralSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,37 +14,37 @@ class InviteSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'GOOGLE'],
             ['name' => 'Google',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'YOUTUBE'],
             ['name' => 'Youtube',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'FACEBOOK'],
             ['name' => 'Facebook',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'DISCORD'],
             ['name' => 'Discord',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'ELITEPVPERS'],
             ['name' => 'Elitepvpers',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'SILKROAD4ARAB'],
             ['name' => 'Silkroad4Arab',]
         );
 
-        DB::table('invites')->updateOrInsert(
+        DB::table('referrals')->updateOrInsert(
             ['code' => 'SROCAVE'],
             ['name' => 'SroCave',]
         );

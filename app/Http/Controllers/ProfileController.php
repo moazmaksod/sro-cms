@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\DonateLog;
+use App\Models\Referral;
 use App\Models\Setting;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
@@ -131,7 +132,16 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function send_code(Request $request)
+    public function updateSettings(Request $request)
+    {
+        foreach ($request->all() as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return back()->with('success', 'Settings updated!');
+    }
+
+    public function resendVerifyCode(Request $request)
     {
         $user = $request->user();
         $code = random_int(100000, 999999);
@@ -148,23 +158,7 @@ class ProfileController extends Controller
         return back()->with('status', $request->input('send-verify-code-name'));
     }
 
-    public function update_settings(Request $request)
-    {
-        foreach ($request->all() as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
-        }
-
-        return back()->with('success', 'Settings updated!');
-    }
-
-    public function donate(Request $request): View
-    {
-        return view('profile.donate', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    public function silk_history(Request $request): View
+    public function silkHistory(Request $request): View
     {
         $page = $request->get('page', 1);
         $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $page);
@@ -175,7 +169,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function passcode(Request $request): RedirectResponse
+    public function secondaryPasswordReset(Request $request): RedirectResponse
     {
         $request->validate([
             'password' => 'required|string',
@@ -189,7 +183,17 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('passcode_error', 'Invalid password provided. Please try again.');
     }
-    public function redeem(Request $request)
+
+    public function voucher()
+    {
+        $data = Voucher::where('jid', Auth::user()->jid)->get();
+
+        return view('profile.voucher', [
+            'data' => $data,
+        ]);
+    }
+
+    public function redeemVoucher(Request $request)
     {
         $request->validate([
             'voucher_code' => 'required|string',
@@ -198,39 +202,48 @@ class ProfileController extends Controller
         $voucher = Voucher::where('code', $request->voucher_code)->first();
 
         if (!$voucher) {
-            return redirect()->back()->with('voucher_error', 'Invalid voucher code.');
+            return redirect()->back()->with('error', 'Invalid voucher code.');
         }
 
         if ($voucher->status) {
-            return redirect()->back()->with('voucher_error', 'This voucher has already been used.');
+            return redirect()->back()->with('error', 'This voucher has already been used.');
         }
 
         if ($voucher->valid_date && Carbon::now()->greaterThan($voucher->valid_date)) {
-            return redirect()->back()->with('voucher_error', 'This voucher has expired.');
+            return redirect()->back()->with('error', 'This voucher has expired.');
         }
 
         $user = Auth::user();
-
         if (config('global.server.version') === 'vSRO') {
             SkSilk::setSkSilk($user->jid, $voucher->type, $voucher->amount);
         } else {
             AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
         }
 
-        DonateLog::setDonateLog('Voucher', (string) Str::uuid(), 'true', 0, $voucher->amount, "User:{$user->username} Has Redeemed:{$voucher->code}", $user->jid, $request->ip());
-        $voucher->update(['user_id' => $user->jid, 'status' => true]);
+        DonateLog::setDonateLog(
+            'Voucher',
+            (string) Str::uuid(),
+            'true',
+            0,
+            $voucher->amount,
+            "User:{$user->username} Has Redeemed:{$voucher->code}",
+            $user->jid,
+            $request->ip()
+        );
 
-        return redirect()->back()->with('voucher_success', 'Voucher redeemed successfully!');
+        $voucher->update(['jid' => $user->jid, 'status' => true]);
+
+        return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }
 
-    public function invites()
+    public function referral()
     {
         $invite = auth()->user()->invitesCreated()->first();
         $usedInvites = auth()->user()->invitesCreated()->whereNotNull('invited_jid')->with('invitedUser')->get();
         $totalPoints = $usedInvites->sum('points');
-        $minimumRedeem = config('global.invites.minimum_redeem', 25);
+        $minimumRedeem = config('global.referral.minimum_redeem', 25);
 
-        return view('profile.invites', [
+        return view('profile.referral', [
             'invite' => $invite,
             'usedInvites' => $usedInvites,
             'totalPoints' => $totalPoints,
@@ -238,13 +251,44 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function invite_redeem()
+    public function fingerprintReferral(Request $request)
+    {
+        $fingerprint = $request->input('fingerprint');
+        $ip = $request->ip();
+
+        session(['fingerprint' => $fingerprint]);
+
+        $invite = Auth::user()->invitesCreated()->first();
+        if (!$invite) {
+            try {
+                do {
+                    $code = strtoupper(Str::random(8));
+                } while (Referral::where('code', $code)->exists());
+
+                Referral::create([
+                    'code' => $code,
+                    'name' => Auth::user()->username,
+                    'jid' => Auth::user()->jid,
+                    'ip' => $ip,
+                    'fingerprint' => $fingerprint,
+                ]);
+
+                return response()->json(['status' => 'ok']);
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        return response()->json(['status' => 'error']);
+    }
+
+    public function redeemReferral()
     {
         $user = Auth::user();
-        $minimumRedeem = config('global.invites.minimum_redeem', 25);
+        $minimumRedeem = config('global.referral.minimum_redeem', 25);
         $invites = $user->invitesCreated()->whereNotNull('invited_jid')->get();
 
-        if(!config('global.invites.enabled', true)) {
+        if(!config('global.referral.enabled', true)) {
             return back()->with('error', "Redeemed invites disabled.");
         }
         if ($invites->sum('points') < $minimumRedeem) {
