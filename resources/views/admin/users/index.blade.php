@@ -50,7 +50,7 @@
                 </tbody>
             </table>
 
-            {{ $data->appends(['search' => request('search')])->links() }}
+            {{ $data->appends(['search' => request('search')])->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

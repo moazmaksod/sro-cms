@@ -41,7 +41,7 @@ class AdminController extends Controller
             ->groupBy('jid')
             ->orderByDesc('total_points')
             ->with('creator')
-            ->take(50)
+            ->take(20)
             ->get()
             ->map(function ($ref) {
                 $referral = Referral::where('jid', $ref->jid)->latest()->first();
