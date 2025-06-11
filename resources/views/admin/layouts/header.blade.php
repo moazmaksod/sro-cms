@@ -53,7 +53,7 @@
 
     <ul class="navbar-nav flex-row">
         <li class="nav-item text-nowrap">
-            <a class="nav-link px-3 text-white" href="{{ route('home') }}" target="_blank">
+            <a class="nav-link px-3 text-white" href="{{ route('home') }}">
                 <svg class="bi" aria-hidden="true"><use xlink:href="#house-fill"/></svg>
                 {{ __('Back Home') }}
             </a>

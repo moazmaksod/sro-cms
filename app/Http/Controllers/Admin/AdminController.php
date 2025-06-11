@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DonateLog;
+use App\Models\Referral;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Shard\Char;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -32,9 +35,34 @@ class AdminController extends Controller
         ]);
     }
 
-    public function donate_logs()
+    public function referralLogs(Request $request)
     {
-        $data = DonateLog::all();
+        $data = Referral::select('jid', DB::raw('SUM(points) as total_points'))
+            ->groupBy('jid')
+            ->orderByDesc('total_points')
+            ->with('creator')
+            ->take(50)
+            ->get();
+
+        return view('admin.referral-logs', compact('data'));
+    }
+
+    public function donateLogs(Request $request)
+    {
+        $data = DonateLog::query()
+            ->when($request->transaction_id, fn($q) =>
+            $q->where('transaction_id', 'like', '%' . $request->transaction_id . '%'))
+            ->when($request->method_type, fn($q) =>
+            $q->where('method', $request->method_type))
+            ->when($request->status, fn($q) =>
+            $q->where('status', $request->status))
+            ->when($request->jid, fn($q) =>
+            $q->where('jid', $request->jid))
+            ->when($request->ip, fn($q) =>
+            $q->where('ip', 'like', '%' . $request->ip . '%'))
+            ->latest()
+            ->paginate(20);
+
         return view('admin.donate-logs', compact('data'));
     }
 }

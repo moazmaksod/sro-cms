@@ -26,6 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->validateCsrfTokens(except: [
             '/callback/*',
+            '/webhook/*',
+            '/pingback/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

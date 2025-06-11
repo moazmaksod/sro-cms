@@ -61,7 +61,16 @@ class UsersController extends Controller
             AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
         }
 
-        DonateLog::setDonateLog('AdminPanel', Str::uuid(), 'true', 0, $validated['amount'], "AdminJID:{$request->user()->jid} has sent:{$validated['amount']} silk", $user->JID, $request->ip());
+        DonateLog::setDonateLog(
+            'AdminPanel',
+            Str::uuid(),
+            'true',
+            0,
+            $validated['amount'],
+            "AdminJID:{$request->user()->jid} has sent:{$validated['amount']} silk",
+            $user->JID,
+            $request->ip()
+        );
 
         return back()->with('success', 'Silk have been Sent!');
     }

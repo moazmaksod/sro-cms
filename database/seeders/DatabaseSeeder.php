@@ -26,9 +26,9 @@ class DatabaseSeeder extends Seeder
             $this->call(ItemNameSeeder::class);
         }
 
-        //$this->call(MagOptSeeder::class);
         $this->call(SettingSeeder::class);
-        $this->call(ReferralSeeder::class);
-        $this->call(VoteSeeder::class);
+        //$this->call(MagOptSeeder::class);
+        //$this->call(ReferralSeeder::class);
+        //$this->call(VoteSeeder::class);
     }
 }

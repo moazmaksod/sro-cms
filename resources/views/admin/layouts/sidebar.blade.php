@@ -53,6 +53,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.referral.logs') ? 'active' : '' }}" href="{{ route('admin.referral.logs') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
+                    {{ __('Referral Logs') }}
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Donate Logs') }}

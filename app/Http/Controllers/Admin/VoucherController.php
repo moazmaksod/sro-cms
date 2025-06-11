@@ -33,10 +33,9 @@ class VoucherController extends Controller
         return redirect()->back()->with('success', 'Voucher created successfully!');
     }
 
-    public function destroy(Voucher $voucher)
+    public function disable(Voucher $voucher)
     {
-        $voucher->delete();
-
+        $voucher->update(['status' => 'Disabled']);
         return redirect()->back()->with('success', 'Voucher deleted successfully!');
     }
 

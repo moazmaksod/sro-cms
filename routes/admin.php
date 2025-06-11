@@ -13,7 +13,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/index', [AdminController::class, 'index'])->name('admin');
 
     Route::prefix('admin')->name('admin.')->group(function() {
-        Route::get('/donate-logs', [AdminController::class, 'donate_logs'])->name('donate.logs');
+        Route::get('/referral-logs', [AdminController::class, 'referralLogs'])->name('referral.logs');
+        Route::get('/donate-logs', [AdminController::class, 'donateLogs'])->name('donate.logs');
 
         //Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
@@ -60,6 +61,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         //Voucher
         Route::get('vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
         Route::post('vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
-        Route::get('/vouchers/{voucher}/destroy', [VoucherController::class, 'destroy'])->name('vouchers.destroy');
+        Route::get('/vouchers/{voucher}/disable', [VoucherController::class, 'disable'])->name('vouchers.disable');
     });
 });

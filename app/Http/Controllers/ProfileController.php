@@ -201,11 +201,11 @@ class ProfileController extends Controller
 
         $voucher = Voucher::where('code', $request->voucher_code)->first();
 
-        if (!$voucher) {
+        if (!$voucher || $voucher->status == 'Disabled') {
             return redirect()->back()->with('error', 'Invalid voucher code.');
         }
 
-        if ($voucher->status) {
+        if ($voucher->status == 'True') {
             return redirect()->back()->with('error', 'This voucher has already been used.');
         }
 
@@ -231,7 +231,7 @@ class ProfileController extends Controller
             $request->ip()
         );
 
-        $voucher->update(['jid' => $user->jid, 'status' => true]);
+        $voucher->update(['jid' => $user->jid, 'status' => 'True']);
 
         return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }
@@ -300,6 +300,17 @@ class ProfileController extends Controller
         } else {
             AphChangedSilk::setChangedSilk($user->jid, 3, $invites->sum('points'));
         }
+
+        DonateLog::setDonateLog(
+            'Referral',
+            Str::uuid(),
+            'true',
+            0,
+            $invites->sum('points'),
+            "AdminJID:{$user->jid} has sent:{$invites->sum('points')} silk",
+            $user->jid,
+            $invites->ip
+        );
 
         foreach ($invites as $invite) {
             $invite->update(['points' => 0]);
