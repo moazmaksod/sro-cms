@@ -28,6 +28,7 @@ class VoucherController extends Controller
             'amount' => $request->amount,
             'type' => $request->type,
             'valid_date' => $request->valid_date,
+            'status' => 'Unused',
         ]);
 
         return redirect()->back()->with('success', 'Voucher created successfully!');
@@ -36,7 +37,13 @@ class VoucherController extends Controller
     public function disable(Voucher $voucher)
     {
         $voucher->update(['status' => 'Disabled']);
-        return redirect()->back()->with('success', 'Voucher deleted successfully!');
+        return redirect()->back()->with('success', 'Voucher disabled successfully!');
+    }
+
+    public function enable(Voucher $voucher)
+    {
+        $voucher->update(['status' => 'Unused']);
+        return redirect()->back()->with('success', 'Voucher enabled successfully!');
     }
 
     private function generateUniqueCode()

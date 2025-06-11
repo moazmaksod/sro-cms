@@ -62,5 +62,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
         Route::post('vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
         Route::get('/vouchers/{voucher}/disable', [VoucherController::class, 'disable'])->name('vouchers.disable');
+        Route::get('/vouchers/{voucher}/enable', [VoucherController::class, 'enable'])->name('vouchers.enable');
     });
 });

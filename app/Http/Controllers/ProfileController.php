@@ -205,7 +205,7 @@ class ProfileController extends Controller
             return redirect()->back()->with('error', 'Invalid voucher code.');
         }
 
-        if ($voucher->status == 'True') {
+        if ($voucher->status == 'Used') {
             return redirect()->back()->with('error', 'This voucher has already been used.');
         }
 
@@ -231,7 +231,7 @@ class ProfileController extends Controller
             $request->ip()
         );
 
-        $voucher->update(['jid' => $user->jid, 'status' => 'True']);
+        $voucher->update(['jid' => $user->jid, 'status' => 'Used']);
 
         return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }

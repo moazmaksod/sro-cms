@@ -12,6 +12,8 @@
                 <thead>
                 <tr>
                     <th>Rank</th>
+                    <th>Invite Code</th>
+                    <th>IP</th>
                     <th>Username</th>
                     <th>JID</th>
                     <th>Total Points</th>
@@ -21,7 +23,9 @@
                 @foreach ($data as $i => $value)
                     <tr>
                         <td>{{ $i + 1 }}</td>
-                        <td>{{ $value->creator->username ?? 'Unknown' }}</td>
+                        <td>{{ $value->code }}</td>
+                        <td>{{ $value->ip }}</td>
+                        <td>{{ $value->name }}</td>
                         <td>{{ $value->jid }}</td>
                         <td>{{ $value->total_points }}</td>
                     </tr>

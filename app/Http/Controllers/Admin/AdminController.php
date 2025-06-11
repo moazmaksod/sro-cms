@@ -42,7 +42,17 @@ class AdminController extends Controller
             ->orderByDesc('total_points')
             ->with('creator')
             ->take(50)
-            ->get();
+            ->get()
+            ->map(function ($ref) {
+                $referral = Referral::where('jid', $ref->jid)->latest()->first();
+                return (object)[
+                    'jid' => $ref->jid,
+                    'total_points' => $ref->total_points,
+                    'code' => $referral->code,
+                    'ip' => $referral->ip,
+                    'name' => optional($referral->creator)->username,
+                ];
+            });
 
         return view('admin.referral-logs', compact('data'));
     }

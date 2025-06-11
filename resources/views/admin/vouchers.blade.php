@@ -67,17 +67,19 @@
                         <td>{{ $value->valid_date ? $value->valid_date->format('Y-m-d H:i:s') : 'No Expiration' }}</td>
                         <td>{{ $value->user->username ?? 'None' }}</td>
                         <td>
-                            @if($value->status == 'True')
+                            @if($value->status == 'Used')
                                 <span class="text-success">Used<span>
-                            @elseif($value->status == 'Disabled')
-                                <span class="text-danger">Disabled</span>
+                            @elseif($value->status == 'Unused')
+                                <span class="text-warning">Unused</span>
                             @else
-                                <span class="text-danger">Unused</span>
+                                <span class="text-danger">Disabled</span>
                             @endif
                         </td>
                         <td>
-                            @if($value->status == 'False')
+                            @if($value->status == 'Unused')
                                 <a href="{{ route('admin.vouchers.disable', $value->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to disable voucher?')">Disable</a>
+                            @elseif($value->status == 'Disabled')
+                                <a href="{{ route('admin.vouchers.enable', $value->id) }}" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to enable voucher?')">Enable</a>
                             @else
                                 <button href="#" class="btn btn-danger btn-sm" disabled="">Disable</button>
                             @endif
