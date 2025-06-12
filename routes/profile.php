@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DonateController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 'throttle'])->group(function () {
@@ -23,6 +24,9 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
         Route::post('/referral-redeem', [ProfileController::class, 'redeemReferral'])->name('referral.redeem');
         Route::post('/referral-fingerprint', [ProfileController::class, 'fingerprintReferral'])->name('referral.fingerprint');
         Route::get('/silk-history', [ProfileController::class, 'silkHistory'])->name('silk-history');
+
+        Route::get('/vote', [VoteController::class, 'index'])->name('vote');
+        Route::get('/vote/{id}', [VoteController::class, 'voting'])->name('vote.voting');
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
         Route::get('/donate/{method}', [DonateController::class, 'show'])->name('donate.show');

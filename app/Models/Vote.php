@@ -9,7 +9,10 @@ class Vote extends Model
     protected $fillable = [
         'title',
         'url',
+        'site',
+        'image',
         'ip',
+        'param',
         'reward',
         'timeout',
         'active',

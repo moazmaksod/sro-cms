@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('url');
+            $table->string('site');
+            $table->text('image');
             $table->string('ip');
+            $table->string('param');
             $table->integer('reward');
             $table->integer('timeout');
             $table->boolean('active');

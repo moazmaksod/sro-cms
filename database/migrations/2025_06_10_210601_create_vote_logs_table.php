@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vote_logs', function (Blueprint $table) {
             $table->id();
             $table->integer('jid');
-            $table->integer('site')->nullable();
+            $table->string('site')->nullable();
             $table->string('ip')->nullable();
             $table->string('fingerprint')->nullable();
             $table->dateTime('expire');

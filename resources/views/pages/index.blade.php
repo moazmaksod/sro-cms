@@ -24,16 +24,16 @@
                     <p class="card-text">
                         @switch($value->category)
                             @case('news')
-                                <span class="badge text-bg-warning">News</span>
+                                <span class="badge text-bg-warning">{{ __('News') }}</span>
                                 @break
                             @case('update')
-                                <span class="badge text-bg-primary">Update</span>
+                                <span class="badge text-bg-primary">{{ __('Update') }}</span>
                                 @break
                             @case('event')
-                                <span class="badge text-bg-success">Event</span>
+                                <span class="badge text-bg-success">{{ __('Event') }}</span>
                                 @break
                             @default
-                                <span class="badge text-bg-warning">News</span>
+                                <span class="badge text-bg-warning">{{ __('News') }}</span>
                         @endswitch
 
                         {{ __('Published on') }} {{ $value->published_at->format("M j, Y") }}

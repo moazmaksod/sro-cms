@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\VoteController;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DonateController;
@@ -14,13 +15,13 @@ Route::get('/page/{slug}', [PageController::class, 'page'])->name('pages.page.sh
 Route::get('/timers', [PageController::class, 'timers'])->name('pages.timers');
 Route::get('/uniques', [PageController::class, 'uniques'])->name('pages.uniques');
 Route::get('/uniques-advanced', [PageController::class, 'uniquesAdvanced'])->name('pages.uniques-advanced');
-Route::any('/fortress', [PageController::class, 'fortress'])->name('pages.fortress');
-Route::any('/globals', [PageController::class, 'globals'])->name('pages.globals');
+Route::get('/fortress', [PageController::class, 'fortress'])->name('pages.fortress');
+Route::get('/globals', [PageController::class, 'globals'])->name('pages.globals');
 //Route::get('/gateway', [PageController::class, 'gateway'])->name('pages.gateway');
 
-Route::get('/callback/{method}', [DonateController::class, 'callback'])->name('callback');
-Route::get('/webhook/{method}', [DonateController::class, 'webhook'])->name('webhook');
-//Route::get('/pingback/{site}', [VoteController::class, 'pingback'])->name('pingback');
+Route::any('/callback/{method}', [DonateController::class, 'callback'])->name('callback');
+Route::any('/webhook/{method}', [DonateController::class, 'webhook'])->name('webhook');
+Route::any('/postback', [VoteController::class, 'postback'])->name('postback');
 
 require __DIR__.'/ranking.php';
 require __DIR__.'/profile.php';

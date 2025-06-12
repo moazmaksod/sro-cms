@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\VoteController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\NewsController;
@@ -63,5 +64,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
         Route::get('/vouchers/{voucher}/disable', [VoucherController::class, 'disable'])->name('vouchers.disable');
         Route::get('/vouchers/{voucher}/enable', [VoucherController::class, 'enable'])->name('vouchers.enable');
+
+        //Vote
+        Route::get('/votes', [VoteController::class, 'index'])->name('votes.index');
+        Route::get('/votes/create', [VoteController::class, 'create'])->name('votes.create');
+        Route::post('/votes', [VoteController::class, 'store'])->name('votes.store');
+        Route::get('/votes/{vote}/edit', [VoteController::class, 'edit'])->name('votes.edit');
+        Route::put('/votes/{vote}', [VoteController::class, 'update'])->name('votes.update');
+        Route::get('/votes/{vote}/delete', [VoteController::class, 'delete'])->name('votes.delete');
+        Route::delete('/votes/{vote}', [VoteController::class, 'destroy'])->name('votes.destroy');
     });
 });
