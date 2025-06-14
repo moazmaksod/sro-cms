@@ -116,12 +116,9 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
-        const fpPromise = FingerprintJS.load();
-
-        fpPromise.then(fp => {
+        FingerprintJS.load().then(fp => {
             fp.get().then(result => {
-                const visitorId = result.visitorId;
-                document.getElementById('fingerprint').value = visitorId;
+                document.getElementById('fingerprint').value = result.visitorId;
             });
         });
     </script>

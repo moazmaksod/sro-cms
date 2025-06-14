@@ -28,7 +28,11 @@
                             <p class="text-muted mb-2">{{ __('Timeout:') }} {{ $value->timeout }} Hours</p>
 
                             @if($value->active)
-                                <a href="{{ route('profile.vote.voting', $value->id) }}" target="_blank" class="btn btn-primary text-decoration-none">Vote Now</a>
+                                <form method="POST" action="{{ route('profile.vote.voting', $value->id) }}">
+                                    @csrf
+                                    <input type="hidden" name="fingerprint" class="fingerprint">
+                                    <button type="submit" class="btn btn-primary">Vote Now</button>
+                                </form>
                             @else
                                 <button class="btn btn-outline-secondary" disabled>Vote Now</button>
                             @endif
@@ -39,3 +43,15 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script>
+        FingerprintJS.load().then(fp => {
+            fp.get().then(result => {
+                Array.from(document.getElementsByClassName('fingerprint')).forEach(el => {
+                    el.value = result.visitorId;
+                });
+            });
+        });
+    </script>
+@endpush

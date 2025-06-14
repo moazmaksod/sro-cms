@@ -41,7 +41,7 @@
                                             <li class="mb-0">
                                                 <span>{{ $jobType[$data->JobType]['name'] }}</span>
                                             </li>
-                                            <li class="mb-0">{{ __('Job Level:') }} <span class="">{{ $value->JobLevel ?? $value->Level }}</span></li>
+                                            <li class="mb-0">{{ __('Job Level:') }} <span class="">{{ $data->JobLevel ?? $data->Level }}</span></li>
                                         </ul>
                                     </div>
                                 </div>

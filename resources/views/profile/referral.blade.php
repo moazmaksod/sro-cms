@@ -96,11 +96,8 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script>
-        const fpPromise = FingerprintJS.load();
-
-        fpPromise.then(fp => {
+        FingerprintJS.load().then(fp => {
             fp.get().then(result => {
-                const visitorId = result.visitorId;
 
                 fetch("{{ route('profile.referral.fingerprint') }}", {
                     method: "POST",
@@ -109,7 +106,7 @@
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
                     body: JSON.stringify({
-                        fingerprint: visitorId
+                        fingerprint: result.visitorId
                     })
                 })
                 .then(response => response.json())

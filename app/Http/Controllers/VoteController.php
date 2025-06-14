@@ -29,14 +29,26 @@ class VoteController extends Controller
         $user = Auth::user();
         $now = Carbon::now();
 
-        $voteLog = VoteLog::where('jid', $user->jid)->where('site', $vote->site)->first();
-        if ($voteLog && $voteLog->expire && $now->lessThan(Carbon::parse($voteLog->expire))) {
-            return redirect()->back()->with('error', "You must wait until {$voteLog->expire} to vote again for {$vote->site}.");
+        $ip = $request->ip();
+        $fingerprint = $request->input('fingerprint');
+
+        $voteLog = VoteLog::where('site', $vote->site)
+            ->where(function($q) use ($ip, $fingerprint) {
+                $q->where('ip', $ip)
+                    ->orWhere('fingerprint', $fingerprint);
+            })
+            ->whereNotNull('expire')
+            ->where('expire', '>', $now)
+            ->first();
+
+        if ($voteLog) {
+            return redirect()->back()
+                ->with('error', "You (or someone using your device) have already voted and must wait until {$voteLog->expire} to vote again for {$vote->site}.");
         }
 
         VoteLog::updateOrCreate(
             ['jid' => $user->jid, 'site' => $vote->site],
-            ['ip' => $request->ip()]
+            ['ip' => $ip, 'fingerprint' => $fingerprint]
         );
 
         $url = str_replace('{JID}', $user->jid, $vote->url);
