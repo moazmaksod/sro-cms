@@ -7,6 +7,14 @@
 
 @section('content')
     <div class="container">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
         <div class="row">
             @foreach($data as $value)
                 <div class="col-md-3 mb-4">

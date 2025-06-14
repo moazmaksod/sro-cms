@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('site')->nullable();
             $table->string('ip')->nullable();
             $table->string('fingerprint')->nullable();
-            $table->dateTime('expire');
+            $table->dateTime('expire')->nullable();
             $table->timestamps();
         });
     }

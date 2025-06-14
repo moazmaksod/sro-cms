@@ -19,7 +19,7 @@ class VoteController extends Controller
 {
     public function index()
     {
-        $data = Vote::all();
+        $data = Vote::getVotes();
         return view('profile.vote', compact('data'));
     }
 
@@ -27,65 +27,53 @@ class VoteController extends Controller
     {
         $vote = Vote::findOrFail($id);
         $user = Auth::user();
+        $now = Carbon::now();
 
-        VoteLog::create([
-            'jid' => $user->jid,
-            'site' => $vote->site,
-            'ip'=> $request->ip(),
-            'expire' => now()->addHours((int) $vote->timeout),
-        ]);
+        $voteLog = VoteLog::where('jid', $user->jid)->where('site', $vote->site)->first();
+        if ($voteLog && $voteLog->expire && $now->lessThan(Carbon::parse($voteLog->expire))) {
+            return redirect()->back()->with('error', "You must wait until {$voteLog->expire} to vote again for {$vote->site}.");
+        }
+
+        VoteLog::updateOrCreate(
+            ['jid' => $user->jid, 'site' => $vote->site],
+            ['ip' => $request->ip()]
+        );
 
         $url = str_replace('{JID}', $user->jid, $vote->url);
-        return redirect()->away($url, 307);
+        return redirect()->away($url);
     }
 
     public function postback(Request $request)
     {
         $remoteIp = $request->server('HTTP_CF_CONNECTING_IP') ?? $request->ip();
-
-        $vote = Vote::where('active', true)
-            ->where(function($query) use ($remoteIp) {
-                $query->whereRaw("FIND_IN_SET(?, ip)", [$remoteIp])
-                    ->orWhereRaw("FIND_IN_SET(?, REPLACE(ip, ' ', ''))", [$remoteIp]);
-            })->first();
-
+        $vote = Vote::where('active', 1)->whereRaw("(',' + ip + ',') LIKE ?", ["%,$remoteIp,%"])->first();
         if (!$vote) {
-            Log::warning('Vote callback: Unauthorized IP', ['ip' => $remoteIp]);
             return response('Unauthorized IP', 401);
         }
 
         $data = $request->isMethod('POST') ? $request->post() : $request->query();
         $jid = $data[$vote->param] ?? null;
-
         if (!$jid) {
-            Log::error("Vote callback: Missing user param '{$vote->param}' for site {$vote->site}", $data);
             return response('Missing user ID', 400);
         }
 
         if ($vote->site === 'gtop100' && (empty($data['Successful']) || abs($data['Successful']) !== 0)) {
-            $msg = $data['Reason'] ?? 'Vote not successful';
-            Log::info("Vote callback: gtop100 - $msg", $data);
-            return response($msg, 200);
+            return response($data['Reason'] ?? 'Vote not successful', 200);
         }
         if (in_array($vote->site, ['arena-top100', 'silkroad-servers', 'private-server']) && (empty($data['voted']) || (int)$data['voted'] !== 1)) {
-            $msg = "User $jid voted already today!";
-            Log::info("Vote callback: {$vote->site} - $msg", $data);
-            return response($msg, 200);
+            return response("User $jid voted already today!", 200);
         }
 
         $now = Carbon::now();
         $timeout = $vote->timeout ?? 12;
         $voteLog = VoteLog::where('jid', $jid)->where('site', $vote->site)->first();
 
-        if ($voteLog && $now->lessThan($voteLog->expire)) {
-            $msg = "User $jid must wait until {$voteLog->expire} to vote again for {$vote->site}.";
-            Log::info("Vote callback: Cooldown", ['jid' => $jid, 'site' => $vote->site]);
-            return response($msg, 200);
+        if ($voteLog && $voteLog->expire && $now->lessThan(Carbon::parse($voteLog->expire))) {
+            return response("User $jid must wait until {$voteLog->expire} to vote again for {$vote->site}.", 200);
         }
 
         $user = User::where('jid', $jid)->first();
         if (!$user) {
-            Log::error("Vote callback: User not found", ['jid' => $jid]);
             return response('User not found', 404);
         }
 
@@ -107,16 +95,14 @@ class VoteController extends Controller
             $remoteIp
         );
 
-        $expire = $now->addHours($timeout);
         VoteLog::updateOrCreate(
             ['jid' => $jid, 'site' => $vote->site],
             [
                 'ip' => $remoteIp,
-                'expire' => $expire,
+                'expire' => $now->addHours((int) $timeout),
             ]
         );
 
-        Log::info("Vote callback: Success", ['jid' => $jid, 'site' => $vote->site]);
         return response("Vote registered and user rewarded!", 200);
     }
 }
