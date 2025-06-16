@@ -57,6 +57,7 @@ class InventoryForAvatar extends Model
             ->where('CharID', '=', $CharID)
             ->where('Slot', '<', 5)
             ->where('Slot', '>=', 0)
+            ->where('ItemID', '!=', 0)
             ->get()
             ->toArray();
         });

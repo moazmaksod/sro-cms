@@ -129,6 +129,7 @@ class Inventory extends Model
             ->where('Slot', '<', 13)
             ->where('Slot', '>=', 0)
             ->where('Slot', '!=', 8)
+            ->where('ItemID', '!=', 0)
             ->get()
             ->toArray();
         });
