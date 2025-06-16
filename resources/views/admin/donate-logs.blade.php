@@ -17,6 +17,7 @@
                     <option value="AdminPanel" {{ request('method') == 'AdminPanel' ? 'selected' : '' }}>AdminPanel</option>
                     <option value="Voucher" {{ request('method') == 'Voucher' ? 'selected' : '' }}>Voucher</option>
                     <option value="Referral" {{ request('method') == 'Referral' ? 'selected' : '' }}>Referral</option>
+                    <option value="Vote" {{ request('method') == 'Vote' ? 'selected' : '' }}>Vote</option>
 
                     @foreach(config('donate') as $key => $method)
                         <option value="{{ $method['name'] }}" {{ request('method') == $method['name'] ? 'selected' : '' }}>{{ $method['name'] }}</option>

@@ -7,21 +7,21 @@
                 @if(config('global.server.version') === 'vSRO')
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Silk') }}</strong>
-                        <span class="badge bg-outline-warning rounded-pill">{{ number_format(Auth::user()->tbUser->getSkSilk->silk_own ?? 0) }}</span>
+                        <span class="badge">{{ number_format(Auth::user()->tbUser->getSkSilk->silk_own ?? 0) }}</span>
                     </li>
                 @else
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Premium Silk') }}</strong>
                         @php $cash = Auth::user()->muUser->getJCash() @endphp
-                        <span class="badge bg-outline-warning rounded-pill">{{ number_format($cash->PremiumSilk ?? 0) }}</span>
+                        <span class="">{{ number_format($cash->PremiumSilk ?? 0) }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Silk') }}</strong>
-                        <span class="badge bg-outline-warning rounded-pill">{{ number_format($cash->Silk ?? 0) }}</span>
+                        <span class="">{{ number_format($cash->Silk ?? 0) }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('VIP') }}</strong>
-                        <span class="badge bg-outline-warning">
+                        <span class="">
                             @isset(Auth::user()->muUser->muVIPInfo->VIPUserType)
                                 <img src="{{ asset(config('ranking.vip_level')['level'][Auth::user()->muUser->muVIPInfo->VIPLv]['image']) }}" width="24" height="24" alt="">
                                 <span>{{ config('ranking.vip_level')['level'][Auth::user()->muUser->muVIPInfo->VIPLv]['name'] }}</span>

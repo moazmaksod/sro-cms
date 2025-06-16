@@ -247,6 +247,23 @@ return [
             'image' => 'images/job_trader_icon.png',
         ],
     ],
+    'job_type_vsro' => [
+        3 => [
+            'name' => 'Hunter',
+            'small_image' => 'images/com_job_hunter.png',
+            'image' => 'images/job_hunter_icon.png',
+        ],
+        2 => [
+            'name' => 'Thief',
+            'small_image' => 'images/com_job_thief.png',
+            'image' => 'images/job_teaf_icon.png',
+        ],
+        1 => [
+            'name' => 'Trader',
+            'small_image' => 'images/com_job_merchant.png',
+            'image' => 'images/job_trader_icon.png',
+        ],
+    ],
     'vip_level' => [
         "level_access" => 4,
         "level" => [

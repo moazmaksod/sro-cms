@@ -156,12 +156,13 @@ class RankingController extends Controller
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
+            $jobType = config('ranking.job_type_vsro');
         } else {
             $data = CharTradeConflictJob::getJobRanking();
+            $jobType = config('ranking.job_type');
         }
         $topImage = config('ranking.top_image');
         $characterRace = config('ranking.character_race');
-        $jobType = config('ranking.job_type');
 
         return view('ranking.ranking.job-all', [
             'data' => $data,
@@ -263,13 +264,14 @@ class RankingController extends Controller
 
             if (config('global.server.version') === 'vSRO') {
                 $characterImage = config('ranking.character_image_vsro');
+                $jobType = config('ranking.job_type_vsro');
             }else {
                 $characterImage = config('ranking.character_image');
+                $jobType = config('ranking.job_type');
             }
 
             $uniqueList = config('ranking.uniques');
             $skillMastery = config('ranking.skill_mastery');
-            $jobType = config('ranking.job_type');
             $characterRace = config('ranking.character_race');
             $hwanLevel = config('ranking.hwan_level');
             $userJID = User::where('CharID', $charID)->first()->UserJID;

@@ -31,7 +31,7 @@
                                     @elseif($value->ChangedSilk == 0 && $value->RemainedSilk > 0)
                                         <span class="text-success">{{ __('Add Silk') }}</span>
                                     @else
-                                        <span class="text-white">{{ __('NoName') }}</span>
+                                        <span class="">{{ __('NoName') }}</span>
                                     @endif
                                 </td>
                                 <td style="color: orange">{{ $value->RemainedSilk }}</td>
