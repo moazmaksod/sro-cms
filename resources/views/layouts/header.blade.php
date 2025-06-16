@@ -18,6 +18,8 @@
                         <li><a class="dropdown-item" href="{{ route('pages.uniques-advanced') }}">{{ __('Advanced Unique Tracker') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.fortress') }}">{{ __('Fortress History') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.globals') }}">{{ __('Global History') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pages.sox-plus') }}">{{ __('Sox Plus') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pages.sox-drop') }}">{{ __('Sox Drop') }}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

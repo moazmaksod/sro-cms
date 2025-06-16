@@ -17,6 +17,8 @@ Route::get('/uniques', [PageController::class, 'uniques'])->name('pages.uniques'
 Route::get('/uniques-advanced', [PageController::class, 'uniquesAdvanced'])->name('pages.uniques-advanced');
 Route::get('/fortress', [PageController::class, 'fortress'])->name('pages.fortress');
 Route::get('/globals', [PageController::class, 'globals'])->name('pages.globals');
+Route::get('/sox-plus', [PageController::class, 'sox_plus'])->name('pages.sox-plus');
+Route::get('/sox-drop', [PageController::class, 'sox_drop'])->name('pages.sox-drop');
 //Route::get('/gateway', [PageController::class, 'gateway'])->name('pages.gateway');
 
 Route::any('/callback/{method}', [DonateController::class, 'callback'])->name('callback');

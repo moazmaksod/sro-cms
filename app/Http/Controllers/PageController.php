@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Pages;
 use App\Models\SRO\Account\WebItemCertifyKey;
 use App\Models\SRO\Log\LogChatMessage;
+use App\Models\SRO\Log\LogEventItem;
 use App\Models\SRO\Log\LogEventSiegeFortress;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
@@ -95,6 +96,18 @@ class PageController extends Controller
     {
         $data = LogChatMessage::getGlobalsHistory(25);
         return view('pages.globals', compact('data'));
+    }
+
+    public function sox_plus()
+    {
+        $data = LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 25);
+        return view('pages.sox-plus', compact('data'));
+    }
+
+    public function sox_drop()
+    {
+        $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
+        return view('pages.sox-drop', compact('data'));
     }
 
     public function gateway(Request $request)
