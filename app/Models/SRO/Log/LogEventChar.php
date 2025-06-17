@@ -139,4 +139,14 @@ class LogEventChar extends Model
                 ->get();
         });
     }
+
+    public static function getCharStatus($charID)
+    {
+        return Cache::remember('char_status_' . $charID, 60, function () use ($charID) {
+            return self::select('EventID', 'EventTime')
+                ->where('CharID', $charID)
+                ->orderBy('EventTime', 'desc')
+                ->first();
+        });
+    }
 }

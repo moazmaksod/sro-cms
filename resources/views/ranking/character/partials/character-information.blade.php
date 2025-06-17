@@ -61,6 +61,23 @@
                 @endif
             </td>
         </tr>
+        <tr>
+            <td>{{ __('Status:') }}</td>
+            <td>
+                @if($status)
+                    @if($status->EventID == 4)
+                        <img src="{{ asset('images/login_window_eu_located_green.png') }}" width="16" height="16" alt=""/>
+                        <span class="text-muted">{{ __('Online') }}</span>
+                    @elseif($status->EventID == 6)
+                        <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
+                        <span class="text-muted">{{ __('Last Logout:') }} {{ \Carbon\Carbon::parse($status->EventTime)->format('Y-m-d H:i') }}</span>
+                    @endif
+                @else
+                    <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
+                    <span class="text-muted">{{ __('Offline') }}</span>
+                @endif
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>

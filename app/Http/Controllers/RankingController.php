@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SRO\Log\LogChatMessage;
+use App\Models\SRO\Log\LogEventChar;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Models\SRO\Shard\Char;
 use App\Models\SRO\Shard\CharSkillMastery;
@@ -275,6 +276,7 @@ class RankingController extends Controller
             $characterRace = config('ranking.character_race');
             $hwanLevel = config('ranking.hwan_level');
             $userJID = User::where('CharID', $charID)->first()->UserJID;
+            $status = LogEventChar::getCharStatus($charID);
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -292,6 +294,7 @@ class RankingController extends Controller
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
+                    'status' => $status,
                 ]);
             }
         }
