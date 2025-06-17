@@ -2,7 +2,7 @@
 
 return [
     'discord' => [
-        'enabled' => true,
+        'enabled' => false,
         'server_id' => '1004443821570019338',
         'channel_id' => '1374482240427528254',
         'theme' => 'dark', //dark, light
@@ -24,7 +24,7 @@ return [
         'limit' => 5,
     ],
     'server_info' => [
-        'enabled' => true,
+        'enabled' => false,
         'data' => [
             0 => [
                 //To changing icon https://fontawesome.com/icons

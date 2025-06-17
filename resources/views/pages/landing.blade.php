@@ -91,6 +91,7 @@
         </div>
     </section>
 
+    @if(config('widgets.server_info.enabled'))
     <!-- Feature Section -->
     <section id="features" class="py-5 bg-silk-dark position-relative">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-texture opacity-10"></div>
@@ -122,7 +123,9 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if($discord['enabled'])
     <!-- Call to Action -->
     <section class="py-5 bg-black position-relative">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-texture opacity-5"></div>
@@ -149,6 +152,7 @@
             </div>
         </div>
     </section>
+    @endif
 
     <!-- News Section -->
     <section id="news" class="py-5 bg-dark position-relative overflow-hidden">
