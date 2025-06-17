@@ -299,6 +299,8 @@ class RankingController extends Controller
             $hwanLevel = config('ranking.hwan_level');
             $userJID = User::where('CharID', $charID)->first()->UserJID;
             $status = LogEventChar::getCharStatus($charID);
+            $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
+            $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -317,6 +319,8 @@ class RankingController extends Controller
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
                     'status' => $status,
+                    'pvpKill' => $pvpKill,
+                    'jobKill' => $jobKill,
                 ]);
             }
         }

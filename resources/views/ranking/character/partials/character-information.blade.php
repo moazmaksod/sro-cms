@@ -47,6 +47,18 @@
             <td>{{ __('Item Points:') }}</td>
             <td>{{ $data->ItemPoints }}</td>
         </tr>
+        @if($pvpKill)
+            <tr>
+                <td>{{ __('Pvp K/D:') }}</td>
+                <td>{{ $pvpKill->KillCount ?? 0 }} / {{ $pvpKill->DeathCount ?? 0 }}</td>
+            </tr>
+        @endif
+        @if($jobKill)
+        <tr>
+            <td>{{ __('Job K/D:') }}</td>
+            <td>{{ $jobKill->KillCount ?? 0 }} / {{ $jobKill->DeathCount ?? 0 }}</td>
+        </tr>
+        @endif
         <tr>
             <td>{{ __('Title:') }}</td>
             <td style="color: #ffc345">

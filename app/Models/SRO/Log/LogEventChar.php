@@ -76,18 +76,22 @@ class LogEventChar extends Model
         });
     }
 
-    public static function getKillDeathRanking($type = null, $limit = 25)
+    public static function getKillDeathRanking($type = null, $limit = 25, $charID = null)
     {
-        $cacheKey = 'log_event_kill_death_ranking_' . ($type ?? 'all') . '_limit_' . $limit;
+        $cacheKey = 'log_event_kill_death_ranking_' . ($type ?? 'all') . '_limit_' . $limit . '_char_' . ($charID ?? 'all');
 
-        return Cache::remember($cacheKey, 600, function () use ($type, $limit) {
+        return Cache::remember($cacheKey, 600, function () use ($type, $limit, $charID) {
             $kills = DB::connection('log')->table('_LogEventChar')
                 ->selectRaw("
                 SUBSTRING(strDesc, CHARINDEX('(', strDesc) + 1, CHARINDEX(')', strDesc) - CHARINDEX('(', strDesc) - 1) AS CharName,
                 COUNT(*) AS KillCount
             ")
-            ->where('EventID', 20)
-            ->whereRaw("CHARINDEX('(', strDesc) > 0 AND CHARINDEX(')', strDesc) > CHARINDEX('(', strDesc)");
+                ->where('EventID', 20)
+                ->whereRaw("CHARINDEX('(', strDesc) > 0 AND CHARINDEX(')', strDesc) > CHARINDEX('(', strDesc)");
+
+            if ($charID) {
+                $kills->where('CharID', $charID);
+            }
 
             if ($type === 'pvp') {
                 $kills->whereRaw("
@@ -109,6 +113,10 @@ class LogEventChar extends Model
                 ->join(DB::raw(DB::connection('shard')->getDatabaseName().".dbo._Char"), '_Char.CharID', '=', '_LogEventChar.CharID')
                 ->selectRaw('_Char.CharName16 AS CharName, COUNT(*) AS DeathCount')
                 ->where('_LogEventChar.EventID', 20);
+
+            if ($charID) {
+                $deaths->where('_LogEventChar.CharID', $charID);
+            }
 
             if ($type === 'pvp') {
                 $deaths->whereRaw("
@@ -142,7 +150,7 @@ class LogEventChar extends Model
 
     public static function getCharStatus($charID)
     {
-        return Cache::remember('char_status_' . $charID, 60, function () use ($charID) {
+        return Cache::remember('char_status_' . $charID, 600, function () use ($charID) {
             return self::select('EventID', 'EventTime')
                 ->where('CharID', $charID)
                 ->orderBy('EventTime', 'desc')
