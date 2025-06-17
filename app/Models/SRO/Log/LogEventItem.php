@@ -91,9 +91,7 @@ class LogEventItem extends Model
                 END as Type
             ")
                 ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogEventItem.CharID')
-                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Inventory', '_Char.CharID', '=', '_Inventory.CharID')
-                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._Items', '_Inventory.ItemID', '=', '_Items.ID64')
-                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefObjCommon', '_Items.RefItemID', '=', '_RefObjCommon.ID')
+                ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefObjCommon', '_LogEventItem.ItemRefID', '=', '_RefObjCommon.ID')
                 ->leftJoin(DB::connection('shard')->getDatabaseName().'.dbo._RefObjItem', '_RefObjCommon.Link', '=', '_RefObjItem.ID')
                 ->leftJoin($itemNameDescTable, $itemNameDescJoinOn, '=', '_RefObjCommon.NameStrID128');
 

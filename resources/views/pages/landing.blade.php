@@ -3,6 +3,9 @@
 
 @php
     $onlinePlayer = App\Models\SRO\Account\ShardCurrentUser::getOnlineCounter();
+    $maxPlayer = config('settings.max_player', 1000);
+    $fakePlayer = config('settings.fake_player', 0);
+
     $discord = config('widgets.discord');
     if (config('global.server.version') !== 'vSRO') {
         $contentConfig = Illuminate\Support\Facades\DB::connection('shard')->select("SELECT * FROM _contentconfig");
@@ -49,7 +52,7 @@
                     <div class="d-flex flex-wrap align-items-center gap-4 mt-4">
                         <div class="d-flex align-items-center">
                             <div class="bg-success rounded-circle me-2 animate-pulse" style="height: 10px; width: 10px;"></div>
-                            <span class="text-light font-cinzel"><span class="text-warning">{{ $onlinePlayer }}</span> Players Online</span>
+                            <span class="text-light font-cinzel"><span class="text-warning">{{ $onlinePlayer+$fakePlayer }}</span> Players Online</span>
                         </div>
                         <div class="vr bg-warning opacity-25 d-none d-sm-block" style="height: 24px;"></div>
                         <div class="text-light font-cinzel"><span class="text-warning">{{ $contentConfig['EXP_RATIO'] ?? 1 }}x</span> EXP Rate</div>
