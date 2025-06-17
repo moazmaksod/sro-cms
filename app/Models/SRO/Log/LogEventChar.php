@@ -136,7 +136,7 @@ class LogEventChar extends Model
 
             return DB::connection('log')->table(DB::raw("({$kills->toSql()}) as k"))
                 ->mergeBindings($kills)
-                ->leftJoinSub($deaths, 'd', 'k.CharName', '=', 'd.CharName')
+                ->leftJoinSub($deaths, 'd', 'k.CharName', '=', DB::raw('d.CharName COLLATE Latin1_General_CI_AS'))
                 ->select(
                     'k.CharName',
                     'k.KillCount',
