@@ -1,5 +1,5 @@
 @extends('layouts.full')
-@section('title', __('Sox Drop'))
+@section('title', __('Job Kills'))
 
 @section('content')
     <div class="container">
@@ -9,10 +9,8 @@
                     <table class="table table-striped">
                         <thead class="table-dark">
                         <tr>
-                            <th scope="col">{{ __('ItemName') }}</th>
-                            <th scope="col">{{ __('Degree') }}</th>
-                            <th scope="col">{{ __('MobName') }}</th>
-                            <th scope="col">{{ __('Character') }}</th>
+                            <th scope="col">{{ __('Killer Name') }}</th>
+                            <th scope="col">{{ __('Dead Name') }}</th>
                             <th scope="col">{{ __('Date') }}</th>
                         </tr>
                         </thead>
@@ -20,23 +18,15 @@
                         @forelse($data as $value)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('images/sro/' . $value->AssocFileIcon128 . '.png') }}" alt="" width="32" height="32" class="">
-                                    @if(config('global.server.version') === 'vSRO')
-                                        {{ $value->RealName }}
+                                    @if(!empty($value->KillerCharName))
+                                        <a href="{{ route('ranking.character.view', ['name' => $value->KillerCharName]) }}" class="text-decoration-none">{{ $value->KillerCharName }}</a>
                                     @else
-                                        {{ $value->ENG }}
+                                        <span>{{ __('NoName') }}</span>
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $value->Degree }} degrees
-                                </td>
-                                <td>
-                                    <!-- TODO: getting mob real name-->
-                                    {{ $value->MobCode }}
-                                </td>
-                                <td>
-                                    @if(!empty($value->CharName16))
-                                        <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
+                                    @if(!empty($value->DeadCharName))
+                                        <a href="{{ route('ranking.character.view', ['name' => $value->DeadCharName]) }}" class="text-decoration-none">{{ $value->DeadCharName }}</a>
                                     @else
                                         <span>{{ __('NoName') }}</span>
                                     @endif

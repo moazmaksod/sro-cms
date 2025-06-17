@@ -20,6 +20,8 @@
                         <li><a class="dropdown-item" href="{{ route('pages.globals') }}">{{ __('Global History') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.sox-plus') }}">{{ __('Sox Plus') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.sox-drop') }}">{{ __('Sox Drop') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pages.pvp-kills') }}">{{ __('Pvp Kills') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('pages.job-kills') }}">{{ __('Job Kills') }}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

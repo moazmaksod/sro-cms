@@ -87,6 +87,7 @@ class LogEventItem extends Model
                     WHEN _RefObjCommon.CodeName128 LIKE '%A_RARE%' THEN 'Seal of Star'
                     WHEN _RefObjCommon.CodeName128 LIKE '%B_RARE%' THEN 'Seal of Moon'
                     WHEN _RefObjCommon.CodeName128 LIKE '%C_RARE%' THEN 'Seal of Sun'
+                    WHEN _RefObjCommon.CodeName128 LIKE 'ITEM_ROC%' THEN 'Seal of roc'
                     ELSE 'Normal'
                 END as Type
             ")
@@ -115,6 +116,7 @@ class LogEventItem extends Model
                         WHEN _RefObjCommon.CodeName128 LIKE '%A_RARE%' THEN 'Seal of Star'
                         WHEN _RefObjCommon.CodeName128 LIKE '%B_RARE%' THEN 'Seal of Moon'
                         WHEN _RefObjCommon.CodeName128 LIKE '%C_RARE%' THEN 'Seal of Sun'
+                        WHEN _RefObjCommon.CodeName128 LIKE 'ITEM_ROC%' THEN 'Seal of roc'
                         ELSE 'Normal'
                     END = ?", [$type]);
             }

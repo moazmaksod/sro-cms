@@ -11,7 +11,6 @@
                             <tr>
                                 <th scope="col">{{ __('ItemName') }}</th>
                                 <th scope="col">{{ __('Degree') }}</th>
-                                <th scope="col">{{ __('Plus') }}</th>
                                 <th scope="col">{{ __('Character') }}</th>
                                 <th scope="col">{{ __('Date') }}</th>
                             </tr>
@@ -26,12 +25,10 @@
                                         @else
                                             {{ $value->ENG }}
                                         @endif
+                                        <span>(+{{ $value->PlusValue }})</span>
                                     </td>
                                     <td>
-                                        {{ $value->Degree }}
-                                    </td>
-                                    <td>
-                                        {{ $value->PlusValue }}
+                                        {{ $value->Degree }} degrees
                                     </td>
                                     <td>
                                         @if(!empty($value->CharName16))

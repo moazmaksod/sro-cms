@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Pages;
 use App\Models\SRO\Account\WebItemCertifyKey;
 use App\Models\SRO\Log\LogChatMessage;
+use App\Models\SRO\Log\LogEventChar;
 use App\Models\SRO\Log\LogEventItem;
 use App\Models\SRO\Log\LogEventSiegeFortress;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
@@ -108,6 +109,18 @@ class PageController extends Controller
     {
         $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
         return view('pages.sox-drop', compact('data'));
+    }
+
+    public function pvp_kills()
+    {
+        $data = LogEventChar::getKillLogs('pvp', 25);
+        return view('pages.pvp-kills', compact('data'));
+    }
+
+    public function job_kills()
+    {
+        $data = LogEventChar::getKillLogs('job', 25);
+        return view('pages.job-kills', compact('data'));
     }
 
     public function gateway(Request $request)

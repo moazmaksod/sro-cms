@@ -19,6 +19,8 @@ Route::get('/fortress', [PageController::class, 'fortress'])->name('pages.fortre
 Route::get('/globals', [PageController::class, 'globals'])->name('pages.globals');
 Route::get('/sox-plus', [PageController::class, 'sox_plus'])->name('pages.sox-plus');
 Route::get('/sox-drop', [PageController::class, 'sox_drop'])->name('pages.sox-drop');
+Route::get('/pvp-kills', [PageController::class, 'pvp_kills'])->name('pages.pvp-kills');
+Route::get('/job-kills', [PageController::class, 'job_kills'])->name('pages.job-kills');
 //Route::get('/gateway', [PageController::class, 'gateway'])->name('pages.gateway');
 
 Route::any('/callback/{method}', [DonateController::class, 'callback'])->name('callback');
