@@ -224,6 +224,28 @@ class RankingController extends Controller
         ]);
     }
 
+    public function pvp_kd()
+    {
+        $data = LogEventChar::getKillDeathRanking('pvp', 25);
+        $topImage = config('ranking.top_image');
+
+        return view('ranking.ranking.pvp-kd', [
+            'data' => $data,
+            'topImage' => $topImage,
+        ]);
+    }
+
+    public function job_kd()
+    {
+        $data = LogEventChar::getKillDeathRanking('job', 25);
+        $topImage = config('ranking.top_image');
+
+        return view('ranking.ranking.job-kd', [
+            'data' => $data,
+            'topImage' => $topImage,
+        ]);
+    }
+
     public function custom($type = 'levelRanking')
     {
         if (function_exists($type)) {

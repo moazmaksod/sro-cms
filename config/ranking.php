@@ -50,6 +50,18 @@ return [
             'image' => 'fa fa-users',
             'route' => 'ranking.fortress-guild',
         ],
+        'ranking-pvp-kd' => [
+            'enabled' => true,
+            'name' => 'Pvp K/D Ranking',
+            'image' => 'fa fa-users',
+            'route' => 'ranking.pvp-kd',
+        ],
+        'ranking-job-kd' => [
+            'enabled' => true,
+            'name' => 'Job K/D Ranking',
+            'image' => 'fa fa-users',
+            'route' => 'ranking.job-kd',
+        ],
     ],
     'job_menu' => [
         'ranking_job_all' => [
