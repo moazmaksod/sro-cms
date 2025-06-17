@@ -6,4 +6,8 @@
 @include('partials.globals-history')
 @include('partials.top-player')
 @include('partials.top-guild')
+@include('partials.sox-plus')
+@include('partials.sox-drop')
+@include('partials.pvp-kills')
+@include('partials.job-kills')
 @include('partials.discord')

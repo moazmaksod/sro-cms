@@ -23,6 +23,22 @@ return [
         'enabled' => false,
         'limit' => 5,
     ],
+    'sox_plus' => [
+        'enabled' => false,
+        'limit' => 5,
+    ],
+    'sox_drop' => [
+        'enabled' => false,
+        'limit' => 5,
+    ],
+    'pvp_kills' => [
+        'enabled' => false,
+        'limit' => 5,
+    ],
+    'job_kills' => [
+        'enabled' => false,
+        'limit' => 5,
+    ],
     'server_info' => [
         'enabled' => false,
         'data' => [

@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Pages;
 use App\Models\SRO\Account\ShardCurrentUser;
 use App\Models\SRO\Log\LogChatMessage;
+use App\Models\SRO\Log\LogEventChar;
+use App\Models\SRO\Log\LogEventItem;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Models\SRO\Shard\Char;
 use App\Models\SRO\Shard\Guild;
@@ -122,6 +124,46 @@ class ViewServiceProvider extends ServiceProvider
                         'topGuild' => Guild::getGuildRanking($topGuildConfig['limit']),
                         'topGuildConfig' => $topGuildConfig,
                         'topImage' => $topImage
+                    ]);
+                });
+            }
+
+            $soxPlusConfig = config('widgets.sox_plus');
+            if($soxPlusConfig['enabled']) {
+                View::composer(['partials.sox-plus'], function ($view) use ($soxPlusConfig) {
+                    $view->with([
+                        'soxPlus' => LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, $soxPlusConfig['limit']),
+                        'soxPlusConfig' => $soxPlusConfig
+                    ]);
+                });
+            }
+
+            $soxDropConfig = config('widgets.sox_drop');
+            if($soxDropConfig['enabled']) {
+                View::composer(['partials.sox-drop'], function ($view) use ($soxDropConfig) {
+                    $view->with([
+                        'soxDrop' => LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, $soxDropConfig['limit']),
+                        'soxDropConfig' => $soxDropConfig
+                    ]);
+                });
+            }
+
+            $pvpKillsConfig = config('widgets.pvp_kills');
+            if($pvpKillsConfig['enabled']) {
+                View::composer(['partials.pvp-kills'], function ($view) use ($pvpKillsConfig) {
+                    $view->with([
+                        'pvpKills' => LogEventChar::getKillLogs('pvp', $pvpKillsConfig['limit']),
+                        'pvpKillsConfig' => $pvpKillsConfig
+                    ]);
+                });
+            }
+
+            $jobKillsConfig = config('widgets.job_kills');
+            if($jobKillsConfig['enabled']) {
+                View::composer(['partials.job-kills'], function ($view) use ($jobKillsConfig) {
+                    $view->with([
+                        'jobKills' => LogEventChar::getKillLogs('job', $jobKillsConfig['limit']),
+                        'jobKillsConfig' => $jobKillsConfig
                     ]);
                 });
             }
