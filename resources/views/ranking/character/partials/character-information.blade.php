@@ -82,7 +82,10 @@
                         <span class="text-muted">{{ __('Online') }}</span>
                     @elseif($status->EventID == 6)
                         <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
-                        <span class="text-muted">{{ __('Last Logout:') }} {{ \Carbon\Carbon::parse($status->EventTime)->format('Y-m-d H:i') }}</span>
+                        <span class="text-muted">
+                            {{ __('Offline') }}
+                            <small class="text-muted" title="{{ __('Last Logout:') }} {{ \Carbon\Carbon::parse($status->EventTime)->format('Y-m-d H:i') }}"><i class="fas fa-circle-info"></i></small>
+                        </span>
                     @endif
                 @else
                     <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>

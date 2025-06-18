@@ -93,7 +93,7 @@
                 </tbody>
             </table>
 
-            {{-- {{ $data->links() }} --}}
+            {{ $data->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

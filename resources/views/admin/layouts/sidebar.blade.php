@@ -18,6 +18,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#people"/></svg>
+                    {{ __('Characters') }}
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.news.index') ? 'active' : '' }}" href="{{ route('admin.news.index') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark"/></svg>
                     {{ __('News') }}
@@ -35,6 +41,12 @@
                     {{ __('Pages') }}
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.votes.index') ? 'active' : '' }}" href="{{ route('admin.votes.index') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
+                    {{ __('Vote4Silk') }}
+                </a>
+            </li>
         </ul>
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
@@ -46,16 +58,11 @@
             -->
         </h6>
         <ul class="nav flex-column mb-auto">
+
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.vouchers.index') ? 'active' : '' }}" href="{{ route('admin.vouchers.index') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Vouchers') }}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.votes.index') ? 'active' : '' }}" href="{{ route('admin.votes.index') }}">
-                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
-                    {{ __('Vote4Silk') }}
                 </a>
             </li>
             <li class="nav-item">
@@ -68,6 +75,12 @@
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Donate Logs') }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 " href="#">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
+                    {{ __('SMC Logs') }}
                 </a>
             </li>
         </ul>

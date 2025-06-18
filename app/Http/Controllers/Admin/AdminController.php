@@ -40,19 +40,18 @@ class AdminController extends Controller
         $data = Referral::select('jid', DB::raw('SUM(points) as total_points'))
             ->groupBy('jid')
             ->orderByDesc('total_points')
-            ->with('creator')
-            ->take(20)
-            ->get()
-            ->map(function ($ref) {
-                $referral = Referral::where('jid', $ref->jid)->latest()->first();
-                return (object)[
-                    'jid' => $ref->jid,
-                    'total_points' => $ref->total_points,
-                    'code' => $referral->code,
-                    'ip' => $referral->ip,
-                    'name' => optional($referral->creator)->username,
-                ];
-            });
+            ->paginate(20);
+
+        $data->getCollection()->transform(function ($ref) {
+            $referral = Referral::where('jid', $ref->jid)->latest()->first();
+            return (object)[
+                'jid' => $ref->jid,
+                'total_points' => $ref->total_points,
+                'code' => $referral->code,
+                'ip' => $referral->ip,
+                'name' => optional($referral->creator)->username,
+            ];
+        });
 
         return view('admin.referral-logs', compact('data'));
     }

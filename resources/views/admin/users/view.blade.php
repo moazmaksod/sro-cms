@@ -15,7 +15,48 @@
 
         <div class="row">
             <div class="col-md-8">
-                <div class="card p-0">
+                <div class="row">
+                    @forelse($characters as $char)
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="d-flex overflow-hidden align-items-center justify-content-center mb-2">
+                                        <img class="object-fit-cover rounded border" src="{{ asset(config('ranking.character_image')[$char->RefObjID]) }}" width="100" height="100" alt=""/>
+                                    </div>
+
+                                    @if($char->RefObjID > 2000)
+                                        <img src="{{ asset(config('ranking.character_race')[1]['image']) }}" width="16" height="16" alt=""/>
+                                    @else
+                                        <img src="{{ asset(config('ranking.character_race')[0]['image']) }}" width="16" height="16" alt=""/>
+                                    @endif
+                                    <a href="{{ route('ranking.character.view', ['name' => $char->CharName16]) }}" class="text-decoration-none">{{ $char->CharName16 }}</a>
+
+                                    {{--
+                                    @if($char->guild->Name != 'DummyGuild')
+                                        <a href="{{ route('ranking.guild.view', ['name' => $char->guild->Name]) }}" class="text-decoration-none">{{ $char->guild->Name }}</a>
+                                    @endif
+                                    <p>
+                                        {{ __('Jobname:') }}
+                                        @if(!empty($char->NickName16))
+                                            {{ $char->NickName16 }}
+                                        @else
+                                            {{ __('None') }}
+                                        @endif
+                                    </p>
+                                    <p>{{ __('Exp:') }} {{ $char->ExpOffset }}</p>
+                                    <p>{{ __('Lv:') }} {{ $char->CurLevel }}</p>
+                                    --}}
+
+                                    <p>{{ __('Gold:') }} {{ number_format($char->RemainGold , 0, ',')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-center">No characters found.</p>
+                    @endforelse
+                </div>
+
+                <div class="card p-0 mt-4">
                     <div class="card-header">
                         <h4 class="text-center">User Details</h4>
                     </div>
@@ -146,60 +187,6 @@
                                     </tr>
                                     </tbody>
                                 @endif
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-0 mt-4">
-                    <div class="card-header">
-                        <h4 class="text-center">Characters</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Guild</th>
-                                    <th>Jobname</th>
-                                    <th>Gold</th>
-                                    <th>Exp</th>
-                                    <th>Level</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @forelse($characters as $char)
-                                    <tr>
-                                        <td>{{ $char->CharID }}</td>
-                                        <td>
-                                            <a href="{{ route('ranking.character.view', ['name' => $char->CharName16]) }}" class="text-decoration-none">{{ $char->CharName16 }}</a>
-                                        </td>
-                                        <td>
-                                            @if($char->guild->Name != 'DummyGuild')
-                                                <a href="{{ route('ranking.guild.view', ['name' => $char->guild->Name]) }}" class="text-decoration-none">{{ $char->guild->Name }}</a>
-                                            @else
-                                                {{ __('None') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if(!empty($char->NickName16))
-                                                {{ $char->NickName16 }}
-                                            @else
-                                                {{ __('None') }}
-                                            @endif
-                                        </td>
-                                        <td>{{ number_format($char->RemainGold) }}</td>
-                                        <td>{{ number_format($char->ExpOffset) }}</td>
-                                        <td>{{ $char->CurLevel }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td class="text-center" colspan="7">No characters found.</td>
-                                    </tr>
-                                @endforelse
-                                </tbody>
                             </table>
                         </div>
                     </div>
