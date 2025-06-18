@@ -13,9 +13,12 @@ Route::get('/ranking/level', [RankingController::class, 'level']);
 Route::get('/ranking/fortress-player', [RankingController::class, 'fortress_player']);
 Route::get('/ranking/fortress-guild', [RankingController::class, 'fortress_guild']);
 
+Route::get('/news', [PageController::class, 'news']);
+Route::get('/download', [PageController::class, 'download']);
 Route::get('/timers', [PageController::class, 'timers']);
 Route::get('/uniques', [PageController::class, 'uniques']);
 
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
