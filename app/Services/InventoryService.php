@@ -16,9 +16,9 @@ class InventoryService
      * @param int $CharID
      * @return array
      */
-    public function getInventorySet(int $CharID): array
+    public function getInventorySet(int $CharID, $max, $min, $not): array
     {
-        $inventory = Inventory::getInventory($CharID);
+        $inventory = Inventory::getInventory($CharID, $max, $min, $not);
         return $this->convertItemList($inventory);
     }
 

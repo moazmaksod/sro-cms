@@ -278,7 +278,7 @@ class RankingController extends Controller
             $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
             $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
 
-            $inventorySet = $inventoryService->getInventorySet($charID);
+            $inventorySet = $inventoryService->getInventorySet($charID, 13, 0, 8);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
             if (config('global.server.version') !== 'vSRO') {
@@ -298,7 +298,7 @@ class RankingController extends Controller
             $characterRace = config('ranking.character_race');
             $hwanLevel = config('ranking.hwan_level');
             $userJID = User::where('CharID', $charID)->first()->UserJID;
-            $status = LogEventChar::getCharStatus($charID);
+            $status = LogEventChar::getCharStatus($charID)->first();
             $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
             $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
 

@@ -29,25 +29,9 @@
                                     @else
                                         <img src="{{ asset(config('ranking.character_race')[0]['image']) }}" width="16" height="16" alt=""/>
                                     @endif
-                                    <a href="{{ route('ranking.character.view', ['name' => $char->CharName16]) }}" class="text-decoration-none">{{ $char->CharName16 }}</a>
+                                    <a href="{{ route('admin.characters.view', $char->CharID) }}" class="text-decoration-none">{{ $char->CharName16 }}</a>
 
-                                    {{--
-                                    @if($char->guild->Name != 'DummyGuild')
-                                        <a href="{{ route('ranking.guild.view', ['name' => $char->guild->Name]) }}" class="text-decoration-none">{{ $char->guild->Name }}</a>
-                                    @endif
-                                    <p>
-                                        {{ __('Jobname:') }}
-                                        @if(!empty($char->NickName16))
-                                            {{ $char->NickName16 }}
-                                        @else
-                                            {{ __('None') }}
-                                        @endif
-                                    </p>
-                                    <p>{{ __('Exp:') }} {{ $char->ExpOffset }}</p>
-                                    <p>{{ __('Lv:') }} {{ $char->CurLevel }}</p>
-                                    --}}
-
-                                    <p>{{ __('Gold:') }} {{ number_format($char->RemainGold , 0, ',')}}</p>
+                                    <p>{{ __('Gold:') }} {{ number_format($char->RemainGold , 0, ',') }}</p>
                                 </div>
                             </div>
                         </div>

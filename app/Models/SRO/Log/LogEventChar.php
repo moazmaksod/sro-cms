@@ -154,7 +154,7 @@ class LogEventChar extends Model
             return self::select('EventID', 'EventTime')
                 ->where('CharID', $charID)
                 ->orderBy('EventTime', 'desc')
-                ->first();
+                ->get();
         });
     }
 }

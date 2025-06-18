@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CharactersController;
 use App\Http\Controllers\Admin\VoteController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\DownloadController;
@@ -31,6 +32,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::put('/users/{user}/password', [UsersController::class, 'updatePassword'])->name('users.update.password');
         Route::post('/users/{user}/block', [UsersController::class, 'block'])->name('users.block');
         Route::put('/users/{user}/unblock', [UsersController::class, 'unblock'])->name('users.unblock');
+
+        //Characters
+        Route::get('/characters', [CharactersController::class, 'index'])->name('characters.index');
+        Route::get('/characters/{char}/view', [CharactersController::class, 'view'])->name('characters.view');
+        Route::put('/characters/{char}', [CharactersController::class, 'update'])->name('characters.update');
 
         //News
         Route::get('/news', [NewsController::class, 'index'])->name('news.index');

@@ -113,11 +113,11 @@ class Inventory extends Model
         'MagParam12' => 'integer',
     ];
 
-    public static function getInventory($CharID)
+    public static function getInventory($CharID, $max = 13, $min = 0, $not = 8)
     {
         $minutes = config('global.cache.character_info', 1440);
 
-        return Cache::remember("character_info_inventory_{$CharID}", now()->addMinutes($minutes), static function () use ($CharID) {
+        return Cache::remember("character_info_inventory_{$CharID}_{$max}_{$min}", now()->addMinutes($minutes), static function () use ($CharID, $max, $min, $not) {
             return self::join('_Items', '_Items.ID64', '_Inventory.ItemID')
             ->join('_RefObjCommon', '_Items.RefItemId', '_RefObjCommon.ID')
             ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
@@ -126,9 +126,9 @@ class Inventory extends Model
                 $join->where('_BindingOptionWithItem.bOptType', '=', '2');
             })
             ->where('CharID', '=', $CharID)
-            ->where('Slot', '<', 13)
-            ->where('Slot', '>=', 0)
-            ->where('Slot', '!=', 8)
+            ->where('Slot', '<', $max)
+            ->where('Slot', '>=', $min)
+            ->where('Slot', '!=', $not)
             ->where('ItemID', '!=', 0)
             ->get()
             ->toArray();
