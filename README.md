@@ -1,7 +1,7 @@
 
-## About iSRO CMS v2
+## About SRO CMS v2
 
-iSRO CMS v2 is A free and open-source project for the MMORPG Silkroad Online (iSRO & vSRO) Server files
+SRO CMS v2 is A free and open-source project for the MMORPG Silkroad Online (iSRO & vSRO) Server files
 
 Whats new?-:
 - Supporting iSRO and vSRO files.
@@ -40,9 +40,9 @@ Whats new?-:
 - And Sometimes you should install ODBC Driver 17 [https://microsoft.com](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
 
 _Lets begin:
-1. Clone the repo for iSRO
+1. Clone the repo for SRO-CMS
 ```sh
-git clone https://github.com/m1xawy/isro-cms.git
+git clone https://github.com/m1xawy/sro-cms.git
 ```
 
 2. Install Laravel dependencies
@@ -58,7 +58,7 @@ composer install
     DB_CONNECTION=sqlsrv
     DB_HOST=192.168.1.101
     DB_PORT=1433
-    DB_DATABASE=ISRO_CMS
+    DB_DATABASE=SRO_CMS
     DB_DATABASE_PORTAL=GB_JoymaxPortal
     DB_DATABASE_ACCOUNT=SILKROAD_R_ACCOUNT
     DB_DATABASE_SHARD=SILKROAD_R_SHARD
@@ -66,7 +66,7 @@ composer install
     DB_USERNAME=sa
     DB_PASSWORD=123456
    ```
-4. Create new database `ISRO_CMS` and run Laravel commands for migrate website tables
+4. Create new database `SRO_CMS` and run Laravel commands for migrate website tables
 ```sh
 php artisan migrate
 php artisan db:seed
@@ -79,7 +79,7 @@ npm install
 npm run build
 ```
 
-6. Change document root of laragon to public folder `isro-cms/public`
+6. Change document root of laragon to public folder `sro-cms/public`
 
 Finally, Congratulation!
 
@@ -87,7 +87,7 @@ for changing main settings, go to admin panel > settings
 and go `config/global.php` to customize everything.
 to access admin panel change role `user` to `admin` from users table or execute this query
    ```sql
-   INSERT INTO ISRO_CMS..user_roles (user_id ,is_admin) VALUES (1, 1)
+   INSERT INTO SRO_CMS..user_roles (user_id ,is_admin) VALUES (1, 1)
    ```
 
 Get new updates:
