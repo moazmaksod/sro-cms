@@ -309,7 +309,7 @@ class ProfileController extends Controller
             $invites->sum('points'),
             "AdminJID:{$user->jid} has sent:{$invites->sum('points')} silk",
             $user->jid,
-            $invites->ip
+            '127.0.0.1',
         );
 
         foreach ($invites as $invite) {

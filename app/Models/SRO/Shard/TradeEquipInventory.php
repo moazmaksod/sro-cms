@@ -58,7 +58,7 @@ class TradeEquipInventory extends Model
                 $join->on('_BindingOptionWithItem.nItemDBID', '_Items.ID64');
             })
             ->where('CharID', '=', $CharID)
-            ->where('Slot', '<', 13)
+            ->where('Slot', '<=', 12)
             ->where('Slot', '>=', 0)
             ->where('ItemID', '!=', 0)
             ->get()

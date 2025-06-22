@@ -113,7 +113,7 @@ class Inventory extends Model
         'MagParam12' => 'integer',
     ];
 
-    public static function getInventory($CharID, $max = 13, $min = 0, $not = 8)
+    public static function getInventory($CharID, $max = 12, $min = 0, $not = 8)
     {
         $minutes = config('global.cache.character_info', 1440);
 
@@ -126,7 +126,7 @@ class Inventory extends Model
                 $join->where('_BindingOptionWithItem.bOptType', '=', '2');
             })
             ->where('CharID', '=', $CharID)
-            ->where('Slot', '<', $max)
+            ->where('Slot', '<=', $max)
             ->where('Slot', '>=', $min)
             ->where('Slot', '!=', $not)
             ->where('ItemID', '!=', 0)

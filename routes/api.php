@@ -18,6 +18,8 @@ Route::get('/download', [PageController::class, 'download']);
 Route::get('/timers', [PageController::class, 'timers']);
 Route::get('/uniques', [PageController::class, 'uniques']);
 
+Route::get('/online-counter', [PageController::class, 'online_counter']);
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);

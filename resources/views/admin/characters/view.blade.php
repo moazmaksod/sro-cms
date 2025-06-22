@@ -81,8 +81,43 @@
                         <h4 class="text-center">Character Items</h4>
                     </div>
                     <div class="card-body">
-                        <div class="" id="display-inventory-set">
-                            @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventorySet])
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div id="display-inventory" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Inventory</h2>
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventorySet, 'min' => 13, 'max' => 108])
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="card">
+                                    <div id="display-storage" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Storage</h2>
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $storageItems, 'min' => 0, 'max' => 179])
+                                    </div>
+                                </div>
+
+                                <div class="card mt-3">
+                                    <div id="display-pet" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Pet</h2>
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $petItems, 'min' => 0, 'max' => 55])
+
+                                        <form method="GET" action="">
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <select class="form-select" name="pet" aria-label="Default select example" onchange="this.form.submit()">
+                                                        @foreach($petNames as $pet)
+                                                            <option value="{{ $pet->ID }}" {{ $PetID == $pet->ID ? 'selected' : '' }}>{{ $pet->CharName ?? $pet->ID }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,29 +224,79 @@
 
     <style>
         /* Style for paginated layout */
-        #display-inventory-set .page-grid {
+        #display-inventory .page-grid {
+            width: 176px;
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-bottom: 20px;
         }
 
         /* Hide all pages initially */
-        #display-inventory-set .page-hidden {
+        #display-inventory .page-hidden {
             display: none !important;
         }
 
         /* Buttons */
-        #display-inventory-set .page-buttons {
+        #display-inventory .page-buttons {
             text-align: center;
             margin-top: 20px;
         }
 
-        #display-inventory-set .page-buttons button {
+        #display-inventory .page-buttons button {
             padding: 8px 16px;
             margin: 0 5px;
             cursor: pointer;
             font-weight: bold;
+        }
+        #display-inventory .sro-item-detail {
+            background: #808080;
+            width: 38px;
+            height: 38px;
+            margin: 0 auto;
+        }
+    </style>
+    <style>
+        #display-storage .page-grid {
+            width: 268px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .page-hidden {
+            display: none !important;
+        }
+        .page-arrows {
+            text-align: center;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-arrows button {
+            font-size: 16px;
+        }
+        .page-number {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 6px 12px;
+            background: none;
+            border: 1px solid var(--bs-card-border-color);
+            border-radius: 6px;
+            min-width: 40px;
+            text-align: center;
+        }
+    </style>
+    <style>
+        #display-pet .page-grid {
+            width: 314px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
         }
     </style>
 @endpush
@@ -221,17 +306,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const container = document.getElementById('display-inventory-set');
-            const table = container.querySelector('table');
+            const container = document.getElementById('display-inventory');
             const itemElements = Array.from(container.querySelectorAll('.sro-item-detail'));
 
-            // Hide first 12 items
-            const remainingItems = itemElements.slice(12);
-            itemElements.slice(0, 12).forEach(item => {
-                item.parentElement.style.display = 'none'; // hides <td>
-            });
+            const remainingItems = itemElements.slice(0);
 
-            // Remove the original table
             const tableWrapper = container.querySelector('.table-responsive');
             if (tableWrapper) tableWrapper.remove();
 
@@ -239,7 +318,6 @@
             const totalPages = Math.ceil(remainingItems.length / itemsPerPage);
             const pages = [];
 
-            // Create new pages
             for (let i = 0; i < totalPages; i++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.classList.add('page-grid');
@@ -252,7 +330,6 @@
                 pages.push(pageDiv);
             }
 
-            // Create page switch buttons
             const btnContainer = document.createElement('div');
             btnContainer.className = 'page-buttons';
 
@@ -268,6 +345,126 @@
             });
 
             container.appendChild(btnContainer);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('display-storage');
+            const itemElements = Array.from(container.querySelectorAll('.sro-item-detail'));
+
+            const remainingItems = itemElements.slice(0);
+
+            const tableWrapper = container.querySelector('.table-responsive');
+            if (tableWrapper) tableWrapper.remove();
+
+            const itemsPerPage = 30;
+            const totalPages = Math.ceil(remainingItems.length / itemsPerPage);
+            const pages = [];
+            let currentPage = 0;
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.classList.add('page-grid');
+                if (i !== 0) pageDiv.classList.add('page-hidden');
+
+                const chunk = remainingItems.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+                chunk.forEach(item => pageDiv.appendChild(item));
+
+                container.appendChild(pageDiv);
+                pages.push(pageDiv);
+            }
+
+            const arrowContainer = document.createElement('div');
+            arrowContainer.className = 'page-arrows';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '◀';
+            prevBtn.className = 'btn btn-primary';
+
+            const pageNumber = document.createElement('span');
+            pageNumber.className = 'page-number';
+            pageNumber.textContent = `${currentPage + 1}`;
+
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '▶';
+            nextBtn.className = 'btn btn-primary';
+
+            function updatePage(newPage) {
+                if (newPage < 0 || newPage >= totalPages) return;
+                pages[currentPage].classList.add('page-hidden');
+                pages[newPage].classList.remove('page-hidden');
+                currentPage = newPage;
+                pageNumber.textContent = `${currentPage + 1}`;
+            }
+
+            prevBtn.addEventListener('click', () => updatePage(currentPage - 1));
+            nextBtn.addEventListener('click', () => updatePage(currentPage + 1));
+
+            arrowContainer.appendChild(prevBtn);
+            arrowContainer.appendChild(pageNumber);
+            arrowContainer.appendChild(nextBtn);
+            container.appendChild(arrowContainer);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('display-pet');
+            const itemElements = Array.from(container.querySelectorAll('.sro-item-detail'));
+
+            const remainingItems = itemElements.slice(0);
+
+            const tableWrapper = container.querySelector('.table-responsive');
+            if (tableWrapper) tableWrapper.remove();
+
+            const itemsPerPage = 28;
+            const totalPages = Math.ceil(remainingItems.length / itemsPerPage);
+            const pages = [];
+            let currentPage = 0;
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.classList.add('page-grid');
+                if (i !== 0) pageDiv.classList.add('page-hidden');
+
+                const chunk = remainingItems.slice(i * itemsPerPage, (i + 1) * itemsPerPage);
+                chunk.forEach(item => pageDiv.appendChild(item));
+
+                container.appendChild(pageDiv);
+                pages.push(pageDiv);
+            }
+
+            const arrowContainer = document.createElement('div');
+            arrowContainer.className = 'page-arrows';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '◀';
+            prevBtn.className = 'btn btn-primary';
+
+            const pageNumber = document.createElement('span');
+            pageNumber.className = 'page-number';
+            pageNumber.textContent = `${currentPage + 1}`;
+
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '▶';
+            nextBtn.className = 'btn btn-primary';
+
+            function updatePage(newPage) {
+                if (newPage < 0 || newPage >= totalPages) return;
+                pages[currentPage].classList.add('page-hidden');
+                pages[newPage].classList.remove('page-hidden');
+                currentPage = newPage;
+                pageNumber.textContent = `${currentPage + 1}`;
+            }
+
+            prevBtn.addEventListener('click', () => updatePage(currentPage - 1));
+            nextBtn.addEventListener('click', () => updatePage(currentPage + 1));
+
+            arrowContainer.appendChild(prevBtn);
+            arrowContainer.appendChild(pageNumber);
+            arrowContainer.appendChild(nextBtn);
+            container.appendChild(arrowContainer);
         });
     </script>
 @endpush

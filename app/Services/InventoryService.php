@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\SRO\Account\ItemNameDesc;
+use App\Models\SRO\Shard\Chest;
+use App\Models\SRO\Shard\InvCOS;
 use App\Models\SRO\Shard\Inventory;
 use App\Models\SRO\Shard\InventoryForAvatar;
 use App\Models\SRO\Shard\TradeEquipInventory;
@@ -43,6 +45,30 @@ class InventoryService
     public function getInventoryJob(int $CharID): array
     {
         $inventory = TradeEquipInventory::getInventoryForJob($CharID);
+        return $this->convertItemList($inventory);
+    }
+
+    /**
+     * Get storage items for a character within a slot range.
+     *
+     * @param int $UserJID
+     * @return array
+     */
+    public function getStorageItems(int $UserJID, $max, $min): array
+    {
+        $inventory = Chest::getChest($UserJID, $max, $min);
+        return $this->convertItemList($inventory);
+    }
+
+    /**
+     * Get Pet items for a character within a slot range.
+     *
+     * @param int $CharID
+     * @return array
+     */
+    public function getPetItems(int $CharID, $PetID, $max, $min): array
+    {
+        $inventory = InvCOS::getPetItems($CharID, $PetID, $max, $min);
         return $this->convertItemList($inventory);
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SRO\Log\LogEventChar;
 use App\Models\SRO\Shard\Char;
+use App\Models\SRO\Shard\InvCOS;
 use App\Models\SRO\Shard\User;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
@@ -31,14 +32,26 @@ class CharactersController extends Controller
     public function view(Char $char, InventoryService $inventoryService)
     {
         $status = LogEventChar::getCharStatus($char->CharID)->take(5);
-        $inventorySet = $inventoryService->getInventorySet($char->CharID, 97, 14, 0);
         $userJID = User::where('CharID', $char->CharID)->first()->UserJID;
+
+        $inventoryAll = $inventoryService->getInventorySet($char->CharID, 108, 13, 0);
+        $storageItems = $inventoryService->getStorageItems($userJID, 180, 0);
+        $petNames = InvCOS::getPetNames($char->CharID);
+
+        $PetID = request('pet') ?? optional($petNames->first())->ID;
+        if ($PetID) {
+            $petItems = $inventoryService->getPetItems($char->CharID, $PetID, 56, 0);
+        }
 
         return view('admin.characters.view', [
             'char' => $char,
             'status' => $status,
-            'inventorySet' => $inventorySet,
             'userJID' => $userJID,
+            'inventorySet' => $inventoryAll,
+            'storageItems' => $storageItems,
+            'petNames' => $petNames,
+            'PetID' => $PetID,
+            'petItems' => $petItems,
         ]);
     }
 

@@ -5,7 +5,7 @@ namespace App\Models\SRO\Shard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-class InventoryForAvatar extends Model
+class Chest extends Model
 {
     /**
      * The Database connection name for the model.
@@ -26,14 +26,14 @@ class InventoryForAvatar extends Model
      *
      * @var string
      */
-    protected $table = 'dbo._InventoryForAvatar';
+    protected $table = 'dbo._Chest';
 
     /**
      * The table primary Key
      *
      * @var string
      */
-    protected $primaryKey = 'CharID';
+    protected $primaryKey = 'UserJID';
 
     /**
      * The attributes that are mass assignable.
@@ -41,41 +41,27 @@ class InventoryForAvatar extends Model
      * @var array
      */
     protected $fillable = [
-        'CharID',
+        'UserJID',
         'slot',
         'ItemID'
     ];
 
-    public static function getInventoryForAvatar($CharID)
+    public static function getChest($UserJID, $max, $min)
     {
         $minutes = config('global.cache.character_info', 1440);
 
-        return Cache::remember("character_info_inventory_avatar_{$CharID}", now()->addMinutes($minutes), static function () use ($CharID) {
-            return self::join('_Items', '_Items.ID64', '_InventoryForAvatar.ItemID')
+        return Cache::remember("character_info_chest_{$UserJID}", now()->addMinutes($minutes), static function () use ($UserJID, $max, $min) {
+            return self::join('_Items', '_Items.ID64', '_Chest.ItemID')
             ->join('_RefObjCommon', '_Items.RefItemId', '_RefObjCommon.ID')
             ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
-            ->where('CharID', '=', $CharID)
-            ->where('Slot', '<=', 5)
-            ->where('Slot', '>=', 0)
+            ->join('_User', '_Chest.UserJID', '=', '_User.UserJID')
+            ->join('_Char', '_User.CharID', '=', '_Char.CharID')
+            ->where('_Chest.UserJID', '=', $UserJID)
+            ->where('Slot', '<=', $max)
+            ->where('Slot', '>=', $min)
             ->where('ItemID', '!=', 0)
             ->get()
             ->toArray();
         });
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function getChar()
-    {
-        return $this->hasMany(Char::class, 'CharID');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function getItem()
-    {
-        return $this->belongsTo(Items::class, 'ItemID', 'ID64');
     }
 }

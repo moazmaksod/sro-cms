@@ -278,7 +278,7 @@ class RankingController extends Controller
             $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
             $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
 
-            $inventorySet = $inventoryService->getInventorySet($charID, 13, 0, 8);
+            $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
             if (config('global.server.version') !== 'vSRO') {

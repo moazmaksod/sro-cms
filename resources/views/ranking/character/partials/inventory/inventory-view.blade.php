@@ -14,6 +14,13 @@ $inventoryList = [
     11 => null,
     12 => null,
 ];
+if(isset($min) && isset($max)) {
+    $inventoryList = [];
+
+    for ($slot = $min; $slot <= $max; $slot++) {
+        $inventoryList[$slot] = null;
+    }
+}
 
 /** @var $inventorySetList */
 foreach ($inventorySetList as $key => $inventorySlot) {

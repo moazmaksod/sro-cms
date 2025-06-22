@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Download;
 use App\Models\News;
+use App\Models\SRO\Account\ShardCurrentUser;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
 
@@ -51,6 +52,20 @@ class PageController extends Controller
             'data' => $data,
             'config' => $config,
             'characterRace' => $characterRace,
+        ]);
+    }
+
+    public function online_counter()
+    {
+        $onlinePlayer = ShardCurrentUser::getOnlineCounter();
+        $maxPlayer = (int)config('settings.max_player', 1000);
+        $fakePlayer = (int)config('settings.fake_player', 0);
+
+        return response()->json([
+            'status' => 'success',
+            'onlinePlayer' => $onlinePlayer,
+            'maxPlayer' => $maxPlayer,
+            'fakePlayer' => $fakePlayer,
         ]);
     }
 }
