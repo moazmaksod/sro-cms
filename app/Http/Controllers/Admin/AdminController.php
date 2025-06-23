@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DonateLog;
 use App\Models\Referral;
 use App\Models\SRO\Account\SkSilk;
+use App\Models\SRO\Account\SmcLog;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Shard\Char;
@@ -73,5 +74,23 @@ class AdminController extends Controller
             ->paginate(20);
 
         return view('admin.donate-logs', compact('data'));
+    }
+
+    public function smcLogs(Request $request)
+    {
+        $query = SmcLog::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('szUserID', 'like', "%{$search}%")
+                    ->orWhere('szLog', 'like', "%{$search}%");
+            });
+        }
+
+        $data = $query->paginate(20);
+
+        return view('admin.smc-logs', compact('data'));
     }
 }

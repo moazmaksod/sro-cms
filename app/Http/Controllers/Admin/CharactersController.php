@@ -51,7 +51,7 @@ class CharactersController extends Controller
             'storageItems' => $storageItems,
             'petNames' => $petNames,
             'PetID' => $PetID,
-            'petItems' => $petItems,
+            'petItems' => $petItems ?? [],
         ]);
     }
 

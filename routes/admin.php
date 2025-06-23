@@ -17,6 +17,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function() {
         Route::get('/referral-logs', [AdminController::class, 'referralLogs'])->name('referral.logs');
         Route::get('/donate-logs', [AdminController::class, 'donateLogs'])->name('donate.logs');
+        Route::get('/smc-logs', [AdminController::class, 'smcLogs'])->name('smc.logs');
 
         //Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
