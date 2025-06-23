@@ -102,7 +102,7 @@
                                 <div class="card mt-3">
                                     <div id="display-pet" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
                                         <h2 class="text-center">Pet</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $petItems, 'min' => 0, 'max' => 55])
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $petItems, 'min' => 0, 'max' => 195])
 
                                         <form method="GET" action="">
                                             <div class="row mb-3">
