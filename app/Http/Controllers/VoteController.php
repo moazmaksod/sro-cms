@@ -25,6 +25,9 @@ class VoteController extends Controller
 
     public function voting($id, Request $request)
     {
+        $request->validate([
+            'fingerprint' => 'required|string|max:255',
+        ]);
         $vote = Vote::findOrFail($id);
         $user = Auth::user();
         $now = Carbon::now();

@@ -16,6 +16,10 @@ class DonateService
 {
     public function processPaypal(Request $request)
     {
+        $request->validate([
+            'price' => 'required|numeric|min:0.01',
+        ]);
+
         $config = config('donate.paypal');
         $accessToken = cache()->remember('paypal_access_token', 540, function () use ($config) {
             $response = Http::withBasicAuth($config['client_id'], $config['secret'])
@@ -161,10 +165,12 @@ class DonateService
     public function processStripe(Request $request)
     {
         $config = config('donate.stripe');
-
         if (!$config['enabled']) {
             return back()->withErrors(['stripe' => 'Stripe payments are currently disabled.'])->withInput();
         }
+        $request->validate([
+            'price' => 'required|numeric|min:0.01',
+        ]);
 
         try {
             $price = $request->input('price');
@@ -275,17 +281,26 @@ class DonateService
         $config = config('donate.stripe');
         $payload = $request->getContent();
         $sigHeader = $request->header('stripe-signature');
+        // TODO: Use Stripe's official webhook signature verification here for better security.
+        // See: https://stripe.com/docs/webhooks/signatures
+        // Prevent replay attacks by checking event ID (if present)
+        $event = json_decode($payload, true);
+        if (isset($event['id'])) {
+            $cacheKey = 'stripe_event_' . $event['id'];
+            if (cache()->has($cacheKey)) {
+                \Log::warning('Stripe webhook replay detected', ['event_id' => $event['id']]);
+                return response('Replay attack detected', 409);
+            }
+            cache()->put($cacheKey, true, 3600); // Store for 1 hour
+        }
+        if ($config['webhook_secret']) {
+            $computedSignature = hash_hmac('sha256', $payload, $config['webhook_secret']);
+            if (!hash_equals($computedSignature, $sigHeader)) {
+                return response('Invalid signature', 400);
+            }
+        }
 
         try {
-            if ($config['webhook_secret']) {
-                $computedSignature = hash_hmac('sha256', $payload, $config['webhook_secret']);
-                if (!hash_equals($computedSignature, $sigHeader)) {
-                    return response('Invalid signature', 400);
-                }
-            }
-
-            $event = json_decode($payload, true);
-
             if ($event['type'] === 'checkout.session.completed') {
                 $session = $event['data']['object'];
 
@@ -304,10 +319,12 @@ class DonateService
     public function processSimplyeasier(Request $request)
     {
         $config = config('donate.simplyeasier');
-
         if (!$config['enabled']) {
             return back()->withErrors(['simplyeasier' => 'Simply Easier payments are currently disabled.'])->withInput();
         }
+        $request->validate([
+            'price' => 'required|numeric|min:0.01',
+        ]);
 
         $price = $request->input('price');
         $package = collect($config['package'])->firstWhere('price', $price);
@@ -395,11 +412,13 @@ class DonateService
     public function processCoinPayments(Request $request)
     {
         $config = config('donate.coinpayments');
+        $request->validate([
+            'price' => 'required|numeric|min:0.01',
+        ]);
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
             return back()->withErrors(['coinpayments' => 'Invalid package selected.'])->withInput();
         }
-
         $payload = [
             "currency" => $config['currency'],
             "clientId" => $config['client_id'],
@@ -421,7 +440,7 @@ class DonateService
                 "total" => "{$package['price']}",
             ],
             "payment" => [
-                "refundEmail" => "info@test.com"
+                "refundEmail" => Auth::user()->email
             ],
             "email" => Auth::user()->email,
         ];
@@ -448,7 +467,8 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['coinpayments' => 'Payment failed: ' . ($result['result']['error'] ?? 'Unknown error')])->withInput();
+        $errorMsg = isset($result['result']['error']) ? 'Payment failed.' : 'Unknown error';
+        return back()->withErrors(['coinpayments' => $errorMsg])->withInput();
     }
 
     public function callbackCoinPayments(Request $request)
@@ -458,9 +478,7 @@ class DonateService
         if ($request->header('HMAC') !== $hmac) {
             return response('Invalid HMAC signature', 400);
         }
-
         $data = $request->all();
-
         if (isset($data['status']) && ($data['status'] >= 100 || $data['status'] == 2)) {
             $user = User::find($data['custom']);
             $package = collect($config['package'])->firstWhere('price', $data['amount1']);
@@ -495,9 +513,12 @@ class DonateService
     {
         $config = config('donate.fawaterk');
         $user = Auth::user();
+        $request->validate([
+            'price' => 'required|numeric|min:5',
+        ]);
 
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
-        if (!$package || $request->input('price') < 5) {
+        if (!$package) {
             return back()->withErrors(['fawaterk' => 'Invalid package selected.'])->withInput();
         }
 
@@ -546,7 +567,8 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['fawaterk' => "Payment failed: " .isset($response['message']) && !is_array($response['message']) ? $response['message'] : 'An error occurred'])->withInput();
+        $errorMsg = isset($response['message']) && !is_array($response['message']) ? 'Payment failed.' : 'An error occurred';
+        return back()->withErrors(['fawaterk' => $errorMsg])->withInput();
     }
 
     public function callbackFawaterk(Request $request)
@@ -592,8 +614,8 @@ class DonateService
     public function processMaxicard(Request $request)
     {
         $request->validate([
-            'code' => 'required',
-            'password' => 'required',
+            'code' => 'required|string',
+            'password' => 'required|string',
         ]);
 
         $config = config('donate.maxicard');
@@ -660,8 +682,8 @@ class DonateService
     public function processHipocard(Request $request)
     {
         $request->validate([
-            'code' => 'required',
-            'password' => 'required',
+            'code' => 'required|string',
+            'password' => 'required|string',
         ]);
 
         $payload = [
@@ -710,12 +732,16 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipocard' => "Payment failed: " .isset($response['message']) ? $response['message'] : 'An error occurred'])->withInput();
+        $errorMsg = isset($response['message']) ? 'Payment failed.' : 'An error occurred';
+        return back()->withErrors(['hipocard' => $errorMsg])->withInput();
     }
 
     public function processHipopay(Request $request)
     {
         $config = config('donate.hipopay');
+        $request->validate([
+            'price' => 'required|numeric|min:0.01',
+        ]);
 
         $package = collect($config['package'])->firstWhere('price', $request->input('price'));
         if (!$package) {
@@ -762,19 +788,15 @@ class DonateService
     public function callbackHipopay(Request $request)
     {
         $config = config('donate.hipopay');
-        //$data = $request->all();
         $payload = file_get_contents('php://input');
         $data = json_decode($payload, true);
-
         if (!$data) {
             return response('Invalid payload', 400);
         }
-
         $user = User::where('jid', $data['user_id'])->first();
         if (!$user) {
             return response('User not found', 404);
         }
-
         $hash = base64_encode(hash_hmac('sha256',$user->jid . trim($user->email) . $user->username . $config['key'], $config['secret'], true));
 
         if (!hash_equals($data['hash'], $hash)) {

@@ -9,9 +9,9 @@ return [
         'image' => 'images/donate/paypal.png',
         //'endpoint' => 'https://api-m.paypal.com', // for prod only
         'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox only
-        'client_id' => '',
-        'secret' => '',
-        'webhook_id' => '',
+        'client_id' => env('PAYPAL_CLIENT_ID', ''),
+        'secret' => env('PAYPAL_SECRET', ''),
+        'webhook_id' => env('PAYPAL_WEBHOOK_ID', ''),
         'package' => [
             [
                 'name' => '500 Silk',
@@ -52,9 +52,9 @@ return [
         'currency' => 'USD',
         'image' => 'images/donate/stripe.png',
         'endpoint' => 'https://api.stripe.com',
-        'secret_key' => '',
-        'publishable_key' => '',
-        'webhook_secret' => '',
+        'secret_key' => env('STRIPE_SECRET_KEY', ''),
+        'publishable_key' => env('STRIPE_PUBLISHABLE_KEY', ''),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET', ''),
         'package' => [
             [
                 'name' => '500 Silk',
@@ -95,7 +95,7 @@ return [
         'currency' => 'USD',
         'image' => 'images/donate/simplyeasier.png',
         'endpoint' => 'https://api.simplyeasier.com',
-        'api_key' => '',
+        'api_key' => env('SIMPLYEASIER_API_KEY', ''),
         'package' => [
             [
                 'name' => '500 Silk',
@@ -137,10 +137,10 @@ return [
         'currency' => 'USD',
         'image' => 'images/donate/coinpayments.png',
         'endpoint' => 'https://api.coinpayments.com',
-        'merchant_id' => '',
-        'client_id' => '',
-        'client_secret' => '',
-        'ipn_secret' => '',
+        'merchant_id' => env('COINPAYMENTS_MERCHANT_ID', ''),
+        'client_id' => env('COINPAYMENTS_CLIENT_ID', ''),
+        'client_secret' => env('COINPAYMENTS_CLIENT_SECRET', ''),
+        'ipn_secret' => env('COINPAYMENTS_IPN_SECRET', ''),
         'package' => [
             [
                 'name' => '100 Silk',
@@ -192,8 +192,8 @@ return [
         'image' => 'images/donate/fawaterk.png',
         //'endpoint' => 'https://app.fawaterk.com',
         'endpoint' => 'https://staging.fawaterk.com',
-        'key' => '',
-        'secret' => '',
+        'key' => env('FAWATERK_KEY', ''),
+        'secret' => env('FAWATERK_SECRET', ''),
         'package' => [
             [
                 'name' => '100 Silk',
@@ -244,8 +244,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/maxicard.png',
         'url' => 'https://www.maxigame.org/epin/yukle.php',
-        'key' => '',
-        'secret' => '',
+        'key' => env('MAXICARD_KEY', ''),
+        'secret' => env('MAXICARD_SECRET', ''),
         'package' => [
             [
                 'name' => '100 Silk',
@@ -297,8 +297,8 @@ return [
         'image' => 'images/donate/hipocard.png',
         //'url' => 'https://www.hipopotamya.com/api/v1/hipocard/epins',
         'url' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins',
-        'key' => '',
-        'secret' => '',
+        'key' => env('HIPOCARD_KEY', ''),
+        'secret' => env('HIPOCARD_SECRET', ''),
         'package' => [
             [
                 'name' => '100 Silk',
@@ -349,8 +349,8 @@ return [
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
         'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token', //callback url: http://localhost/callback/hipopay
-        'key' => '',
-        'secret' => '',
+        'key' => env('HIPOPAY_KEY', ''),
+        'secret' => env('HIPOPAY_SECRET', ''),
         'commission_type' => 1,
         'package' => [
             [

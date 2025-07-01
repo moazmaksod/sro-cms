@@ -30,6 +30,6 @@ Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 't
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
         Route::get('/donate/{method}', [DonateController::class, 'show'])->name('donate.show');
-        Route::post('/donate/{method}/process', [DonateController::class, 'process'])->name('donate.process');
+        Route::post('/donate/{method}/process', [DonateController::class, 'process'])->middleware('throttle:5,1')->name('donate.process');
     });
 });

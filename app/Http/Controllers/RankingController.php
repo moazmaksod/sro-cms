@@ -21,6 +21,10 @@ class RankingController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'type' => 'nullable|in:player,guild',
+            'search' => 'nullable|string|max:255',
+        ]);
         if ($request->input('type') == 'player' && $request->filled('search')) {
             $data = Char::getPlayerRanking(25, 0, $request->search);
         }elseif ($request->input('type') == 'guild' && $request->filled('search')) {

@@ -89,7 +89,7 @@ class AdminController extends Controller
             });
         }
 
-        $data = $query->paginate(20);
+        $data = $query->orderBy('dLogDate', 'desc')->paginate(20);
 
         return view('admin.smc-logs', compact('data'));
     }

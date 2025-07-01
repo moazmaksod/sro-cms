@@ -253,6 +253,9 @@ class ProfileController extends Controller
 
     public function fingerprintReferral(Request $request)
     {
+        $request->validate([
+            'fingerprint' => 'required|string|max:255',
+        ]);
         $fingerprint = $request->input('fingerprint');
         $ip = $request->ip();
 
