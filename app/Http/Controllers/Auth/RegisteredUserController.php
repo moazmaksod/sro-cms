@@ -135,7 +135,9 @@ class RegisteredUserController extends Controller
             return back()->withErrors(['username' => [$e->getMessage()]]);
         }
 
-        event(new Registered($user));
+        if (config('settings.register_confirm')) {
+            event(new Registered($user));
+        }
 
         Auth::login($user);
 

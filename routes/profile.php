@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', config('settings.register_confirm') ? 'verified' : 'throttle'])->group(function () {
+Route::middleware(array_filter(['auth', config('settings.register_confirm') ? 'verified' : null]))->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     Route::prefix('profile')->name('profile.')->group(function() {
