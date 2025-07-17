@@ -93,7 +93,9 @@ class AuthController extends Controller
 
             DB::commit();
 
-            event(new Registered($user));
+            if (config('settings.register_confirm')) {
+                event(new Registered($user));
+            }
 
             Auth::login($user);
             $token = $user->createToken('api-token')->plainTextToken;
