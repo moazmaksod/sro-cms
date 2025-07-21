@@ -28,7 +28,7 @@
         <div class="mb-5">
             <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ asset(config('settings.hero_background', '/images/bg.jpg')) }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
                 <div class="container py-5">
-                    <h1 class="display-5 text-white fw-bold text-body-emphasis">@yield('title')</h1>
+                    <h1 class="display-5 text-white fw-bold">@yield('title')</h1>
                     <p class="col-lg-8 mx-auto lead"></p>
                 </div>
             </div>

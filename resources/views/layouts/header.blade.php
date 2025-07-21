@@ -15,13 +15,23 @@
                     <ul class="dropdown-menu" style="">
                         <li><a class="dropdown-item" href="{{ route('pages.timers') }}">{{ __('Event Times') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.uniques') }}">{{ __('Unique Tracker') }}</a></li>
+                        @if(config("ranking.extra.advanced_unique_ranking"))
                         <li><a class="dropdown-item" href="{{ route('pages.uniques-advanced') }}">{{ __('Advanced Unique Tracker') }}</a></li>
+                        @endif
                         <li><a class="dropdown-item" href="{{ route('pages.fortress') }}">{{ __('Fortress History') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.globals') }}">{{ __('Global History') }}</a></li>
+                        @if(config("ranking.extra.item_logs.plus"))
                         <li><a class="dropdown-item" href="{{ route('pages.sox-plus') }}">{{ __('Sox Plus') }}</a></li>
+                        @endif
+                        @if(config("ranking.extra.item_logs.drop"))
                         <li><a class="dropdown-item" href="{{ route('pages.sox-drop') }}">{{ __('Sox Drop') }}</a></li>
+                        @endif
+                        @if(config("ranking.extra.kill_logs.pvp"))
                         <li><a class="dropdown-item" href="{{ route('pages.pvp-kills') }}">{{ __('Pvp Kills') }}</a></li>
+                        @endif
+                        @if(config("ranking.extra.kill_logs.job"))
                         <li><a class="dropdown-item" href="{{ route('pages.job-kills') }}">{{ __('Job Kills') }}</a></li>
+                        @endif
                     </ul>
                 </li>
                 <li class="dropdown">

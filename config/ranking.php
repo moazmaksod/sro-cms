@@ -51,13 +51,13 @@ return [
             'route' => 'ranking.fortress-guild',
         ],
         'ranking-pvp-kd' => [
-            'enabled' => true,
+            'enabled' => false,
             'name' => 'Pvp K/D Ranking',
             'image' => 'fa fa-users',
             'route' => 'ranking.pvp-kd',
         ],
         'ranking-job-kd' => [
-            'enabled' => true,
+            'enabled' => false,
             'name' => 'Job K/D Ranking',
             'image' => 'fa fa-users',
             'route' => 'ranking.job-kd',
@@ -96,6 +96,17 @@ return [
         ],
         'guilds' => [
             'RigidStaff',
+        ],
+    ],
+    'extra' => [
+        'advanced_unique_ranking' => false,
+        'kill_logs' => [
+            'pvp' => false,
+            'job' => false,
+        ],
+        'item_logs' => [
+            'plus' => false,
+            'drop' => false,
         ],
     ],
     'uniques' => [
