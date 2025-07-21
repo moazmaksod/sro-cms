@@ -230,7 +230,11 @@ class RankingController extends Controller
 
     public function pvp_kd()
     {
-        $data = LogEventChar::getKillDeathRanking('pvp', 25);
+        if (config('ranking.extra.kill_logs.pvp')) {
+            $data = LogEventChar::getKillDeathRanking('pvp', 25);
+        } else {
+            $data = [];
+        }
         $topImage = config('ranking.top_image');
 
         return view('ranking.ranking.pvp-kd', [
@@ -241,7 +245,11 @@ class RankingController extends Controller
 
     public function job_kd()
     {
-        $data = LogEventChar::getKillDeathRanking('job', 25);
+        if (config('ranking.extra.kill_logs.job')) {
+            $data = LogEventChar::getKillDeathRanking('job', 25);
+        } else {
+            $data = [];
+        }
         $topImage = config('ranking.top_image');
 
         return view('ranking.ranking.job-kd', [
@@ -297,14 +305,21 @@ class RankingController extends Controller
                 $jobType = config('ranking.job_type');
             }
 
+            $pvpKill = [];
+            $jobKill = [];
+            if (config('ranking.extra.kill_logs.pvp')) {
+                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
+            }
+            if (config('ranking.extra.kill_logs.job')) {
+                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
+            }
+
             $uniqueList = config('ranking.uniques');
             $skillMastery = config('ranking.skill_mastery');
             $characterRace = config('ranking.character_race');
             $hwanLevel = config('ranking.hwan_level');
             $userJID = User::where('CharID', $charID)->first()->UserJID;
             $status = LogEventChar::getCharStatus($charID)->first();
-            $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
-            $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
 
             if ($data) {
                 return view('ranking.character.index', [

@@ -66,8 +66,14 @@ class PageController extends Controller
 
     public function uniquesAdvanced()
     {
-        $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0, false);
-        $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
+        if (config('ranking.extra.advanced_unique_ranking')) {
+            $kills = LogInstanceWorldInfo::getUniquesKill(9999, 0, false);
+            $ranking = LogInstanceWorldInfo::getUniqueRanking(9999, 0);
+        } else {
+            $kills = [];
+            $ranking = [];
+        }
+
         $config = config('ranking.uniques');
 
         $data = [];
@@ -101,25 +107,41 @@ class PageController extends Controller
 
     public function sox_plus()
     {
-        $data = LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 25);
+        if (config('ranking.extra.item_logs.plus')) {
+            $data = LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 25);
+        } else {
+            $data = [];
+        }
         return view('pages.sox-plus', compact('data'));
     }
 
     public function sox_drop()
     {
-        $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
+        if (config('ranking.extra.item_logs.drop')) {
+            $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
+        } else {
+            $data = [];
+        }
         return view('pages.sox-drop', compact('data'));
     }
 
     public function pvp_kills()
     {
-        $data = LogEventChar::getKillLogs('pvp', 25);
+        if (config('ranking.extra.kill_logs.pvp')) {
+            $data = LogEventChar::getKillLogs('pvp', 25);
+        } else {
+            $data = [];
+        }
         return view('pages.pvp-kills', compact('data'));
     }
 
     public function job_kills()
     {
-        $data = LogEventChar::getKillLogs('job', 25);
+        if (config('ranking.extra.kill_logs.job')) {
+            $data = LogEventChar::getKillLogs('job', 25);
+        } else {
+            $data = [];
+        }
         return view('pages.job-kills', compact('data'));
     }
 

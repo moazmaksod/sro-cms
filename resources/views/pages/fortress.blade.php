@@ -25,7 +25,7 @@
                                         @if(!empty($value->strDesc))
                                             <a href="{{ route('ranking.guild.view', ['name' => $value->strDesc]) }}" class="text-decoration-none">{{ $value->strDesc }}</a>
                                         @else
-                                            <span>{{ __('NoName') }}</span>
+                                            <span>{{ __('No Winner') }}</span>
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
