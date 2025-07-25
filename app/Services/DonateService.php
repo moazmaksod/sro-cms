@@ -803,13 +803,15 @@ class DonateService
             return response('Invalid Hash', 400);
         }
 
+        /*
         $transaction_id = DonateLog::where('transaction_id', $data['transaction_id'])->where('status', 'true')->first();
         if ($transaction_id) {
             return response('This transaction has already been processed successfully.', 409);
         }
+        */
 
         if ($data['status'] === 'success') {
-            $package = collect($config['package'])->firstWhere('price', intval($data['payment_total']));
+            $package = collect($config['package'])->firstWhere('price', intval($data['payment_total'] / 100));
             if (!$package) {
                 return response('Invalid package price', 422);
             }

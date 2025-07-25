@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
             'new_email' => array_filter([
                 config('settings.update_type') == 'verify_code' ? 'required' : null,
                 'email',
-                !config('settings.duplicate_email', 1) ? Rule::unique(User::class)->ignore($this->user()->id) : null
+                !config('settings.duplicate_email', 1) ? Rule::unique('users', 'email')->ignore($this->user()->id) : null
             ]),
 
             'email' => array_filter([
