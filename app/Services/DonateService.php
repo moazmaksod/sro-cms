@@ -749,7 +749,7 @@ class DonateService
         }
 
         $user = Auth::user();
-        $hash = base64_encode(hash_hmac('sha256', $user->jid . trim($user->email) . $user->username . $config['key'], $config['secret'], true));
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
 
         $payload = [
             'api_key' => $config['key'],
@@ -797,18 +797,16 @@ class DonateService
         if (!$user) {
             return response('User not found', 404);
         }
-        $hash = base64_encode(hash_hmac('sha256',$user->jid . trim($user->email) . $user->username . $config['key'], $config['secret'], true));
+        $hash = base64_encode(hash_hmac('sha256',$data["transaction_id"].$data["user_id"].$data["email"].$data["name"].$data["status"].$config['key'],$config['secret'] ,true));
 
         if (!hash_equals($data['hash'], $hash)) {
             return response('Invalid Hash', 400);
         }
 
-        /*
-        $transaction_id = DonateLog::where('transaction_id', $data['transaction_id'])->where('status', 'true')->first();
+        $transaction_id = DonateLog::where('transaction_id', $data['transaction_id'])->where('status', 'true')->exists();
         if ($transaction_id) {
             return response('This transaction has already been processed successfully.', 409);
         }
-        */
 
         if ($data['status'] === 'success') {
             $package = collect($config['package'])->firstWhere('price', intval($data['payment_total'] / 100));
