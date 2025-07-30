@@ -77,6 +77,7 @@
                 @endif
             </td>
         </tr>
+        @if(config("ranking.extra.character_status"))
         <tr>
             <td>{{ __('Status:') }}</td>
             <td>
@@ -97,6 +98,7 @@
                 @endif
             </td>
         </tr>
+        @endif
         </tbody>
     </table>
 </div>

@@ -42,6 +42,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.vouchers.index') ? 'active' : '' }}" href="{{ route('admin.vouchers.index') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
+                    {{ __('Vouchers') }}
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.votes.index') ? 'active' : '' }}" href="{{ route('admin.votes.index') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Vote4Silk') }}
@@ -58,23 +64,16 @@
             -->
         </h6>
         <ul class="nav flex-column mb-auto">
-
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.vouchers.index') ? 'active' : '' }}" href="{{ route('admin.vouchers.index') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
-                    {{ __('Vouchers') }}
+                    {{ __('Donate Logs') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.referral.logs') ? 'active' : '' }}" href="{{ route('admin.referral.logs') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Referral Logs') }}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
-                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
-                    {{ __('Donate Logs') }}
                 </a>
             </li>
             <li class="nav-item">

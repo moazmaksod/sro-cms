@@ -284,18 +284,10 @@ class RankingController extends Controller
         $charID = Char::getCharIDByName($name);
         if ($charID > 0) {
 
-            $data = Char::getPlayerRanking(1, $charID)->first();
-            $build = CharSkillMastery::getCharBuildInfo($charID);
-
-            $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
-            $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
-
-            $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
-            $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
-
-            if (config('global.server.version') !== 'vSRO') {
-                $inventoryJob = $inventoryService->getInventoryJob($charID);
-            }
+            $uniqueList = config('ranking.uniques');
+            $skillMastery = config('ranking.skill_mastery');
+            $characterRace = config('ranking.character_race');
+            $hwanLevel = config('ranking.hwan_level');
 
             if (config('global.server.version') === 'vSRO') {
                 $characterImage = config('ranking.character_image_vsro');
@@ -305,21 +297,29 @@ class RankingController extends Controller
                 $jobType = config('ranking.job_type');
             }
 
-            $pvpKill = [];
-            $jobKill = [];
+            $data = Char::getPlayerRanking(1, $charID)->first();
+            $build = CharSkillMastery::getCharBuildInfo($charID);
+            $userJID = User::where('CharID', $charID)->first()->UserJID;
+
+            $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
+            $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
+
+            if (config('global.server.version') !== 'vSRO') {
+                $inventoryJob = $inventoryService->getInventoryJob($charID);
+            }
+
+            $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
+            $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
+
             if (config('ranking.extra.kill_logs.pvp')) {
                 $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
             }
             if (config('ranking.extra.kill_logs.job')) {
                 $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
             }
-
-            $uniqueList = config('ranking.uniques');
-            $skillMastery = config('ranking.skill_mastery');
-            $characterRace = config('ranking.character_race');
-            $hwanLevel = config('ranking.hwan_level');
-            $userJID = User::where('CharID', $charID)->first()->UserJID;
-            $status = LogEventChar::getCharStatus($charID)->first();
+            if (config('ranking.extra.character_status')) {
+                $status = LogEventChar::getCharStatus($charID)->first();
+            }
 
             if ($data) {
                 return view('ranking.character.index', [
@@ -337,9 +337,9 @@ class RankingController extends Controller
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
-                    'status' => $status,
-                    'pvpKill' => $pvpKill,
-                    'jobKill' => $jobKill,
+                    'status' => $status ?? null,
+                    'pvpKill' => $pvpKill ?? null,
+                    'jobKill' => $jobKill ?? null,
                 ]);
             }
         }

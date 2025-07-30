@@ -171,14 +171,41 @@ class ProfileController extends Controller
 
     public function secondaryPasswordReset(Request $request): RedirectResponse
     {
-        $request->validate([
-            'password' => 'required|string',
-        ]);
+        if (config('settings.update_type') == 'verify_code') {
+            $request->validate([
+                'verify_code_secondary' => 'required|string',
+            ]);
 
-        $tbUser = TbUser::where('password', md5($request->password))->first();
-        if ($tbUser) {
-            DB::connection('account')->statement("DELETE FROM SILKROAD_R_ACCOUNT.._SecondaryPassword WHERE UserJID = ?", [$tbUser->JID]);
-            return redirect()->back()->with('passcode_success', 'Your secondary password has been reset successfully!');
+            $codeRecord = DB::table('password_reset_tokens')->where('email', $request->user()->email)->first();
+
+            if (!$codeRecord || !($request->input('verify_code_secondary') === $codeRecord->token) || Carbon::parse($codeRecord->created_at)->addMinutes(30)->isPast()) {
+                return back()->withErrors(['verify_code_secondary' => 'The provided verification code is invalid or expired.']);
+            }
+
+            $tbUser = $request->user()->tbUser;
+            $deleted = DB::connection('account')->table('_SecondaryPassword')->where('UserJID', $tbUser->JID)->delete();
+
+            DB::table('password_reset_tokens')->where('email', $request->user()->email)->delete();
+
+            if ($deleted) {
+                return back()->with('passcode_success', 'Your secondary password has been reset successfully!');
+            } else {
+                return back()->with('passcode_error', 'No secondary password was found for your account.');
+            }
+        } else {
+            $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            $tbUser = TbUser::where('password', md5($request->password))->first();
+            if ($tbUser) {
+                $deleted = DB::connection('account')->table('_SecondaryPassword')->where('UserJID', $tbUser->JID)->delete();
+                if ($deleted) {
+                    return back()->with('passcode_success', 'Your secondary password has been reset successfully!');
+                } else {
+                    return back()->with('passcode_error', 'No secondary password was found for your account.');
+                }
+            }
         }
 
         return redirect()->back()->with('passcode_error', 'Invalid password provided. Please try again.');

@@ -99,6 +99,7 @@ return [
         ],
     ],
     'extra' => [
+        'character_status' => false,
         'advanced_unique_ranking' => false,
         'kill_logs' => [
             'pvp' => false,
