@@ -107,8 +107,9 @@ class PageController extends Controller
 
     public function sox_plus()
     {
-        if (config('ranking.extra.item_logs.plus')) {
-            $data = LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 25);
+        $config = config('ranking.extra.item_logs.plus');
+        if ($config['enabled']) {
+            $data = LogEventItem::getLogEventItem('plus', $config['plus'], $config['degree'], $config['type'], null, 25);
         } else {
             $data = [];
         }
@@ -117,8 +118,9 @@ class PageController extends Controller
 
     public function sox_drop()
     {
-        if (config('ranking.extra.item_logs.drop')) {
-            $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
+        $config = config('ranking.extra.item_logs.drop');
+        if ($config['enabled']) {
+            $data = LogEventItem::getLogEventItem('drop', null, $config['degree'], $config['type'], null, 25);
         } else {
             $data = [];
         }

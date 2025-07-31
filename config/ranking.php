@@ -106,8 +106,17 @@ return [
             'job' => false,
         ],
         'item_logs' => [
-            'plus' => false,
-            'drop' => false,
+            'plus' => [
+                'enabled' => false,
+                'plus' => 8,
+                'degree' => 8,
+                'type' => 'Seal of Sun', //Seal of Star, Seal of Moon, Seal of Sun, Seal of roc
+            ],
+            'drop' => [
+                'enabled' => false,
+                'degree' => 8,
+                'type' => 'Seal of Sun', //Seal of Star, Seal of Moon, Seal of Sun, Seal of roc
+            ],
         ],
     ],
     'uniques' => [

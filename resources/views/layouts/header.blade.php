@@ -20,10 +20,10 @@
                         @endif
                         <li><a class="dropdown-item" href="{{ route('pages.fortress') }}">{{ __('Fortress History') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('pages.globals') }}">{{ __('Global History') }}</a></li>
-                        @if(config("ranking.extra.item_logs.plus"))
+                        @if(config("ranking.extra.item_logs.plus.enabled"))
                         <li><a class="dropdown-item" href="{{ route('pages.sox-plus') }}">{{ __('Sox Plus') }}</a></li>
                         @endif
-                        @if(config("ranking.extra.item_logs.drop"))
+                        @if(config("ranking.extra.item_logs.drop.enabled"))
                         <li><a class="dropdown-item" href="{{ route('pages.sox-drop') }}">{{ __('Sox Drop') }}</a></li>
                         @endif
                         @if(config("ranking.extra.kill_logs.pvp"))
