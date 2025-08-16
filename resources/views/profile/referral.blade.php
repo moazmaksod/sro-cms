@@ -99,7 +99,10 @@
         FingerprintJS.load().then(fp => {
             fp.get().then(result => {
 
-                fetch("{{ route('profile.referral.fingerprint') }}", {
+                let url = "{{ route('profile.referral.fingerprint', [], false) }}";
+                url = window.location.protocol + "//" + window.location.host + url;
+
+                fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

@@ -45,10 +45,6 @@
                         @if(config('global.server.version') === 'vSRO')
                             <tbody>
                             <tr>
-                                <th scope="row">JID</th>
-                                <td>{{ Auth::user()->tbUser->JID }}</td>
-                            </tr>
-                            <tr>
                                 <th scope="row">Username</th>
                                 <td>{{ Auth::user()->tbUser->StrUserID }}</td>
                             </tr>
@@ -71,10 +67,6 @@
                             </tbody>
                         @else
                             <tbody>
-                            <tr>
-                                <th scope="row">Portal JID</th>
-                                <td>{{ Auth::user()->tbUser->PortalJID }}</td>
-                            </tr>
                             <tr>
                                 <th scope="row">Username</th>
                                 <td>{{ Auth::user()->tbUser->StrUserID }}</td>

@@ -199,6 +199,9 @@
             top: 21px;
             left: 59px;
         }
+        #display-inventory-avatar {
+            background: url({{ asset('images/inventory_job_bg.png') }}) 0 0 no-repeat;
+        }
         #display-inventory-avatar-accessory {
             width: 172px;
             height: 129px;

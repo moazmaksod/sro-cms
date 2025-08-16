@@ -149,7 +149,7 @@ class DonateService
         }
 
         DonateLog::setDonateLog(
-            'PayPal',
+            'Paypal',
             (string) Str::uuid(),
             'true',
             $package['price'],
@@ -274,139 +274,6 @@ class DonateService
         } catch (\Exception $e) {
             return back()->withErrors(['stripe' => 'Payment processing failed. Please try again.'])->withInput();
         }
-    }
-
-    public function webhookStripe(Request $request)
-    {
-        $config = config('donate.stripe');
-        $payload = $request->getContent();
-        $sigHeader = $request->header('stripe-signature');
-        // TODO: Use Stripe's official webhook signature verification here for better security.
-        // See: https://stripe.com/docs/webhooks/signatures
-        // Prevent replay attacks by checking event ID (if present)
-        $event = json_decode($payload, true);
-        if (isset($event['id'])) {
-            $cacheKey = 'stripe_event_' . $event['id'];
-            if (cache()->has($cacheKey)) {
-                \Log::warning('Stripe webhook replay detected', ['event_id' => $event['id']]);
-                return response('Replay attack detected', 409);
-            }
-            cache()->put($cacheKey, true, 3600); // Store for 1 hour
-        }
-        if ($config['webhook_secret']) {
-            $computedSignature = hash_hmac('sha256', $payload, $config['webhook_secret']);
-            if (!hash_equals($computedSignature, $sigHeader)) {
-                return response('Invalid signature', 400);
-            }
-        }
-
-        try {
-            if ($event['type'] === 'checkout.session.completed') {
-                $session = $event['data']['object'];
-
-                // Handle successful payment here if needed
-                \Log::info('Stripe webhook: Payment completed', ['session_id' => $session['id']]);
-            }
-
-            return response('OK', 200);
-
-        } catch (\Exception $e) {
-            \Log::error('Stripe webhook error', ['error' => $e->getMessage()]);
-            return response('Webhook error', 400);
-        }
-    }
-
-    public function processSimplyeasier(Request $request)
-    {
-        $config = config('donate.simplyeasier');
-        if (!$config['enabled']) {
-            return back()->withErrors(['simplyeasier' => 'Simply Easier payments are currently disabled.'])->withInput();
-        }
-        $request->validate([
-            'price' => 'required|numeric|min:0.01',
-        ]);
-
-        $price = $request->input('price');
-        $package = collect($config['package'])->firstWhere('price', $price);
-
-        if (!$package) {
-            return back()->withErrors(['simplyeasier' => 'Invalid package selected.'])->withInput();
-        }
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $config['api_key'],
-                'Accept' => 'application/json',
-            ])->post($config['endpoint'] . '/payments', [
-                'amount' => $price,
-                'currency' => $config['currency'],
-                'description' => $package['name'],
-                'metadata' => [
-                    'user_id' => Auth::id(),
-                    'package_value' => $package['value'],
-                    'package_name' => $package['name'],
-                ],
-                'callback_url' => route('callback', ['method' => 'simplyeasier']),
-                'success_url' => route('profile.donate'),
-                'cancel_url' => route('profile.donate'),
-            ]);
-
-            if ($response->successful()) {
-                return redirect()->away($response['payment_url']);
-            }
-
-            return back()->withErrors(['simplyeasier' => 'Payment initialization failed.'])->withInput();
-        } catch (\Exception $e) {
-            return back()->withErrors(['simplyeasier' => 'Payment error: ' . $e->getMessage()])->withInput();
-        }
-    }
-
-    public function callbackSimplyeasier(Request $request)
-    {
-        // Validate and process payment result
-        $paymentId = $request->get('payment_id');
-
-        // Fetch payment status from Simply Easier
-        $config = config('donate.simplyeasier');
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $config['api_key'],
-        ])->get($config['endpoint'] . "/payments/{$paymentId}");
-
-        if (!$response->successful() || $response['status'] !== 'paid') {
-            return back()->withErrors(['simplyeasier' => 'Payment was not successful.']);
-        }
-
-        // Assume metadata is returned
-        $metadata = $response['metadata'];
-        $user = User::find($metadata['user_id']);
-
-        if (!$user) {
-            return back()->withErrors(['simplyeasier' => 'User not found.']);
-        }
-
-        $value = $metadata['package_value'];
-        $name = $metadata['package_name'];
-        $price = $response['amount'];
-
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $value);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $value);
-        }
-
-        DonateLog::setDonateLog(
-            'SimplyEasier',
-            $paymentId,
-            'true',
-            $price,
-            $value,
-            "User:{$user->username} purchased {$name} for \${$price}.",
-            $user->jid,
-            $request->ip()
-        );
-
-        return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
     }
 
     public function processCoinPayments(Request $request)
@@ -625,7 +492,7 @@ class DonateService
                     <username>{$config['key']}</username>
                     <password>{$config['secret']}</password>
                     <cmd>epinadd</cmd>
-                    <epinusername>".Auth::user()->jid."</epinusername>
+                    <epinusername>".Auth::user()->username."</epinusername>
                     <epincode>{$request->code}</epincode>
                     <epinpass>{$request->password}</epinpass>
                 </params>
@@ -662,7 +529,7 @@ class DonateService
                 }
 
                 DonateLog::setDonateLog(
-                    'Maxicard',
+                    'MaxiCard',
                     $orderNumber,
                     'true',
                     $package['price'],
@@ -718,7 +585,7 @@ class DonateService
                 }
 
                 DonateLog::setDonateLog(
-                    'Hipocard',
+                    'HipoCard',
                     uniqid().rand(100,999),
                     'true',
                     $package['price'],

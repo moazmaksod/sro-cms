@@ -18,7 +18,7 @@
         <div class="row">
             @foreach($data as $value)
                 <div class="col-md-3 mb-4">
-                    <div class="card @if($value->active) border-primary @endif">
+                    <div class="card">
                         <div class="card-body text-center">
                             <div class="d-flex overflow-hidden align-items-center justify-content-center mb-2">
                                 <img class="object-fit-cover rounded border" src="{{ $value->image }}" alt="" style="min-width: 90px; min-height: 50px;"/>
@@ -34,7 +34,7 @@
                                     <button type="submit" class="btn btn-primary">Vote Now</button>
                                 </form>
                             @else
-                                <button class="btn btn-outline-secondary" disabled>Vote Now</button>
+                                <button class="btn btn-primary" disabled>Vote Now</button>
                             @endif
                         </div>
                     </div>

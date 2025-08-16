@@ -48,6 +48,7 @@ return [
         2 => 'Low Quality',
         3 => 'Medium Quality',
         4 => 'High Quality',
+        5 => 'Highest Quality',
     ],
     'detail' => [
         0 => 'Head',

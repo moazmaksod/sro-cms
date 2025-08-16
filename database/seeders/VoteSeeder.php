@@ -89,7 +89,7 @@ class VoteSeeder extends Seeder
             [
                 'url' => 'https://silkroad-servers.com/index.php?a=in&u=SERVER_ID&id={JID}',
                 'site' => 'silkroad-servers',
-                'image' => 'https://silkroad-servers.com/Vote.png',
+                'image' => 'https://silkroad-servers.com/images/button.png',
                 'ip' => '116.203.217.217',
                 'param' => 'userid',
                 'reward' => 5,
@@ -103,7 +103,7 @@ class VoteSeeder extends Seeder
             [
                 'url' => 'https://private-server.ws/index.php?a=in&u=SERVER_ID&id={JID}',
                 'site' => 'private-server',
-                'image' => 'https://private-server.ws/Vote.png',
+                'image' => 'https://private-server.ws/images/vote_button.jpg',
                 'ip' => '116.203.234.215',
                 'param' => 'userid',
                 'reward' => 5,

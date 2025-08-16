@@ -151,6 +151,9 @@ class InventoryService
     private function getItemInfo(array $item): array
     {
         $info = [
+            'ID64' => $item['ID64'],
+            'RefItemID' => $item['RefItemID'],
+            'Serial64' => $item['Serial64'],
             'CodeName128' => $item['CodeName128'],
             'ReqLevel1' => $item['ReqLevel1'],
             'ItemClass' => $item['ItemClass'],

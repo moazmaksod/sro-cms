@@ -47,7 +47,7 @@
     @endif
 </span>
 
-@if(!config("settings.item_stats_jid_{$userJID}"))
+@if(!config("settings.item_stats_jid_{$userJID}") || auth()->user()?->role?->is_admin)
     @if($item['WhiteInfo'])
         @foreach($item['WhiteInfo'] as $iKey => $sWhites)
             @if(!empty($sWhites))
@@ -126,7 +126,7 @@
     <br />
 @endif
 
-@if(!config("settings.item_stats_jid_{$userJID}"))
+@if(!config("settings.item_stats_jid_{$userJID}") || auth()->user()?->role?->is_admin)
     @if(!in_array((int) $item['TypeID2'], [4], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
         @if($item['MagParam1'] >= 4611686018427387904)
             <span style="color:#ff2f51;">{{ __('You may not use normal Magic Stone') }}</span>
@@ -179,4 +179,11 @@
     @if($item['Amount'])
         {{ __('Quantity') }} {{ $item['Amount'] }}<br/>
     @endif
+@endif
+
+@if(auth()->user()?->role?->is_admin && request()->routeIs('admin.characters.*'))
+    <br/><br/><span style="color:#efdaa4;">{{ __('GM info:') }}</span><br/>
+    <span style="color:#ff2f51;">{{ __('ItemID:') }} {{ $item['ID64'] }}</span><br/>
+    <span style="color:#ff2f51;">{{ __('RefItemID:') }} {{ $item['RefItemID'] }}</span><br/>
+    <span style="color:#ff2f51;">{{ __('Serial64:') }} {{ $item['Serial64'] }}</span><br/>
 @endif
