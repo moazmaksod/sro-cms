@@ -106,6 +106,11 @@
     <br />
 @endif
 
+@if(config('global.server.version') === 'vSRO' && in_array((int) $item['TypeID2'], [1], true))
+    <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
+    <br />
+@endif
+
 @if(in_array((int) $item['TypeID3'], [13], true) && $item['MaxMagicOptCount'] != 0)
     @isset($item['Gender'])
         <br />{{ $item['Gender'] }}<br />
