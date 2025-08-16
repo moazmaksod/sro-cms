@@ -22,8 +22,24 @@
                         <label for="inviteLink" class="form-label">Your Invite Link</label>
                         <div class="input-group">
                             <input type="text" id="inviteLink" class="form-control" value="{{ url('/register?invite=' . $invite->code) }}" readonly>
-                            <button class="btn btn-outline-primary" type="button" onclick="copyInviteLink()">Copy</button>
+                            <button class="btn btn-outline-primary" id="inviteButton" type="button" onclick="copyInviteLink()">Copy</button>
                         </div>
+                        <script>
+                            function copyInviteLink() {
+                                const input = document.getElementById("inviteLink");
+                                const button = document.getElementById("inviteButton");
+
+                                input.select();
+                                input.setSelectionRange(0, 99999); // for mobile
+                                navigator.clipboard.writeText(input.value).then(() => {
+                                    button.textContent = "Copied!";
+
+                                    setTimeout(() => {
+                                        button.textContent = "Copy";
+                                    }, 2000);
+                                });
+                            }
+                        </script>
                     </div>
 
                     <div class="card d-flex justify-content-between align-items-center mb-3 mt-3 p-3">
@@ -74,16 +90,6 @@
                             <div class="alert alert-info">No invited users yet.</div>
                         @endif
                     </div>
-
-                    <script>
-                        function copyInviteLink() {
-                            const input = document.getElementById("inviteLink");
-                            input.select();
-                            input.setSelectionRange(0, 99999);
-                            document.execCommand("copy");
-                            alert("Invite link copied to clipboard!");
-                        }
-                    </script>
                 @else
                     <div class="alert alert-warning">
                         No invite code found for this user.

@@ -36,7 +36,9 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-center">No characters found.</p>
+                        <div class="alert alert-danger">
+                            <p class="text-center">No characters found.</p>
+                        </div>
                     @endforelse
                 </div>
 
@@ -58,57 +60,8 @@
                                         <td>{{ $user->StrUserID }}</td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">Password</th>
-                                        <td>
-                                            <span id="password-display">********</span>
-                                            <button id="edit-password-btn" class="btn btn-sm btn-secondary ms-1 py-0" onclick="togglePasswordEdit()">Change</button>
-                                        </td>
-                                    </tr>
-                                    <tr id="password-edit-field" style="display: none;">
-                                        <td colspan="2">
-                                            <form method="POST" action="{{ route('admin.users.update.password', $user->JID) }}">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="row g-1 mb-1">
-                                                    <div class="col-6">
-                                                        <input id="password" type="password" class="form-control form-control-sm @error('password') is-invalid @enderror" name="password" placeholder="New Password" required>
-                                                        @error('password')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <input id="password_confirmation" type="password" class="form-control form-control-sm" name="password_confirmation" placeholder="Confirm" required>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button type="submit" class="btn btn-warning btn-sm w-100 py-0">Save</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <th scope="row">Email</th>
-                                        <td>
-                                            <span id="current-email">{{ $user->Email }}</span>
-                                            <button id="edit-email-btn" class="btn btn-sm btn-secondary ms-1 py-0" onclick="toggleEmailEdit()">Change</button>
-                                        </td>
-                                    </tr>
-                                    <tr id="email-edit-field" style="display: none;">
-                                        <td colspan="2">
-                                            <form method="POST" action="{{ route('admin.users.update.email', $user->JID) }}" class="row g-1">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="col-8">
-                                                    <input type="email" class="form-control form-control-sm @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->Email) }}" required>
-                                                    @error('email')
-                                                    <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-4">
-                                                    <button type="submit" class="btn btn-warning btn-sm w-100 py-0">Save</button>
-                                                </div>
-                                            </form>
-                                        </td>
+                                        <td>{{ $user->Email }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Silk') }}</th>
@@ -395,29 +348,6 @@
 
 @push('scripts')
     <script>
-        function toggleEmailEdit() {
-            const editField = document.getElementById('email-edit-field');
-            const editBtn = document.getElementById('edit-email-btn');
-            if (editField.style.display === 'none') {
-                editField.style.display = 'table-row';
-                editBtn.textContent = 'Cancel';
-            } else {
-                editField.style.display = 'none';
-                editBtn.textContent = 'Change';
-            }
-        }
-
-        function togglePasswordEdit() {
-            const editField = document.getElementById('password-edit-field');
-            const editBtn = document.getElementById('edit-password-btn');
-            if (editField.style.display === 'none') {
-                editField.style.display = 'table-row';
-                editBtn.textContent = 'Cancel';
-            } else {
-                editField.style.display = 'none';
-                editBtn.textContent = 'Change';
-            }
-        }
         function toggleCustomReason(select) {
             const field = document.getElementById('custom-reason-field');
             field.style.display = (select.value === 'Custom') ? 'block' : 'none';

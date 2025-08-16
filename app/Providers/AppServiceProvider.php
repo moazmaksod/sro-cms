@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
@@ -34,11 +35,5 @@ class AppServiceProvider extends ServiceProvider
 
         date_default_timezone_set(config('settings.timezone', config('app.timezone')));
         View::getFinder()->prependLocation(resource_path("themes/".config('settings.theme').'/views'));
-
-        if (config('settings.default_locale') === 'switch') {
-            App::setLocale(config('settings.locale', 'en'));
-        } else {
-            App::setLocale(config('settings.default_locale', 'en'));
-        }
     }
 }

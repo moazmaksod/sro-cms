@@ -103,7 +103,7 @@
                     <ul class="dropdown-menu" style="">
                         @foreach($languages as $key => $value)
                             <li>
-                                <a class="dropdown-item" href="{{ route('lang.switch', $key) }}">
+                                <a class="dropdown-item" href="{{ route('locale', $key) }}">
                                     <span class="fi fi-{{ $value['flag'] }}"></span>
                                     {{ $value['name'] }}
                                 </a>

@@ -74,29 +74,6 @@ class UsersController extends Controller
 
         return back()->with('success', 'Silk have been Sent!');
     }
-     public function updateEmail(Request $request, TbUser $user)
-    {
-        $validated = $request->validate([
-            'email' => 'required|email|max:255',
-        ]);
-
-        $user->Email = $validated['email'];
-        $user->save();
-
-        return back()->with('success', 'Email address updated successfully!');
-    }
-
-    public function updatePassword(Request $request, TbUser $user)
-    {
-        $validated = $request->validate([
-            'password' => 'required|min:6|confirmed',
-        ]);
-
-        $user->password = md5($validated['password']);
-        $user->save();
-
-        return back()->with('success', 'Password updated successfully!');
-    }
 
     public function block(Request $request, TbUser $user)
     {

@@ -2,7 +2,7 @@
     <table class="table table-striped">
         <thead class="table-dark">
             <tr class="text-center">
-                <th scope="col">{{ __('Name') }}</th>
+                <th scope="col">{{ __('Alliances') }}</th>
             </tr>
         </thead>
         <tbody>

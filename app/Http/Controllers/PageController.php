@@ -14,6 +14,7 @@ use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
 {
@@ -21,6 +22,14 @@ class PageController extends Controller
     {
         $data = News::getPosts();
         return view('pages.index', compact('data'));
+    }
+
+    public function locale($locale)
+    {
+        if (array_key_exists($locale, config('global.languages'))) {
+            Session::put('locale', $locale);
+        }
+        return back();
     }
 
     public function post($slug)
