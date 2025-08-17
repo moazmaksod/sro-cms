@@ -301,6 +301,7 @@ class InventoryService
                 'name' => str_replace('%desc%', $value, $config[$id]['desc']),
                 'value' => $value,
                 'mLevel' => $config[$id]['mLevel'],
+                'mValue' => $config[$id]['mValue'] ?? 0,
                 'sortkey' => $config[$id]['sortkey'],
             ];
         }

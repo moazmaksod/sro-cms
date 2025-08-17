@@ -120,7 +120,7 @@
         .sro-item-detail .tooltip {
             text-align: left !important;
             font-size: 12px;
-            width: 250px;
+            width: 300px;
             min-height: 200px;
             background-color: rgba(28, 30, 52, .8);
             color: #fff;

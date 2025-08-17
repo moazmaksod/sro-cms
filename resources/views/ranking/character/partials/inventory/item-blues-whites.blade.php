@@ -62,7 +62,18 @@
     @if(in_array((int) $item['TypeID2'], [4], true))
         {{ __('Job level:') }} {{ $item['ReqLevel1'] }}<br />
     @else
-        {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
+        @if(config('global.server.version') === 'vSRO')
+            {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
+        @else
+            @if($item['Country'] == 'European' && in_array((int) $item['TypeID3'], [9], true))
+                {{ __('Mastery level: Wizard Mastery') }} {{ $item['ReqLevel1'] }}<br />
+                {{ __('Mastery level: Warlock Mastery') }} {{ $item['ReqLevel1'] }}<br />
+                {{ __('Mastery level: Bard Mastery') }} {{ $item['ReqLevel1'] }}<br />
+                {{ __('Mastery level: Cleric Mastery') }} {{ $item['ReqLevel1'] }}<br />
+            @else
+                {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
+            @endif
+        @endif
      @endif
 @endif
 
@@ -158,7 +169,10 @@
     @if($item['BlueInfo'])
         <br />
         @foreach($item['BlueInfo'] as $value)
-            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">{{ $value['name'] }} {{--@if(isset($value['mLevel']) && $value['mLevel'] > 0) (+{{ round($value['value'] / $value['mLevel']) * 100 }}%) @endif--}}</b><br />
+            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">
+                {{ $value['name'] }} @if($value['mValue'] > 0) (+{{ ceil((($value['value'] - 1) / ($value['mValue'] - 1)) * 100) }}%) @endif
+            </b>
+            <br />
         @endforeach
     @endif
 @else
