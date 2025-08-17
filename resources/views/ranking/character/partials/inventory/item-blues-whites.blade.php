@@ -87,7 +87,7 @@
     @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
     @elseif($item['TypeID3'] == 13)
-        {{ $item['ItemDesc'] ?? 'Dress worn by ' }} <br />
+        {{ $item['ItemDesc'] ?? 'Dress worn by undefined' }} <br />
     @elseif($item['TypeID4'] == 1 || $item['TypeID4'] == 2)
         {{ $item['ItemDesc'] ?? 'A quiver of 10,000 arrows.' }} <br />
     @else

@@ -312,13 +312,13 @@ class RankingController extends Controller
             $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
 
             if (config('ranking.extra.kill_logs.pvp')) {
-                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first() ?? null;
+                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
             }
             if (config('ranking.extra.kill_logs.job')) {
-                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first() ?? null;
+                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
             }
             if (config('ranking.extra.character_status')) {
-                $status = LogEventChar::getCharStatus($charID)->first() ?? null;
+                $status = LogEventChar::getCharStatus($charID)->first();
             }
 
             if ($data) {
@@ -337,9 +337,9 @@ class RankingController extends Controller
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
-                    'status' => $status,
-                    'pvpKill' => $pvpKill,
-                    'jobKill' => $jobKill,
+                    'status' => $status ?? null,
+                    'pvpKill' => $pvpKill ?? null,
+                    'jobKill' => $jobKill ?? null,
                 ]);
             }
         }
