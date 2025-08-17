@@ -299,26 +299,26 @@ class RankingController extends Controller
 
             $data = Char::getPlayerRanking(1, $charID)->first();
             $build = CharSkillMastery::getCharBuildInfo($charID);
-            $userJID = User::where('CharID', $charID)->first()->UserJID;
+            $userJID = User::where('CharID', $charID)->first()->UserJID ?? 0;
 
             $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
 
             if (config('global.server.version') !== 'vSRO') {
-                $inventoryJob = $inventoryService->getInventoryJob($charID);
+                $inventoryJob = $inventoryService->getInventoryJob($charID) ?? [];
             }
 
             $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
             $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
 
             if (config('ranking.extra.kill_logs.pvp')) {
-                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
+                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first() ?? null;
             }
             if (config('ranking.extra.kill_logs.job')) {
-                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
+                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first() ?? null;
             }
             if (config('ranking.extra.character_status')) {
-                $status = LogEventChar::getCharStatus($charID)->first();
+                $status = LogEventChar::getCharStatus($charID)->first() ?? null;
             }
 
             if ($data) {
@@ -329,7 +329,7 @@ class RankingController extends Controller
                     'globalsHistory' => $globalsHistory,
                     'inventorySet' => $inventorySet,
                     'inventoryAvatar' => $inventoryAvatar,
-                    'inventoryJob' => $inventoryJob ?? null,
+                    'inventoryJob' => $inventoryJob,
                     'uniqueList' => $uniqueList,
                     'characterImage' => $characterImage,
                     'skillMastery' => $skillMastery,
@@ -337,9 +337,9 @@ class RankingController extends Controller
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
-                    'status' => $status ?? null,
-                    'pvpKill' => $pvpKill ?? null,
-                    'jobKill' => $jobKill ?? null,
+                    'status' => $status,
+                    'pvpKill' => $pvpKill,
+                    'jobKill' => $jobKill,
                 ]);
             }
         }
