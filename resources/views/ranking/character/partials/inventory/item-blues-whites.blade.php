@@ -183,15 +183,6 @@
             <br />
         @endforeach
     @endif
-
-    @if($item['StoneInfo'])
-        @foreach($item['StoneInfo'] as $stone)
-            <b style="color:#50cecd">
-                {{ $stone['name'] }} ({{ $stone['value'] }} {{ __('Time/times') }})
-            </b>
-            <br />
-        @endforeach
-    @endif
 @else
     <span style="color:#ff2f51">{{ __('Item details are restricted by User') }}</span><br />
 @endif

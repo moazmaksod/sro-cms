@@ -193,7 +193,6 @@ class InventoryService
         $info['DevilMaxHP'] = $this->getDevilMaxHP($item);
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
-        $info['StoneInfo'] = $this->getStoneInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
 
         return $info;
@@ -275,20 +274,49 @@ class InventoryService
             'MATTR_PET_RESIST_SLEEP',
         ];
 
-        $start = ($item['MagParam1'] ?? 0) >= 4611686018427387904 ? 2 : 1; //is_wheeled
-        for ($i = $start; $i <= ($item['MagParamNum'] ?? 12); $i++) {
-            $key = "MagParam{$i}";
+        $stoneConfig = [
+            512 => array_filter($config, fn($c) => $c['name'] === 'MATTR_ASTRAL'),
+            64 => array_filter($config, fn($c) => $c['name'] === 'MATTR_LUCK'),
+            8 => array_filter($config, fn($c) => $c['name'] === 'MATTR_SOLID'),
+            1 => array_filter($config, fn($c) => $c['name'] === 'MATTR_ATHANASIA'),
+        ];
 
-            if (!isset($item[$key]) || $item[$key] <= 1) {
+        $stoneValues = [512, 64, 8, 1];
+        $stoneParam = $item['MagParam1'] ?? 0;
+
+        foreach ($stoneValues as $bit) {
+            $count = intdiv($stoneParam, $bit);
+            if ($count > 0 && isset($stoneConfig[$bit])) {
+                $stoneParam -= $count * $bit;
+
+                foreach ($stoneConfig[$bit] as $id => $opt) {
+                    if ($opt['mLevel'] === $count || $bit === 512) {
+                        $blueInfo[] = [
+                            'id' => $id,
+                            'code' => $opt['name'],
+                            'name' => str_replace('%desc%', $count, $opt['desc']),
+                            'value' => $count,
+                            'mLevel' => $opt['mLevel'],
+                            'mValue' => $opt['mValue'] ?? 0,
+                            'sortkey' => $opt['sortkey'],
+                        ];
+                        break;
+                    }
+                }
+            }
+        }
+
+        for ($i = 1; $i <= ($item['MagParamNum'] ?? 12); $i++) {
+            if (!isset($item["MagParam{$i}"]) || $item["MagParam{$i}"] <= 1) {
                 continue;
             }
 
-            if ($item[$key] === 65) {
+            if ($item["MagParam{$i}"] === 65) {
                 $blueInfo[] = ['id' => 0, 'code' => 'MATTR_DUR', 'name' => 'Repair invalid (Maximum durability 400% increase)', 'value' => 400, 'mLevel' => 0, 'sortkey' => 0];
                 continue;
             }
 
-            $hexParam = str_pad(dechex($item[$key]), 11, '0', STR_PAD_LEFT);
+            $hexParam = str_pad(dechex($item["MagParam{$i}"]), 11, '0', STR_PAD_LEFT);
             $id = hexdec(substr($hexParam, 3));
             $value = hexdec(substr($hexParam, 0, 3));
 
@@ -317,31 +345,6 @@ class InventoryService
 
         usort($blueInfo, fn($a, $b) => $a['sortkey'] <=> $b['sortkey']);
         return $blueInfo;
-    }
-
-    private function getStoneInfo($item): array
-    {
-        $config = config('item.stones');
-        $StoneInfo = [];
-
-        foreach ($config as $name => $data) {
-            $value = $data['value'];
-            $sort  = $data['sort'];
-
-            $count = intdiv($item['MagParam1'], $value);
-            if ($count > 0) {
-                $StoneInfo[] = [
-                    'name' => $name,
-                    'value' => $count,
-                    'sort' => $sort,
-                ];
-                $item['MagParam1'] -= $count * $value;
-            }
-        }
-
-        usort($StoneInfo, fn($a, $b) => $a['sort'] <=> $b['sort']);
-
-        return $StoneInfo;
     }
 
     private function getWhiteInfo($item): array
