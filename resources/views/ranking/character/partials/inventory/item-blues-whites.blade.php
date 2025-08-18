@@ -65,11 +65,19 @@
         @if(config('global.server.version') === 'vSRO')
             {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
         @else
-            @if($item['Country'] == 'European' && in_array((int) $item['TypeID3'], [9], true))
-                {{ __('Mastery level: Wizard Mastery') }} {{ $item['ReqLevel1'] }}<br />
-                {{ __('Mastery level: Warlock Mastery') }} {{ $item['ReqLevel1'] }}<br />
-                {{ __('Mastery level: Bard Mastery') }} {{ $item['ReqLevel1'] }}<br />
-                {{ __('Mastery level: Cleric Mastery') }} {{ $item['ReqLevel1'] }}<br />
+            @if(in_array((int) $item['TypeID3'], [9, 10], true))
+                @if($item['ReqLevelType1'] > 1)
+                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType1']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel1'] }}<br />
+                @endif
+                @if($item['ReqLevelType2'] > 1)
+                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType2']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel2'] }}<br />
+                @endif
+                @if($item['ReqLevelType3'] > 1)
+                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType3']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel3'] }}<br />
+                @endif
+                @if($item['ReqLevelType4'] > 1)
+                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType4']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel4'] }}<br />
+                @endif
             @else
                 {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
             @endif
@@ -170,7 +178,7 @@
         <br />
         @foreach($item['BlueInfo'] as $value)
             <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">
-                {{ $value['name'] }} @if($value['mValue'] > 0) (+{{ ceil((($value['value'] - 1) / ($value['mValue'] - 1)) * 100) }}%) @endif
+                {{ $value['name'] }} @if($value['mValue'] > 0) (+{{ max(0, ceil((($value['value'] - 1) / ($value['mValue'] - 1)) * 100)) }}%) @endif
             </b>
             <br />
         @endforeach
