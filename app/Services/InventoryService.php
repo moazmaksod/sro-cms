@@ -321,11 +321,25 @@ class InventoryService
 
     private function getStoneInfo($item): array
     {
+        $config = config('item.stones');
         $StoneInfo = [];
 
-        if (!empty($item['nItemDBID'])) {
-            $StoneInfo = BindingOptionWithItem::getBindingOption($item['nItemDBID']);
+        foreach ($config as $name => $data) {
+            $value = $data['value'];
+            $sort  = $data['sort'];
+
+            $count = intdiv($item['MagParam1'], $value);
+            if ($count > 0) {
+                $StoneInfo[] = [
+                    'name' => $name,
+                    'value' => $count,
+                    'sort' => $sort,
+                ];
+                $item['MagParam1'] -= $count * $value;
+            }
         }
+
+        usort($StoneInfo, fn($a, $b) => $a['sort'] <=> $b['sort']);
 
         return $StoneInfo;
     }
