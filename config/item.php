@@ -71,24 +71,6 @@ return [
         'AMALRUN_YELLOW' => 25,
         'AMALRUN_UNIQUE' => 30,
     ],
-    'stones' => [
-        'Astral' => [
-            'value' => 512,
-            'sort' => 4
-        ],
-        'Lucky' => [
-            'value' => 64,
-            'sort' => 3
-        ],
-        'Steady' => [
-            'value' => 8,
-            'sort' => 2
-        ],
-        'Immortal' => [
-            'value' => 1,
-            'sort' => 1
-        ],
-    ],
     'types' => [
         3 => [ // typeID1
             1 => [ // typeID2
