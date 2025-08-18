@@ -67,16 +67,16 @@
         @else
             @if(in_array((int) $item['TypeID3'], [9, 10], true))
                 @if($item['ReqLevelType1'] > 1)
-                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType1']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel1'] }}<br />
+                {{ __('Mastery level:') }} {{ config('ranking.skill_mastery')[$item['ReqLevelType1']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel1'] }}<br />
                 @endif
                 @if($item['ReqLevelType2'] > 1)
-                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType2']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel2'] }}<br />
+                {{ __('Mastery level:') }} {{ config('ranking.skill_mastery')[$item['ReqLevelType2']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel2'] }}<br />
                 @endif
                 @if($item['ReqLevelType3'] > 1)
-                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType3']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel3'] }}<br />
+                {{ __('Mastery level:') }} {{ config('ranking.skill_mastery')[$item['ReqLevelType3']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel3'] }}<br />
                 @endif
                 @if($item['ReqLevelType4'] > 1)
-                {{ __('Mastery level:') }} {{ $skillMastery[$item['ReqLevelType4']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel4'] }}<br />
+                {{ __('Mastery level:') }} {{ config('ranking.skill_mastery')[$item['ReqLevelType4']]['name'] }} {{ __('Mastery') }} {{ $item['ReqLevel4'] }}<br />
                 @endif
             @else
                 {{ __('Reqiure level:') }} {{ $item['ReqLevel1'] }}<br />
