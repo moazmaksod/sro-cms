@@ -123,7 +123,7 @@ class Inventory extends Model
             ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
             ->leftJoin('_BindingOptionWithItem', static function ($join) {
                 $join->on('_BindingOptionWithItem.nItemDBID', '_Items.ID64');
-                $join->where('_BindingOptionWithItem.bOptType', '=', '2');
+                //$join->where('_BindingOptionWithItem.bOptType', '=', '2');
             })
             ->where('CharID', '=', $CharID)
             ->where('Slot', '<=', $max)

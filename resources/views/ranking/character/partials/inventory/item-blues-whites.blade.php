@@ -183,6 +183,17 @@
             <br />
         @endforeach
     @endif
+
+    {{--
+    @if($item['StoneInfo'])
+        @foreach($item['StoneInfo'] as $value)
+            <b style="color:#50cecd">
+                {{ $value['nItemDBID'] }} - {{ $value['nOptID'] }} ({{ $value['nOptValue'] }} - {{ $value['nParam1'] }} Times)
+            </b>
+            <br />
+        @endforeach
+    @endif
+    --}}
 @else
     <span style="color:#ff2f51">{{ __('Item details are restricted by User') }}</span><br />
 @endif

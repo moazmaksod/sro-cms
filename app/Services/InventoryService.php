@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SRO\Account\ItemNameDesc;
+use App\Models\SRO\Shard\BindingOptionWithItem;
 use App\Models\SRO\Shard\Chest;
 use App\Models\SRO\Shard\InvCOS;
 use App\Models\SRO\Shard\Inventory;
@@ -192,6 +193,7 @@ class InventoryService
         $info['DevilMaxHP'] = $this->getDevilMaxHP($item);
         $info['WhiteInfo'] = $this->getWhiteInfo($item);
         $info['BlueInfo'] = $this->getBlueInfo($item);
+        $info['StoneInfo'] = $this->getStoneInfo($item);
         $info['TimeEnd'] = $this->getTimeEnd($item);
 
         return $info;
@@ -315,6 +317,17 @@ class InventoryService
 
         usort($blueInfo, fn($a, $b) => $a['sortkey'] <=> $b['sortkey']);
         return $blueInfo;
+    }
+
+    private function getStoneInfo($item): array
+    {
+        $StoneInfo = [];
+
+        if (!empty($item['nItemDBID'])) {
+            $StoneInfo = BindingOptionWithItem::getBindingOption($item['nItemDBID']);
+        }
+
+        return $StoneInfo;
     }
 
     private function getWhiteInfo($item): array

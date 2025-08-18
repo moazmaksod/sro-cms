@@ -329,7 +329,7 @@ class RankingController extends Controller
                     'globalsHistory' => $globalsHistory,
                     'inventorySet' => $inventorySet,
                     'inventoryAvatar' => $inventoryAvatar,
-                    'inventoryJob' => $inventoryJob,
+                    'inventoryJob' => $inventoryJob ?? null,
                     'uniqueList' => $uniqueList,
                     'characterImage' => $characterImage,
                     'skillMastery' => $skillMastery,
