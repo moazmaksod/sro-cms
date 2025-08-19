@@ -26,8 +26,8 @@
                                 <tr>
                                     <th scope="row">Username</th>
                                     <td>
-                                        <a href="{{ route('admin.users.view', $user->JID) }}" class="text-decoration-none">
-                                            {{ $user->StrUserID }}
+                                        <a href="{{ route('admin.users.view', $data->User->tbUser->JID) }}" class="text-decoration-none">
+                                            {{ $data->User->tbUser->StrUserID }}
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                                 <path fill="currentColor" d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z"/>
@@ -37,19 +37,19 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">CharID</th>
-                                    <td>{{ $char->CharID }}</td>
+                                    <td>{{ $data->CharID }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">CharName</th>
                                     <td>
-                                        @if($char->RefObjID > 2000)
+                                        @if($data->RefObjID > 2000)
                                             <img src="{{ asset(config('ranking.character_race')[1]['image']) }}" width="16" height="16" alt=""/>
                                         @else
                                             <img src="{{ asset(config('ranking.character_race')[0]['image']) }}" width="16" height="16" alt=""/>
                                         @endif
 
-                                        <a href="{{ route('ranking.character.view', ['name' => $char->CharName16]) }}" target="_blank" class="text-decoration-none">
-                                            {{ $char->CharName16 }}
+                                        <a href="{{ route('ranking.character.view', ['name' => $data->CharName16]) }}" target="_blank" class="text-decoration-none">
+                                            {{ $data->CharName16 }}
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                                 <path fill="currentColor" d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z"/>
@@ -60,8 +60,8 @@
                                 <tr>
                                     <th scope="row">Guild</th>
                                     <td>
-                                        @if($char->guild->Name != 'DummyGuild')
-                                            <a href="{{ route('ranking.guild.view', ['name' => $char->guild->Name]) }}" class="text-decoration-none">{{ $char->guild->Name }}</a>
+                                        @if($data->guild->Name != 'DummyGuild')
+                                            <a href="{{ route('ranking.guild.view', ['name' => $data->guild->Name]) }}" class="text-decoration-none">{{ $data->guild->Name }}</a>
                                         @else
                                             {{ __('None') }}
                                         @endif
@@ -70,8 +70,8 @@
                                 <tr>
                                     <th scope="row">Jobname</th>
                                     <td>
-                                        @if(!empty($char->NickName16))
-                                            {{ $char->NickName16 }}
+                                        @if(!empty($data->NickName16))
+                                            {{ $data->NickName16 }}
                                         @else
                                             {{ __('None') }}
                                         @endif
@@ -79,15 +79,15 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Level</th>
-                                    <td>{{ $char->CurLevel }}</td>
+                                    <td>{{ $data->CurLevel }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Exp</th>
-                                    <td>{{ number_format($char->ExpOffset , 0, ',') }}</td>
+                                    <td>{{ number_format($data->ExpOffset , 0, ',') }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Gold</th>
-                                    <td>{{ number_format($char->RemainGold , 0, ',') }}</td>
+                                    <td>{{ number_format($data->RemainGold , 0, ',') }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -187,20 +187,20 @@
                         <ul class="list-unstyled w-50 m-auto p-3">
                             <li>
                                 <span>Current X:</span>
-                                <span class="float-end">{{ round($char->PosX, 2) }}</span>
+                                <span class="float-end">{{ round($data->PosX, 2) }}</span>
                             </li>
                             <li>
                                 <span>Current Y:</span>
-                                <span class="float-end">{{ round($char->PosY, 2) }}</span>
+                                <span class="float-end">{{ round($data->PosY, 2) }}</span>
                             </li>
                             <li>
                                 <span>Current Z:</span>
-                                <span class="float-end">{{ round($char->PosZ, 2) }}</span>
+                                <span class="float-end">{{ round($data->PosZ, 2) }}</span>
                             </li>
                         </ul>
                         <hr>
 
-                        <form method="POST" action="{{ route('admin.characters.update', $char) }}">
+                        <form method="POST" action="{{ route('admin.characters.update', $data) }}">
                             @csrf
                             @method('PUT')
 

@@ -51,7 +51,7 @@ class User extends Model
     public function tbUser()
     {
         if (config('global.server.version') === 'vSRO') {
-            return $this->hasOne(TbUser::class, 'JID', 'jid');
+            return $this->belongsTo(TbUser::class, 'UserJID', 'JID');
         } else {
             return $this->belongsTo(TbUser::class, 'UserJID', 'JID');
         }

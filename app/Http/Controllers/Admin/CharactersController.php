@@ -32,11 +32,8 @@ class CharactersController extends Controller
     public function view(Char $char, InventoryService $inventoryService)
     {
         $status = LogEventChar::getCharStatus($char->CharID)->take(5);
-        $user = User::where('CharID', $char->CharID)->first()->tbUser;
-        $userJID = $user->UserJID ?? 0;
-
         $inventoryAll = $inventoryService->getInventorySet($char->CharID, 108, 13, 0);
-        $storageItems = $inventoryService->getStorageItems($userJID, 180, 0);
+        $storageItems = $inventoryService->getStorageItems($char->user->UserJID, 180, 0);
         $petNames = InvCOS::getPetNames($char->CharID);
 
         $PetID = request('pet') ?? optional($petNames->first())->ID;
@@ -45,10 +42,8 @@ class CharactersController extends Controller
         }
 
         return view('admin.characters.view', [
-            'char' => $char,
+            'data' => $char,
             'status' => $status,
-            'user' => $user,
-            'userJID' => $userJID,
             'inventorySet' => $inventoryAll,
             'storageItems' => $storageItems,
             'petNames' => $petNames,

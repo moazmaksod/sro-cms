@@ -274,21 +274,20 @@ class InventoryService
             'MATTR_PET_RESIST_SLEEP',
         ];
 
-        $stoneValues = [512, 64, 8, 1];
-        $stoneParam = $item['MagParam1'] ?? 0;
-        $stoneParam = $stoneParam & 0xFFFFFFFF;
+        $bits = [512, 64, 8, 1];
+        $param1 = ($item['MagParam1'] ?? 0) > 4611686018427387904 ? $item['MagParam1'] - 4611686018427387904 : $item['MagParam1'];
 
         if (config('global.server.version') !== 'vSRO') {
-            foreach ($stoneValues as $bit) {
-                $count = intdiv($stoneParam, $bit);
+            foreach ($bits as $bit) {
+                $count = intdiv($param1, $bit);
                 if ($count > 0) {
-                    $stoneParam -= $count * $bit;
+                    $param1 -= $count * $bit;
                     foreach ($config as $id => $opt) {
                         if (
                             ($bit === 512 && $opt['name'] === 'MATTR_ASTRAL') ||
-                            ($bit === 64 && $opt['name'] === 'MATTR_LUCK' && $opt['mLevel'] === $count) ||
-                            ($bit === 8 && $opt['name'] === 'MATTR_SOLID' && $opt['mLevel'] === $count) ||
-                            ($bit === 1 && $opt['name'] === 'MATTR_ATHANASIA' && $opt['mLevel'] === $count)
+                            ($bit === 64 && $opt['name'] === 'MATTR_LUCK') ||
+                            ($bit === 8 && $opt['name'] === 'MATTR_SOLID') ||
+                            ($bit === 1 && $opt['name'] === 'MATTR_ATHANASIA')
                         ) {
                             $blueInfo[] = [
                                 'id' => $id,

@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            @if(!config("settings.job_name_jid_{$userJID}") || auth()->user()?->role?->is_admin)
+            @if(!config("settings.job_name_jid_{$data->user->UserJID}") || auth()->user()?->role?->is_admin)
                 @if(!empty($data->NickName16))
                     <td>{{ $data->NickName16 }}</td>
                 @else

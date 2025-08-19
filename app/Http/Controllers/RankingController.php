@@ -299,7 +299,6 @@ class RankingController extends Controller
 
             $data = Char::getPlayerRanking(1, $charID)->first();
             $build = CharSkillMastery::getCharBuildInfo($charID);
-            $userJID = User::where('CharID', $charID)->first()->UserJID ?? 0;
 
             $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
             $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
@@ -338,7 +337,6 @@ class RankingController extends Controller
                     'jobType' => $jobType,
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
-                    'userJID' => $userJID,
                     'uniqueHistory' => $uniqueHistory ?? [],
                     'globalsHistory' => $globalsHistory ?? [],
                     'status' => $status ?? null,
