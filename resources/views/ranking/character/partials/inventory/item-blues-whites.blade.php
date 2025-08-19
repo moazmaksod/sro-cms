@@ -178,7 +178,7 @@
         <br />
         @foreach($item['BlueInfo'] as $value)
             <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">
-                {{ $value['name'] }} @if($value['mValue'] > 0) (+{{ max(0, ceil((($value['value'] - 1) / ($value['mValue'] - 1)) * 100)) }}%) @endif
+                {{ $value['name'] }} @if($value['mValue'] > 0) (+{{ intval(($value['value'] / $value['mValue']) * 100) }}%) @endif
             </b>
             <br />
         @endforeach
