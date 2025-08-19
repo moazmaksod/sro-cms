@@ -296,7 +296,7 @@ class InventoryService
                                 'name' => str_replace('%desc%', $count, $opt['desc']),
                                 'value' => $count,
                                 'mLevel' => $opt['mLevel'],
-                                'mValue' => $opt['mValue'] ?? 0,
+                                'mValue' =>  0,
                                 'sortkey' => $opt['sortkey'],
                             ];
                             break;
@@ -312,7 +312,15 @@ class InventoryService
             }
 
             if ($item["MagParam{$i}"] === 65) {
-                $blueInfo[] = ['id' => 0, 'code' => 'MATTR_DUR', 'name' => 'Repair invalid (Maximum durability 400% increase)', 'value' => 400, 'mLevel' => 0, 'sortkey' => 0];
+                $blueInfo[] = [
+                    'id' => 0,
+                    'code' => 'MATTR_DUR',
+                    'name' => 'Repair invalid (Maximum durability 400% increase)',
+                    'value' => 400,
+                    'mLevel' => 0,
+                    'mValue' =>  0,
+                    'sortkey' => 0
+                ];
                 continue;
             }
 

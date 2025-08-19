@@ -171,7 +171,7 @@
     @if($item['BlueInfo'])
         <br />
         @foreach($item['BlueInfo'] as $value)
-            <b style="color:#{{ $value['code'] == 'MATTR_DEC_MAXDUR' ? 'ff2f51' : '50cecd' }}">
+            <b style="color:#{{ in_array($value['code'], ['MATTR_DEC_MAXDUR', 'MATTR_DUR']) && $value['value'] == 400 ? 'ff2f51' : '50cecd' }}">
                 {{ $value['name'] }}
 
                 @if($value['mValue'] > 0)
