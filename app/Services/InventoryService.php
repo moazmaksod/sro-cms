@@ -275,7 +275,8 @@ class InventoryService
         ];
 
         $stoneValues = [512, 64, 8, 1];
-        $stoneParam = $item['MagParam1'] > 4611686018427387904 ? $item['MagParam1'] - 4611686018427387904 : 0;
+        $stoneParam = $item['MagParam1'] ?? 0;
+        $stoneParam = $stoneParam & 0xFFFFFFFF;
 
         if (config('global.server.version') !== 'vSRO') {
             foreach ($stoneValues as $bit) {
