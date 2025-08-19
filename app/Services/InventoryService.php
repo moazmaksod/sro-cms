@@ -277,27 +277,29 @@ class InventoryService
         $stoneValues = [512, 64, 8, 1];
         $stoneParam = $item['MagParam1'] ?? 0;
 
-        foreach ($stoneValues as $bit) {
-            $count = intdiv($stoneParam, $bit);
-            if ($count > 0) {
-                $stoneParam -= $count * $bit;
-                foreach ($config as $id => $opt) {
-                    if (
-                        ($bit === 512 && $opt['name'] === 'MATTR_ASTRAL') ||
-                        ($bit === 64 && $opt['name'] === 'MATTR_LUCK' && $opt['mLevel'] === $count) ||
-                        ($bit === 8 && $opt['name'] === 'MATTR_SOLID' && $opt['mLevel'] === $count) ||
-                        ($bit === 1 && $opt['name'] === 'MATTR_ATHANASIA' && $opt['mLevel'] === $count)
-                    ) {
-                        $blueInfo[] = [
-                            'id' => $id,
-                            'code' => $opt['name'],
-                            'name' => str_replace('%desc%', $count, $opt['desc']),
-                            'value' => $count,
-                            'mLevel' => $opt['mLevel'],
-                            'mValue' => $opt['mValue'] ?? 0,
-                            'sortkey' => $opt['sortkey'],
-                        ];
-                        break;
+        if (config('global.server.version') !== 'vSRO') {
+            foreach ($stoneValues as $bit) {
+                $count = intdiv($stoneParam, $bit);
+                if ($count > 0) {
+                    $stoneParam -= $count * $bit;
+                    foreach ($config as $id => $opt) {
+                        if (
+                            ($bit === 512 && $opt['name'] === 'MATTR_ASTRAL') ||
+                            ($bit === 64 && $opt['name'] === 'MATTR_LUCK' && $opt['mLevel'] === $count) ||
+                            ($bit === 8 && $opt['name'] === 'MATTR_SOLID' && $opt['mLevel'] === $count) ||
+                            ($bit === 1 && $opt['name'] === 'MATTR_ATHANASIA' && $opt['mLevel'] === $count)
+                        ) {
+                            $blueInfo[] = [
+                                'id' => $id,
+                                'code' => $opt['name'],
+                                'name' => str_replace('%desc%', $count, $opt['desc']),
+                                'value' => $count,
+                                'mLevel' => $opt['mLevel'],
+                                'mValue' => $opt['mValue'] ?? 0,
+                                'sortkey' => $opt['sortkey'],
+                            ];
+                            break;
+                        }
                     }
                 }
             }
