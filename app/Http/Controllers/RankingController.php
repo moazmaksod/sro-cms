@@ -308,8 +308,12 @@ class RankingController extends Controller
                 $inventoryJob = $inventoryService->getInventoryJob($charID) ?? [];
             }
 
-            $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
-            $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
+            if (config('widgets.unique_history.enabled')) {
+                $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
+            }
+            if (config('widgets.globals_history.enabled')) {
+                $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
+            }
 
             if (config('ranking.extra.kill_logs.pvp')) {
                 $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
@@ -325,8 +329,6 @@ class RankingController extends Controller
                 return view('ranking.character.index', [
                     'data' => $data,
                     'build' => $build,
-                    'uniqueHistory' => $uniqueHistory,
-                    'globalsHistory' => $globalsHistory,
                     'inventorySet' => $inventorySet,
                     'inventoryAvatar' => $inventoryAvatar,
                     'inventoryJob' => $inventoryJob ?? null,
@@ -337,6 +339,8 @@ class RankingController extends Controller
                     'characterRace' => $characterRace,
                     'hwanLevel' => $hwanLevel,
                     'userJID' => $userJID,
+                    'uniqueHistory' => $uniqueHistory ?? [],
+                    'globalsHistory' => $globalsHistory ?? [],
                     'status' => $status ?? null,
                     'pvpKill' => $pvpKill ?? null,
                     'jobKill' => $jobKill ?? null,
