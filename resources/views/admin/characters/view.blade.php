@@ -60,7 +60,7 @@
                                 <tr>
                                     <th scope="row">Guild</th>
                                     <td>
-                                        @if($data->guild->Name != 'DummyGuild')
+                                        @if(!empty($data->guild->Name) && $data->guild->Name != 'DummyGuild')
                                             <a href="{{ route('ranking.guild.view', ['name' => $data->guild->Name]) }}" class="text-decoration-none">{{ $data->guild->Name }}</a>
                                         @else
                                             {{ __('None') }}
