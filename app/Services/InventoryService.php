@@ -275,7 +275,7 @@ class InventoryService
         ];
 
         $bits = [512, 64, 8, 1];
-        $param1 = ($item['MagParam1'] ?? 0) > 4611686018427387904 ? $item['MagParam1'] - 4611686018427387904 : $item['MagParam1'];
+        $param1 = (int) (($item['MagParam1'] ?? 0) > 4611686018427387904 ? $item['MagParam1'] - 4611686018427387904 : ($item['MagParam1'] ?? 0));
 
         if (config('global.server.version') !== 'vSRO') {
             foreach ($bits as $bit) {
@@ -295,7 +295,7 @@ class InventoryService
                                 'name' => str_replace('%desc%', $count, $opt['desc']),
                                 'value' => $count,
                                 'mLevel' => $opt['mLevel'],
-                                'mValue' =>  0,
+                                'mValue' => 0,
                                 'sortkey' => $opt['sortkey'],
                             ];
                             break;
