@@ -22,7 +22,7 @@ class DonateService
 
         $config = config('donate.paypal');
         $accessToken = cache()->remember('paypal_access_token', 540, function () use ($config) {
-            $response = Http::withBasicAuth($config['client_id'], $config['secret'])
+            $response = Http::withBasicAuth($config['client_id'], $config['client_secret'])
                 ->asForm()
                 ->post($config['endpoint'] . '/v1/oauth2/token', [
                     'grant_type' => 'client_credentials',
@@ -84,7 +84,7 @@ class DonateService
         $token = $request->get('token');
 
         $accessToken = cache()->remember('paypal_access_token', 540, function () use ($config) {
-            $response = Http::withBasicAuth($config['client_id'], $config['secret'])
+            $response = Http::withBasicAuth($config['client_id'], $config['client_secret'])
                 ->asForm()
                 ->post("{$config['endpoint']}/v1/oauth2/token", [
                     'grant_type' => 'client_credentials',
@@ -151,7 +151,7 @@ class DonateService
         DonateLog::setDonateLog(
             'Paypal',
             (string) Str::uuid(),
-            'true',
+            'success',
             $package['price'],
             $package['value'],
             "User: {$user->username} purchased {$package['name']} for \${$package['price']}.",
@@ -258,7 +258,7 @@ class DonateService
                 DonateLog::setDonateLog(
                     'Stripe',
                     $session['id'],
-                    'true',
+                    'success',
                     $package['price'],
                     $package['value'],
                     "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
@@ -362,7 +362,7 @@ class DonateService
             DonateLog::setDonateLog(
                 'CoinPayments',
                 $data['txn_id'],
-                'true',
+                'success',
                 $data['amount1'],
                 $package['value'],
                 "User:{$user->username} purchased {$package['name']} using CoinPayments.",
@@ -397,9 +397,9 @@ class DonateService
                 'email' => $user->email,
             ],
             "redirectionUrls" => [
-                "successUrl" => route('callback', ['method' => 'fawaterk', 'status' => 'success']),
-                "failUrl" => route('callback', ['method' => 'fawaterk', 'status' => 'fail']),
-                "pendingUrl" => route('callback', ['method' => 'fawaterk', 'status' => 'pending']),
+                "successUrl" => route('webhook', ['method' => 'fawaterk', 'status' => 'success']),
+                "failUrl" => route('webhook', ['method' => 'fawaterk', 'status' => 'fail']),
+                "pendingUrl" => route('webhook', ['method' => 'fawaterk', 'status' => 'pending']),
             ],
             'cartItems' => [
                 [
@@ -412,7 +412,7 @@ class DonateService
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $config['key'],
+            'Authorization' => 'Bearer ' . $config['api_key'],
         ])->post($config['endpoint'] . '/api/v2/createInvoiceLink', $invoiceData);
 
         if ($response->successful()) {
@@ -422,7 +422,7 @@ class DonateService
                 DonateLog::setDonateLog(
                     'Fawaterk',
                     $response['data']['invoiceId'],
-                    'false',
+                    'pending',
                     $package['price'],
                     $package['value'],
                     "User:{$user->username} purchased {$package['name']} using Fawaterk.",
@@ -438,26 +438,26 @@ class DonateService
         return back()->withErrors(['fawaterk' => $errorMsg])->withInput();
     }
 
-    public function callbackFawaterk(Request $request)
+    public function webhookFawaterk(Request $request)
     {
         $config = config('donate.fawaterk');
         $status = $request->query('status');
         $invoice_id = $request->query('invoice_id');
 
         if ($status === 'success') {
-            $transaction_id = DonateLog::where('transaction_id', $invoice_id)->where('status', 'false')->first();
+            $transaction_id = DonateLog::where('transaction_id', $invoice_id)->where('status', 'pending')->first();
             if (!$transaction_id) {
-                return back()->withErrors(['fawaterk' => 'Invalid transaction ID.'])->withInput();
+                return response('Invalid transaction ID.', 400);
             }
 
             $package = collect($config['package'])->firstWhere('price', $transaction_id->amount);
             if (!$package) {
-                return back()->withErrors(['fawaterk' => 'Invalid package price.'])->withInput();
+                return response('Invalid package price.', 400);
             }
 
             $user = User::where('jid', $transaction_id->jid)->first();
             if (!$user) {
-                return back()->withErrors(['fawaterk' => 'User not found'])->withInput();
+                return response('User not found', 400);
             }
 
             if (config('global.server.version') === 'vSRO') {
@@ -466,15 +466,15 @@ class DonateService
                 AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
             }
 
-            $transaction_id->update(['status' => 'true']);
+            $transaction_id->update(['status' => 'success']);
 
-            return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+            return response('OK', 200);
         } elseif ($status === 'fail') {
-            return back()->withErrors(['fawaterk' => 'Payment failed. Please try again.'])->withInput();
+            return response('Payment failed. Please try again.', 400);
         } elseif ($status === 'pending') {
-            return back()->withErrors(['fawaterk' => 'Payment is pending. Please check back later.'])->withInput();
+            return response('Payment is pending. Please check back later.', 400);
         }else {
-            return back()->withErrors(['fawaterk' => 'Unknown payment status.'])->withInput();
+            return response('Unknown payment status.', 400);
         }
     }
 
@@ -489,8 +489,8 @@ class DonateService
 
         $xml = "<APIRequest>
                 <params>
-                    <username>{$config['key']}</username>
-                    <password>{$config['secret']}</password>
+                    <username>{$config['api_key']}</username>
+                    <password>{$config['api_password']}</password>
                     <cmd>epinadd</cmd>
                     <epinusername>".Auth::user()->username."</epinusername>
                     <epincode>{$request->code}</epincode>
@@ -498,7 +498,7 @@ class DonateService
                 </params>
             </APIRequest>";
 
-        $response = Http::send('post', $config['url'], [
+        $response = Http::send('post', $config['endpoint'], [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
                 "Cache-Control" => "no-cache",
@@ -531,7 +531,7 @@ class DonateService
                 DonateLog::setDonateLog(
                     'MaxiCard',
                     $orderNumber,
-                    'true',
+                    'success',
                     $package['price'],
                     $package['value'],
                     "User:{$user->username} purchased Silk for {$package['price']} using Maxicard.",
@@ -564,9 +564,9 @@ class DonateService
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'api-key' => $config['key'],
-            'api-secret' => $config['secret'],
-        ])->post($config['url'], $payload);
+            'api-key' => $config['api_key'],
+            'api-secret' => $config['api_password'],
+        ])->post($config['endpoint'], $payload);
 
         if ($response->successful()) {
             $responseData = $response->json();
@@ -587,7 +587,7 @@ class DonateService
                 DonateLog::setDonateLog(
                     'HipoCard',
                     uniqid().rand(100,999),
-                    'true',
+                    'success',
                     $package['price'],
                     $package['value'],
                     "User:{$user->username} purchased Silk for {$package['price']} using Hipocard.",
@@ -616,11 +616,11 @@ class DonateService
         }
 
         $user = Auth::user();
-        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['key'],$config['secret'] ,true));
+        $hash = base64_encode(hash_hmac('sha256',$user->jid.trim($user->email).$user->username.$config['api_key'],$config['api_password'] ,true));
 
         $payload = [
-            'api_key' => $config['key'],
-            'api_secret' => $config['secret'],
+            'api_key' => $config['api_key'],
+            'api_secret' => $config['api_password'],
             'user_id' => $user->jid,
             'username' => $user->username,
             'email' => $user->email,
@@ -635,7 +635,7 @@ class DonateService
             ],
         ];
 
-        $response = Http::asForm()->post($config['url'], $payload);
+        $response = Http::asForm()->post($config['endpoint'], $payload);
 
         if ($response->successful()) {
             $responseData = $response->json();
@@ -652,7 +652,7 @@ class DonateService
         return back()->withErrors(['hipopay' => "Payment Failed: " .(isset($response['message']) ? $response['message'] : 'An error occurred')])->withInput();
     }
 
-    public function callbackHipopay(Request $request)
+    public function webhookHipopay(Request $request)
     {
         $config = config('donate.hipopay');
         $payload = file_get_contents('php://input');
@@ -664,7 +664,7 @@ class DonateService
         if (!$user) {
             return response('User not found', 404);
         }
-        $hash = base64_encode(hash_hmac('sha256',$data["transaction_id"].$data["user_id"].$data["email"].$data["name"].$data["status"].$config['key'],$config['secret'] ,true));
+        $hash = base64_encode(hash_hmac('sha256',$data["transaction_id"].$data["user_id"].$data["email"].$data["name"].$data["status"].$config['api_key'],$config['api_password'] ,true));
 
         if (!hash_equals($data['hash'], $hash)) {
             return response('Invalid Hash', 400);
@@ -692,7 +692,7 @@ class DonateService
             DonateLog::setDonateLog(
                 'HipoPay',
                 $data['transaction_id'],
-                'true',
+                'success',
                 $package['price'],
                 $package['value'],
                 "User:{$user->username} purchased Silk for {$package['price']} using HipoPay.",

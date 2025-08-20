@@ -7,11 +7,10 @@ return [
         'route' => 'paypal',
         'currency' => 'USD',
         'image' => 'images/donate/paypal.png',
-        //'endpoint' => 'https://api-m.paypal.com', // for prod only
-        'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox only
+        //'endpoint' => 'https://api-m.paypal.com', // for production
+        'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox
         'client_id' => 'PAYPAL_CLIENT_ID',
-        'secret' => 'PAYPAL_SECRET',
-        'webhook_id' => 'PAYPAL_WEBHOOK_ID',
+        'client_secret' => 'PAYPAL_CLIENT_SECRET',
         'package' => [
             [
                 'name' => '500 Silk',
@@ -54,7 +53,6 @@ return [
         'endpoint' => 'https://api.stripe.com',
         'secret_key' => 'STRIPE_SECRET_KEY',
         'publishable_key' => 'STRIPE_PUBLISHABLE_KEY',
-        'webhook_secret' => 'STRIPE_WEBHOOK_SECRET',
         'package' => [
             [
                 'name' => '500 Silk',
@@ -98,7 +96,6 @@ return [
         'merchant_id' => 'COINPAYMENTS_MERCHANT_ID',
         'client_id' => 'COINPAYMENTS_CLIENT_ID',
         'client_secret' => 'COINPAYMENTS_CLIENT_SECRET',
-        'ipn_secret' => 'COINPAYMENTS_IPN_SECRET',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -148,16 +145,11 @@ return [
         'route' => 'fawaterk',
         'currency' => 'EGP',
         'image' => 'images/donate/fawaterk.png',
-        //'endpoint' => 'https://app.fawaterk.com', // for production
-        'endpoint' => 'https://staging.fawaterk.com', // for sandbox
-        'key' => 'FAWATERK_API_KEY',
-        'secret' => 'FAWATERK_PROVIDER_KEY',
+        //'endpoint' => 'https://app.fawaterk.com', // for production //webhook url: http://localhost/webhook/fawaterk
+        'endpoint' => 'https://staging.fawaterk.com', // for sandbox //webhook url: http://localhost/webhook/fawaterk
+        'api_key' => 'FAWATERK_API_KEY',
+        'provider_key' => 'FAWATERK_PROVIDER_KEY',
         'package' => [
-            [
-                'name' => '100 Silk',
-                'price' => 1.00,
-                'value' => 100,
-            ],
             [
                 'name' => '500 Silk',
                 'price' => 5.00,
@@ -201,9 +193,9 @@ return [
         'route' => 'maxicard',
         'currency' => 'TL',
         'image' => 'images/donate/maxicard.png',
-        'url' => 'https://www.maxigame.org/epin/yukle.php',
-        'key' => 'MAXICARD_API_KEY',
-        'secret' => 'MAXICARD_API_PASSWORD',
+        'endpoint' => 'https://www.maxigame.org/epin/yukle.php',
+        'api_key' => 'MAXICARD_API_KEY',
+        'api_password' => 'MAXICARD_API_PASSWORD',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -253,10 +245,10 @@ return [
         'route' => 'hipocard',
         'currency' => 'TL',
         'image' => 'images/donate/hipocard.png',
-        //'url' => 'https://www.hipopotamya.com/api/v1/hipocard/epins', // for production
-        'url' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins', // for sandbox
-        'key' => 'HIPOCARD_API_KEY',
-        'secret' => 'HIPOCARD_API_PASSWORD',
+        //'endpoint' => 'https://www.hipopotamya.com/api/v1/hipocard/epins', // for production
+        'endpoint' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins', // for sandbox
+        'api_key' => 'HIPOCARD_API_KEY',
+        'api_password' => 'HIPOCARD_API_PASSWORD',
         'package' => [
             [
                 'name' => '100 Silk',
@@ -306,9 +298,9 @@ return [
         'route' => 'hipopay',
         'currency' => 'TL',
         'image' => 'images/donate/hipopay.png',
-        'url' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token', //callback url: http://localhost/callback/hipopay
-        'key' => 'HIPOPAY_API_KEY',
-        'secret' => 'HIPOPAY_API_PASSWORD',
+        'endpoint' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token', //webhook url: http://localhost/webhook/hipopay
+        'api_key' => 'HIPOPAY_API_KEY',
+        'api_password' => 'HIPOPAY_API_PASSWORD',
         'commission_type' => 1,
         'package' => [
             [
