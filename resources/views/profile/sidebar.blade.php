@@ -47,8 +47,10 @@
                 <a href="{{ route('profile') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile') ? 'active' : '' }}">{{ __('Account') }}</a>
                 <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('profile.edit') ? 'active' : '' }}">{{ __('Settings') }}</a>
 
+                {{--
                 <a href="{{ route('logout') }}" class="btn btn-outline-danger" onclick="event.preventDefault();$('#logout-form').submit();">{{ __('Log Out') }}</a>
                 <form id="logout-form" method="POST" action="{{ route('logout') }}"> @csrf </form>
+                --}}
             </div>
         </div>
     </div>

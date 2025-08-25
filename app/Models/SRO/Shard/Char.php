@@ -158,6 +158,7 @@ class Char extends Model
                 '_Char.CharName16',
                 '_Char.CurLevel',
                 '_Char.RefObjID',
+                '_Char.ExpOffset',
                 '_Guild.ID',
                 '_Guild.Name',
             );
@@ -169,6 +170,7 @@ class Char extends Model
                 '_Char.CharName16',
                 '_Char.CurLevel',
                 '_Char.RefObjID',
+                '_Char.ExpOffset',
                 '_Guild.ID',
                 '_Guild.Name',
             ];

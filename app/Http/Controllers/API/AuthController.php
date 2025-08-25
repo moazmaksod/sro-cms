@@ -14,10 +14,12 @@ use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Portal\MuVIPInfo;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -28,6 +30,8 @@ class AuthController extends Controller
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
             'email' => ['required', 'string', 'email', 'max:70'],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
+            'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
+            'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
             'invite' => ['nullable', 'string'],
             'fingerprint' => ['nullable', 'string'],
         ];
@@ -98,12 +102,14 @@ class AuthController extends Controller
             }
 
             Auth::login($user);
+            $request->session()->regenerate();
             $token = $user->createToken('api-token')->plainTextToken;
 
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user,
                 'token' => $token,
+                'redirect' => url('/profile'),
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -151,13 +157,30 @@ class AuthController extends Controller
             Auth::login($user);
         }
 
+        $request->session()->regenerate();
         $token = $request->user()->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'user' => $request->user(),
             'token' => $token,
+            'redirect' => url('/profile'),
         ]);
+    }
+
+    public function forgot_password(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json(['message' => __($status)], 200)
+            : response()->json(['errors' => ['email' => __($status)]], 422);
     }
 
     public function logout(Request $request)
@@ -170,7 +193,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function user(Request $request)
+    public function profile(Request $request)
     {
         return response()->json($request->user());
     }
