@@ -64,6 +64,7 @@ class Char extends Model
     public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')
     {
         $minutes = config('global.cache.ranking_player', 60);
+        $CharName = substr(preg_replace('/[^a-zA-Z0-9_]/', '', $CharName), 0, 50);
 
         return Cache::remember("ranking_player_{$limit}_{$CharID}_{$CharName}", now()->addMinutes($minutes), function () use ($CharName, $CharID, $limit) {
             $query = self::select(

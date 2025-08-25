@@ -30,6 +30,7 @@ class Guild extends Model
     public static function getGuildRanking($limit = 25, $GuildID = 0, $Name = '')
     {
         $minutes = config('global.cache.ranking_guild', 60);
+        $Name = substr(preg_replace('/[^a-zA-Z0-9_]/', '', $Name), 0, 50);
 
         return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", now()->addMinutes($minutes), function () use ($Name, $GuildID, $limit) {
             $query = self::select(
