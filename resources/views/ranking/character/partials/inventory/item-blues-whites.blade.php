@@ -29,7 +29,7 @@
         {{ __('Sort of item:') }} {{ $item['Type'] }}<br />
     @endisset
 
-    @if(!in_array((int) $item['TypeID3'], [13, 14], true))
+    @if(in_array((int) $item['TypeID2'], [1], true) && !in_array((int) $item['TypeID3'], [13, 14], true))
         @isset($item['Detail'])
             {{ __('Mounting part:') }} {{ $item['Detail'] }}<br />
         @endisset
@@ -103,11 +103,11 @@
         <br />
         <br />
         {{ __('When awakened, the Awakening Time is counted down.') }}
-    @elseif($item['TypeID3'] == 13 && $item['MaxMagicOptCount'] == 0)
+    @elseif($item['TypeID3'] == 13 && $item['TypeID4'] == 4 && $item['MaxMagicOptCount'] == 0)
         {{ __('Flag with enormous, magnificent dragon pattern engraved. Can be equipped in the job slot.') }}<br />
     @elseif($item['TypeID3'] == 13)
         {{ $item['ItemDesc'] ?? 'Dress worn by undefined' }} <br />
-    @elseif($item['TypeID4'] == 1 || $item['TypeID4'] == 2)
+    @elseif(($item['TypeID3'] == 4 && $item['TypeID4'] == 1) || ($item['TypeID3'] == 4 &&$item['TypeID4'] == 2))
         {{ $item['ItemDesc'] ?? 'A quiver of 10,000 arrows.' }} <br />
     @else
         {{ $item['ItemDesc'] }} <br />
@@ -125,7 +125,7 @@
     <br />
 @endif
 
-@if(config('global.server.version') === 'vSRO' && in_array((int) $item['TypeID2'], [1], true))
+@if(config('global.server.version') === 'vSRO' && !in_array((int) $item['TypeID3'], [13, 14], true))
     <span style="color:#efdaa4;">{{ __('Max. no. of magic options: :unit Unit', ['unit' => $item['MaxMagicOptCount']]) }}</span>
     <br />
 @endif

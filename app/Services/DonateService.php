@@ -276,6 +276,79 @@ class DonateService
         }
     }
 
+    public function webhookPaymentwall(Request $request)
+    {
+        $config = config('donate.paymentwall');
+        $pingback = $request->all();
+
+        $authorizedRanges = [
+            '216.127.71.0/24',
+            // Add other Paymentwall IPs/ranges here if needed
+        ];
+
+        $clientIp = $request->ip();
+        $ipValid = false;
+        foreach ($authorizedRanges as $cidr) {
+            list($subnet, $mask) = explode('/', $cidr);
+            if ((ip2long($clientIp) & ~((1 << (32 - $mask)) - 1)) === ip2long($subnet)) {
+                $ipValid = true;
+                break;
+            }
+        }
+        if (!$ipValid) {
+            return response('Invalid IP address', 403);
+        }
+
+        $params = $request->except(['sign']);
+        ksort($params);
+        $baseString = '';
+        foreach ($params as $key => $value) {
+            $baseString .= $key . '=' . $value;
+        }
+        $expectedSign = md5($baseString . $config['private_key']);
+        if ($pingback['sign'] !== $expectedSign) {
+            return response('Invalid signature', 400);
+        }
+
+        $transactionExists = DonateLog::where('transaction_id', $pingback['ref'])->where('status', 'success')->exists();
+        if ($transactionExists) {
+            return response('This transaction has already been processed successfully.', 409);
+        }
+
+        $user = User::where('jid', $pingback['user_id'])->first();
+        if (!$user) {
+            return response('User not found', 404);
+        }
+
+        if ($pingback['status'] === 'completed') {
+            $package = collect($config['package'])->firstWhere('price', intval($pingback['amount']));
+            if (!$package) {
+                return response('Invalid package price', 422);
+            }
+
+            if (config('global.server.version') === 'vSRO') {
+                SkSilk::setSkSilk($user->jid, 0, $package['value']);
+            } else {
+                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+            }
+
+            DonateLog::setDonateLog(
+                'Paymentwall',
+                $pingback['ref'],
+                'success',
+                $package['price'],
+                $package['value'],
+                "User:{$user->username} purchased Silk for {$package['price']} using Paymentwall.",
+                $user->jid,
+                $request->ip()
+            );
+
+            return response('OK', 200);
+        }
+
+        return response('Payment not successful', 422);
+    }
+
     public function processCoinPayments(Request $request)
     {
         $config = config('donate.coinpayments');
