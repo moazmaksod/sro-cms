@@ -281,66 +281,88 @@ class DonateService
         $config = config('donate.paymentwall');
         $pingback = $request->all();
 
+        $authorizedIps = [
+            '174.36.92.186',
+            '174.36.96.66',
+            '174.36.92.187',
+            '174.36.92.192',
+            '174.37.14.28',
+            '174.36.92.189',
+            '174.37.0.50',
+            '174.36.92.190',
+        ];
         $authorizedRanges = [
             '216.127.71.0/24',
-            // Add other Paymentwall IPs/ranges here if needed
         ];
-
-        $clientIp = $request->ip();
-        $ipValid = false;
-        foreach ($authorizedRanges as $cidr) {
-            list($subnet, $mask) = explode('/', $cidr);
-            if ((ip2long($clientIp) & ~((1 << (32 - $mask)) - 1)) === ip2long($subnet)) {
-                $ipValid = true;
-                break;
+        $clientIp = $request->header('CF-Connecting-IP') ?: $request->ip();
+        $ipValid = in_array($clientIp, $authorizedIps);
+        if (!$ipValid) {
+            foreach ($authorizedRanges as $cidr) {
+                list($subnet, $mask) = explode('/', $cidr);
+                if ((ip2long($clientIp) & ~((1 << (32 - $mask)) - 1)) === ip2long($subnet)) {
+                    $ipValid = true;
+                    break;
+                }
             }
         }
         if (!$ipValid) {
             return response('Invalid IP address', 403);
         }
 
-        $params = $request->except(['sign']);
-        ksort($params);
-        $baseString = '';
-        foreach ($params as $key => $value) {
-            $baseString .= $key . '=' . $value;
+        $apiType = $config['api_type'] ?? 'vc';
+
+        if ($apiType === 'vc') {
+            $signatureKeys = ['uid', 'currency', 'type', 'ref'];
+        } elseif ($apiType === 'goods') {
+            $signatureKeys = ['uid', 'goodsid', 'slength', 'speriod', 'type', 'ref'];
+        } else { // cart
+            $signatureKeys = ['uid', 'goodsid', 'type', 'ref'];
         }
+
+        $baseString = '';
+        foreach ($signatureKeys as $key) {
+            $baseString .= $key . '=' . (isset($pingback[$key]) ? $pingback[$key] : '');
+        }
+
         $expectedSign = md5($baseString . $config['private_key']);
-        if ($pingback['sign'] !== $expectedSign) {
+
+        if (($pingback['sig'] ?? '') !== $expectedSign) {
             return response('Invalid signature', 400);
+        }
+
+        foreach (array_merge($signatureKeys, ['sig']) as $required) {
+            if (!isset($pingback[$required]) || $pingback[$required] === '') {
+                return response('Missing parameter: ' . $required, 400);
+            }
         }
 
         $transactionExists = DonateLog::where('transaction_id', $pingback['ref'])->where('status', 'success')->exists();
         if ($transactionExists) {
-            return response('This transaction has already been processed successfully.', 409);
+            return response('Duplicard Ref', 409);
         }
 
-        $user = User::where('jid', $pingback['user_id'])->first();
+        $user = User::where('username', $pingback['uid'])->first();
         if (!$user) {
             return response('User not found', 404);
         }
 
-        if ($pingback['status'] === 'completed') {
-            $package = collect($config['package'])->firstWhere('price', intval($pingback['amount']));
-            if (!$package) {
-                return response('Invalid package price', 422);
-            }
+        if (($pingback['type'] ?? '') == '0' || ($pingback['type'] ?? '') == '201') {
 
             if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
+                SkSilk::setSkSilk($user->jid, 0, $pingback['currency']);
             } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+                AphChangedSilk::setChangedSilk($user->jid, 3, $pingback['currency']);
             }
 
             DonateLog::setDonateLog(
                 'Paymentwall',
                 $pingback['ref'],
                 'success',
-                $package['price'],
-                $package['value'],
-                "User:{$user->username} purchased Silk for {$package['price']} using Paymentwall.",
+                $pingback['currency'],
+                $pingback['currency'],
+                "User:{$user->username} purchased Silk for {$pingback['currency']} using Paymentwall.",
                 $user->jid,
-                $request->ip()
+                $clientIp
             );
 
             return response('OK', 200);

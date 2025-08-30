@@ -95,37 +95,9 @@ return [
         'public_key' => 'YOUR_PROJECT_KEY',
         'private_key' => 'YOUR_SECRET_KEY',
         'widget_code' => 'p1_1',
+        'api_type' => 'vc',
         'package' => [
-            [
-                'name' => '500 Silk',
-                'price' => 5,
-                'value' => 500,
-            ],
-            [
-                'name' => '1000 Silk',
-                'price' => 10,
-                'value' => 1000,
-            ],
-            [
-                'name' => '2500 Silk',
-                'price' => 25,
-                'value' => 2500,
-            ],
-            [
-                'name' => '5000 Silk',
-                'price' => 50,
-                'value' => 5000,
-            ],
-            [
-                'name' => '7500 Silk',
-                'price' => 75,
-                'value' => 7500,
-            ],
-            [
-                'name' => '10000 Silk',
-                'price' => 100,
-                'value' => 10000,
-            ],
+
         ],
     ],
     'coinpayments' => [
