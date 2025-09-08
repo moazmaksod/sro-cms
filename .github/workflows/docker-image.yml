@@ -1,9 +1,11 @@
 # .github/workflows/docker-build.yml
 #
-# This workflow builds the application's Docker image to ensure it's not broken.
+# This workflow builds the application's Docker image, starts a temporary
+# MS SQL Server database, and then verifies that the application can
+# successfully connect to the database.
 # It runs automatically on every push or pull request to the 'main' branch.
 
-name: Docker Build CI
+name: Docker Build and Test CI
 
 on:
   push:
@@ -12,42 +14,68 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    # The type of virtual machine the job will run on
+  build-and-test:
     runs-on: ubuntu-latest
 
+    # --- Define a Service Container for the Database ---
+    # This block tells GitHub Actions to start a temporary MS SQL Server container
+    # that will be available for the duration of this job.
+    services:
+      mssql:
+        # Use the official Microsoft SQL Server image
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        # Set the required environment variables for the database
+        env:
+          ACCEPT_EULA: 'Y'
+          SA_PASSWORD: 'yourStrong(!)Password' # A secure, non-empty password is required
+        # Map the container's port to a specific port on the job runner's network
+        ports:
+          - 1433:1433
+        # Add a health check to ensure the job waits until the database is fully ready
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
-      # Step 1: Check out your repository code so the workflow can access it
+      # Step 1: Check out your repository code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Docker Buildx for advanced features like caching
+      # Step 2: Set up Docker Buildx for advanced features
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Step 3: Log in to Docker Hub (Optional, but good practice)
-      # This is not strictly required for just building, but it's needed if you ever want to push the image.
-      # You would need to add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN as secrets in your GitHub repository settings.
-      # - name: Log in to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Step 3: Copy the CI environment file
+      - name: Setup .env for testing
+        run: cp .env.example .env.ci
+
+      # --- Configure .env for the Service Container ---
+      # This step updates the .env.ci file to connect to the temporary database.
+      - name: Configure .env for CI
+        run: |
+          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env.ci
+          sed -i 's/^DB_PORT=.*/DB_PORT=1433/' .env.ci
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=sa/' .env.ci
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=yourStrong(!)Password/' .env.ci
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=master/' .env.ci
 
       # Step 4: Build the Docker image
-      # This is the core step. It uses the official Docker build action, which has
-      # excellent support for caching to speed up future builds.
       - name: Build the Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./.docker/Dockerfile
-          push: false # We are only building, not pushing the image to a registry
+          push: false
           tags: sro-cms-app:latest
-          cache-from: type=gha # Enable caching from the GitHub Actions cache
-          cache-to: type=gha,mode=max # Enable writing to the GitHub Actions cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      # Step 5 (Future Improvement): You could add a step here to run tests
-      # - name: Run Laravel Tests
-      #   run: |
-      #     docker-compose run --rm app php artisan test
+      # Step 5: Verify Database Connection
+      # This command attempts a simple query to confirm that the application can
+      # successfully connect to the MS SQL Server service container.
+      - name: Verify Database Connection
+        run: |
+          docker-compose --env-file .env.ci run --rm app php artisan db:raw 'SELECT 1'
+
