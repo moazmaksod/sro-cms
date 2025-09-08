@@ -1,4 +1,3 @@
-
 ## About SRO CMS v2
 
 SRO CMS v2 is A free and open-source project for the MMORPG Silkroad Online (iSRO & vSRO) Server files
@@ -98,6 +97,79 @@ php artisan migrate
 php artisan db:seed
 php artisan optimize:clear
 ```
+
+## Setup on WSL & Docker (Recommended for Linux/WSL2 Users)
+
+This project provides a fully automated setup for development using WSL2 and Docker. The included `setup.sh` script will handle environment configuration, dependency installation, and database preparation for you.
+
+### Prerequisites
+- **WSL 2** with a Linux distribution (e.g., Ubuntu)
+- **Docker Desktop** installed and integrated with WSL 2
+- **Git** command-line tool
+
+### 1. Clone the Repository
+```sh
+git clone https://github.com/m1xawy/sro-cms.git
+cd sro-cms
+```
+
+### 2. Run the Setup Script
+The `setup.sh` script will:
+- Check for required tools (Git, Docker, Docker Compose)
+- Interactively create and configure your `.env` file
+- Build and start Docker containers
+- Install Composer and NPM dependencies
+- Prepare the database and run migrations/seeds
+- Compile frontend assets
+
+Making the internal environment script executable...
+```sh
+chmod +x setup.sh
+```
+
+Run the following command:
+```sh
+bash setup.sh setup
+```
+Follow the interactive prompts to configure your environment and database connection.
+
+### 3. Daily Development Commands
+- **Start containers:**
+  ```sh
+  bash setup.sh up
+  ```
+- **Stop containers:**
+  ```sh
+  bash setup.sh down
+  ```
+- **Install/update dependencies:**
+  ```sh
+  bash setup.sh install
+  ```
+- **Open a shell in the app container:**
+  ```sh
+  bash setup.sh ssh
+  ```
+- **Run Laravel Artisan commands:**
+  ```sh
+  bash setup.sh artisan <command>
+  ```
+- **Clear Laravel caches:**
+  ```sh
+  bash setup.sh clear
+  ```
+- **Clean (remove containers & dependency volumes):**
+  ```sh
+  bash setup.sh clean
+  ```
+
+### 4. Access the Application
+Once setup is complete, visit: [http://localhost:8000](http://localhost:8000)
+
+### Troubleshooting
+- Ensure Docker Desktop is running and WSL integration is enabled.
+- If you encounter permission issues, rerun the setup or use `bash setup.sh install`.
+- For database connection issues, double-check your `.env` values and SQL Server accessibility from WSL.
 
 ## Contributing
 
