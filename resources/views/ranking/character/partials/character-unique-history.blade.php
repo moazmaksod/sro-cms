@@ -1,3 +1,4 @@
+@if(config('widgets.unique_history.enabled'))
 <div class="table-responsive">
     <table class="table table-striped">
         <thead class="table-dark">
@@ -8,11 +9,11 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($uniqueHistory as $value)
+            @forelse($data->uniqueHistory as $row)
                 <tr>
-                    <td>{{ $uniqueList[$value->Value]['name'] }}</td>
-                    <td>+{{ $uniqueList[$value->Value]['points'] }}</td>
-                    <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
+                    <td>{{ config('ranking.uniques')[$row->Value]['name'] }}</td>
+                    <td>+{{ config('ranking.uniques')[$row->Value]['points'] }}</td>
+                    <td>{{ \Carbon\Carbon::make($row->EventTime)->diffForHumans() }}</td>
                 </tr>
             @empty
                 <tr>
@@ -22,3 +23,4 @@
         </tbody>
     </table>
 </div>
+@endif

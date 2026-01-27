@@ -9,8 +9,13 @@ return [
         'image' => 'images/donate/paypal.png',
         //'endpoint' => 'https://api-m.paypal.com', // for production
         'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox
+        //'endpoint_ipn' => 'https://www.paypal.com/cgi-bin/webscr', // for production IPN
+        'endpoint_ipn' => 'https://www.sandbox.paypal.com/cgi-bin/webscr', // for sandbox IPN
         'client_id' => 'PAYPAL_CLIENT_ID',
         'client_secret' => 'PAYPAL_CLIENT_SECRET',
+        'webhook_id' => 'PAYPAL_WEBHOOK_ID',
+        'business_email' => 'PAYPAL_BUSINESS_EMAIL',
+        'mode' => 'sandbox', //live, sandbox, IPN
         'package' => [
             [
                 'name' => '500 Silk',
@@ -45,7 +50,7 @@ return [
         ],
     ],
     'stripe' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'Stripe',
         'route' => 'stripe',
         'currency' => 'USD',
@@ -96,12 +101,26 @@ return [
         'private_key' => 'YOUR_SECRET_KEY',
         'widget_code' => 'p1_1',
         'api_type' => 'vc',
+        'authorized_ips' => [
+            '174.36.92.186',
+            '174.36.96.66',
+            '174.36.92.187',
+            '174.36.92.192',
+            '174.37.14.28',
+            '174.36.92.189',
+            '174.37.0.50',
+            '174.36.92.190',
+        ],
+
+        'authorized_ranges' => [
+            '216.127.71.0/24',
+        ],
         'package' => [
 
         ],
     ],
     'coinpayments' => [
-        'enabled' => false,
+        'enabled' => true,
         'name' => 'CoinPayments',
         'route' => 'coinpayments',
         'currency' => 'USD',
@@ -202,7 +221,7 @@ return [
         ],
     ],
     'maxicard' => [
-        'enabled' => false,
+        'enabled' => true,
         'name' => 'MaxiCard',
         'route' => 'maxicard',
         'currency' => 'TL',

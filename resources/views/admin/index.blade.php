@@ -42,6 +42,41 @@
             </div>
         </div>
 
+        <div class="row my-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <p>PHP Memory used</p>
+                        <h4>{{ number_format($systemInfo->memoryUsage / 1024 / 1024, 2) }}M / {{ $systemInfo->memoryLimit }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Disk Space</p>
+                        <h4>{{ number_format($systemInfo->diskFree / 1024 / 1024 / 1024, 2) }}GB / {{ number_format($systemInfo->diskTotal / 1024 / 1024 / 1024, 2) }}GB</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Laravel</p>
+                        <h4>Debug: {{ $systemInfo->appDebug ? 'true' : 'false' }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Admins</p>
+                        <h4>{{ $systemInfo->adminCount }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mt-3 mb-3 border-bottom">
             <h1 class="h2">iSRO-CMS Updates</h1>
 

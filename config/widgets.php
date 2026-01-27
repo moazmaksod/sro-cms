@@ -103,6 +103,24 @@ return [
             50 => 'Survival (Solo)',
             49 => 'Survival (Party)',
         ],
+        'custom' => [
+            101 => [
+                'enabled' => false,
+                'name' => 'Custom Event #1',
+                'days' => ['Sunday', 'Monday'],
+                'hour' => 8,
+                'min' => 14,
+                'duration' => 3600,
+            ],
+            102 => [
+                'enabled' => false,
+                'name' => 'Custom Event #2',
+                'days' => ['Friday'],
+                'hour' => 21,
+                'min' => 30,
+                'duration' => 1800,
+            ],
+        ],
     ],
     'fortress_war' => [
         'enabled' => false,
@@ -123,6 +141,25 @@ return [
                 'name' => 'Bandit',
                 'image' => 'images/sro/etc/fort_bijeokdan.png',
             ],
+        ],
+    ],
+    'custom' => [
+        'owned_titles' => [
+            'enabled' => false,
+            'template' => 'partials.character-owned-titles',
+            'query' => 'SELECT TOP(:Limit)
+                            _CharTitle.TitleID,
+                            _CharTitle.Enable,
+                            _RefTitle.TitleString,
+                            _Rigid_ItemNameDesc.ENG AS TitleName
+                        FROM
+                            SILKROAD_R_SHARD.._CharTitle
+                            JOIN SILKROAD_R_SHARD.._RefTitle ON _RefTitle.TitleID = _CharTitle.TitleID
+                            LEFT JOIN SILKROAD_R_ACCOUNT.._Rigid_ItemNameDesc ON _Rigid_ItemNameDesc.StrID = _RefTitle.TitleString
+                        WHERE
+                            _CharTitle.CharID = :CharID
+                        ORDER BY
+                            _RefTitle.Category DESC;',
         ],
     ],
 ];

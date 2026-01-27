@@ -3,28 +3,60 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 
 class Vote extends Model
 {
     protected $fillable = [
-        'title',
-        'url',
+        'jid',
         'site',
-        'image',
         'ip',
-        'param',
-        'reward',
-        'timeout',
-        'active',
+        'fingerprint',
+        'expire',
     ];
 
-    public static function getVotes()
-    {
-        $minutes = config('global.cache.account_info', 5);
+    protected $casts = [
+        'expire' => 'datetime',
+    ];
 
-        return Cache::remember('votes', now()->addMinutes($minutes), function () {
-            return self::all();
+    public static function getVotes($request, ?string $fingerprint): Collection
+    {
+        $voteSites = collect(config('vote'));
+        $ip = $request->ip();
+
+        if (!$ip || !$fingerprint) {
+            return $voteSites->map(fn($site) => (object) [
+                ...$site,
+                'expire' => null,
+            ]);
+        }
+
+        $logs = self::whereIn('site', $voteSites->pluck('route'))
+            ->where(function ($q) use ($ip, $fingerprint) {
+                $q->where('ip', $ip)
+                    ->orWhere('fingerprint', $fingerprint);
+            })
+            ->get()
+            ->keyBy('site');
+
+        return $voteSites->map(function ($site) use ($logs) {
+            $log = $logs->get($site['route']);
+
+            return (object) [
+                ...$site,
+                'expire' => $log?->expire,
+            ];
         });
+    }
+
+    public static function activeVote(string $site, string $ip, string $fingerprint): ?self
+    {
+        return self::where('site', $site)
+            ->where(function ($q) use ($ip, $fingerprint) {
+                $q->where('ip', $ip)
+                    ->orWhere('fingerprint', $fingerprint);
+            })
+            ->where('expire', '>', now())
+            ->first();
     }
 }

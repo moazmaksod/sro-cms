@@ -21,17 +21,8 @@ class VerifyEmailController extends Controller
         }
 
         if ($request->user()->markEmailAsVerified()) {
-
             if (config('global.server.version') !== 'vSRO') {
-                DB::beginTransaction();
-                try {
-                    MuhAlteredInfo::where('JID', $request->user()->jid)->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
-
-                    DB::commit();
-
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                }
+                $request->user()->muUser?->muAlteredInfo->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
             }
 
             event(new Verified($request->user()));

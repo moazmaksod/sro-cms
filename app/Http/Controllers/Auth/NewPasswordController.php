@@ -48,23 +48,7 @@ class NewPasswordController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user) use ($request) {
-
-                $user = User::where('email', $request->email)->first();
-
-                DB::beginTransaction();
-                try {
-                    if (config('global.server.version') === 'vSRO') {
-                        TbUser::where('JID', $user->jid)->update(['password' => md5($request->password)]);
-                    } else {
-                        MuUser::where('JID', $user->jid)->update(['UserPwd' => md5($request->password)]);
-                        TbUser::where('PortalJID', $user->jid)->update(['password' => md5($request->password)]);
-                    }
-
-                    DB::commit();
-
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                }
+                $user->updateGamePassword($request->password);
 
                 $user->forceFill([
                     'password' => Hash::make($request->password),

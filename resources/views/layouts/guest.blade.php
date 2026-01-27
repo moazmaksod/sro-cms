@@ -10,7 +10,14 @@
     <link rel="shortcut icon" href="{{ asset(config('settings.site_favicon', 'images/favicon.ico')) }}">
 
     <!-- SEO -->
-    @include('partials.seo')
+    <meta property="og:url" content="{{ config('settings.site_url', 'http://localhost') }}" />
+    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="{{ config('settings.site_title', 'iSRO CMS v2') }}"/>
+    <meta property="og:title" content="{{ config('settings.site_title', 'iSRO CMS v2') }} - @yield('title')" />
+    <meta property="og:image" content="{{ asset(config('settings.site_logo', 'images/logo.png')) }}" />
+    <meta property="og:image:secure_url" content="{{ asset(config('settings.site_logo', 'images/logo.png')) }}" />
+
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" media="screen" rel="stylesheet" type="text/css" crossorigin="anonymous">
@@ -24,17 +31,6 @@
 @include('layouts.header')
 
 <main>
-    @section('hero')
-        <div class="mb-5">
-            <div class="p-5 text-center bg-body-tertiary" style="background-image: url({{ asset(config('settings.hero_background', '/images/bg.jpg')) }}) !important; background-repeat: no-repeat; background-size: cover; background-position: center;">
-                <div class="container py-5">
-                    <h1 class="display-5 text-white fw-bold">@yield('title')</h1>
-                    <p class="col-lg-8 mx-auto lead"></p>
-                </div>
-            </div>
-        </div>
-    @show
-
     <div class="container">
         <div class="row">
             @yield('content')

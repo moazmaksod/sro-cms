@@ -8,22 +8,20 @@
             </tr>
         </thead>
         <tbody>
-            @php $i = 1; @endphp
-            @forelse($data as $value)
-                <tr>
-                    <td>
-                        @if($i <= 3)
-                            <img src="{{ asset($topImage[$i]) }}" alt=""/>
-                        @else
-                            {{ $i }}
-                        @endif
+            @forelse($data as $key => $row)
+            <tr>
+                <td>
+                    @if($key < 3)
+                        <img src="{{ asset(config('ranking.top_image')[$key + 1]) }}" alt=""/>
+                    @else
+                        {{ $key + 1 }}
+                    @endif
                     </td>
                     <td>
-                        <a href="{{ route('ranking.guild.view', ['name' => $value->Name]) }}" class="text-decoration-none">{{ $value->Name }}</a>
+                        <a href="{{ route('ranking.guild.view', ['name' => $row->Name]) }}" class="text-decoration-none">{{ $row->Name }}</a>
                     </td>
-                    <td>{{ $value->TotalKills }} / {{ $value->TotalDeath }}</td>
+                    <td>{{ $row->TotalKills }} / {{ $row->TotalDeath }}</td>
                 </tr>
-                @php $i++ @endphp
             @empty
                 <tr>
                     <td colspan="3" class="text-center">{{ __('No Records Found!') }}</td>

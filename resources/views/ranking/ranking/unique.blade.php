@@ -10,35 +10,33 @@
             </tr>
         </thead>
         <tbody>
-            @php $i = 1; @endphp
-            @forelse($data as $value)
-                <tr>
-                    <td>
-                        @if($i <= 3)
-                            <img src="{{ asset($topImage[$i]) }}" alt=""/>
-                        @else
-                            {{ $i }}
-                        @endif
+            @forelse($data as $key => $row)
+            <tr>
+                <td>
+                    @if($key < 3)
+                        <img src="{{ asset(config('ranking.top_image')[$key + 1]) }}" alt=""/>
+                    @else
+                        {{ $key + 1 }}
+                    @endif
                     </td>
                     <td>
-                        @if($value->RefObjID > 2000)
-                            <img src="{{ asset($characterRace[1]['image']) }}" width="16" height="16" alt=""/>
+                        @if($row->RefObjID > 2000)
+                            <img src="{{ asset(config('ranking.character_race')[1]['image']) }}" width="16" height="16" alt=""/>
                         @else
-                            <img src="{{ asset($characterRace[0]['image']) }}" width="16" height="16" alt=""/>
+                            <img src="{{ asset(config('ranking.character_race')[0]['image']) }}" width="16" height="16" alt=""/>
                         @endif
-                        <a href="{{ route('ranking.character.view', ['name' => $value->CharName16]) }}" class="text-decoration-none">{{ $value->CharName16 }}</a>
+                        <a href="{{ route('ranking.character.view', ['name' => $row->CharName16]) }}" class="text-decoration-none">{{ $row->CharName16 }}</a>
                     </td>
                     <td>
-                        @if($value->ID > 0)
-                            <a href="{{ route('ranking.guild.view', ['name' => $value->Name]) }}" class="text-decoration-none">{{ $value->Name }}</a>
+                        @if($row->ID > 0)
+                            <a href="{{ route('ranking.guild.view', ['name' => $row->Name]) }}" class="text-decoration-none">{{ $row->Name }}</a>
                         @else
                             <span>{{ __('None') }}</span>
                         @endif
                     </td>
-                    <td>{{ $value->CurLevel }}</td>
-                    <td>{{ $value->Points }}</td>
+                    <td>{{ $row->CurLevel }}</td>
+                    <td>{{ $row->Points }}</td>
                 </tr>
-                @php $i++ @endphp
             @empty
                 <tr>
                     <td colspan="5" class="text-center">{{ __('No Records Found!') }}</td>
@@ -49,8 +47,8 @@
 </div>
 
 <p class="mb-2 text-center">
-    @forelse($uniqueList as $value)
-        <span>{{ $value['name'] }} [{{ $value['points'] }} {{ __('points') }}]</span>,
+    @forelse(config('ranking.uniques') as $row)
+        <span>{{ $row['name'] }} [{{ $row['points'] }} {{ __('points') }}]</span>,
     @empty
     @endforelse
 </p>

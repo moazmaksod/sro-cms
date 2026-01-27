@@ -8,22 +8,20 @@
             </tr>
         </thead>
         <tbody>
-        @php $i = 1; @endphp
-        @forelse($data as $value)
+            @forelse($data as $key => $row)
             <tr>
                 <td>
-                    @if($i <= 3)
-                        <img src="{{ asset($topImage[$i]) }}" alt=""/>
+                    @if($key < 3)
+                        <img src="{{ asset(config('ranking.top_image')[$key + 1]) }}" alt=""/>
                     @else
-                        {{ $i }}
+                        {{ $key + 1 }}
                     @endif
                 </td>
                 <td>
-                    <a href="{{ route('ranking.character.view', ['name' => $value->CharName]) }}" class="text-decoration-none">{{ $value->CharName }}</a>
+                    <a href="{{ route('ranking.character.view', ['name' => $row->CharName]) }}" class="text-decoration-none">{{ $row->CharName }}</a>
                 </td>
-                <td>{{ $value->KillCount }} / {{ $value->DeathCount }}</td>
+                <td>{{ $row->KillCount }} / {{ $row->DeathCount }}</td>
             </tr>
-            @php $i++ @endphp
         @empty
             <tr>
                 <td colspan="3" class="text-center">{{ __('No Records Found!') }}</td>

@@ -14,18 +14,13 @@ use App\Models\SRO\Portal\MuJoiningInfo;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Portal\MuVIPInfo;
 use App\Models\User;
-use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -44,9 +39,43 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if (config('settings.disable_register')) {
+            return back()->withErrors(['username' => ["Register page is disabled!"]]);
+        }
+
+        $request->validate($this->getValidationRules($request));
+
+        $ip = filter_var($request->ip(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ?: '0.0.0.0';
+
+        if (config('global.server.version') === 'vSRO') {
+            $jid = $this->createAccountVSRO($request, $ip);
+        } else {
+            $jid = $this->createAccountISRO($request, $ip);
+        }
+
+        $user = User::create([
+            'jid' => $jid,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $this->handleReferral($user, $request);
+
+        if (config('settings.register_confirm')) {
+            event(new Registered($user));
+        }
+
+        Auth::login($user);
+
+        return redirect(route('profile', absolute: false));
+    }
+
+    private function getValidationRules(Request $request): array
+    {
         $rules = [
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
-            'email' => ['required', 'string', 'email', 'max:70'],
+            'email' => ['required', 'string', 'email', 'max:70', 'unique:' . User::class],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
             'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
@@ -56,91 +85,60 @@ class RegisteredUserController extends Controller
 
         if (config('global.server.version') === 'vSRO') {
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
-        }elseif (config('global.server.version') === 'vSRO' && !config('settings.duplicate_email', 1)) {
-            $rules['email'][] = 'unique:' . User::class . ',email';
-            $rules['email'][] = 'unique:' . TbUser::class . ',Email';
         } else {
-            $rules['email'][] = 'unique:' . User::class . ',email';
             $rules['username'][] = 'unique:' . MuUser::class . ',UserID';
             $rules['username'][] = 'unique:' . TbUser::class . ',StrUserID';
             $rules['email'][] = 'unique:' . MuEmail::class . ',EmailAddr';
         }
 
-        $request->validate($rules);
+        return $rules;
+    }
 
-        DB::beginTransaction();
-        try {
-            if (config('global.server.version') === 'vSRO') {
-                $tbUser = TbUser::setGameAccount($jid = null, $request->username, $request->password, $request->email, $request->ip());
-                $jid = $tbUser->JID;
+    private function createAccountVSRO(Request $request, string $ip): int
+    {
+        return DB::transaction(function () use ($request, $ip) {
+            $tbUser = TbUser::setVSROAccount(null, $request->username, $request->password, $request->email, $ip);
+            SkSilk::setSkSilk($tbUser->JID, 0, 0);
 
-                SkSilk::setSkSilk($jid, 0, 0);
-            } else {
-                //Fixing local registration
-                $userBinIP = ($request->ip() == "::1") ? ip2long('127.0.0.1') : ip2long($request->ip());
+            return $tbUser->JID;
+        });
+    }
 
-                $portalUser = MuUser::setPortalAccount($request->username, $request->password);
-                $jid = $portalUser->JID;
+    private function createAccountISRO(Request $request, string $ip): int
+    {
+        return DB::transaction(function () use ($request, $ip) {
+            $userBinIP = ip2long($ip);
 
-                MuEmail::setEmail($jid, $request->email);
-                MuhAlteredInfo::setAlteredInfo($jid, $request->username, $request->email, $userBinIP);
-                AuhAgreedService::setAgreedService($jid, $userBinIP);
-                MuJoiningInfo::setJoiningInfo($jid, $userBinIP);
-                MuVIPInfo::setVIPInfo($jid);
+            $portalUser = MuUser::setPortalAccount($request->username, $request->password);
 
-                //type 1 = silk, type 3 = premium silk
-                //AphChangedSilk::setChangedSilk($jid, 1, 0);
-                //AphChangedSilk::setChangedSilk($jid, 3, 0);
-                TbUser::setGameAccount($jid, $request->username, $request->password, $request->email, $request->ip());
-            }
+            MuEmail::setEmail($portalUser->JID, $request->email);
+            MuhAlteredInfo::setAlteredInfo($portalUser->JID, $request->username, $request->email, $userBinIP);
+            AuhAgreedService::setAgreedService($portalUser->JID, $userBinIP);
+            MuJoiningInfo::setJoiningInfo($portalUser->JID, $userBinIP);
+            MuVIPInfo::setVIPInfo($portalUser->JID);
 
-            if (config('global.referral.enabled', true)) {
-                if ($request->filled('invite')) {
-                    $invite = Referral::where('code', $request->invite)->first();
+            //type 1 = silk, type 3 = premium silk
+            //AphChangedSilk::setChangedSilk($portalUser->JID, 1, 0);
+            //AphChangedSilk::setChangedSilk($portalUser->JID, 3, 0);
 
-                    if ($invite) {
-                        if ($invite->ip !== $request->ip() && $invite->fingerprint !== $request->fingerprint) {
-                            Referral::create([
-                                'code' => $invite->code,
-                                'name' => $invite->name,
-                                'jid' => $invite->jid,
-                                'invited_jid' => $jid,
-                                'points' => config('global.referral.reward_points', 0),
-                            ]);
-                        }else {
-                            Referral::create([
-                                'code' => $invite->code,
-                                'name' => $invite->name,
-                                'ip' => 'CHEATING',
-                                'jid' => $invite->jid,
-                                'invited_jid' => $jid,
-                                'points' => 0,
-                            ]);
-                        }
-                    }
-                }
-            }
+            TbUser::setISROAccount($portalUser->JID, $request->username, $request->password, $request->email, $ip);
 
-            $user = User::create([
-                'jid' => $jid,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+            return $portalUser->JID;
+        });
+    }
 
-            DB::commit();
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['username' => [$e->getMessage()]]);
+    private function handleReferral(User $user, Request $request): void
+    {
+        if (!config('global.referral.enabled', true)) {
+            return;
         }
 
-        if (config('settings.register_confirm')) {
-            event(new Registered($user));
+        if ($request->filled('fingerprint')) {
+            Referral::createReferral($user, $request->input('fingerprint'), $request->ip());
         }
 
-        Auth::login($user);
-
-        return redirect(route('profile', absolute: false));
+        if ($request->filled('invite') && $request->filled('fingerprint')) {
+            Referral::inviteReferral($user, $request->input('invite'), $request->input('fingerprint'), $request->ip());
+        }
     }
 }

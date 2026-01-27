@@ -5,6 +5,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
+                <h2 class="mt-5">{{ __('Verify Email') }}</h2>
+
                 @if (session('status') == 'verification-link-sent')
                     <div class="alert alert-success" role="alert">
                         {{ __('A new verification link has been sent to the email address you provided during registration.') }}

@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            @if(!config("settings.job_name_jid_{$data->user->UserJID}") || auth()->user()?->role?->is_admin)
+            @if(!config("settings.job_name_jid_{$data->jid}") || auth()->user()?->role?->is_admin)
                 @if(!empty($data->NickName16))
                     <td>{{ $data->NickName16 }}</td>
                 @else
@@ -31,67 +31,55 @@
             <td>{{ __('Race:') }}</td>
             <td>
                 @if($data->RefObjID > 2000)
-                    <img src="{{ asset($characterRace[1]['image']) }}" width="16" height="16" alt=""/>
-                    <span>{{ $characterRace[1]['name'] }}</span>
+                    <img src="{{ asset(config('ranking.character_race')[1]['image']) }}" width="16" height="16" alt=""/>
+                    <span>{{ config('ranking.character_race')[1]['name'] }}</span>
                 @else
-                    <img src="{{ asset($characterRace[0]['image']) }}" width="16" height="16" alt=""/>
-                    <span>{{ $characterRace[0]['name'] }}</span>
+                    <img src="{{ asset(config('ranking.character_race')[0]['image']) }}" width="16" height="16" alt=""/>
+                    <span>{{ config('ranking.character_race')[0]['name'] }}</span>
                 @endif
             </td>
         </tr>
         <tr>
             <td>{{ __('Level:') }}</td>
-            <td>{{ $data->CurLevel }} / {{ config('settings.max_level') }}</td>
+            <td>{{ $data->CurLevel }} / {{ config('settings.max_level', 140) }}</td>
         </tr>
         <tr>
             <td>{{ __('Item Points:') }}</td>
             <td>{{ $data->ItemPoints }}</td>
         </tr>
-        @if(config("ranking.extra.kill_logs.pvp"))
-            @if($pvpKill)
-                <tr>
-                    <td>{{ __('Pvp K/D:') }}</td>
-                    <td>{{ $pvpKill->KillCount ?? 0 }} / {{ $pvpKill->DeathCount ?? 0 }}</td>
-                </tr>
-            @endif
-        @endif
-        @if(config("ranking.extra.kill_logs.job"))
-            @if($jobKill)
+        @if(config('ranking.extra.pvp_kill_logs') && $data->pvpKill)
             <tr>
-                <td>{{ __('Job K/D:') }}</td>
-                <td>{{ $jobKill->KillCount ?? 0 }} / {{ $jobKill->DeathCount ?? 0 }}</td>
+                <td>{{ __('Pvp K/D:') }}</td>
+                <td>{{ $data->pvpKill->KillCount ?? 0 }} / {{ $data->pvpKill->DeathCount ?? 0 }}</td>
             </tr>
-            @endif
+        @endif
+        @if(config('ranking.extra.job_kill_logs') && $data->jobKill)
+        <tr>
+            <td>{{ __('Job K/D:') }}</td>
+            <td>{{ $data->jobKill->KillCount ?? 0 }} / {{ $data->jobKill->DeathCount ?? 0 }}</td>
+        </tr>
         @endif
         <tr>
             <td>{{ __('Title:') }}</td>
             <td style="color: #ffc345">
                 @if($data->HwanLevel > 0)
                     @if($data->RefObjID > 2000)
-                        [{{ $hwanLevel[1][$data->HwanLevel] ?? '' }}]
+                        [{{ config('ranking.hwan_level')[1][$data->HwanLevel] ?? '' }}]
                     @else
-                        [{{ $hwanLevel[2][$data->HwanLevel] ?? '' }}]
+                        [{{ config('ranking.hwan_level')[2][$data->HwanLevel] ?? '' }}]
                     @endif
                 @else
                     []
                 @endif
             </td>
         </tr>
-        @if(config("ranking.extra.character_status"))
+        @if(config('ranking.extra.character_status'))
         <tr>
             <td>{{ __('Status:') }}</td>
             <td>
-                @if($status)
-                    @if($status->EventID == 4)
-                        <img src="{{ asset('images/login_window_eu_located_green.png') }}" width="16" height="16" alt=""/>
-                        <span class="text-muted">{{ __('Online') }}</span>
-                    @elseif($status->EventID == 6)
-                        <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
-                        <span class="text-muted">
-                            {{ __('Offline') }}
-                            <small class="text-muted" title="{{ __('Last Logout:') }} {{ \Carbon\Carbon::parse($status->EventTime)->format('Y-m-d H:i') }}"><i class="fas fa-circle-info"></i></small>
-                        </span>
-                    @endif
+                @if($data->isOnline)
+                    <img src="{{ asset('images/login_window_eu_located_green.png') }}" width="16" height="16" alt=""/>
+                    <span class="text-muted">{{ __('Online') }}</span>
                 @else
                     <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
                     <span class="text-muted">{{ __('Offline') }}</span>

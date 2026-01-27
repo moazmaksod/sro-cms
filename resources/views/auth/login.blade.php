@@ -5,6 +5,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
+                <h2 class="mt-5">{{ __('Login') }}</h2>
+
                 @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}

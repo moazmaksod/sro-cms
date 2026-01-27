@@ -18,19 +18,30 @@ class Pages extends Model
 
     protected $casts = [];
 
+    protected static function booted()
+    {
+        static::created(fn ($page) => self::clearCache($page));
+        static::updated(fn ($page) => self::clearCache($page));
+        static::deleted(fn ($page) => self::clearCache($page));
+    }
+
     public static function getPageNames()
     {
-        return Cache::remember("pages_names", now()->addSeconds(10), function () {
+        return Cache::rememberForever("pages_names", function () {
             return self::select('title', 'slug')->get();
         });
     }
 
     public static function getPage($slug)
     {
-        $minutes = config('global.cache.pages', 10080);
-
-        return Cache::remember("pages_view_{$slug}", now()->addMinutes($minutes), function () use ($slug) {
+        return Cache::rememberForever("pages_view_{$slug}", function () use ($slug) {
             return self::where('slug', $slug)->first();
         });
+    }
+
+    protected static function clearCache(self $page): void
+    {
+        Cache::forget('pages_names');
+        Cache::forget("pages_view_{$page->slug}");
     }
 }

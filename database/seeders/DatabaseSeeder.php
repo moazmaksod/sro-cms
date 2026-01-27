@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call(SettingSeeder::class);
-        $this->call(VoteSeeder::class);
 
         //$this->call(MagOptSeeder::class);
         //$this->call(ReferralSeeder::class);

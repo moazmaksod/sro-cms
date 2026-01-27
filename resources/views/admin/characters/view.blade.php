@@ -12,6 +12,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
 
         <div class="row">
             <div class="col-md-8">
@@ -26,8 +31,8 @@
                                 <tr>
                                     <th scope="row">Username</th>
                                     <td>
-                                        <a href="{{ route('admin.users.view', $data->User->tbUser->JID) }}" class="text-decoration-none">
-                                            {{ $data->User->tbUser->StrUserID }}
+                                        <a href="{{ route('admin.users.view', $data->User->tbUser?->JID) }}" class="text-decoration-none">
+                                            {{ $data->User->tbUser?->StrUserID }}
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                                 <path fill="currentColor" d="M384 64C366.3 64 352 78.3 352 96C352 113.7 366.3 128 384 128L466.7 128L265.3 329.4C252.8 341.9 252.8 362.2 265.3 374.7C277.8 387.2 298.1 387.2 310.6 374.7L512 173.3L512 256C512 273.7 526.3 288 544 288C561.7 288 576 273.7 576 256L576 96C576 78.3 561.7 64 544 64L384 64zM144 160C99.8 160 64 195.8 64 240L64 496C64 540.2 99.8 576 144 576L400 576C444.2 576 480 540.2 480 496L480 416C480 398.3 465.7 384 448 384C430.3 384 416 398.3 416 416L416 496C416 504.8 408.8 512 400 512L144 512C135.2 512 128 504.8 128 496L128 240C128 231.2 135.2 224 144 224L224 224C241.7 224 256 209.7 256 192C256 174.3 241.7 160 224 160L144 160z"/>
@@ -60,7 +65,7 @@
                                 <tr>
                                     <th scope="row">Guild</th>
                                     <td>
-                                        @if(!empty($data->guild->Name) && $data->guild->Name != 'DummyGuild')
+                                        @if($data->GuildID)
                                             <a href="{{ route('ranking.guild.view', ['name' => $data->guild->Name]) }}" class="text-decoration-none">{{ $data->guild->Name }}</a>
                                         @else
                                             {{ __('None') }}
@@ -99,36 +104,57 @@
                     <div class="card-header">
                         <h4 class="text-center">Character Items</h4>
                     </div>
+
+                    <ul class="nav nav-tabs justify-content-center mt-3" id="characterItemsTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button" role="tab">
+                                Inventory
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab">
+                                Storage
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pet-tab" data-bs-toggle="tab" data-bs-target="#pet" type="button" role="tab">
+                                Pet
+                            </button>
+                        </li>
+                    </ul>
+
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="inventory" role="tabpanel">
                                 <div class="card">
                                     <div id="display-inventory" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
                                         <h2 class="text-center">Inventory</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $inventorySet, 'min' => 13, 'max' => 108])
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet(108, 13, 0), 'min' => 13, 'max' => 108])
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-6">
+                            <div class="tab-pane fade" id="storage" role="tabpanel">
                                 <div class="card">
                                     <div id="display-storage" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
                                         <h2 class="text-center">Storage</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $storageItems, 'min' => 0, 'max' => 179])
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->charStorageItems, 'min' => 0, 'max' => 179])
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="tab-pane fade" id="pet" role="tabpanel">
                                 <div class="card mt-3">
                                     <div id="display-pet" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
                                         <h2 class="text-center">Pet</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $petItems, 'min' => 0, 'max' => 195])
+                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharPetItems(request()->input('pet') ?? ($data->CharPets->first()->ID ?? null)), 'min' => 0, 'max' => 195])
 
                                         <form method="GET" action="">
                                             <div class="row mb-3">
                                                 <div class="col-md-12">
                                                     <select class="form-select" name="pet" aria-label="Default select example" onchange="this.form.submit()">
-                                                        @foreach($petNames as $pet)
-                                                            <option value="{{ $pet->ID }}" {{ $PetID == $pet->ID ? 'selected' : '' }}>{{ $pet->CharName ?? $pet->ID }}</option>
+                                                        @foreach($data->CharPets as $row)
+                                                            <option value="{{ $row->ID }}">{{ $row->CharName ?? $row->ID }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -155,17 +181,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($status as $value)
-                                    @if($value->EventID == 4 || $value->EventID == 6)
-                                        <tr>
-                                            @if($value->EventID == 4)
-                                                <td><span class="text-success">Login</span></td>
-                                            @elseif($value->EventID == 6)
-                                                <td><span class="text-danger">Logout</span></td>
-                                            @endif
-                                            <td>{{ \Carbon\Carbon::parse($value->EventTime)->format('Y-m-d H:i') }}</td>
-                                        </tr>
-                                    @endif
+                                @forelse($data->getCharStatus()->take(5)->get() as $row)
+                                    <tr>
+                                        @if($row->EventID == 4)
+                                            <td><span class="text-success">Login</span></td>
+                                        @else
+                                            <td><span class="text-danger">Logout</span></td>
+                                        @endif
+                                        <td>{{ \Carbon\Carbon::parse($row->EventTime)->format('Y-m-d H:i') }}</td>
+                                    </tr>
                                 @empty
                                     <tr>
                                         <td colspan="2" class="text-center">No Records Found!</td>
@@ -200,7 +224,7 @@
                         </ul>
                         <hr>
 
-                        <form method="POST" action="{{ route('admin.characters.update', $data) }}">
+                        <form method="POST" action="{{ route('admin.characters.unstuck', $data) }}" onsubmit="return confirm('Are you sure you want to Unstuck this character?');">
                             @csrf
                             @method('PUT')
 

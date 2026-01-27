@@ -2,6 +2,8 @@
 
 namespace App\Models\SRO\Account;
 
+use App\Models\Donate;
+use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\MuUser;
 use App\Models\SRO\Shard\Char;
 use App\Models\User;
@@ -52,110 +54,120 @@ class TbUser extends Model
         'password'
     ];
 
+    protected array $fillable_vsro = [
+        'StrUserID',
+        'Name',
+        'password',
+        'Status',
+        'GMrank',
+        'Email',
+        'regtime',
+        'reg_ip',
+        'sec_primary',
+        'sec_content',
+        'AccPlayTime',
+        'LatestUpdateTime_ToPlayTime',
+    ];
+
+    protected array $fillable_isro = [
+        'PortalJID',
+        'StrUserID',
+        'ServiceCompany',
+        'password',
+        'Active',
+        'UserIP',
+        'CountryCode',
+        'VisitDate',
+        'RegDate',
+        'sec_primary',
+        'sec_content',
+        'sec_grade',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
         if (config('global.server.version') === 'vSRO') {
-            $this->fillable = [
-                'StrUserID',
-                'Name',
-                'password',
-                'Status',
-                'GMrank',
-                'Email',
-                'regtime',
-                'reg_ip',
-                'sec_primary',
-                'sec_content',
-                'AccPlayTime',
-                'LatestUpdateTime_ToPlayTime'
-            ];
+            $this->fillable = $this->fillable_vsro;
         } else {
-            $this->fillable = [
-                'PortalJID',
-                'StrUserID',
-                'ServiceCompany',
-                'password',
-                'Active',
-                'UserIP',
-                'CountryCode',
-                'VisitDate',
-                'RegDate',
-                'sec_primary',
-                'sec_content',
-                'sec_grade',
-            ];
+            $this->fillable = $this->fillable_isro;
         }
     }
 
-    public static function setGameAccount($jid, $username, $password, $email, $ip)
+    public static function setVSROAccount($jid, $username, $password, $email, $ip)
     {
-        if (config('global.server.version') === 'vSRO') {
-            return self::create([
-                'StrUserID' => strtolower($username),
-                'Name' => $username,
-                'password' => md5($password),
-                'Status' => 1,
-                'GMrank' => 0,
-                'Email' => $email,
-                'regtime' => now(),
-                'reg_ip' => $ip,
-                'sec_primary' => 3,
-                'sec_content' => 3
+        return self::create([
+            'StrUserID' => strtolower($username),
+            'Name' => $username,
+            'password' => md5($password),
+            'Status' => 1,
+            'GMrank' => 0,
+            'Email' => $email,
+            'regtime' => now(),
+            'reg_ip' => $ip,
+            'sec_primary' => 3,
+            'sec_content' => 3
+        ]);
+    }
+
+    public static function setISROAccount($jid, $username, $password, $email, $ip)
+    {
+        return self::create([
+            'PortalJID' => $jid,
+            'StrUserID' => $username,
+            'ServiceCompany' => 11,
+            'password' => md5($password),
+            'Active' => 1,
+            'UserIP' => $ip,
+            'CountryCode' => 'EG',
+            'VisitDate' => now(),
+            'RegDate' => now(),
+            'sec_primary' => 3,
+            'sec_content' => 3,
+            'sec_grade' => 0,
+            'AccPlayTime' => 0,
+            'LatestUpdateTime_ToPlayTime' => 0,
+        ]);
+    }
+
+    public function blockAccount(string $reason, int $durationHours, ?string $customReason = null)
+    {
+        $finalReason = $reason === 'Custom' ? $customReason : $reason;
+        $punishment = Punishment::setPunishment($this->JID, $finalReason, now(), now()->copy()->addHours($durationHours));
+        $blocked = BlockedUser::where('UserJID', $this->JID)->where('Type', 1)->first();
+
+        if ($blocked) {
+            $blocked->update([
+                'SerialNo' => $punishment->SerialNo,
+                'timeBegin' => now(),
+                'timeEnd' => now()->copy()->addHours($durationHours),
             ]);
         } else {
-            return self::create([
-                'PortalJID' => $jid,
-                'StrUserID' => $username,
-                'ServiceCompany' => 11,
-                'password' => md5($password),
-                'Active' => 1,
-                'UserIP' => $ip,
-                'CountryCode' => 'EG',
-                'VisitDate' => now(),
-                'RegDate' => now(),
-                'sec_primary' => 3,
-                'sec_content' => 3,
-                'sec_grade' => 0,
-                'AccPlayTime' => 0,
-                'LatestUpdateTime_ToPlayTime' => 0,
-            ]);
+            BlockedUser::setBlockedUser($this->JID, $this->StrUserID, $punishment->SerialNo, now(), now()->copy()->addHours($durationHours));
         }
+
+        return $punishment;
     }
 
-    public static function getTbUserCount()
+    public function unblockAccount()
     {
-        $minutes = config('global.cache.account_info', 5);
+        $blocked = BlockedUser::where('UserJID', $this->JID)->where('Type', 1)->first();
+        if ($blocked) {
+            $blocked->update(['timeEnd' => now()]);
+            return true;
+        }
 
-        return Cache::remember('account_info_ingame_count', now()->addMinutes($minutes), function () {
-            return self::count();
-        });
+        return false;
     }
 
-    public function getSkSilk()
+    public function activeBlock()
     {
-        return $this->belongsTo(SkSilk::class, 'JID', 'JID');
-    }
-
-    public function certifyKey()
-    {
-        return $this->hasMany(WebItemCertifyKey::class, 'UserJID', 'JID');
-    }
-
-    public function getSkSilkHistory()
-    {
-        return $this->hasMany(SkSilkBuyList::class, 'UserJID', 'JID');
-    }
-
-    public function shardUser()
-    {
-        return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
-    }
-
-    public function muUser()
-    {
-        return $this->hasOne(MuUser::class, 'JID', 'PortalJID');
+        return $this->hasOne(BlockedUser::class, 'UserJID', 'JID')
+            ->where('Type', 1)
+            ->where('timeEnd', '>', now())
+            ->with('punishment')
+            ->latest('timeEnd');
     }
 
     public function user()
@@ -167,8 +179,60 @@ class TbUser extends Model
         }
     }
 
+    public function muUser()
+    {
+        return $this->hasOne(MuUser::class, 'JID', 'PortalJID');
+    }
+
     public function blockedUser()
     {
         return $this->hasOne(BlockedUser::class, 'UserJID', 'JID');
+    }
+
+    public function getShardUserAttribute()
+    {
+        return cache()->remember( "shard_user_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->shardUser()->get() ?? collect());
+    }
+
+    public function getGetSkSilkAttribute()
+    {
+        return cache()->remember( "user_silk_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->getSkSilk()->first());
+    }
+
+    public function shardUser()
+    {
+        return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
+    }
+
+    public function getSkSilk()
+    {
+        return $this->hasOne(SkSilk::class, 'JID', 'JID');
+    }
+
+    public function donationLogs()
+    {
+        return $this->hasMany(Donate::class, 'jid', 'JID');
+    }
+
+    public function getSkSilkHistory()
+    {
+        return $this->hasMany(SkSilkBuyList::class, 'UserJID', 'JID');
+    }
+
+    public static function getTbUserCount()
+    {
+        return Cache::remember('tb_user_count', 86400, function () {
+            return self::count();
+        });
+    }
+
+    public function secondaryPassword()
+    {
+        return $this->hasOne(SecondaryPassword::class, 'UserJID', 'JID');
+    }
+
+    public function certifyKey()
+    {
+        return $this->hasMany(WebItemCertifyKey::class, 'UserJID', 'JID');
     }
 }

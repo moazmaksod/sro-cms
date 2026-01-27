@@ -16,7 +16,10 @@ class Setting extends Model
 
     protected $keyType = 'string';
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = [
+        'key',
+        'value'
+    ];
 
     public static function get($key, $default = null)
     {
@@ -33,5 +36,12 @@ class Setting extends Model
         Cache::forget("settings_all");
 
         return $setting;
+    }
+
+    public static function cached()
+    {
+        return cache()->rememberForever('settings_all', function () {
+            return self::pluck('value', 'key');
+        });
     }
 }

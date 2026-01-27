@@ -4,6 +4,7 @@ namespace App\Models\SRO\Account;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class SkSilk extends Model
 {
@@ -67,11 +68,27 @@ class SkSilk extends Model
         return self::where('JID', $jid)->increment($types[$type], $amount);
     }
 
+    public static function setSkSilkLive($username, $amount, $pkgId = 0, $price = 0, $orderId = 'Website')
+    {
+        return DB::statement("
+            EXEC [" . DB::connection('account')->getDatabaseName() . "].[CGI].[CGI_WebPurchaseSilk]
+                @OrderID = :orderID,
+                @UserID = :userID,
+                @PkgID = :pkgID,
+                @NumSilk = :numSilk,
+                @Price = :price
+        ", [
+            'orderID' => $orderId,
+            'userID'  => $username,
+            'pkgID'   => $pkgId,
+            'numSilk' => $amount,
+            'price'   => $price,
+        ]);
+    }
+
     public static function getSilkSum()
     {
-        $minutes = config('global.cache.account_info', 5);
-
-        return Cache::remember('account_info_vsro_silk_sum', now()->addMinutes($minutes), function () {
+        return Cache::remember('vsro_silk_sum', 86400, function () {
             try {
                 return self::selectRaw('SUM(CAST(silk_own AS BIGINT)) as total')->value('total');
             } catch (\Exception $e) {

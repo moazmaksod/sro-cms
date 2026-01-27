@@ -5,6 +5,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
+                <h2 class="mt-5">{{ __('Reset Password') }}</h2>
+
                 <form method="POST" action="{{ route('password.store') }}">
                     @csrf
 

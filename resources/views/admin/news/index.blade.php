@@ -25,29 +25,29 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Slug</th>
+                        <th scope="col">Url</th>
                         <th scope="col">Category</th>
                         <th scope="col">Status</th>
                         <th scope="col">Options</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($data as $value)
+                    @forelse($data as $row)
                         <tr>
-                            <td>{{ $value->id }}</td>
-                            <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $value->title }}</td>
-                            <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $value->slug }}</td>
-                            <td>{{ $value->category }}</td>
+                            <td>{{ $row->id }}</td>
+                            <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $row->title }}</td>
+                            <td><a href="{{ route('post.show', ['slug' => $row->slug]) }}" target="_blank">{{ route('post.show', ['slug' => $row->slug]) }}</a></td>
+                            <td>{{ $row->category }}</td>
                             <td>
-                                @if($value->active == 1)
+                                @if($row->active == 1)
                                     <span class="text-success">Active</span>
-                                @elseif($value->active == 0)
+                                @elseif($row->active == 0)
                                     <span class="text-danger">Not Active</span>
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('admin.news.edit', $value->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                <a href="{{ route('admin.news.delete', $value->id) }}" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{{ route('admin.news.edit', $row->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="{{ route('admin.news.delete', $row->id) }}" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     @empty
@@ -57,6 +57,8 @@
                     @endforelse
                 </tbody>
             </table>
+
+            {{ $data->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

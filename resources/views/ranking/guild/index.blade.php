@@ -4,15 +4,15 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="card mb-4 p-0">
-                <div class="card-header">
+            <div class="card border-0">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="d-flex">
-                                <div class="mt-3">
+                                <div>
                                     <h2>
-                                        @if(isset($data->CrestIcon))
-                                        <img src="{{ route('ranking.guild-crest', ['hex' => $data->CrestIcon]) }}" alt="" width="32" height="32">
+                                        @if(isset($data->Crest))
+                                            <img src="{{ route('ranking.guild.crest', ['bin' => $data->Crest]) }}" alt="" width="32" height="32">
                                         @endif
                                         {{ $data->Name }}
                                     </h2>
@@ -20,8 +20,9 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
-                            <div class="row mt-2 justify-content-end text-center">
+                            <div class="row justify-content-end text-center">
                                 <div class="col-md-3">
                                     <ul class="list-unstyled mt-3">
                                         <li class="mb-2"><h4>{{ $data->LeaderName }}</h4></li>
@@ -49,17 +50,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    @include('ranking.guild.partials.guild-members')
-                </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="card mb-4">
-                <div class="card-body">
-                    @include('ranking.guild.partials.guild-alliances')
+                    @include('ranking.guild.partials.guild-members')
+
+                    <div class="mt-4">
+                        @include('ranking.guild.partials.guild-alliances')
+                    </div>
                 </div>
             </div>
         </div>

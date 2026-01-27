@@ -2,8 +2,6 @@
 
 namespace App\Models\SRO\Log;
 
-use App\Models\SRO\Shard\Char;
-use App\Models\SRO\Shard\Guild;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +36,6 @@ class LogInstanceWorldInfo extends Model
     public static function getUniqueRanking($limit = 25, $month = 0)
     {
         $uniqueList = config('ranking.uniques');
-        $minutes = config('global.cache.ranking_unique', 60);
 
         $case = 'SUM(CASE ';
         foreach ($uniqueList as $uniqueCode => $points) {
@@ -48,7 +45,7 @@ class LogInstanceWorldInfo extends Model
         $case .= 'ELSE 0 END) AS Points';
         $startOfMonth = Carbon::now()->startOfMonth();
 
-        return Cache::remember("ranking_unique_{$limit}_{$month}", now()->addMinutes($minutes), function () use ($month, $startOfMonth, $uniqueList, $case, $limit) {
+        return Cache::remember("ranking_unique_{$limit}_{$month}", config('global.cache.ranking_unique', 600), function () use ($month, $startOfMonth, $uniqueList, $case, $limit) {
             return self::select(
                     '_Char.CharName16',
                     '_Char.RefObjID',
@@ -80,9 +77,8 @@ class LogInstanceWorldInfo extends Model
 	public static function getUniquesKill($limit = 25, $CharID = 0, $includeSpawns = true)
 	{
 		$uniqueList = array_keys(config('ranking.uniques'));
-		$minutes = config('global.cache.unique_history', 10);
 
-		return Cache::remember("unique_history_{$limit}_{$CharID}_{$includeSpawns}", now()->addMinutes($minutes), function () use ($CharID, $limit, $uniqueList, $includeSpawns) {
+		return Cache::remember("unique_history_{$limit}_{$CharID}_{$includeSpawns}", config('global.cache.unique_history', 600), function () use ($CharID, $limit, $uniqueList, $includeSpawns) {
 			return self::select([
 					'_LogInstanceWorldInfo.CharID',
 					'_Char.CharName16',
@@ -111,4 +107,40 @@ class LogInstanceWorldInfo extends Model
 				->get();
 		});
 	}
+
+    public static function getUniquesAdvanced(int $limit = 5)
+    {
+        $config = config('ranking.uniques');
+
+        return Cache::remember("uniques_advanced_top{$limit}", config('global.cache.unique_history', 600), function () use ($config, $limit) {
+            $result = collect();
+
+            foreach ($config as $value => $cfg) {
+                $kills = self::select([
+                    '_LogInstanceWorldInfo.CharID',
+                    '_Char.CharName16',
+                ])
+                    ->join(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
+                    ->where('_LogInstanceWorldInfo.Value', $value)
+                    ->where('_LogInstanceWorldInfo.ValueCodeName128', 'KILL_UNIQUE_MONSTER')
+                    ->orderByDesc('_LogInstanceWorldInfo.EventTime')
+                    ->limit(9999)
+                    ->get();
+
+                $topPlayers = $kills
+                    ->groupBy(fn($kill) => strtolower($kill->CharName16))
+                    ->map(fn($playerKills) => (object)[
+                        'CharName16' => $playerKills->first()->CharName16 ?: 'Unknown',
+                        'Points' => ($cfg['points'] ?? 0) * $playerKills->count(),
+                    ])
+                    ->sortByDesc('Points')
+                    ->take($limit)
+                    ->values();
+
+                $result[$value] = $topPlayers;
+            }
+
+            return $result;
+        });
+    }
 }

@@ -48,9 +48,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.votes.index') ? 'active' : '' }}" href="{{ route('admin.votes.index') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.tickets.index') ? 'active' : '' }}" href="{{ route('admin.tickets.index') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
-                    {{ __('Vote4Silk') }}
+                    {{ __('Tickets') }}
                 </a>
             </li>
         </ul>
@@ -65,19 +65,25 @@
         </h6>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.donate.logs') ? 'active' : '' }}" href="{{ route('admin.donate.logs') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.donate') ? 'active' : '' }}" href="{{ route('admin.logs.donate') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Donate Logs') }}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.referral.logs') ? 'active' : '' }}" href="{{ route('admin.referral.logs') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.referral') ? 'active' : '' }}" href="{{ route('admin.logs.referral') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('Referral Logs') }}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.smc.logs') ? 'active' : '' }}" href="{{ route('admin.smc.logs') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.vote') ? 'active' : '' }}" href="{{ route('admin.logs.vote') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
+                    {{ __('Vote Logs') }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.smc') ? 'active' : '' }}" href="{{ route('admin.logs.smc') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#file-earmark-text"></use></svg>
                     {{ __('SMC Logs') }}
                 </a>

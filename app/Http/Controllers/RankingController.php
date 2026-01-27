@@ -2,390 +2,215 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SRO\Log\LogChatMessage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use App\Models\SRO\Log\LogEventChar;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Models\SRO\Shard\Char;
-use App\Models\SRO\Shard\CharSkillMastery;
 use App\Models\SRO\Shard\CharTradeConflictJob;
 use App\Models\SRO\Shard\CharTrijob;
 use App\Models\SRO\Shard\Guild;
 use App\Models\SRO\Shard\GuildMember;
 use App\Models\SRO\Shard\TrainingCampHonorRank;
-use App\Models\SRO\Shard\User;
 use App\Services\CrestService;
-use App\Services\InventoryService;
 use Illuminate\Http\Request;
 
 class RankingController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'type' => 'nullable|in:player,guild',
             'search' => 'nullable|string|max:255',
         ]);
-        if ($request->input('type') == 'player' && $request->filled('search')) {
-            $data = Char::getPlayerRanking(25, 0, $request->search);
-        }elseif ($request->input('type') == 'guild' && $request->filled('search')) {
-            $data = Guild::getGuildRanking(25, 0, $request->search);
-        }else {
-            $data = Char::getPlayerRanking();
+
+        $type = $validated['type'] ?? 'player';
+        $search = $validated['search'] ?? '';
+
+        $data = Char::getPlayerRanking(25, 0, $search);
+
+        if ($type === 'guild') {
+            $data = Guild::getGuildRanking(25, 0, $search);
         }
-        $config = config('ranking.menu');
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
+
+        $config = (object) collect(config('ranking.menu'))->merge(config('ranking.custom'))->map(fn ($item) => (object) $item)->values();
 
         return view('ranking.index', [
             'data' => $data,
             'config' => $config,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-            'type' => $request->input('type'),
+            'type' => $type,
         ]);
     }
 
-    public function player()
+    public function playerRanking()
     {
         $data = Char::getPlayerRanking();
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.player', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.player', compact('data'));
     }
 
-    public function guild()
+    public function guildRanking()
     {
         $data = Guild::getGuildRanking();
-        $topImage = config('ranking.top_image');
 
-        return view('ranking.ranking.guild', [
-            'data' => $data,
-            'topImage' => $topImage,
-        ]);
+        return view('ranking.ranking.guild', compact('data'));
     }
 
-    public function unique()
+    public function uniqueRanking()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking();
-        $uniqueList = config('ranking.uniques');
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.unique', [
-            'data' => $data,
-            'uniqueList' => $uniqueList,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.unique', compact('data'));
     }
 
-    public function unique_monthly()
+    public function uniqueMonthlyRanking()
     {
         $data = LogInstanceWorldInfo::getUniqueRanking(25, 1);
-        $uniqueList = config('ranking.uniques');
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.unique-monthly', [
-            'data' => $data,
-            'uniqueList' => $uniqueList,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.unique-monthly', compact('data'));
     }
 
-    public function fortress_player()
+    public function fortressPlayerRanking()
     {
         $data = GuildMember::getFortressPlayerRanking();
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.fortress-player', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.fortress-player', compact('data'));
     }
 
-    public function fortress_guild()
+    public function fortressGuildRanking()
     {
         $data = Guild::getFortressGuildRanking();
-        $topImage = config('ranking.top_image');
 
-        return view('ranking.ranking.fortress-guild', [
-            'data' => $data,
-            'topImage' => $topImage,
-        ]);
+        return view('ranking.ranking.fortress-guild', compact('data'));
     }
 
-    public function honor()
+    public function honorRanking()
     {
         $data = TrainingCampHonorRank::getHonorRanking();
-        $honorLevel = config('ranking.honor_level');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.honor', [
-            'data' => $data,
-            'honorLevel' => $honorLevel,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.honor', compact('data'));
     }
 
-    public function job()
+    public function jobRanking()
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
         } else {
             $data = CharTradeConflictJob::getJobRanking();
         }
-        $config = config('ranking.job_menu');
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
-        $jobType = config('ranking.job_type');
+
+        $config = (object) collect(config('ranking.job_menu'))->map(fn($item) => (object)$item)->values();
 
         return view('ranking.ranking.job', [
             'data' => $data,
             'config' => $config,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-            'jobType' => $jobType,
         ]);
     }
 
-    public function job_all()
+    public function jobAllRanking()
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking();
-            $jobType = config('ranking.job_type_vsro');
         } else {
             $data = CharTradeConflictJob::getJobRanking();
-            $jobType = config('ranking.job_type');
         }
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.job-all', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-            'jobType' => $jobType,
-        ]);
+        return view('ranking.ranking.job-all', compact('data'));
     }
 
-    public function job_hunter()
+    public function jobHunterRanking()
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 3);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 1);
         }
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.job-hunter', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.job-hunter', compact('data'));
     }
 
-    public function job_thieve()
+    public function jobThieveRanking()
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 2);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 2);
         }
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.job-thieve', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.job-thieve', compact('data'));
     }
 
-    public function job_trader()
+    public function jobTraderRanking()
     {
         if (config('global.server.version') === 'vSRO') {
             $data = CharTrijob::getJobRanking(25, 1);
         } else {
             $data = CharTradeConflictJob::getJobRanking(25, 3);
         }
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
 
-        return view('ranking.ranking.job-trader', [
-            'data' => $data,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-        ]);
+        return view('ranking.ranking.job-trader', compact('data'));
     }
 
-    public function pvp_kd()
+    public function pvpKDRanking()
     {
-        if (config('ranking.extra.kill_logs.pvp')) {
-            $data = LogEventChar::getKillDeathRanking('pvp', 25);
-        } else {
-            $data = [];
-        }
-        $topImage = config('ranking.top_image');
+        $data = LogEventChar::getKillDeathRanking('pvp', 25);
 
-        return view('ranking.ranking.pvp-kd', [
-            'data' => $data,
-            'topImage' => $topImage,
-        ]);
+        return view('ranking.ranking.pvp-kd', compact('data'));
     }
 
-    public function job_kd()
+    public function jobKDRanking()
     {
-        if (config('ranking.extra.kill_logs.job')) {
-            $data = LogEventChar::getKillDeathRanking('job', 25);
-        } else {
-            $data = [];
-        }
-        $topImage = config('ranking.top_image');
+        $data = LogEventChar::getKillDeathRanking('job', 25);
 
-        return view('ranking.ranking.job-kd', [
-            'data' => $data,
-            'topImage' => $topImage,
-        ]);
+        return view('ranking.ranking.job-kd', compact('data'));
     }
 
-    public function custom($type = 'levelRanking')
+    public function customRanking(string $type)
     {
-        if (function_exists($type)) {
-            $data = $type();
-        } else {
-            abort(404, "Ranking type [$type] not found.");
+        $ranking = config("ranking.custom.$type");
+        if (!$ranking || empty($ranking['enabled'])) {
+            abort(404, "Ranking type [$type] not found or disabled.");
         }
 
-        $config = config('ranking.menu');
-        $topImage = config('ranking.top_image');
-        $characterRace = config('ranking.character_race');
+        $query = $ranking['query'];
+        $data = Cache::remember("{$type}", 600, function () use ($query) {
+            return collect(
+                DB::connection('shard')->select($query)
+            );
+        });
 
         return view('ranking.ranking.custom', [
             'data' => $data,
-            'config' => $config,
-            'topImage' => $topImage,
-            'characterRace' => $characterRace,
-            'type' => $type,
         ]);
     }
 
-    public function character_view($name, InventoryService $inventoryService)
+    public function characterView($name)
     {
-        $charID = Char::getCharIDByName($name);
-        if ($charID > 0) {
+        $data = Char::getCharByName($name);
 
-            $uniqueList = config('ranking.uniques');
-            $skillMastery = config('ranking.skill_mastery');
-            $characterRace = config('ranking.character_race');
-            $hwanLevel = config('ranking.hwan_level');
-
-            if (config('global.server.version') === 'vSRO') {
-                $characterImage = config('ranking.character_image_vsro');
-                $jobType = config('ranking.job_type_vsro');
-            }else {
-                $characterImage = config('ranking.character_image');
-                $jobType = config('ranking.job_type');
-            }
-
-            $data = Char::getPlayerRanking(1, $charID)->first();
-            $build = CharSkillMastery::getCharBuildInfo($charID);
-
-            $inventorySet = $inventoryService->getInventorySet($charID, 12, 0, 8);
-            $inventoryAvatar = $inventoryService->getInventoryAvatar($charID);
-
-            if (config('global.server.version') !== 'vSRO') {
-                $inventoryJob = $inventoryService->getInventoryJob($charID) ?? [];
-            }
-
-            if (config('widgets.unique_history.enabled')) {
-                $uniqueHistory = LogInstanceWorldInfo::getUniquesKill(5, $charID);
-            }
-            if (config('widgets.globals_history.enabled')) {
-                $globalsHistory = LogChatMessage::getGlobalsHistory(5, $name);
-            }
-
-            if (config('ranking.extra.kill_logs.pvp')) {
-                $pvpKill = LogEventChar::getKillDeathRanking('pvp', 1, $charID)->first();
-            }
-            if (config('ranking.extra.kill_logs.job')) {
-                $jobKill = LogEventChar::getKillDeathRanking('job', 1, $charID)->first();
-            }
-            if (config('ranking.extra.character_status')) {
-                $status = LogEventChar::getCharStatus($charID)->first();
-            }
-
-            if ($data) {
-                return view('ranking.character.index', [
-                    'data' => $data,
-                    'build' => $build,
-                    'inventorySet' => $inventorySet,
-                    'inventoryAvatar' => $inventoryAvatar,
-                    'inventoryJob' => $inventoryJob ?? null,
-                    'uniqueList' => $uniqueList,
-                    'characterImage' => $characterImage,
-                    'skillMastery' => $skillMastery,
-                    'jobType' => $jobType,
-                    'characterRace' => $characterRace,
-                    'hwanLevel' => $hwanLevel,
-                    'uniqueHistory' => $uniqueHistory ?? [],
-                    'globalsHistory' => $globalsHistory ?? [],
-                    'status' => $status ?? null,
-                    'pvpKill' => $pvpKill ?? null,
-                    'jobKill' => $jobKill ?? null,
-                ]);
-            }
-        }
-        return redirect()->back();
+        return view('ranking.character.index', compact('data'));
     }
 
-    public function guild_view($name)
+    public function guildView($name)
     {
-        $guildID = Guild::getGuildIDByName($name);
-        if ($guildID > 0) {
+        $data = Guild::getGuildByName($name);
 
-            $data = Guild::getGuildRanking(1, $guildID)->first();
-            $members = GuildMember::getGuildInfoMembers($guildID);
-            $alliances = Guild::getGuildInfoAlliance($guildID);
-
-            $characterRace = config('ranking.character_race');
-            $guildAuthority = config('ranking.guild_authority');
-
-            if ($data) {
-                return view('ranking.guild.index', [
-                    'data' => $data,
-                    'members' => $members,
-                    'alliances' => $alliances,
-                    'characterRace' => $characterRace,
-                    'guildAuthority' => $guildAuthority,
-                ]);
-            }
-        }
-
-        return redirect()->back();
+        return view('ranking.guild.index', compact('data'));
     }
 
-    public function guild_crest($hex)
+    public function guildCrest(string $bin)
     {
-        if (!preg_match('/^[a-fA-F0-9]+$/', $hex)) {
-            abort(400, 'Invalid crest data.');
-        }
+        abort_if(!ctype_xdigit($bin), 404, 'Invalid crest data.');
 
-        $img = CrestService::generateGuildCrest($hex);
+        $image = CrestService::generateGuildCrest($bin);
 
-        return response()->stream(function () use ($img) {
-            header('Content-Type: image/png');
-            imagepng($img);
-            imagedestroy($img);
-        });
+        return response()->stream(
+            function () use ($image) {
+                imagepng($image);
+                imagedestroy($image);
+            },
+            200,
+            ['Content-Type' => 'image/png']
+        );
     }
 }

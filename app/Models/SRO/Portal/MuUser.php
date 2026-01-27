@@ -73,11 +73,9 @@ class MuUser extends Model
         ]);
     }
 
-    public function getJCash()
+    public function getJCashAttribute()
     {
-        $seconds = config('global.cache.account_info', 5);
-
-        return Cache::remember("account_jcash_{$this->JID}", now()->addSeconds($seconds), function () {
+        return Cache::remember("account_jcash_{$this->JID}", config('global.cache.account_info', 600), function () {
             return collect(DB::select('
                 DECLARE @ReturnValue Int, @PremiumSilk Int, @Silk Int, @VipLevel Int, @UsageMonth Int, @Usage3Month Int;
                 SET NOCOUNT ON;
@@ -87,9 +85,24 @@ class MuUser extends Model
         });
     }
 
+    public function getMuVIPInfoAttribute()
+    {
+        return cache()->remember( "user_muVIPInfo_{$this->JID}", 600, fn () => $this->muVIPInfo()->first());
+    }
+
+    public function getMuEmailAttribute()
+    {
+        return cache()->remember( "user_muEmail_{$this->JID}", 600, fn () => $this->muEmail()->first());
+    }
+
     public function muEmail()
     {
         return $this->hasOne(MuEmail::class, 'JID', 'JID');
+    }
+
+    public function muAlteredInfo()
+    {
+        return $this->hasOne(MuhAlteredInfo::class, 'JID', 'JID');
     }
 
     public function muVIPInfo()

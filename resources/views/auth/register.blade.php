@@ -5,12 +5,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                @if (!config('settings.disable_register'))
+                <h2 class="mt-5">{{ __('Register') }}</h2>
+
+                @if (!config('settings.disable_register', false))
                     <form method="POST" action="{{ route('register') }}">
                     @csrf
-
-                    <input type="hidden" name="invite" value="{{ request()->query('invite') }}">
-                    <input type="hidden" name="fingerprint" id="fingerprint">
 
                     <div class="form-group row mb-3">
                         <label for="username" class="col-md-12 col-form-label text-md-left">{{ __('Username') }}</label>
@@ -77,12 +76,12 @@
                         </div>
                     @endif
 
-                    @if(config('settings.agree_terms'))
+                    @if(config('settings.agree_terms', false))
                         <div class="form-check mb-3">
                             <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox" name="terms" id="terms" {{ old('terms') ? 'checked' : '' }}>
 
                             <label class="form-check-label" for="terms">
-                                I agree to the <a href="#" target="_blank">terms and conditions</a>
+                                I agree to the <a href="{{ route('page.show', ['slug' => 'terms']) }}" target="_blank">terms and conditions</a>
                             </label>
 
                             @error('terms')
@@ -118,7 +117,22 @@
     <script>
         FingerprintJS.load().then(fp => {
             fp.get().then(result => {
-                document.getElementById('fingerprint').value = result.visitorId;
+                const form = document.querySelector('form[action*="register"]');
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'fingerprint';
+                input.value = result.visitorId;
+                form.appendChild(input);
+
+                const invite = new URLSearchParams(window.location.search).get('invite');
+                if (invite) {
+                    const inviteInput = document.createElement('input');
+                    inviteInput.type = 'hidden';
+                    inviteInput.name = 'invite';
+                    inviteInput.value = invite;
+                    form.appendChild(inviteInput);
+                }
             });
         });
     </script>

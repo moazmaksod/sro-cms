@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="container">
-        <div class="card">
+        <div class="card border-0">
             <div class="card-body">
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -25,33 +25,30 @@
                     </div>
                 @endif
 
-                <div class="row">
-                    <div class="col-md-3">
+                <div class="row justify-content-center">
+                    <div class="col-12 mb-4 text-center">
                         <p>Select Payment Method</p>
-                        <div class="d-flex flex-column">
-                            @php $i = 1; @endphp
-                            @foreach($data as $key => $method)
-                                @if($method['enabled'])
-                                    <div class="card m-2 d-flex {{ $i == 1 ? 'selected' : '' }}" role="button" data-method="{{ $key }}" style="">
-                                        <img src="{{ asset($method['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $method['name'] }}">
-                                        <div class="card-body text-center">
-                                            <strong>{{ $method['name'] }}</strong><br>
+                        <div class="d-flex justify-content-center flex-wrap">
+                            @foreach($data as $key => $row)
+                                @if($row['enabled'])
+                                    <div class="card m-2 d-flex {{ $key == 0 ? 'selected' : '' }}" role="button" data-method="{{ $key }}" style="width: 120px;">
+                                        <img src="{{ asset($row['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $row['name'] }}">
+                                        <div class="card-body text-center p-2">
+                                            <strong>{{ $row['name'] }}</strong>
                                         </div>
                                     </div>
-                                    @php $i++; @endphp
                                 @endif
                             @endforeach
                         </div>
                     </div>
-
-                    <div class="col-md-6">
+                    <div class="col-12 mb-4">
                         <p>Select Package</p>
                         <div id="content-donate">
                             @php $method = array_key_first(array_filter($data, fn($v) => $v['enabled'])); @endphp
                             @include('profile.donate.' . $method, ['data' => $data[$method]])
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 mb-4">
                         <p>Order Details</p>
                         <div id="content-donate-details">
                             <form action="{{ route('profile.donate.process', ['method' => $method]) }}" method="POST">

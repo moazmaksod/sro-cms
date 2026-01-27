@@ -1,3 +1,4 @@
+@if(config('widgets.globals_history.enabled'))
 <div class="table-responsive">
     <table class="table table-striped">
         <thead class="table-dark">
@@ -7,10 +8,10 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($globalsHistory as $value)
+            @forelse($data->globalHistory as $row)
                 <tr>
-                    <td>{!! $value->Comment !!}</td>
-                    <td>{{ \Carbon\Carbon::make($value->EventTime)->diffForHumans() }}</td>
+                    <td>{!! $row->Comment !!}</td>
+                    <td>{{ \Carbon\Carbon::make($row->EventTime)->diffForHumans() }}</td>
                 </tr>
             @empty
                 <tr>
@@ -20,3 +21,4 @@
         </tbody>
     </table>
 </div>
+@endif

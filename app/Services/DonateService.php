@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\DonateLog;
+use App\Models\Donate;
 use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\User;
@@ -142,24 +142,76 @@ class DonateService
         }
 
         $user = Auth::user();
+
         if (config('global.server.version') === 'vSRO') {
             SkSilk::setSkSilk($user->jid, 0, $package['value']);
         } else {
             AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
         }
 
-        DonateLog::setDonateLog(
-            'Paypal',
-            (string) Str::uuid(),
-            'success',
-            $package['price'],
-            $package['value'],
-            "User: {$user->username} purchased {$package['name']} for \${$package['price']}.",
-            $user->jid,
-            $request->ip()
-        );
+        Donate::DonateLog([
+            'method' => 'Paypal',
+            'amount' => $package['price'],
+            'value' => $package['value'],
+            'jid' => $user->jid,
+        ]);
 
         return redirect()->route('profile.donate')->with('success', 'Payment completed successfully!');
+    }
+
+    public function webhookPaypal(Request $request)
+    {
+        $config = config('donate.paypal');
+        $data = $request->all();
+
+        if (($data['payment_status'] ?? '') !== 'Completed') {
+            return response('Payment not completed', 200);
+        }
+
+        if (($data['receiver_email'] ?? '') !== $config['business_email']) {
+            return response('Invalid receiver', 403);
+        }
+
+        if (Donate::where('transaction_id', $data['txn_id'])->exists()) {
+            return response('Duplicate TXN', 409);
+        }
+
+        $jid = $data['custom'] ?? null;
+        if (!$jid) {
+            return response('Missing custom', 400);
+        }
+
+        $user = User::where('jid', $jid)->first();
+        if (!$user) {
+            return response('User not found', 404);
+        }
+
+        $paidAmount = (float) ($data['mc_gross'] ?? 0);
+        $currency   = $data['mc_currency'] ?? '';
+        if ($currency !== $config['currency']) {
+            return response('Invalid currency', 400);
+        }
+
+        $package = collect($config['package'])->firstWhere('price', $paidAmount);
+        if (!$package) {
+            return response('Invalid package amount', 400);
+        }
+
+        if (config('global.server.version') === 'vSRO') {
+            SkSilk::setSkSilk($user->jid, 0, $package['value']);
+        } else {
+            AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
+        }
+
+        Donate::DonateLog([
+            'method' => 'Paypal-IPN',
+            'transaction_id' => $data['txn_id'],
+            'amount' => $package['price'],
+            'value' => $package['value'],
+            'jid' => $user->jid,
+        ]);
+
+        return response('OK', 200);
     }
 
     public function processStripe(Request $request)
@@ -249,22 +301,20 @@ class DonateService
                 }
 
                 $user = Auth::user();
+
                 if (config('global.server.version') === 'vSRO') {
                     SkSilk::setSkSilk($user->jid, 0, $package['value']);
                 } else {
                     AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
                 }
 
-                DonateLog::setDonateLog(
-                    'Stripe',
-                    $session['id'],
-                    'success',
-                    $package['price'],
-                    $package['value'],
-                    "User:{$user->username} purchased {$package['name']} for \${$package['price']}.",
-                    $user->jid,
-                    $request->ip()
-                );
+                Donate::DonateLog([
+                    'method' => 'Stripe',
+                    'transaction_id' => $session['id'],
+                    'amount' => $package['price'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
 
                 return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
             }
@@ -281,19 +331,9 @@ class DonateService
         $config = config('donate.paymentwall');
         $pingback = $request->all();
 
-        $authorizedIps = [
-            '174.36.92.186',
-            '174.36.96.66',
-            '174.36.92.187',
-            '174.36.92.192',
-            '174.37.14.28',
-            '174.36.92.189',
-            '174.37.0.50',
-            '174.36.92.190',
-        ];
-        $authorizedRanges = [
-            '216.127.71.0/24',
-        ];
+        $authorizedIps    = $config['authorized_ips'] ?? [];
+        $authorizedRanges = $config['authorized_ranges'] ?? [];
+
         $clientIp = $request->header('CF-Connecting-IP') ?: $request->ip();
         $ipValid = in_array($clientIp, $authorizedIps);
         if (!$ipValid) {
@@ -306,7 +346,7 @@ class DonateService
             }
         }
         if (!$ipValid) {
-            return response('Invalid IP address', 403);
+            return response("Invalid IP address: {$clientIp}", 403);
         }
 
         $apiType = $config['api_type'] ?? 'vc';
@@ -336,7 +376,7 @@ class DonateService
             }
         }
 
-        $transactionExists = DonateLog::where('transaction_id', $pingback['ref'])->where('status', 'success')->exists();
+        $transactionExists = Donate::where('transaction_id', $pingback['ref'])->where('status', 'success')->exists();
         if ($transactionExists) {
             return response('Duplicard Ref', 409);
         }
@@ -354,16 +394,12 @@ class DonateService
                 AphChangedSilk::setChangedSilk($user->jid, 3, $pingback['currency']);
             }
 
-            DonateLog::setDonateLog(
-                'Paymentwall',
-                $pingback['ref'],
-                'success',
-                $pingback['currency'],
-                $pingback['currency'],
-                "User:{$user->username} purchased Silk for {$pingback['currency']} using Paymentwall.",
-                $user->jid,
-                $clientIp
-            );
+            Donate::DonateLog([
+                'method' => 'Paymentwall',
+                'transaction_id' => $pingback['ref'],
+                'value' => $pingback['currency'],
+                'jid' => $user->jid,
+            ]);
 
             return response('OK', 200);
         }
@@ -454,16 +490,13 @@ class DonateService
                 AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
             }
 
-            DonateLog::setDonateLog(
-                'CoinPayments',
-                $data['txn_id'],
-                'success',
-                $data['amount1'],
-                $package['value'],
-                "User:{$user->username} purchased {$package['name']} using CoinPayments.",
-                $user->jid,
-                $request->ip()
-            );
+            Donate::DonateLog([
+                'method' => 'CoinPayments',
+                'transaction_id' => $data['txn_id'],
+                'amount' => $data['amount1'],
+                'value' => $package['value'],
+                'jid' => $user->jid,
+            ]);
 
             return response('OK', 200);
         }
@@ -514,16 +547,14 @@ class DonateService
             $paymentUrl = $response['data']['url'] ?? null;
 
             if ($paymentUrl) {
-                DonateLog::setDonateLog(
-                    'Fawaterk',
-                    $response['data']['invoiceId'],
-                    'pending',
-                    $package['price'],
-                    $package['value'],
-                    "User:{$user->username} purchased {$package['name']} using Fawaterk.",
-                    $user->jid,
-                    $request->ip()
-                );
+                Donate::DonateLog([
+                    'method' => 'Fawaterk',
+                    'transaction_id' => $response['data']['invoiceId'],
+                    'status' => 'pending',
+                    'amount' => $package['price'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
 
                 return redirect()->away($paymentUrl);
             }
@@ -540,7 +571,7 @@ class DonateService
         $invoice_id = $request->query('invoice_id');
 
         if ($status === 'success') {
-            $transaction_id = DonateLog::where('transaction_id', $invoice_id)->where('status', 'pending')->first();
+            $transaction_id = Donate::where('transaction_id', $invoice_id)->where('status', 'pending')->first();
             if (!$transaction_id) {
                 return response('Invalid transaction ID.', 400);
             }
@@ -617,22 +648,20 @@ class DonateService
                 }
 
                 $user = Auth::user();
+
                 if (config('global.server.version') === 'vSRO') {
                     SkSilk::setSkSilk($user->jid, 0, $package['value']);
                 } else {
                     AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
                 }
 
-                DonateLog::setDonateLog(
-                    'MaxiCard',
-                    $orderNumber,
-                    'success',
-                    $package['price'],
-                    $package['value'],
-                    "User:{$user->username} purchased Silk for {$package['price']} using Maxicard.",
-                    $user->jid,
-                    $request->ip()
-                );
+                Donate::DonateLog([
+                    'method' => 'MaxiCard',
+                    'transaction_id' => $orderNumber,
+                    'amount' => $package['price'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
 
                 return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
             }
@@ -673,28 +702,26 @@ class DonateService
                 }
 
                 $user = Auth::user();
+
                 if (config('global.server.version') === 'vSRO') {
                     SkSilk::setSkSilk($user->jid, 0, $package['value']);
                 } else {
                     AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
                 }
 
-                DonateLog::setDonateLog(
-                    'HipoCard',
-                    uniqid().rand(100,999),
-                    'success',
-                    $package['price'],
-                    $package['value'],
-                    "User:{$user->username} purchased Silk for {$package['price']} using Hipocard.",
-                    $user->jid,
-                    $request->ip()
-                );
+                Donate::DonateLog([
+                    'method' => 'HipoCard',
+                    'transaction_id' => uniqid().rand(100,999),
+                    'amount' => $package['price'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
 
                 return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
             }
         }
 
-        $errorMsg = isset($response['message']) ? 'Payment failed.' : 'An error occurred';
+        $errorMsg = $response['message'] ?? $responseData['message'];
         return back()->withErrors(['hipocard' => $errorMsg])->withInput();
     }
 
@@ -784,16 +811,13 @@ class DonateService
                 AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
             }
 
-            DonateLog::setDonateLog(
-                'HipoPay',
-                $data['transaction_id'],
-                'success',
-                $package['price'],
-                $package['value'],
-                "User:{$user->username} purchased Silk for {$package['price']} using HipoPay.",
-                $user->jid,
-                $request->ip()
-            );
+            Donate::DonateLog([
+                'method' => 'HipoPay',
+                'transaction_id' => $data['transaction_id'],
+                'amount' => $package['price'],
+                'value' => $package['value'],
+                'jid' => $user->jid,
+            ]);
 
             return response('OK', 200);
         }

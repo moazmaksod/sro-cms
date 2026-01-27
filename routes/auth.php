@@ -57,4 +57,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/login/verify', [AuthenticatedSessionController::class, 'show'])->name('login.show');
+    Route::post('/login/verify', [AuthenticatedSessionController::class, 'verify'])->name('login.verify');
+    Route::post('/login/verify/resend', [AuthenticatedSessionController::class, 'resendVerify'])->name('login.resend');
 });

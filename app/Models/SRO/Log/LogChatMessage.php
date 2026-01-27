@@ -35,9 +35,7 @@ class LogChatMessage extends Model
 
     public static function getGlobalsHistory($limit = 25, $CharName = null)
     {
-        $minutes = config('global.cache.globals_history', 10);
-
-        $data = Cache::remember("globals_history_{$limit}_{$CharName}", now()->addMinutes($minutes), function () use ($CharName, $limit) {
+        $data = Cache::remember("globals_history_{$limit}_{$CharName}", config('global.cache.globals_history', 600), function () use ($CharName, $limit) {
             return self::select([
                     '_Char.CharID',
                     '_Char.RefObjID',
@@ -61,7 +59,7 @@ class LogChatMessage extends Model
             preg_match_all('/\d{19}/', $value->Comment, $matches);
             $serials = $matches[0] ?? [];
 
-            if (!empty($serials)) {
+            if (!empty($serials) && config('global.server.version') !== 'vSRO') {
                 $items = Items::getItemNameBySerial($serials);
 
                 foreach ($serials as $serial) {
