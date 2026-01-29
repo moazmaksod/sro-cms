@@ -18,22 +18,22 @@ services:
     networks:
       - sro-cms-network
 
-nginx:
-    image: nginx:alpine
-    container_name: sro-cms-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"  # تغيير المنفذ إلى 80 ليعمل الدومين مباشرة بدون كتابة :8000
-    environment:
-      - APP_URL=${APP_URL:-localhost} # يمرر الرابط من ملف .env
-    volumes:
-      - ./:/var/www/html
-      # تم تغيير مسار الربط ليصبح قالب (Template)
-      - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template
-    depends_on:
-      - app
-    networks:
-      - sro-cms-network
+  nginx:
+      image: nginx:alpine
+      container_name: sro-cms-nginx
+      restart: unless-stopped
+      ports:
+        - "80:80"  # تغيير المنفذ إلى 80 ليعمل الدومين مباشرة بدون كتابة :8000
+      environment:
+        - APP_URL=${APP_URL:-localhost} # يمرر الرابط من ملف .env
+      volumes:
+        - ./:/var/www/html
+        # تم تغيير مسار الربط ليصبح قالب (Template)
+        - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template
+      depends_on:
+        - app
+      networks:
+        - sro-cms-network
 
 # Docker Networks
 networks:
