@@ -2,17 +2,17 @@
 
 return [
     'xtremetop100' => [
-        'enabled' => true, //Postback url: https://localhost/postback/xtremetop100
+        'enabled' => false, //Postback url: https://localhost/postback/xtremetop100
         'name' => 'XtremeTop100',
         'route' => 'xtremetop100',
         'image' => 'https://www.xtremetop100.com/votenew.jpg',
         'url' => 'https://www.xtremetop100.com/in.php?site=SERVER_ID&postback={JID}',
-        'ip' => '137.74.41.178, 2001:41d0:305:2100::413b, ::1',
+        'ip' => '137.74.41.178, 2001:41d0:305:2100::413b',
         'reward' => 5,
         'timeout' => 12,
     ],
     'gtop100' => [
-        'enabled' => true, //Postback url: https://localhost/postback/gtop100
+        'enabled' => false, //Postback url: https://localhost/postback/gtop100
         'name' => 'GTop100',
         'route' => 'gtop100',
         'image' => 'https://gtop100.com/images/votebutton.jpg',
@@ -22,7 +22,7 @@ return [
         'timeout' => 12,
     ],
     'topg' => [
-        'enabled' => true, //Postback url: https://localhost/postback/topg
+        'enabled' => false, //Postback url: https://localhost/postback/topg
         'name' => 'TopG',
         'route' => 'topg',
         'image' => 'https://topg.org/topg.gif',
@@ -32,7 +32,7 @@ return [
         'timeout' => 12,
     ],
     'top100arena' => [
-        'enabled' => true, //Postback url: https://localhost/postback/top100arena
+        'enabled' => false, //Postback url: https://localhost/postback/top100arena
         'name' => 'Top100 Arena',
         'route' => 'top100arena',
         'image' => 'https://www.top100arena.com/hit/101410/medium',
@@ -42,7 +42,7 @@ return [
         'timeout' => 12,
     ],
     'arenatop100' => [
-        'enabled' => true, //Postback url: https://localhost/postback/arenatop100
+        'enabled' => false, //Postback url: https://localhost/postback/arenatop100
         'name' => 'Arena Top100',
         'route' => 'arenatop100',
         'image' => 'https://www.arena-top100.com/images/vote/silkroad-private-servers.png',
@@ -52,7 +52,7 @@ return [
         'timeout' => 12,
     ],
     'silkroadservers' => [
-        'enabled' => true, //Postback url: https://localhost/postback/silkroadservers
+        'enabled' => false, //Postback url: https://localhost/postback/silkroadservers
         'name' => 'Silkroad Servers',
         'route' => 'silkroadservers',
         'image' => 'https://silkroad-servers.com/images/button.png',
@@ -62,7 +62,7 @@ return [
         'timeout' => 12,
     ],
     'privateserver' => [
-        'enabled' => true, //Postback url: https://localhost/postback/privateserver
+        'enabled' => false, //Postback url: https://localhost/postback/privateserver
         'name' => 'Private Servers',
         'route' => 'privateserver',
         'image' => 'https://private-server.ws/images/vote_button.jpg',
@@ -70,5 +70,16 @@ return [
         'ip' => '116.203.234.215',
         'reward' => 5,
         'timeout' => 12,
+    ],
+    'vote4rewards' => [
+        'enabled' => false, //Postback url: https://localhost/postback/vote4rewards
+        'name' => 'Vote4Rewards',
+        'route' => 'vote4rewards',
+        'image' => 'https://vote4rewards.de/vote4rewards_small_banner.png',
+        'webhook_secret' => '0EKA5t4XD0vGrNCnkNzFZULVVm3ighm0', // example: Q7A9DA2xVdkL3rP0B8mNfH5S3LJcWgUy
+        'url' => 'https://vote4rewards.de/vote/SERVER_ID?rewarder={JID}', // example: https://vote4rewards.de/vote/fc5296a9-814d-406b-aeba-68d83ff414bb?rewarder={JID}
+        'ip' => '91.98.130.153',
+        'reward' => 2,
+        'timeout' => 6,
     ],
 ];
