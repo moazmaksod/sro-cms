@@ -244,5 +244,5 @@ case "$1" in
         echo "  seed   : Run only the database seeders."
         echo "  fix-dns: Force Docker to use Google DNS for resolution."
         exit 1
-        ;;
+       ;;
 esac
