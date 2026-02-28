@@ -121,6 +121,13 @@
                                 Pet
                             </button>
                         </li>
+                        @if(config('global.server.version') !== 'vSRO')
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="chest-tab" data-bs-toggle="tab" data-bs-target="#chest" type="button" role="tab">
+                                Chest
+                            </button>
+                        </li>
+                        @endif
                     </ul>
 
                     <div class="card-body">
@@ -163,6 +170,41 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(config('global.server.version') !== 'vSRO')
+                            <div class="tab-pane fade" id="chest" role="tabpanel">
+                                <div class="card">
+                                    <div id="display-Chest" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Chest</h2>
+                                        <div class="table-responsive_">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">No.</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Qty.</th>
+                                                    <th scope="col">Date Registered</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @foreach($data->charChestItems as $key => $row)
+                                                    <tr>
+                                                        <td>{{ $key + 1 }}</td>
+                                                        <td>
+                                                            <img src="{{ asset('images/sro/'.$row->IconPath.'.png') }}" alt="" width="32" height="32" class="">
+                                                            {{ $row->ItemName }}
+                                                        </td>
+                                                        <td>{{ $row->ItemCount }}</td>
+                                                        <td>{{ $row->RegDate }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {{ $data->charChestItems->links('pagination::bootstrap-5') }}
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -208,6 +250,10 @@
                         <h4 class="text-center">Unstuck</h4>
                     </div>
                     <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <div id="player-map"></div>
+                        </div>
+
                         <ul class="list-unstyled w-50 m-auto p-3">
                             <li>
                                 <span>Current X:</span>
@@ -340,6 +386,11 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
             margin-bottom: 20px;
+        }
+    </style>
+    <style>
+        #display-Chest nav p.small {
+            display: none;
         }
     </style>
 @endpush
@@ -508,6 +559,29 @@
             arrowContainer.appendChild(pageNumber);
             arrowContainer.appendChild(nextBtn);
             container.appendChild(arrowContainer);
+        });
+    </script>
+
+    <script src="{{ asset('xSROMap/assets/js/minimap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            createMinimapCanvas(
+                '{{ asset('https://raw.githubusercontent.com/JellyBitz/xSROMap/master/assets/img/silkroad/minimap/8') }}/',
+                'player-map',
+                206,
+                206,
+                {{ $data->PosX }},
+                {{ $data->PosZ }},
+                {{ $data->PosY }},
+                {{ $data->LatestRegion }}
+            );
+            addMinimapCursor(
+                'player-map',
+                '{{ asset('https://raw.githubusercontent.com/JellyBitz/xSROMap/master/assets/img/silkroad/minimap/icon/mm_sign_otherplayer.png') }}',
+                6,
+                6
+            );
         });
     </script>
 @endpush
