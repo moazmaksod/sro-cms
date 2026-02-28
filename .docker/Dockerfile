@@ -2,7 +2,7 @@
 # It should be placed inside a folder named ".docker" in your project root.
 
 # Use the official PHP 8.2 FPM image as a base to match project requirements
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 # Set working directory
 WORKDIR /var/www/html
