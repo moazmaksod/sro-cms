@@ -82,19 +82,41 @@ function init_production_env() {
     fi
 }
 
-# --- Step 2: Build & Start Containers ---
+# --- Step 2: Auto-update Dockerfile for PHP Compatibility ---
+function auto_update_dockerfile() {
+    local dockerfile=".docker/Dockerfile"
+    if [ ! -f "$dockerfile" ]; then return; fi
+
+    print_info "Checking Dockerfile for PHP version compatibility..."
+    
+    # Update from 8.2 to 8.3 if detected to support latest sqlsrv drivers
+    if grep -q "FROM php:8.2-fpm" "$dockerfile"; then
+        print_warning "Detected legacy PHP 8.2 in Dockerfile. Updating to PHP 8.3 for driver compatibility..."
+        sed -i 's/FROM php:8.2-fpm/FROM php:8.3-fpm/g' "$dockerfile"
+        print_success "Dockerfile updated to PHP 8.3."
+    fi
+}
+
+# --- Step 3: Build & Start Containers ---
 function start_production() {
     print_info "Ensuring host directory permissions..."
     # Ensure the current VPS user owns the directory before Docker mounts it
     sudo chown -R $USER:$USER .
 
+    auto_update_dockerfile
+
     print_info "Building and starting containers in detached mode..."
     # --pull always ensures we get the latest base images (security updates)
-    $DOCKER_CMD up -d --build --pull always
+    if ! $DOCKER_CMD up -d --build --pull always; then
+        print_warning "Standard build failed. Retrying with host networking (bypassing VPS DNS issues)..."
+        export DOCKER_BUILDKIT=1
+        $DOCKER_CMD build --pull
+        $DOCKER_CMD up -d
+    fi
     print_success "Containers are running."
 }
 
-# --- Step 3: Application Setup ---
+# --- Step 4: Application Setup ---
 function setup_laravel() {
     print_info "Fixing container workspace and NPM permissions..."
     # Force the internal /var/www/html to be owned by www-data so composer can write
@@ -129,13 +151,14 @@ function setup_laravel() {
     docker_exec_root /opt/mssql-tools/bin/sqlcmd -S "${DB_HOST},${DB_PORT}" -U "${DB_USERNAME}" -P "${DB_PASSWORD}" -d master -Q "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'${DB_DATABASE}') CREATE DATABASE [${DB_DATABASE}];"
     print_success "Database check/creation finished."
     
-    print_info "Running migrations..."
-    docker_exec php artisan migrate --force
+    print_info "Running migrations and seeding..."
+    # We use --seed to run the DatabaseSeeder automatically
+    docker_exec php artisan migrate --force --seed
     
-    print_success "Application is fully configured."
+    print_success "Application is fully configured with initial data."
 }
 
-# --- Step 4: Security/Firewall Check ---
+# --- Step 5: Security/Firewall Check ---
 function check_firewall() {
     if command -v ufw &> /dev/null; then
         print_info "Checking UFW Firewall..."
@@ -146,12 +169,12 @@ function check_firewall() {
     fi
 }
 
-# --- Step 5: Configure Auto-start on Boot ---
+# --- Step 6: Configure Auto-start on Boot ---
 function enable_autostart() {
     print_info "Configuring Docker to start automatically on system boot..."
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
-    print_success "System services enabled. Containers will now start on reboot thanks to 'restart: unless-stopped' policy."
+    print_success "System services enabled. Containers will now start on reboot."
 }
 
 # ==============================================================================
@@ -182,7 +205,6 @@ case "$1" in
         ;;
     update)
         print_info "Fixing ownership for Git update..."
-        # Ensure moaz owns the .git directory and all files
         sudo chown -R $USER:$USER .
         
         print_info "Updating application code..."
@@ -193,14 +215,27 @@ case "$1" in
         start_production
         setup_laravel
         ;;
+    seed)
+        print_info "Running database seeders..."
+        docker_exec php artisan db:seed --force
+        print_success "Seeding complete."
+        ;;
+    fix-dns)
+        print_info "Applying permanent Docker DNS fix..."
+        echo '{"dns": ["8.8.8.8", "8.8.4.4"]}' | sudo tee /etc/docker/daemon.json
+        sudo systemctl restart docker
+        print_success "Docker restarted with Google DNS. Try running update again."
+        ;;
     *)
-        echo "Usage: $0 {setup|up|down|logs|update}"
+        echo "Usage: $0 {setup|up|down|logs|update|seed|fix-dns}"
         echo ""
         echo "  setup  : Full first-time installation on a clean VPS."
         echo "  up     : Start existing containers."
         echo "  down   : Stop containers."
         echo "  logs   : Show real-time container logs."
         echo "  update : Pull latest code from Git and rebuild everything."
+        echo "  seed   : Run only the database seeders."
+        echo "  fix-dns: Force Docker to use Google DNS for resolution."
         exit 1
         ;;
 esac
