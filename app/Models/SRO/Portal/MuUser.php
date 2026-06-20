@@ -6,8 +6,8 @@ use App\Models\SRO\Account\TbUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class MuUser extends Model
 {
@@ -73,26 +73,38 @@ class MuUser extends Model
         ]);
     }
 
-    public function getJCashAttribute()
+    public function getGetSilkAttribute()
     {
-        return Cache::remember("account_jcash_{$this->JID}", config('global.cache.account_info', 600), function () {
-            return collect(DB::select('
-                DECLARE @ReturnValue Int, @PremiumSilk Int, @Silk Int, @VipLevel Int, @UsageMonth Int, @Usage3Month Int;
-                SET NOCOUNT ON;
-                EXECUTE @ReturnValue = [GB_JoymaxPortal].[dbo].[B_GetJCash] ?, @PremiumSilk OUTPUT, @Silk OUTPUT, @VipLevel OUTPUT, @UsageMonth OUTPUT, @Usage3Month OUTPUT;
-                SELECT @ReturnValue AS ErrorCode, @PremiumSilk AS PremiumSilk, @Silk AS Silk, @UsageMonth AS MonthUsage, @Usage3Month AS ThreeMonthUsage;
-            ', [intval($this->JID)]))->first();
+        return Cache::remember("mu_user_silk_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return (object) [
+                'PremiumSilk' => AphChangedSilk::getChangedSilk($this->JID, 3),
+                'Silk' => AphChangedSilk::getChangedSilk($this->JID, 1),
+            ];
+        });
+    }
+
+    public function getGetSilkUsageAttribute()
+    {
+        return Cache::remember("mu_user_silk_usage_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return (object) [
+                'MonthUsage' => AphCpItemSaleDetails::getSilkUsage($this->JID, 3, 0),
+                'ThreeMonthUsage' => AphCpItemSaleDetails::getSilkUsage($this->JID, 3, 2),
+            ];
         });
     }
 
     public function getMuVIPInfoAttribute()
     {
-        return cache()->remember( "user_muVIPInfo_{$this->JID}", 600, fn () => $this->muVIPInfo()->first());
+        return Cache::remember("mu_user_vip_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->muVIPInfo()->first();
+        });
     }
 
     public function getMuEmailAttribute()
     {
-        return cache()->remember( "user_muEmail_{$this->JID}", 600, fn () => $this->muEmail()->first());
+        return Cache::remember("mu_user_email_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->muEmail()->first();
+        });
     }
 
     public function muEmail()
@@ -113,6 +125,11 @@ class MuUser extends Model
     public function aphChangedSilk()
     {
         return $this->hasMany(AphChangedSilk::class, 'JID', 'JID');
+    }
+
+    public function aphCpItemSaleDetails()
+    {
+        return $this->hasMany(AphCpItemSaleDetails::class, 'JID', 'JID');
     }
 
     public function tbUser()

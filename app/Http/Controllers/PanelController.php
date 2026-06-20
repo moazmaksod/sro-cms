@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Donate;
 use App\Models\Referral;
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\SkSilkBuyList;
+use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\Ticket;
 use App\Models\Vote;
@@ -23,7 +23,7 @@ class PanelController extends Controller
     {
         $page = $request->get('page', 1);
         if (config('global.server.version') === 'vSRO') {
-            $data = SkSilkBuyList::getSilkHistory($request->user()->jid, 25, $page);
+            $data = SkSilkBuyList::getSilkBuyList($request->user()->jid, 25, $page);
         }else {
             $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $page);
         }
@@ -65,11 +65,7 @@ class PanelController extends Controller
 
         $user = $request->user();
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, $voucher->type, $voucher->amount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, $voucher->type, $voucher->amount);
-        }
+        TbUser::updateSilk($user->jid, $voucher->type, $voucher->amount);
 
         Donate::DonateLog([
             'method' => 'Voucher',
@@ -121,11 +117,7 @@ class PanelController extends Controller
             return back()->with('error', "You need at least {$minimumRedeem} points to redeem.");
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $invites->sum('points'));
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $invites->sum('points'));
-        }
+        TbUser::updateSilk($user->jid, 0, $invites->sum('points'));
 
         Donate::DonateLog([
             'method' => 'Voucher',

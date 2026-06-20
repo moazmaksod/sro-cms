@@ -165,22 +165,19 @@ class SettingsServiceProvider extends ServiceProvider
     private function applyHistorySettings(array $settings): void
     {
         $history = $this->decodeJson($settings['history'] ?? null);
+        $defaults = config('global.history', []);
 
-        if (empty($history)) {
-            return;
-        }
-
+        $merged = !empty($history) ? array_replace_recursive($defaults, $history) : $defaults;
         $hasEnabledFeature = false;
 
-        foreach ($history as $key => $value) {
+        foreach ($merged as $key => $value) {
             if ($key !== 'enabled' && !empty($value)) {
                 $hasEnabledFeature = true;
                 break;
             }
         }
 
-        Config::set('global.history', $history);
-
+        Config::set('global.history', $merged);
         Config::set('global.history.enabled', $hasEnabledFeature);
     }
 

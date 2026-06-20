@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('donates', function (Blueprint $table) {
             $table->increments('id');
             $table->string('method');
-            $table->string('transaction_id');
+            $table->string('transaction_id')->unique();
             $table->string('status');
             $table->integer('amount');
+            $table->integer('type');
             $table->integer('value');
             $table->text('desc');
             $table->unsignedInteger('jid');

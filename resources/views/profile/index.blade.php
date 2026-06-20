@@ -63,15 +63,15 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Silk') }}</th>
-                                    <td>{{ auth()->user()->tbUser->getSkSilk->silk_own ?? 0 }}</td>
+                                    <td>{{ auth()->user()->tbUser->getSilk->silk_own ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Gift Silk') }}</th>
-                                    <td>{{ auth()->user()->tbUser->getSkSilk->silk_gift ?? 0 }}</td>
+                                    <td>{{ auth()->user()->tbUser->getSilk->silk_gift ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Point Silk') }}</th>
-                                    <td>{{ auth()->user()->tbUser->getSkSilk->silk_point ?? 0 }}</td>
+                                    <td>{{ auth()->user()->tbUser->getSilk->silk_point ?? 0 }}</td>
                                 </tr>
                                 </tbody>
                             @else
@@ -85,20 +85,20 @@
                                     <td>{{ auth()->user()->muUser->muEmail->EmailAddr }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">{{ __('Silk') }}</th>
-                                    <td>{{ auth()->user()->muUser->JCash->Silk ?? 0 }}</td>
-                                </tr>
-                                <tr>
                                     <th scope="row">{{ __('Premium Silk') }}</th>
-                                    <td>{{ auth()->user()->muUser->JCash->PremiumSilk ?? 0 }}</td>
+                                    <td>{{ auth()->user()->muUser->getSilk->PremiumSilk ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('Month Usage') }}</th>
-                                    <td>{{ auth()->user()->muUser->JCash->MonthUsage ?? 0 }}</td>
+                                    <td>{{ auth()->user()->muUser->getSilkUsage->MonthUsage ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('3Month Usage') }}</th>
-                                    <td>{{ auth()->user()->muUser->JCash->ThreeMonthUsage ?? 0 }}</td>
+                                    <td>{{ auth()->user()->muUser->getSilkUsage->ThreeMonthUsage ?? 0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">{{ __('Silk') }}</th>
+                                    <td>{{ auth()->user()->muUser->getSilk->Silk ?? 0 }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">{{ __('VIP') }}</th>

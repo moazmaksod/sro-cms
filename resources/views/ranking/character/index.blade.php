@@ -169,6 +169,81 @@
 
 @push('styles')
     <style>
+        .sro-item-detail {
+            background: #808080;
+            width: 38px;
+            margin: 0 auto;
+        }
+
+        .sro-item-detail.sro-item-special {
+            background: #FF8C00;
+        }
+
+        .sro-item-detail.sro-item-special .sro-item-special-seal {
+            z-index: 4;
+        }
+
+        .sro-item-detail .item {
+            width: 32px;
+            height: 32px;
+            float: left;
+            margin: 3px;
+            padding: 0 !important;
+            color: #fff;
+            background: #5f5f5f;
+            position: relative;
+        }
+        .sro-item-detail .item img {
+            position: absolute;
+        }
+
+        .sro-item-detail .item .amount {
+            background: rgba(50, 50, 50, 0.5);
+            padding: 1px 2px;
+            float: left;
+            font-size: 11px;
+        }
+
+        .sro-item-detail .info {
+            color: #fff;
+            z-index: 80;
+            position: absolute;
+            left: 34px;
+            top: 3px;
+            width: 180px;
+            background: rgba(88, 98, 170, 0.85);
+            border: 2px solid #303d4d;
+            padding: 5px;
+            display: none;
+            line-height: 18px;
+            font-size: 10px;
+        }
+
+        .table.table-inventory td, .table.table-inventory th {
+            padding: 4px;
+        }
+
+        .sro-item-detail .tooltip {
+            font-size: 10px;
+            line-height: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            position: fixed;
+            padding: 5px;
+            border: 1px solid #ccc;
+            visibility: hidden;
+            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition:
+                opacity 0.3s,
+                visiblity 0s;
+        }
+        .sro-item-detail:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /********/
         .sro-item-detail .tooltip {
             text-align: left !important;
             font-size: 12px;
@@ -189,15 +264,11 @@
         }
     </style>
     <style>
-        .table-inventory tr td {
-            background: none;
-            border: none;
+        .table.table-inventory td,
+        .table.table-inventory th {
+            background: none !important;
+            border: none !important;
         }
-        /*
-        #display-inventory .d-block {
-            display: block !important;
-        }
-        */
         #display-inventory .d-none {
             display: none !important;
         }
@@ -206,23 +277,57 @@
 
 @push('scripts')
 <script>
-    jQuery('#display-inventory-switch-isro').click(function() {
-        var current = jQuery(this).data('type');
-        var stages = ['set'];
+    function itemInfo()
+    {
+        Array.from(document.querySelectorAll('[data-iteminfo]')).forEach(el => {
+            let tip = document.createElement('div');
+            tip.classList.add('tooltip');
 
-        @if(config('global.server.version') !== 'vSRO')
-        stages.push('job');
-        @endif
-        stages.push('avatar');
+            if (el.parentElement.querySelector('.info').innerHTML === '') {
+                return;
+            }
 
-        var currentIndex = stages.indexOf(current);
-        var nextIndex = (currentIndex + 1) % stages.length;
-        var change = stages[nextIndex];
+            tip.innerHTML = el.parentElement.querySelector('.info').innerHTML;
+            tip.style.transform =
+                'translate(' +
+                (el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px') + ', ' +
+                (el.hasAttribute('tip-top') ? '-100%' : '0') +
+                ')';
+            el.appendChild(tip);
+            el.onmousemove = e => {
+                tip.style.left = e.clientX + 'px'
+                tip.style.top = e.clientY + 'px';
+            };
+        });
+    }
 
-        jQuery('#display-inventory-' + current).addClass('d-none');
-        jQuery('#display-inventory-' + change).removeClass('d-none');
+    jQuery(document).ready(function(){
+        jQuery('.timerCountdown').each(function() {
+            sString = jQuery(this).attr('id');
+            timerCountdown[sString] = jQuery(this).data('time');
+            loadCheck();
+        });
+        window.setInterval('loadCheck();',999);
+        itemInfo();
 
-        jQuery(this).data('type', change);
+        jQuery('#display-inventory-switch-isro').click(function() {
+            var current = jQuery(this).data('type');
+            var stages = ['set'];
+
+            @if(config('global.server.version') !== 'vSRO')
+            stages.push('job');
+            @endif
+            stages.push('avatar');
+
+            var currentIndex = stages.indexOf(current);
+            var nextIndex = (currentIndex + 1) % stages.length;
+            var change = stages[nextIndex];
+
+            jQuery('#display-inventory-' + current).addClass('d-none');
+            jQuery('#display-inventory-' + change).removeClass('d-none');
+
+            jQuery(this).data('type', change);
+        });
     });
 </script>
 @endpush

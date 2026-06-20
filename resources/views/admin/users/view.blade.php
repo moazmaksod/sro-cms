@@ -74,15 +74,15 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Silk') }}</th>
-                                        <td>{{ $data->getSkSilk->silk_own ?? 0 }}</td>
+                                        <td>{{ $data->getSilk->silk_own ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Gift Silk') }}</th>
-                                        <td>{{ $data->getSkSilk->silk_gift ?? 0 }}</td>
+                                        <td>{{ $data->getSilk->silk_gift ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Point Silk') }}</th>
-                                        <td>{{ $data->getSkSilk->silk_point ?? 0 }}</td>
+                                        <td>{{ $data->getSilk->silk_point ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Reg. Date') }}</th>
@@ -104,20 +104,20 @@
                                         <td>{{ $data->muUser->muEmail->EmailAddr }}</td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">{{ __('Silk') }}</th>
-                                        <td>{{ $data->muUser->JCash->Silk ?? 0 }}</td>
-                                    </tr>
-                                    <tr>
                                         <th scope="row">{{ __('Premium Silk') }}</th>
-                                        <td>{{ $data->muUser->JCash->PremiumSilk ?? 0 }}</td>
+                                        <td>{{ $data->muUser->getSilk->PremiumSilk ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('Month Usage') }}</th>
-                                        <td>{{ $data->muUser->JCash->MonthUsage ?? 0 }}</td>
+                                        <td>{{ $data->muUser->getSilkUsage->MonthUsage ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{ __('3Month Usage') }}</th>
-                                        <td>{{ $data->muUser->JCash->ThreeMonthUsage ?? 0 }}</td>
+                                        <td>{{ $data->muUser->getSilkUsage->ThreeMonthUsage ?? 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ __('Silk') }}</th>
+                                        <td>{{ $data->muUser->getSilk->Silk ?? 0 }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">VIP</th>
@@ -151,19 +151,21 @@
                                     <th>Transaction ID</th>
                                     <th>Status</th>
                                     <th>Amount (€)</th>
+                                    <th>Type</th>
                                     <th>Value (Silk)</th>
                                     <th>Description</th>
                                     <th>IP</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($data->donationLogs as $row)
+                                @forelse($data->donationLogs()->latest()->take(10)->get() as $row)
                                     <tr>
                                         <td>{{ $row->created_at }}</td>
                                         <td>{{ $row->method }}</td>
                                         <td>{{ $row->transaction_id }}</td>
                                         <td>{{ $row->status }}</td>
                                         <td>{{ $row->amount }}</td>
+                                        <td>{{ $row->type }}</td>
                                         <td>{{ $row->value }}</td>
                                         <td>{{ $row->desc }}</td>
                                         <td>{{ $row->ip }}</td>
@@ -192,7 +194,7 @@
                                 <label for="password" class="col-md-12 col-form-label text-md-start">{{ __('New Password') }}</label>
 
                                 <div class="col-md-12">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" required>
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" placeholder="{{ __('******') }}" required>
 
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -222,7 +224,7 @@
                                 <label for="email" class="col-md-12 col-form-label text-md-start">{{ __('New Email') }}</label>
 
                                 <div class="col-md-12">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required>
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="{{ __('john@example.com') }}" required>
 
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -246,13 +248,13 @@
                         <h4 class="text-center">Add Silk</h4>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('admin.users.silk', $data->JID) }}">
+                        <form method="POST" action="{{ route('admin.users.add-silk', $data->JID) }}">
                             @csrf
                             <div class="row mb-3">
                                 <label for="amount" class="col-md-12 col-form-label text-md-start">{{ __('Silk Amount') }}</label>
 
                                 <div class="col-md-12">
-                                    <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required>
+                                    <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" placeholder="{{ __('Negative values accepted, e.g. -100') }}" required>
 
                                     @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -274,8 +276,8 @@
                                         </select>
                                     @else
                                         <select class="form-select @error('type') is-invalid @enderror" name="type" aria-label="Default select example">
-                                            <option value="0">Normal</option>
-                                            <option value="3">Premium</option>
+                                            <option value="3">Premium Silk</option>
+                                            <option value="1">Normal Silk</option>
                                         </select>
                                     @endif
 
@@ -289,7 +291,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">{{ __('Add Silk') }}</button>
+                                    <button type="submit" class="btn btn-primary w-100">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </form>

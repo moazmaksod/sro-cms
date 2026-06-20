@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Models\Donate;
 use App\Models\SRO\Account\SkSilk;
-use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class DonateService
 {
@@ -143,11 +143,7 @@ class DonateService
 
         $user = Auth::user();
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $package['value']);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-        }
+        SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
         Donate::DonateLog([
             'method' => 'Paypal',
@@ -247,11 +243,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
-                } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-                }
+                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'Stripe',
@@ -333,11 +325,7 @@ class DonateService
 
         if (($pingback['type'] ?? '') == '0' || ($pingback['type'] ?? '') == '201') {
 
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $pingback['currency']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $pingback['currency']);
-            }
+            SkSilk::handleSilkUpdate($user->jid, 0, $pingback['currency']);
 
             Donate::DonateLog([
                 'method' => 'Paymentwall',
@@ -429,11 +417,7 @@ class DonateService
                 return response('Invalid user or package', 400);
             }
 
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-            }
+            SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
             Donate::DonateLog([
                 'method' => 'CoinPayments',
@@ -531,11 +515,7 @@ class DonateService
                 return response('User not found', 400);
             }
 
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-            }
+            SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
             $transaction_id->update(['status' => 'success']);
 
@@ -594,11 +574,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
-                } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-                }
+                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'MaxiCard',
@@ -648,11 +624,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                if (config('global.server.version') === 'vSRO') {
-                    SkSilk::setSkSilk($user->jid, 0, $package['value']);
-                } else {
-                    AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-                }
+                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'HipoCard',
@@ -707,7 +679,7 @@ class DonateService
         if ($response->successful()) {
             $responseData = $response->json();
 
-            if (isset($response['success']) && $responseData['success'] === true) {
+            if (isset($responseData['success']) && $responseData['success'] === true) {
                 $paymentUrl = $responseData['data']['payment_url'] ?? null;
 
                 if ($paymentUrl) {
@@ -716,53 +688,51 @@ class DonateService
             }
         }
 
-        return back()->withErrors(['hipopay' => "Payment Failed: " .(isset($response['message']) ? $response['message'] : 'An error occurred')])->withInput();
+        return back()->withErrors(['hipopay' => 'Payment Failed: ' . ($responseData['message'] ?? 'An error occurred')])->withInput();
     }
 
     public function webhookHipopay(Request $request)
     {
         $config = config('donate.hipopay');
-        $payload = file_get_contents('php://input');
-        $data = json_decode($payload, true);
+        $data = $request->json()->all();
         if (!$data) {
             return response('Invalid payload', 400);
         }
+
         $user = User::where('jid', $data['user_id'])->first();
         if (!$user) {
             return response('User not found', 404);
         }
-        $hash = base64_encode(hash_hmac('sha256',$data["transaction_id"].$data["user_id"].$data["email"].$data["name"].$data["status"].$config['api_key'],$config['api_password'] ,true));
 
+        $hash = base64_encode(hash_hmac('sha256',$data["transaction_id"].$data["user_id"].$data["email"].$data["name"].$data["status"].$config['api_key'],$config['api_password'] ,true));
         if (!hash_equals($data['hash'], $hash)) {
             return response('Invalid Hash', 400);
         }
 
-        /*
-        $transaction_id = DonateLog::where('transaction_id', $data['transaction_id'])->where('status', 'true')->exists();
-        if ($transaction_id) {
+        $transactionId = Donate::where('transaction_id', $data['transaction_id'])->where('status', 'success')->exists();
+        if ($transactionId) {
             return response('This transaction has already been processed successfully.', 409);
         }
-        */
+
+        $package = collect($config['package'])->firstWhere('price', intval($data['payment_total'] / 100));
+        if (!$package) {
+            return response('Invalid package price', 422);
+        }
 
         if ($data['status'] === 'success') {
-            $package = collect($config['package'])->firstWhere('price', intval($data['payment_total'] / 100));
-            if (!$package) {
-                return response('Invalid package price', 422);
-            }
+            DB::transaction(function () use ($user, $package, $data) {
+                SkSilk::handleSilkUpdate($user->jid, $package['type'], $package['value']);
 
-            if (config('global.server.version') === 'vSRO') {
-                SkSilk::setSkSilk($user->jid, 0, $package['value']);
-            } else {
-                AphChangedSilk::setChangedSilk($user->jid, 3, $package['value']);
-            }
-
-            Donate::DonateLog([
-                'method' => 'HipoPay',
-                'transaction_id' => $data['transaction_id'],
-                'amount' => $package['price'],
-                'value' => $package['value'],
-                'jid' => $user->jid,
-            ]);
+                Donate::DonateLog([
+                    'method' => 'HipoPay',
+                    'transaction_id' => $data['transaction_id'],
+                    'status' => $data['status'],
+                    'amount' => $package['price'],
+                    'type' => $package['type'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
+            });
 
             return response('OK', 200);
         }

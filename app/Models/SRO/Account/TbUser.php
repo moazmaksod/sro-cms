@@ -131,6 +131,15 @@ class TbUser extends Model
         ]);
     }
 
+    public static function updateSilk($jid, $type, $amount)
+    {
+        if (config('global.server.version') === 'vSRO') {
+            SkSilk::updateSkSilk($jid, $type, $amount);
+        } else {
+            AphChangedSilk::updateChangedSilk($jid, $type, $amount);
+        }
+    }
+
     public function blockAccount(string $reason, int $durationHours, ?string $customReason = null)
     {
         $finalReason = $reason === 'Custom' ? $customReason : $reason;
@@ -191,12 +200,16 @@ class TbUser extends Model
 
     public function getShardUserAttribute()
     {
-        return cache()->remember( "shard_user_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->shardUser()->get() ?? collect());
+        return Cache::remember("shard_user_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->shardUser()->get() ?? collect();
+        });
     }
 
-    public function getGetSkSilkAttribute()
+    public function getGetSilkAttribute()
     {
-        return cache()->remember( "user_silk_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->getSkSilk()->first());
+        return Cache::remember("tb_user_silk_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->SkSilk()->first();
+        });
     }
 
     public function shardUser()
@@ -204,7 +217,7 @@ class TbUser extends Model
         return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
     }
 
-    public function getSkSilk()
+    public function SkSilk()
     {
         return $this->hasOne(SkSilk::class, 'JID', 'JID');
     }

@@ -64,19 +64,35 @@ class SkSilkBuyList extends Model
         'RegDate'
     ];
 
-    public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
+    public static function setSilkBuyList($userJID, $numSilk, $silkRemain = null, $silkType = 0, $pkgId = 0, $orderId = 'Website')
+    {
+        return self::create([
+            'UserJID' => $userJID,
+            'Silk_Type' => $silkType,
+            'Silk_Reason' => 0,
+            'Silk_Offset' => $numSilk,
+            'Silk_Remain' => $silkRemain ?? $numSilk,
+            'ID' => $pkgId,
+            'BuyQuantity' => 1,
+            'OrderNumber' => $orderId,
+            'SlipPaper' => 'User Purchase Silk from Website',
+            'RegDate' => now(),
+        ]);
+    }
+
+    public static function getSilkBuyList($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
         $data = Cache::remember("account_info_vsro_donate_history_{$jid}_{$paginate}_{$page}", config('global.cache.account_info', 600), function () use ($paginate, $page, $jid) {
             return self::select(
-                'SK_SilkBuyList.BuyNo',
-                'SK_SilkBuyList.OrderNumber',
-                'SK_SilkBuyList.Silk_Offset',
-                'SK_SilkBuyList.Silk_Remain',
-                'SK_SilkBuyList.Silk_Type',
-                'SK_SilkBuyList.RegDate'
+                'BuyNo',
+                'OrderNumber',
+                'Silk_Offset',
+                'Silk_Remain',
+                'Silk_Type',
+                'RegDate'
             )
-                ->where('SK_SilkBuyList.UserJID', $jid)
-                ->orderBy('SK_SilkBuyList.RegDate', 'desc')
+                ->where('UserJID', $jid)
+                ->orderBy('RegDate', 'desc')
                 ->get();
         });
 

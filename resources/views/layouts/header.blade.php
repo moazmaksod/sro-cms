@@ -83,29 +83,29 @@
                         </svg>
 
                         <a class="nav-link px-3 py-1 text-white dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
-                            <svg class="bi my-1 theme-icon-active" aria-hidden="true"><use href="#sun-fill"></use></svg>
+                            <svg class="bi my-1 theme-icon-active" aria-hidden="true" style="fill: #fff; width: 16px; height: 16px;"><use href="#sun-fill"></use></svg>
                             <span class="visually-hidden" id="bd-theme-text">{{ __('Toggle theme') }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
                             <li>
                                 <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#sun-fill"></use></svg>
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#sun-fill"></use></svg>
                                     {{ __('Light') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#moon-stars-fill"></use></svg>
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#moon-stars-fill"></use></svg>
                                     {{ __('Dark') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true"><use href="#circle-half"></use></svg>
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#circle-half"></use></svg>
                                     {{ __('Auto') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true"><use href="#check2"></use></svg>
+                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
                                 </button>
                             </li>
                         </ul>
@@ -120,7 +120,7 @@
                         <ul class="dropdown-menu" style="">
                             @foreach(config('global.languages') as $key => $item)
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('locale', $key) }}">
+                                    <a class="dropdown-item" href="{{ !empty(request()->segments()) ? url($key . '/' . implode('/', array_slice(request()->segments(), 1))) : url($key) }}">
                                         <span class="fi fi-{{ $item['flag'] }}"></span>
                                         {{ $item['name'] }}
                                     </a>

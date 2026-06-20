@@ -4,27 +4,27 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 
 class LocaleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle($request, Closure $next)
     {
-        if (config('settings.default_locale', 'switch') === 'switch') {
-            $locale = Session::get('locale', config('app.locale'));
-        } else {
-            $locale = config('settings.default_locale');
+        $locale = $request->segment(1);
+
+        if ($locale && array_key_exists($locale, config('global.languages', []))) {
+            App::setLocale($locale);
             Session::put('locale', $locale);
+        } else {
+            $locale = Session::get('locale', config('app.locale'));
+            App::setLocale($locale);
         }
 
-        App::setLocale($locale);
+        URL::defaults(['locale' => App::getLocale()]);
+
+        $request->route()?->forgetParameter('locale');
 
         return $next($request);
     }

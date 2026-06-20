@@ -365,11 +365,9 @@ class VoteService
         $serverId = $request->input('server_uuid');
         $webhookSecret = $config['webhook_secret'];
         $signature = $request->header('X-Webhook-Signature');
-        /*
         if ($signature !== $webhookSecret) {
             return response('Wrong Signature', 403);
         }
-        */
 
         $jid = $request->input('voter_id');
         if (!$jid) {

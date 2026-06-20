@@ -20,14 +20,6 @@ class HomeController extends Controller
         return view('pages.news', compact('data'));
     }
 
-    public function locale($locale)
-    {
-        if (isset(config('global.languages')[$locale])) {
-            session(['locale' => $locale]);
-        }
-        return back();
-    }
-
     public function post($slug)
     {
         $data = News::getPost($slug);

@@ -7,16 +7,12 @@
                 @if(config('global.server.version') === 'vSRO')
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Silk') }}</strong>
-                        <span class="">{{ number_format(auth()->user()->tbUser->getSkSilk->silk_own ?? 0) }}</span>
+                        <span class="">{{ number_format(auth()->user()->tbUser->getSilk->silk_own ?? 0) }}</span>
                     </li>
                 @else
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Premium Silk') }}</strong>
-                        <span class="">{{ number_format(auth()->user()->muUser->JCash->PremiumSilk ?? 0) }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>{{ __('Silk') }}</strong>
-                        <span class="">{{ number_format(auth()->user()->muUser->JCash->Silk ?? 0) }}</span>
+                        <span class="">{{ number_format(auth()->user()->muUser->getSilk->PremiumSilk ?? 0) }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('VIP') }}</strong>

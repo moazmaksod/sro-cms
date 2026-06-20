@@ -50,7 +50,7 @@ class SkSilk extends Model
 
     public static function setSkSilk($jid, $type, $amount)
     {
-        $types = [
+        $silkTypes = [
             '0' => 'silk_own',
             '1' => 'silk_gift',
             '2' => 'silk_point'
@@ -65,12 +65,12 @@ class SkSilk extends Model
             ]
         );
 
-        return self::where('JID', $jid)->increment($types[$type], $amount);
+        return self::where('JID', $jid)->increment($silkTypes[$type] ?? 'silk_own', $amount);
     }
 
     public static function setSkSilkLive($username, $amount, $pkgId = 0, $price = 0, $orderId = 'Website')
     {
-        return DB::statement("
+        $result = DB::select("
             EXEC [" . DB::connection('account')->getDatabaseName() . "].[CGI].[CGI_WebPurchaseSilk]
                 @OrderID = :orderID,
                 @UserID = :userID,
@@ -84,6 +84,39 @@ class SkSilk extends Model
             'numSilk' => $amount,
             'price'   => $price,
         ]);
+
+        $status = $result[0]->Result ?? null;
+
+        return $status === 'SUCCESS' ? true : $status;
+    }
+
+    public static function getSkSilk($jid, $type)
+    {
+        $silkTypes = [
+            '0' => 'silk_own',
+            '1' => 'silk_gift',
+            '2' => 'silk_point'
+        ];
+
+        return (int) self::where('JID', $jid)->value($silkTypes[$type]) ?? 0;
+    }
+
+    public static function updateSkSilk($jid, $type, $amount)
+    {
+        return DB::transaction(function () use ($jid, $type, $amount) {
+            $oldAmount = self::getSkSilk($jid, $type);
+
+            self::setSkSilk($jid, $type, $amount);
+
+            $newAmount = $oldAmount + $amount;
+
+            SkSilkBuyList::setSilkBuyList($jid, $amount, $newAmount, $type);
+            SkSilkChangeByWeb::setSilkChange($jid, $newAmount, $amount, $type);
+
+            Cache::forget("tb_user_silk_{$jid}");
+
+            return $oldAmount + $amount;
+        });
     }
 
     public static function getSilkSum()
