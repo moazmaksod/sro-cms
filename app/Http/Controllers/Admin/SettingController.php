@@ -144,7 +144,7 @@ class SettingController extends Controller
         $data = Setting::cached()->toArray();
 
         return [
-            'settings'  => $this->mergeScalarSettings($data, config('global.general', [])),
+            'settings'  => $this->mergeScalarSettings($data, config('global', [])),
             'themes'    => $this->loadThemes(),
             'languages' => config('global.languages', []),
             'timezones' => \DateTimeZone::listIdentifiers(),

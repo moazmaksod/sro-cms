@@ -21,25 +21,25 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['string', 'max:255'],
             'verify_code_email' => array_filter([
-                config('settings.update_type') == 'verify_code' ? 'required' : null,
+                config('global.account_verify') ? 'required' : null,
                 'string'
             ]),
             'new_email' => array_filter([
                 'nullable',
                 'email',
-                !config('settings.duplicate_email', 1) ? Rule::unique('users', 'email')->ignore($this->user()->id) : null
+                !config('global.duplicate_email', 1) ? Rule::unique('users', 'email')->ignore($this->user()->id) : null
             ]),
 
             'email' => array_filter([
-                config('settings.update_type') !== 'verify_code' ? 'required' : null,
+                !config('global.account_verify') ? 'required' : null,
                 'string',
                 'lowercase',
                 'email',
                 'max:255',
-                !config('settings.duplicate_email', 1) ? Rule::unique(User::class)->ignore($this->user()->id) : null,
+                !config('global.duplicate_email', 1) ? Rule::unique(User::class)->ignore($this->user()->id) : null,
 
                 function ($attribute, $value, $fail) {
-                    if (config('global.server.version') === 'vSRO' && !config('settings.duplicate_email', 1)) {
+                    if (config('global.server.version') === 'vSRO' && !config('global.duplicate_email', 1)) {
                         $exists = $this->user()->tbUser()->where('Email', $value)->where('JID', '!=', $this->user()->jid)->exists();
                         if ($exists) {
                             $fail('The email has already been taken in another account.');

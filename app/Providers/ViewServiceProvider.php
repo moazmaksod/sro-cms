@@ -23,16 +23,16 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
-                $view->with('pageNames', Pages::getPageNames());
+            View::composer(['layouts.header', 'layouts.header'], function ($view) {
+                $view->with('pages', Pages::getPageNames());
             });
 
             View::composer(['*'], function ($view) {
                 $view->with([
                     'onlineCounter' => (object) [
                         'onlinePlayer' => ShardCurrentUser::getOnlineCounter(),
-                        'maxPlayer' => config('settings.max_player', 1000),
-                        'fakePlayer' => config('settings.fake_player', 0)
+                        'maxPlayer' => config('global.max_player', 1000),
+                        'fakePlayer' => config('global.fake_player', 0)
                     ]
                 ]);
             });

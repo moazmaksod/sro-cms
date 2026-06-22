@@ -14,11 +14,11 @@ class EmailVerificationNotificationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('profile', absolute: false));
+            return redirect()->intended(route('account', absolute: false));
         }
 
-        if (!config('settings.register_confirm') || $request->user()?->role?->is_admin) {
-            return redirect()->intended(route('profile', absolute: false));
+        if (!config('global.register_confirm') || $request->user()?->role?->is_admin) {
+            return redirect()->intended(route('account', absolute: false));
         }
 
         $request->user()->sendEmailVerificationNotification();

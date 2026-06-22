@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('settings.site_title', 'iSRO CMS v2') }} - @yield('title')</title>
-    <meta name="description" content="{{ config('settings.site_desc', 'Description') }}">
-    <link rel="shortcut icon" href="{{ asset(config('settings.site_favicon', 'images/favicon.ico')) }}">
+    <title>{{ config('global.site_name', 'iSRO CMS v2') }} - @yield('title')</title>
+    <meta name="description" content="{{ config('global.site_desc', 'Description') }}">
+    <link rel="shortcut icon" href="{{ asset(config('global.site_favicon', 'images/favicon.ico')) }}">
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/dashboard.css') }}" rel="stylesheet">
     <!-- Inline Styles -->
     @stack('styles')
 </head>
-<body data-bs-theme="{{ config('settings.dark_mode', 'dark') }}">
+<body data-bs-theme="{{ config('global.dark_mode', 'dark') }}">
 
 @include('admin.layouts.header')
 

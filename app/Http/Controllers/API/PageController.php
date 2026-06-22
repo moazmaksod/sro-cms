@@ -60,8 +60,8 @@ class PageController extends Controller
     public function onlineCounter()
     {
         $onlinePlayer = ShardCurrentUser::getOnlineCounter();
-        $maxPlayer = (int)config('settings.max_player', 1000);
-        $fakePlayer = (int)config('settings.fake_player', 0);
+        $maxPlayer = (int)config('global.max_player', 1000);
+        $fakePlayer = (int)config('global.fake_player', 0);
 
         return response()->json([
             'status' => 'success',

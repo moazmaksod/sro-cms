@@ -1,27 +1,26 @@
 <?php
 
 return [
-    'general' => [
-        'site_title' => 'Silkroad Online',
-        'site_desc' => "Silkroad Online is a World's first blockbuster Free to play MMORPG. Silkroad Online puts players deep into ancient Chinese, Islamic, and European civilization. Enjoy Silkroad's hardcore PvP, personal dungeon system, never ending fortress war and be the top of the highest heroes!",
-        'site_url' => 'https://localhost',
-        'site_favicon' => 'images/favicon.ico',
-        'site_logo' => 'images/logo.png',
-        'hero_background' => 'images/bg.jpg',
-        'max_level' => 140,
-        'max_player' => 3500,
-        'fake_player' => 0,
-        'dark_mode' => 'switch',
-        'default_locale' => 'switch',
-        'locale' => 'en',
-        'theme' => 'default',
-        'timezone' => 'Africa/Cairo',
-        'update_type' => 'standard',
-        'disable_register' => 0,
-        'register_confirm' => 0,
-        'duplicate_email' => 0,
-        'agree_terms' => 0,
-    ],
+    'site_name' => 'Silkroad Online',
+    'site_desc' => "Silkroad Online is a World's first blockbuster Free to play MMORPG. Silkroad Online puts players deep into ancient Chinese, Islamic, and European civilization. Enjoy Silkroad's hardcore PvP, personal dungeon system, never ending fortress war and be the top of the highest heroes!",
+    'site_url' => 'https://localhost',
+    'site_favicon' => 'images/favicon.ico',
+    'site_logo' => 'images/logo.png',
+    'site_background' => 'images/bg.jpg',
+    'dark_mode' => 'switch',
+    'default_locale' => 'switch',
+    'locale' => 'en',
+    'theme' => 'default',
+    'timezone' => 'Africa/Cairo',
+    'max_level' => 140,
+    'max_player' => 3500,
+    'fake_player' => 0,
+    'account_verify' => 0,
+    'disable_register' => 0,
+    'register_confirm' => 0,
+    'duplicate_email' => 0,
+    'agree_terms' => 0,
+
     'server' => [
         'version' => env('SRO_VERSION', 'iSRO'), // or 'vSRO'
         //'saltKey' => 'eset5ag.nsy-g6ky5.mp',
@@ -48,35 +47,41 @@ return [
     'languages' => [
         'en' => [
             'name' => 'English',
-            'flag' => 'gb'
+            'flag' => 'us',
+            'image' => 'images/us.png',
         ],
         'tr' => [
             'name' => 'Türkçe',
             'flag' => 'tr',
+            'image' => 'images/tr.png',
         ],
         'ar' => [
             'name' => 'العربية',
-            'flag' => 'sa',
+            'flag' => 'eg',
+            'image' => 'images/eg.png',
         ],
         'es' => [
             'name' => 'Español',
             'flag' => 'es',
+            'image' => 'images/es.png',
         ],
         'de' => [
             'name' => 'Deutsch',
             'flag' => 'de',
+            'image' => 'images/de.png',
         ],
         'zh_CN' => [
             'name' => '简体中文',
             'flag' => 'cn',
+            'image' => 'images/cn.png',
         ],
     ],
     'referral' => [
         'enabled' => false,
-        'reward_points' => 5, //5 Default, 0 = No eward
+        'reward_points' => 5,
         'minimum_redeem' => 25,
     ],
-    'tickets' => [
+    'ticket' => [
         'enabled' => false,
         'categories' => [
             'sales' => 'Sales',
@@ -84,41 +89,35 @@ return [
             'other' => 'Other',
         ]
     ],
-    'history' => [
-        'event_schedule' => true,
-        'unique_tracker' => true,
-        'advanced_unique_tracker' => false,
-        'fortress_history' => true,
-        'global_history' => true,
-        'pvp_kill_logs' => false,
-        'job_kill_logs' => false,
-        'item_plus_logs' => false,
-        'item_drop_logs' => false,
+    'logs' => [
+        'schedule' => true,
+        'unique' => true,
+        'unique_advanced' => false,
+        'fortress' => true,
+        'global' => true,
+        'pvp' => false,
+        'job' => false,
+        'plus' => false,
+        'drop' => false,
     ],
-    'sliders' => [
+    'slider' => [
         0 => [
             'title' => 'Example headline',
-            'title_color' => '#fff',
             'desc' => 'Some representative placeholder content for the first slide of the carousel.',
-            'desc_color' => '#fff',
             'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
             'btn_label' => 'Sign Up',
             'btn_url' => '#',
         ],
         1 => [
             'title' => 'Example headline',
-            'title_color' => '#fff',
             'desc' => 'Some representative placeholder content for the first slide of the carousel.',
-            'desc_color' => '#fff',
             'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
             'btn_label' => 'Play Now',
             'btn_url' => '#',
         ],
         2 => [
             'title' => 'Example headline',
-            'title_color' => '#fff',
             'desc' => 'Some representative placeholder content for the first slide of the carousel.',
-            'desc_color' => '#fff',
             'image' => 'https://wallpapercave.com/wp/wp7441040.jpg',
             'btn_label' => 'Download Now',
             'btn_url' => '#',

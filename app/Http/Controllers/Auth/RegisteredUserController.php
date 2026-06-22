@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Referral;
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\AuhAgreedService;
@@ -39,7 +38,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (config('settings.disable_register')) {
+        if (config('global.disable_register')) {
             return back()->withErrors(['username' => ["Register page is disabled!"]]);
         }
 
@@ -60,13 +59,13 @@ class RegisteredUserController extends Controller
 
         $this->handleReferral($user, $request);
 
-        if (config('settings.register_confirm')) {
+        if (config('global.register_confirm')) {
             event(new Registered($user));
         }
 
         Auth::login($user);
 
-        return redirect(route('profile', absolute: false));
+        return redirect(route('account', absolute: false));
     }
 
     private function getValidationRules(Request $request): array
@@ -76,7 +75,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:70', 'unique:' . User::class],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => config('captcha.enabled', false) ? ['required', 'captcha'] : ['nullable'],
-            'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
+            'terms' => config('global.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
             'invite' => ['nullable', 'string'],
             'fingerprint' => ['nullable', 'string'],
         ];
@@ -98,7 +97,7 @@ class RegisteredUserController extends Controller
             $ip = filter_var($request->ip(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ?: '0.0.0.0';
 
             $tbUser = TbUser::setVSROAccount(null, $request->username, $request->password, $request->email, $ip);
-            SkSilk::setSkSilk($tbUser->JID, 0, 0);
+            TbUser::updateSilk($tbUser->JID, 0, 0);
 
             return $tbUser->JID;
         });

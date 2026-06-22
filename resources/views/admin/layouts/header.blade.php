@@ -60,7 +60,7 @@
 
             <ul class="dropdown-menu dropdown-menu-end shadow position-absolute" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="{{ route('admin.users.view', auth()->user()->tbUser->JID) }}">Profile</a></li>
-                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Settings</a></li>
+                <li><a class="dropdown-item" href="{{ route('account.edit') }}">Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you sure you want to Sign out?')">

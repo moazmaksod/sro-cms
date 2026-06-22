@@ -63,7 +63,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">{{ __('Site Title') }}</label>
-                        <input type="text" class="form-control" name="site_title" value="{{ $settings['site_title'] ?? '' }}">
+                        <input type="text" class="form-control" name="site_name" value="{{ $settings['site_name'] ?? '' }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ __('Site Description') }}</label>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ __('Background') }}</label>
-                        <input type="text" class="form-control" name="hero_background" value="{{ $settings['hero_background'] ?? '' }}">
+                        <input type="text" class="form-control" name="site_background" value="{{ $settings['site_background'] ?? '' }}">
                     </div>
 
                     <h5 class="fw-semibold mb-3 mt-4">{{ __('Server Settings') }}</h5>
@@ -145,10 +145,10 @@
                     <h5 class="fw-semibold mb-3 mt-4">{{ __('User Settings') }}</h5>
 
                     <div class="mb-3">
-                        <label class="form-label">{{ __('Update Profile Type') }}</label>
-                        <select class="form-select" name="update_type">
-                            <option value="standard"    {{ ($settings['update_type'] ?? '') === 'standard'    ? 'selected' : '' }}>Standard</option>
-                            <option value="verify_code" {{ ($settings['update_type'] ?? '') === 'verify_code' ? 'selected' : '' }}>Verification Code</option>
+                        <label class="form-label">{{ __('Account Verification') }}</label>
+                        <select class="form-select" name="account_verify">
+                            <option value="0" {{ ($settings['account_verify'] ?? '') === '0' ? 'selected' : '' }}>Disabled</option>
+                            <option value="1" {{ ($settings['account_verify'] ?? '') === '1' ? 'selected' : '' }}>Enabled</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -479,15 +479,15 @@
 
                     <div class="d-flex flex-column gap-2">
                         @foreach([
-                            'event_schedule'          => __('Event Schedule'),
-                            'unique_tracker'          => __('Unique Tracker'),
-                            'advanced_unique_tracker' => __('Advanced Unique Tracker'),
-                            'fortress_history'        => __('Fortress History'),
-                            'global_history'          => __('Global History'),
-                            'pvp_kill_logs'           => __('PvP Kill Logs'),
-                            'job_kill_logs'           => __('Job Kill Logs'),
-                            'item_plus_logs'          => __('Item Plus Logs'),
-                            'item_drop_logs'          => __('Item Drop Logs'),
+                            'schedule'        => __('Event Schedule'),
+                            'unique'          => __('Unique Tracker'),
+                            'unique_advanced' => __('Advanced Unique Tracker'),
+                            'fortress'        => __('Fortress History'),
+                            'global'          => __('Global History'),
+                            'pvp'             => __('PvP Kill Logs'),
+                            'job'             => __('Job Kill Logs'),
+                            'plus'            => __('Item Plus Logs'),
+                            'drop'            => __('Item Drop Logs'),
                         ] as $key => $label)
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox"

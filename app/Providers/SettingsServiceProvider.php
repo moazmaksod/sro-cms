@@ -50,7 +50,7 @@ class SettingsServiceProvider extends ServiceProvider
     private function applyGeneralSettings(array $settings): void
     {
         // Start with config defaults
-        $general = config('global.general', []);
+        $general = config('global', []);
 
         // Merge ALL scalar DB settings on top (not just keys from config)
         // This catches dynamic keys like item_stats_jid_2, job_name_jid_2, verify_jid_2
@@ -65,9 +65,9 @@ class SettingsServiceProvider extends ServiceProvider
             $general[$key] = $value;
         }
 
-        Config::set('settings', $general);
-        Config::set('global.general', $general);
-        Config::set('app.name', $general['site_title'] ?? config('app.name'));
+        Config::set('global', $general);
+        Config::set('app.name', $general['site_name'] ?? config('app.name'));
+        Config::set('app.description', $general['site_desc'] ?? config('app.description'));
         Config::set('app.url',  $general['site_url']   ?? config('app.url'));
 
         if (! empty($general['timezone'])) {

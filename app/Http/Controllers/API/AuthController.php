@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\PasswordResetToken;
 use App\Models\Referral;
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
 use App\Models\SRO\Portal\AuhAgreedService;
 use App\Models\SRO\Portal\MuEmail;
@@ -18,6 +16,7 @@ use App\Notifications\SendVerifyCode;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -48,7 +47,7 @@ class AuthController extends Controller
 
             DB::commit();
 
-            if (config('settings.register_confirm')) {
+            if (config('global.register_confirm')) {
                 event(new Registered($user));
             }
 
@@ -59,7 +58,7 @@ class AuthController extends Controller
                 'message' => 'Registration successful',
                 'user' => $user,
                 'token' => $token,
-                'redirect' => url('/profile'),
+                'redirect' => url('/account'),
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -78,7 +77,7 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:70', 'unique:' . User::class],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
             'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
-            'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
+            'terms' => config('global.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
             'invite' => ['nullable', 'string'],
             'fingerprint' => ['nullable', 'string'],
         ];
@@ -98,7 +97,7 @@ class AuthController extends Controller
     {
         return DB::transaction(function () use ($request, $ip) {
             $tbUser = TbUser::setVSROAccount(null, $request->username, $request->password, $request->email, $ip);
-            SkSilk::setSkSilk($tbUser->JID, 3, 0);
+            TbUser::updateSilk($tbUser->JID, 3, 0);
             return $tbUser->JID;
         });
     }
@@ -192,7 +191,7 @@ class AuthController extends Controller
 
         $code = random_int(100000, 999999);
 
-        PasswordResetToken::setToken($user->email, $code);
+        Cache::put('verify_code_'.$user->email, $code, now()->addMinutes(30));
 
         $user->notify(new SendVerifyCode($code));
 

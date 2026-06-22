@@ -1,71 +1,72 @@
-<header class="p-3 text-bg-dark">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="{{ url('/') }}" class="d-flex align-items-center me-3 mb-2 mb-lg-0 text-white text-decoration-none">
-                    <img src="{{ asset(config('settings.site_logo', 'images/logo.png')) }}" alt="" width="" height="60" class="">
-                </a>
-
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="{{ url('/') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }} px-2 text-white">{{ __('Home') }}</a></li>
-                    <li><a href="{{ route('news') }}" class="nav-link {{ request()->routeIs('news') ? 'active' : '' }} px-2 text-white">{{ __('News') }}</a></li>
-                    <li><a href="{{ route('download') }}" class="nav-link {{ request()->routeIs('download') ? 'active' : '' }} px-2 text-white">{{ __('Download') }}</a></li>
-                    @if(config('ranking.enabled', false))
-                        <li><a href="{{ route('ranking') }}" class="nav-link {{ request()->routeIs('ranking') ? 'active' : '' }} px-2 text-white">{{ __('Ranking') }}</a></li>
-                    @endif
-
-                    @if(config("global.history.enabled", false))
-                    <li class="dropdown">
-                        <a href="{{ route('history') }}" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Server History') }}</a>
-                        <ul class="dropdown-menu" style="">
-                            @if(config("global.history.event_schedule", true))
-                            <li><a class="dropdown-item" href="{{ route('history.schedule') }}">{{ __('Event Schedule') }}</a></li>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Fifth navbar example">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <img src="{{ asset(config('global.site_logo')) }}" alt="" width="" height="64">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExample05">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" aria-current="page" href="{{ route('home') }}">{{ __('Home') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('news') ? 'active' : '' }}" href="{{ route('news') }}">{{ __('News') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('download') ? 'active' : '' }}" href="{{ route('download') }}">{{ __('Download') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('ranking') ? 'active' : '' }}" href="{{ route('ranking') }}">{{ __('Ranking') }}</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('logs.*') ? 'active' : '' }}" href="#" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Server History') }}</a>
+                        <ul class="dropdown-menu">
+                            @if(config("global.logs.schedule"))
+                                <li><a class="dropdown-item" href="{{ route('logs.schedule') }}">{{ __('Event Schedule') }}</a></li>
                             @endif
-                            @if(config("global.history.unique_tracker", true))
-                            <li><a class="dropdown-item" href="{{ route('history.unique') }}">{{ __('Unique Tracker') }}</a></li>
+                            @if(config("global.logs.unique"))
+                                <li><a class="dropdown-item" href="{{ route('logs.unique') }}">{{ __('Unique Tracker') }}</a></li>
                             @endif
-                            @if(config("global.history.advanced_unique_tracker", false))
-                            <li><a class="dropdown-item" href="{{ route('history.unique-advanced') }}">{{ __('Advanced Unique Tracker') }}</a></li>
+                            @if(config("global.logs.unique_advanced"))
+                                <li><a class="dropdown-item" href="{{ route('logs.unique-advanced') }}">{{ __('Advanced Unique Tracker') }}</a></li>
                             @endif
-                            @if(config("global.history.fortress_history", true))
-                            <li><a class="dropdown-item" href="{{ route('history.fortress') }}">{{ __('Fortress History') }}</a></li>
+                            @if(config("global.logs.fortress"))
+                                <li><a class="dropdown-item" href="{{ route('logs.fortress') }}">{{ __('Fortress History') }}</a></li>
                             @endif
-                            @if(config("global.history.global_history", true))
-                            <li><a class="dropdown-item" href="{{ route('history.global') }}">{{ __('Global History') }}</a></li>
+                            @if(config("global.logs.global"))
+                                <li><a class="dropdown-item" href="{{ route('logs.global') }}">{{ __('Global History') }}</a></li>
                             @endif
-                            @if(config("global.history.item_plus_logs", false))
-                            <li><a class="dropdown-item" href="{{ route('history.item-plus') }}">{{ __('Item Plus Logs') }}</a></li>
+                            @if(config("global.logs.plus"))
+                                <li><a class="dropdown-item" href="{{ route('logs.plus') }}">{{ __('Item Plus') }}</a></li>
                             @endif
-                            @if(config("global.history.item_drop_logs", false))
-                            <li><a class="dropdown-item" href="{{ route('history.item-drop') }}">{{ __('Item Drop Logs') }}</a></li>
+                            @if(config("global.logs.drop"))
+                                <li><a class="dropdown-item" href="{{ route('logs.drop') }}">{{ __('Item Drop') }}</a></li>
                             @endif
-                            @if(config("global.history.pvp_kill_logs", false))
-                            <li><a class="dropdown-item" href="{{ route('history.pvp-kill') }}">{{ __('Pvp Kills Logs') }}</a></li>
+                            @if(config("global.logs.pvp"))
+                                <li><a class="dropdown-item" href="{{ route('logs.pvp') }}">{{ __('Pvp Kills') }}</a></li>
                             @endif
-                            @if(config("global.history.job_kill_logs", false))
-                            <li><a class="dropdown-item" href="{{ route('history.job-kill') }}">{{ __('Job Kills Logs') }}</a></li>
+                            @if(config("global.logs.job"))
+                                <li><a class="dropdown-item" href="{{ route('logs.job') }}">{{ __('Job Kills') }}</a></li>
                             @endif
                         </ul>
                     </li>
-                    @endif
-
-                    @if(count($pageNames) > 0)
-                    <li class="dropdown">
-                        <a href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Pages') }}</a>
-                        <ul class="dropdown-menu" style="">
-                            @forelse ($pageNames as $row)
-                                <li><a class="dropdown-item" href="{{ route('page.show', ['slug' => $row->slug]) }}">{{ $row->title }}</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('pages.*') ? 'active' : '' }}" href="#" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Information') }}</a>
+                        <ul class="dropdown-menu">
+                            @forelse ($pages as $row)
+                            <li><a class="dropdown-item" href="{{ route('pages.show', ['slug' => $row->slug]) }}">{{ $row->title }}</a></li>
                             @empty
-                                <li><a class="dropdown-item" href="#">{{ __('No Pages') }}</a></li>
+                            <li><a class="dropdown-item" href="#">{{ __('No Pages') }}</a></li>
                             @endforelse
                         </ul>
                     </li>
-                    @endif
                 </ul>
-
-                <div class="d-flex text-end">
-                    @if(config('settings.dark_mode', 'switch') == 'switch')
-                    <div class="dropdown bd-mode-toggle">
+                <ul class="navbar-nav">
+                    @if(config('global.dark_mode') == 'switch')
+                    <li class="nav-item dropdown bd-mode-toggle">
                         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
                             <symbol id="check2" viewBox="0 0 16 16">
                                 <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
@@ -82,87 +83,93 @@
                             </symbol>
                         </svg>
 
-                        <a class="nav-link px-3 py-1 text-white dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
-                            <svg class="bi my-1 theme-icon-active" aria-hidden="true" style="fill: #fff; width: 16px; height: 16px;"><use href="#sun-fill"></use></svg>
-                            <span class="visually-hidden" id="bd-theme-text">{{ __('Toggle theme') }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+                        <button class="nav-link dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
+                            <svg class="bi my-1 theme-icon-active" aria-hidden="true" style="width: 1em; height: 1em;fill: #fff; ">
+                                <use href="#circle-half"></use>
+                            </svg>
+                            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="bd-theme-text">
                             <li>
-                                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#sun-fill"></use></svg>
-                                    {{ __('Light') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
+                                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 1em; height: 1em;">
+                                        <use href="#sun-fill"></use>
+                                    </svg>
+                                    Light
+                                    <svg class="bi ms-auto d-none" aria-hidden="true">
+                                        <use href="#check2"></use>
+                                    </svg>
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#moon-stars-fill"></use></svg>
-                                    {{ __('Dark') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 1em; height: 1em;">
+                                        <use href="#moon-stars-fill"></use>
+                                    </svg>
+                                    Dark
+                                    <svg class="bi ms-auto d-none" aria-hidden="true">
+                                        <use href="#check2"></use>
+                                    </svg>
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#circle-half"></use></svg>
-                                    {{ __('Auto') }}
-                                    <svg class="bi ms-auto d-none" aria-hidden="true" style="width: 16px; height: 16px;"><use href="#check2"></use></svg>
+                                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+                                    <svg class="bi me-2 opacity-50" aria-hidden="true" style="width: 1em; height: 1em;">
+                                        <use href="#circle-half"></use>
+                                    </svg>
+                                    Auto
+                                    <svg class="bi ms-auto d-none" aria-hidden="true">
+                                        <use href="#check2"></use>
+                                    </svg>
                                 </button>
                             </li>
                         </ul>
-                    </div>
+                    </li>
                     @endif
 
-                    @if(config('settings.default_locale', 'switch') == 'switch')
-                    <div class="dropdown">
-                        <a href="#" class="nav-link px-3 py-2 text-white dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="fi fi-{{ config('global.languages')[App::getLocale()]['flag'] }}"></span>
+                    @if(config('global.default_locale') == 'switch')
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset(config('global.languages')[App::getLocale()]['image']) }}" alt="" style="width: 1em; height: 1em;">
                         </a>
-                        <ul class="dropdown-menu" style="">
-                            @foreach(config('global.languages') as $key => $item)
-                                <li>
-                                    <a class="dropdown-item" href="{{ !empty(request()->segments()) ? url($key . '/' . implode('/', array_slice(request()->segments(), 1))) : url($key) }}">
-                                        <span class="fi fi-{{ $item['flag'] }}"></span>
-                                        {{ $item['name'] }}
-                                    </a>
-                                </li>
+                        <ul class="dropdown-menu">
+                            @foreach(config('global.languages') as $key => $row)
+                            <li>
+                                <a class="dropdown-item" href="{{ !empty(request()->segments()) ? url($key . '/' . implode('/', array_slice(request()->segments(), 1))) : url($key) }}">
+                                    <img src="{{ asset($row['image']) }}" alt="" style="width: 1em; height: 1em;"> {{ $row['name'] }}
+                                </a>
+                            </li>
                             @endforeach
                         </ul>
-                    </div>
+                    </li>
                     @endif
-
-                    @if (Route::has('login'))
-                        @auth
-                            <div class="dropdown">
-                                <a href="{{ route('profile') }}" class="d-block text-decoration-none dropdown-toggle px-3 py-1 text-white" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(auth()->user()->email))) }}?s=60&d=identicon" class="rounded-circle me-2" width="30" height="30" alt="User">
-                                    {{ auth()->user()->username }}
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ route('profile') }}">{{ __('Account Panel') }}</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Account Settings') }}</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('profile.donate') }}">{{ __('Donate') }}</a></li>
-                                    @if(auth()->user()->role?->is_admin)
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ route('admin') }}">{{ __('Admin panel') }}</a></li>
-                                    @endif
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();this.closest('form').submit();">{{ __('Log Out') }}</a>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-outline-light me-3">{{ __('Log in') }}</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn btn-warning">{{ __('Create Account') }}</a>
+                    @auth
+                    <li class="nav-item dropdown">
+                        <a href="{{ route('account') }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(auth()->user()->email))) }}?s=60&d=identicon" alt="mdo" width="32" height="32" class="rounded-circle">
+                            {{ auth()->user()->username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('account') }}">{{ __('Account Info') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('account.edit') }}">{{ __('Settings') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('account.donate') }}">{{ __('Donate') }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            @if(auth()->user()->role?->is_admin)
+                            <li><a class="dropdown-item" href="{{ route('admin') }}">{{ __('Admin Panel') }}</a></li>
                             @endif
-                        @endauth
-                    @endif
-                </div>
+                            <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); fetch('{{ route('logout') }}', {method:'POST', headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}'}}).then(() => window.location.href = '/')">{{ __('Logout') }}</a></li>
+                        </ul>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary me-2" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{{ route('register') }}">{{ __('Register') }}</a>
+                    </li>
+                    @endauth
+                </ul>
             </div>
         </div>
-    </div>
+    </nav>
 </header>

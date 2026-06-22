@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Donate;
-use App\Models\SRO\Account\SkSilk;
+use App\Models\SRO\Account\TbUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +45,7 @@ class DonateService
                 "paypal" => [
                     "experience_context" => [
                         "return_url" => route('callback', ['method' => 'paypal']),
-                        "cancel_url" => route('profile.donate'),
+                        "cancel_url" => route('account.donate'),
                     ],
                 ],
             ],
@@ -143,7 +143,7 @@ class DonateService
 
         $user = Auth::user();
 
-        SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+        TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
         Donate::DonateLog([
             'method' => 'Paypal',
@@ -152,7 +152,7 @@ class DonateService
             'jid' => $user->jid,
         ]);
 
-        return redirect()->route('profile.donate')->with('success', 'Payment completed successfully!');
+        return redirect()->route('account.donate')->with('success', 'Payment completed successfully!');
     }
 
     public function processStripe(Request $request)
@@ -184,7 +184,7 @@ class DonateService
                 'line_items[0][quantity]' => 1,
                 'mode' => 'payment',
                 'success_url' => route('callback', ['method' => 'stripe']) . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('profile.donate'),
+                'cancel_url' => route('account.donate'),
                 'metadata[user_id]' => Auth::id(),
                 'metadata[package_price]' => $price,
                 'metadata[package_value]' => $package['value'],
@@ -243,7 +243,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'Stripe',
@@ -253,7 +253,7 @@ class DonateService
                     'jid' => $user->jid,
                 ]);
 
-                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
             }
 
             return back()->withErrors(['stripe' => 'Payment was not completed successfully.'])->withInput();
@@ -325,7 +325,7 @@ class DonateService
 
         if (($pingback['type'] ?? '') == '0' || ($pingback['type'] ?? '') == '201') {
 
-            SkSilk::handleSilkUpdate($user->jid, 0, $pingback['currency']);
+            TbUser::updateSilk($user->jid, 0, $pingback['currency']);
 
             Donate::DonateLog([
                 'method' => 'Paymentwall',
@@ -417,7 +417,7 @@ class DonateService
                 return response('Invalid user or package', 400);
             }
 
-            SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+            TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
             Donate::DonateLog([
                 'method' => 'CoinPayments',
@@ -515,7 +515,7 @@ class DonateService
                 return response('User not found', 400);
             }
 
-            SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+            TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
             $transaction_id->update(['status' => 'success']);
 
@@ -574,7 +574,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'MaxiCard',
@@ -584,7 +584,7 @@ class DonateService
                     'jid' => $user->jid,
                 ]);
 
-                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
             }
         }
 
@@ -624,7 +624,7 @@ class DonateService
 
                 $user = Auth::user();
 
-                SkSilk::handleSilkUpdate($user->jid, $package['type'] ?? 0, $package['value']);
+                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'HipoCard',
@@ -634,7 +634,7 @@ class DonateService
                     'jid' => $user->jid,
                 ]);
 
-                return redirect()->route('profile.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
             }
         }
 
@@ -721,7 +721,7 @@ class DonateService
 
         if ($data['status'] === 'success') {
             DB::transaction(function () use ($user, $package, $data) {
-                SkSilk::handleSilkUpdate($user->jid, $package['type'], $package['value']);
+                TbUser::updateSilk($user->jid, $package['type'], $package['value']);
 
                 Donate::DonateLog([
                     'method' => 'HipoPay',

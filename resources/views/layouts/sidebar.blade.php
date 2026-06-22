@@ -1,3 +1,2 @@
-@include('partials.online-counter')
-@include('partials.server-info')
-@include('partials.event-schedule')
+@include('partials.logged-in')
+@include('partials.status')

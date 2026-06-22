@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Game\GameController;
+use App\Http\Controllers\Pages\GameController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/game', [GameController::class, 'index'])->name('game');

@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\Models\Donate;
-use App\Models\SRO\Account\SkSilk;
-use App\Models\SRO\Portal\AphChangedSilk;
+use App\Models\SRO\Account\TbUser;
 use App\Models\User;
 use App\Models\Vote;
 use Carbon\Carbon;
@@ -44,11 +43,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -95,11 +90,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -142,11 +133,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -189,11 +176,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -240,11 +223,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -287,11 +266,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -334,11 +309,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",
@@ -388,11 +359,7 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->jid, 0, $rewardAmount);
-        } else {
-            AphChangedSilk::setChangedSilk($user->jid, 3, $rewardAmount);
-        }
+        TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
         Donate::DonateLog([
             'method' => "Vote [{$config['name']}]",

@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
+use App\Models\SRO\Account\BlockedUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\SRO\Portal\MuUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,8 +69,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 $this->muUser?->muAlteredInfo?->update([
                     'EmailAddr' => $email,
-                    'EmailReceptionStatus' => config('settings.register_confirm') ? 'N' : 'Y',
-                    'EmailCertificationStatus' => config('settings.register_confirm') ? 'N' : 'Y',
+                    'EmailReceptionStatus' => config('global.register_confirm') ? 'N' : 'Y',
+                    'EmailCertificationStatus' => config('global.register_confirm') ? 'N' : 'Y',
                 ]);
             }
         });
@@ -91,11 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function giveSilk(string $type, float $amount)
     {
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($this->jid, $type, $amount);
-        } else {
-            AphChangedSilk::setChangedSilk($this->tbUser?->PortalJID, $type, $amount);
-        }
+        TbUser::updateSilk($this->jid, $type, $amount);
     }
 
     public function tbUser()
