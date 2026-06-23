@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('Client Secret') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_client_secret"
+                                    <input type="text" class="form-control" id="{{ $key }}_client_secret"
                                            value="{{ $gateway['client_secret'] ?? '' }}" placeholder="PAYPAL_CLIENT_SECRET">
                                 </div>
 
@@ -140,7 +140,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('Secret Key') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_secret_key"
+                                    <input type="text" class="form-control" id="{{ $key }}_secret_key"
                                            value="{{ $gateway['secret_key'] ?? '' }}" placeholder="STRIPE_SECRET_KEY">
                                 </div>
                                 <div class="mb-3">
@@ -157,7 +157,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('Private Key') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_private_key"
+                                    <input type="text" class="form-control" id="{{ $key }}_private_key"
                                            value="{{ $gateway['private_key'] ?? '' }}" placeholder="YOUR_SECRET_KEY">
                                 </div>
                                 <div class="mb-3">
@@ -203,7 +203,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('Client Secret') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_client_secret"
+                                    <input type="text" class="form-control" id="{{ $key }}_client_secret"
                                            value="{{ $gateway['client_secret'] ?? '' }}" placeholder="COINPAYMENTS_CLIENT_SECRET">
                                 </div>
 
@@ -244,7 +244,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('API Password') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_api_password"
+                                    <input type="text" class="form-control" id="{{ $key }}_api_password"
                                            value="{{ $gateway['api_password'] ?? '' }}" placeholder="MAXICARD_API_PASSWORD">
                                 </div>
 
@@ -269,7 +269,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('API Password') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_api_password"
+                                    <input type="text" class="form-control" id="{{ $key }}_api_password"
                                            value="{{ $gateway['api_password'] ?? '' }}" placeholder="HIPOCARD_API_PASSWORD">
                                 </div>
 
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('API Password') }}</label>
-                                    <input type="password" class="form-control" id="{{ $key }}_api_password"
+                                    <input type="text" class="form-control" id="{{ $key }}_api_password"
                                            value="{{ $gateway['api_password'] ?? '' }}" placeholder="HIPOPAY_API_PASSWORD">
                                 </div>
 
@@ -317,6 +317,7 @@
                                     <th>{{ __('Name') }}</th>
                                     <th style="width: 130px;">{{ __('Price') }}</th>
                                     <th style="width: 130px;">{{ __('Silk Value') }}</th>
+                                    <th style="width: 120px;">{{ __('Silk Type') }}</th>
                                     <th style="width: 80px;">{{ __('Action') }}</th>
                                 </tr>
                                 </thead>
@@ -326,6 +327,18 @@
                                         <td><input type="text"   class="form-control form-control-sm" data-pkg="name"  value="{{ $pkg['name']  ?? '' }}"></td>
                                         <td><input type="number" class="form-control form-control-sm" data-pkg="price" value="{{ $pkg['price'] ?? '' }}" step="0.01" min="0"></td>
                                         <td><input type="number" class="form-control form-control-sm" data-pkg="value" value="{{ $pkg['value'] ?? '' }}" min="0"></td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-pkg="type">
+                                                @if(config('global.server.version') === 'vSRO')
+                                                    <option value="0" {{ ($pkg['type'] ?? 0) == 0 ? 'selected' : '' }}>{{ __('Normal') }}</option>
+                                                    <option value="1" {{ ($pkg['type'] ?? 0) == 1 ? 'selected' : '' }}>{{ __('Gift') }}</option>
+                                                    <option value="2" {{ ($pkg['type'] ?? 0) == 2 ? 'selected' : '' }}>{{ __('Point') }}</option>
+                                                @else
+                                                    <option value="3" {{ ($pkg['type'] ?? 3) == 3 ? 'selected' : '' }}>{{ __('Premium') }}</option>
+                                                    <option value="1" {{ ($pkg['type'] ?? 3) == 1 ? 'selected' : '' }}>{{ __('Normal') }}</option>
+                                                @endif
+                                            </select>
+                                        </td>
                                         <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">{{ __('Remove') }}</button></td>
                                     </tr>
                                 @endforeach
@@ -361,6 +374,18 @@
             <td><input type="text"   class="form-control form-control-sm" data-pkg="name"  placeholder="500 Silk"></td>
             <td><input type="number" class="form-control form-control-sm" data-pkg="price" placeholder="5.00" step="0.01" min="0"></td>
             <td><input type="number" class="form-control form-control-sm" data-pkg="value" placeholder="500" min="0"></td>
+            <td>
+                <select class="form-select form-select-sm" data-pkg="type">
+                    @if(config('global.server.version') === 'vSRO')
+                    <option value="0">{{ __('Normal') }}</option>
+                    <option value="1">{{ __('Gift') }}</option>
+                    <option value="2">{{ __('Point') }}</option>
+                    @else
+                    <option value="3" selected>{{ __('Premium') }}</option>
+                    <option value="1">{{ __('Normal') }}</option>
+                    @endif
+                </select>
+            </td>
             <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">{{ __('Remove') }}</button></td>`;
         }
 
@@ -421,6 +446,7 @@
                     name:  tr.querySelector('[data-pkg="name"]').value,
                     price: parseFloat(tr.querySelector('[data-pkg="price"]').value) || 0,
                     value: parseInt(tr.querySelector('[data-pkg="value"]').value)   || 0,
+                    type:  parseInt(tr.querySelector('[data-pkg="type"]').value)    || 0,
                 }))
                 .filter(p => p.name || p.price || p.value);
 

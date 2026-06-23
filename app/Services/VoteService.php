@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Vote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -43,15 +44,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -90,15 +93,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -133,15 +138,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -176,15 +183,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -223,15 +232,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -266,15 +277,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -309,15 +322,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }
@@ -359,15 +374,17 @@ class VoteService
             return response("Cooldown active until {$voteLog->expire}", 200);
         }
 
-        TbUser::updateSilk($user->jid, 0, $rewardAmount);
+        DB::transaction(function () use ($user, $rewardAmount, $config, $jid, $remoteIp, $now, $timeout) {
+            TbUser::updateSilk($user->jid, 0, $rewardAmount);
 
-        Donate::DonateLog([
-            'method' => "Vote [{$config['name']}]",
-            'value' => $rewardAmount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => "Vote [{$config['name']}]",
+                'value' => $rewardAmount,
+                'jid' => $user->jid,
+            ]);
 
-        Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+            Vote::updateOrCreate(['jid' => $jid, 'site' => $config['route']], ['ip' => $remoteIp, 'expire' => $now->addHours($timeout)]);
+        });
 
         return response("OK", 200);
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Donate;
 use App\Models\SRO\Account\TbUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -39,14 +40,16 @@ class UserController extends Controller
         ]);
 
         $JID = config('global.server.version') === 'vSRO' ? $user->JID : $user->PortalJID;
-        TbUser::updateSilk($JID, $validated['type'], $validated['amount']);
+        DB::transaction(function () use ($JID, $validated, $user) {
+            TbUser::updateSilk($JID, $validated['type'], $validated['amount']);
 
-        Donate::DonateLog([
-            'method' => 'AdminPanel',
-            'type' => $validated['type'],
-            'value' => $validated['amount'],
-            'jid' => $user->JID,
-        ]);
+            Donate::log([
+                'method' => 'AdminPanel',
+                'type' => $validated['type'],
+                'value' => $validated['amount'],
+                'jid' => $user->JID,
+            ]);
+        });
 
         return back()->with('success', 'Silk have been Sent!');
     }

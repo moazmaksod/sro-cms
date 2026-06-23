@@ -58,6 +58,7 @@
                                 <input type="hidden" name="price" value="0">
                                 <hr>
                                 <p class="package-name text-muted mb-0 mt-2">Select a package</p>
+                                <p class="package-type mb-0 small">Type: Premium Silk</p>
                                 <p class="package-price mb-0">Total amount: 0 USD</p>
                                 <hr>
                                 <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
@@ -87,11 +88,25 @@
 @push('scripts')
     <script>
         var FORM_ACTION = "{{ route('account.donate.process', ['method' => '_METHOD_']) }}";
+        var SILK_TYPES = {};
+        var SILK_DEFAULT = 0;
+        @if(config('global.server.version') === 'vSRO')
+        SILK_TYPES = {0: '{{ __("Normal Silk") }}', 1: '{{ __("Gift Silk") }}', 2: '{{ __("Point Silk") }}'};
+        SILK_DEFAULT = 0;
+        @else
+        SILK_TYPES = {3: '{{ __("Premium Silk") }}', 1: '{{ __("Normal Silk") }}'};
+        SILK_DEFAULT = 3;
+        @endif
 
         document.addEventListener('DOMContentLoaded', function () {
             var donate = document.getElementById('content-donate');
             var details = document.getElementById('content-donate-details');
             var detailsSection = document.getElementById('details-section');
+
+            var firstMethod = q('[data-method]');
+            if (firstMethod) {
+                q('form', details).action = FORM_ACTION.replace('_METHOD_', firstMethod.dataset.method);
+            }
 
             function showDetails(show) {
                 detailsSection.classList.toggle('d-none', !show);
@@ -119,9 +134,10 @@
                         donate.innerHTML = html;
                         q('input[name=price]', details).value = 0;
                         q('.package-name', details).textContent = 'Select a package';
+                        q('.package-type', details).textContent = 'Type: Premium Silk';
                         q('.package-price', details).textContent = 'Total amount: 0 USD';
 
-                        if (['maxicard', 'hipocard', 'custom'].includes(method)) {
+                        if (['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method)) {
                             setBtn(true, 'Not Available');
                         } else {
                             setBtn(true, 'Buy Now');
@@ -142,7 +158,7 @@
                     qa('[data-method]').forEach(function (c) { c.classList.remove('selected'); });
                     this.classList.add('selected');
 
-                    showDetails(!['maxicard', 'hipocard', 'custom'].includes(method));
+                    showDetails(!['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method));
                     q('form', details).action = FORM_ACTION.replace('_METHOD_', method);
                     loadPackages(method);
                 });
@@ -160,12 +176,14 @@
 
                 q('input[name=price]', details).value = card.dataset.price;
 
-                if (['maxicard', 'hipocard'].includes(method)) {
+                if (['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method)) {
                     setBtn(true, 'Not Available');
                 } else {
                     setBtn(false, 'Buy Now');
                 }
 
+                var typeLabel = SILK_TYPES[card.dataset.type] || SILK_TYPES[SILK_DEFAULT];
+                q('.package-type', details).textContent = 'Type: ' + typeLabel;
                 q('.package-name', details).textContent = 'Package: ' + card.dataset.name;
                 q('.package-price', details).textContent = 'Total amount: ' + card.dataset.price + ' ' + card.dataset.currency;
             });

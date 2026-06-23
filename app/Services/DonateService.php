@@ -143,16 +143,18 @@ class DonateService
 
         $user = Auth::user();
 
-        TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+        DB::transaction(function () use ($user, $package) {
+            TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-        Donate::DonateLog([
-            'method' => 'Paypal',
-            'amount' => $package['price'],
-            'value' => $package['value'],
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => 'Paypal',
+                'amount' => $package['price'],
+                'value' => $package['value'],
+                'jid' => $user->jid,
+            ]);
+        });
 
-        return redirect()->route('account.donate')->with('success', 'Payment completed successfully!');
+        return redirect()->route('account.donate')->with('success', number_format($package['value']) . ' ' . __('Silk has been added to your account.'));
     }
 
     public function processStripe(Request $request)
@@ -243,17 +245,19 @@ class DonateService
 
                 $user = Auth::user();
 
-                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+                DB::transaction(function () use ($user, $package, $session) {
+                    TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-                Donate::DonateLog([
-                    'method' => 'Stripe',
-                    'transaction_id' => $session['id'],
-                    'amount' => $package['price'],
-                    'value' => $package['value'],
-                    'jid' => $user->jid,
-                ]);
+                    Donate::log([
+                        'method' => 'Stripe',
+                        'transaction_id' => $session['id'],
+                        'amount' => $package['price'],
+                        'value' => $package['value'],
+                        'jid' => $user->jid,
+                    ]);
+                });
 
-                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', number_format($package['value']) . ' ' . __('Silk has been added to your account.'));
             }
 
             return back()->withErrors(['stripe' => 'Payment was not completed successfully.'])->withInput();
@@ -325,14 +329,16 @@ class DonateService
 
         if (($pingback['type'] ?? '') == '0' || ($pingback['type'] ?? '') == '201') {
 
-            TbUser::updateSilk($user->jid, 0, $pingback['currency']);
+            DB::transaction(function () use ($user, $pingback) {
+                TbUser::updateSilk($user->jid, 0, $pingback['currency']);
 
-            Donate::DonateLog([
-                'method' => 'Paymentwall',
-                'transaction_id' => $pingback['ref'],
-                'value' => $pingback['currency'],
-                'jid' => $user->jid,
-            ]);
+                Donate::log([
+                    'method' => 'Paymentwall',
+                    'transaction_id' => $pingback['ref'],
+                    'value' => $pingback['currency'],
+                    'jid' => $user->jid,
+                ]);
+            });
 
             return response('OK', 200);
         }
@@ -417,15 +423,17 @@ class DonateService
                 return response('Invalid user or package', 400);
             }
 
-            TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+            DB::transaction(function () use ($user, $package, $data) {
+                TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-            Donate::DonateLog([
-                'method' => 'CoinPayments',
-                'transaction_id' => $data['txn_id'],
-                'amount' => $data['amount1'],
-                'value' => $package['value'],
-                'jid' => $user->jid,
-            ]);
+                Donate::log([
+                    'method' => 'CoinPayments',
+                    'transaction_id' => $data['txn_id'],
+                    'amount' => $data['amount1'],
+                    'value' => $package['value'],
+                    'jid' => $user->jid,
+                ]);
+            });
 
             return response('OK', 200);
         }
@@ -476,7 +484,7 @@ class DonateService
             $paymentUrl = $response['data']['url'] ?? null;
 
             if ($paymentUrl) {
-                Donate::DonateLog([
+                Donate::log([
                     'method' => 'Fawaterk',
                     'transaction_id' => $response['data']['invoiceId'],
                     'status' => 'pending',
@@ -515,9 +523,11 @@ class DonateService
                 return response('User not found', 400);
             }
 
-            TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+            DB::transaction(function () use ($user, $package, $transaction_id) {
+                TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-            $transaction_id->update(['status' => 'success']);
+                $transaction_id->update(['status' => 'success']);
+            });
 
             return response('OK', 200);
         } elseif ($status === 'fail') {
@@ -574,17 +584,19 @@ class DonateService
 
                 $user = Auth::user();
 
-                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+                DB::transaction(function () use ($user, $package, $orderNumber) {
+                    TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-                Donate::DonateLog([
-                    'method' => 'MaxiCard',
-                    'transaction_id' => $orderNumber,
-                    'amount' => $package['price'],
-                    'value' => $package['value'],
-                    'jid' => $user->jid,
-                ]);
+                    Donate::log([
+                        'method' => 'MaxiCard',
+                        'transaction_id' => $orderNumber,
+                        'amount' => $package['price'],
+                        'value' => $package['value'],
+                        'jid' => $user->jid,
+                    ]);
+                });
 
-                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', number_format($package['value']) . ' ' . __('Silk has been added to your account.'));
             }
         }
 
@@ -624,17 +636,19 @@ class DonateService
 
                 $user = Auth::user();
 
-                TbUser::updateSilk($user->jid, $package['type'] ?? 0, $package['value']);
+                DB::transaction(function () use ($user, $package) {
+                    TbUser::updateSilk($user->jid, $package['type'] ?? (config('global.server.version') === 'vSRO' ? 0 : 3), $package['value']);
 
-                Donate::DonateLog([
-                    'method' => 'HipoCard',
-                    'transaction_id' => uniqid().rand(100,999),
-                    'amount' => $package['price'],
-                    'value' => $package['value'],
-                    'jid' => $user->jid,
-                ]);
+                    Donate::log([
+                        'method' => 'HipoCard',
+                        'transaction_id' => uniqid().rand(100,999),
+                        'amount' => $package['price'],
+                        'value' => $package['value'],
+                        'jid' => $user->jid,
+                    ]);
+                });
 
-                return redirect()->route('account.donate')->with('success', 'Payment processed successfully!');
+                return redirect()->route('account.donate')->with('success', number_format($package['value']) . ' ' . __('Silk has been added to your account.'));
             }
         }
 
@@ -723,7 +737,7 @@ class DonateService
             DB::transaction(function () use ($user, $package, $data) {
                 TbUser::updateSilk($user->jid, $package['type'], $package['value']);
 
-                Donate::DonateLog([
+                Donate::log([
                     'method' => 'HipoPay',
                     'transaction_id' => $data['transaction_id'],
                     'status' => $data['status'],

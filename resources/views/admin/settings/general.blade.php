@@ -229,7 +229,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ __('Password') }}</label>
-                        <input type="password" class="form-control" id="mail_password"
+                        <input type="text" class="form-control" id="mail_password"
                                value="{{ ($mail['MAIL_PASSWORD'] ?? 'null') !== 'null' ? ($mail['MAIL_PASSWORD'] ?? '') : '' }}"
                                placeholder="null">
                     </div>
@@ -271,7 +271,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ __('Secret Key') }}</label>
-                        <input type="password" class="form-control" id="captcha_secret"
+                        <input type="text" class="form-control" id="captcha_secret"
                                value="{{ $captcha['secret'] ?? '' }}" placeholder="NOCAPTCHA_SECRET">
                         <div class="form-text">{{ __('The private key used for server-side verification. Keep this secret.') }}</div>
                     </div>
@@ -623,7 +623,7 @@
                                 @if($voteKey === 'vote4rewards')
                                     <div class="mb-3">
                                         <label class="form-label">{{ __('Webhook Secret') }}</label>
-                                        <input type="password" class="form-control" id="vote_{{ $voteKey }}_webhook_secret"
+                                        <input type="text" class="form-control" id="vote_{{ $voteKey }}_webhook_secret"
                                                value="{{ $voteItem['webhook_secret'] ?? '' }}" placeholder="Q7A9DA2xVdkL3rP0B8mNfH5S3LJcWgUy">
                                     </div>
                                 @endif

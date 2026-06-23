@@ -26,7 +26,7 @@ class Donate extends Model
         'ip',
     ];
 
-    public static function DonateLog(array $data)
+    public static function log(array $data)
     {
         return self::create([
             'method' => $data['method'] ?? 'unknown',

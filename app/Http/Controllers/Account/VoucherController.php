@@ -8,6 +8,7 @@ use App\Models\SRO\Account\TbUser;
 use App\Models\Voucher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VoucherController extends Controller
 {
@@ -42,15 +43,17 @@ class VoucherController extends Controller
 
         $user = $request->user();
 
-        TbUser::updateSilk($user->jid, $voucher->type, $voucher->amount);
+        DB::transaction(function () use ($user, $voucher) {
+            TbUser::updateSilk($user->jid, $voucher->type, $voucher->amount);
 
-        Donate::DonateLog([
-            'method' => 'Voucher',
-            'value' => $voucher->amount,
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => 'Voucher',
+                'value' => $voucher->amount,
+                'jid' => $user->jid,
+            ]);
 
-        $voucher->update(['jid' => $user->jid, 'status' => 'Used']);
+            $voucher->update(['jid' => $user->jid, 'status' => 'Used']);
+        });
 
         return redirect()->back()->with('success', 'Voucher redeemed successfully!');
     }

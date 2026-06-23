@@ -8,6 +8,7 @@ use App\Models\Referral;
 use App\Models\SRO\Account\TbUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ReferralController extends Controller
 {
@@ -50,15 +51,17 @@ class ReferralController extends Controller
             return back()->with('error', "You need at least {$minimumRedeem} points to redeem.");
         }
 
-        TbUser::updateSilk($user->jid, 0, $invites->sum('points'));
+        DB::transaction(function () use ($user, $invites) {
+            TbUser::updateSilk($user->jid, 0, $invites->sum('points'));
 
-        Donate::DonateLog([
-            'method' => 'Voucher',
-            'value' => $invites->sum('points'),
-            'jid' => $user->jid,
-        ]);
+            Donate::log([
+                'method' => 'Voucher',
+                'value' => $invites->sum('points'),
+                'jid' => $user->jid,
+            ]);
 
-        $user->invitesCreated()->whereNotNull('invited_jid')->update(['points' => 0]);
+            $user->invitesCreated()->whereNotNull('invited_jid')->update(['points' => 0]);
+        });
 
         return back()->with('success', "{$invites->sum('points')} Silk has been added to your account!");
     }
