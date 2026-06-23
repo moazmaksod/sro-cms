@@ -20,83 +20,36 @@
             </ul>
         </div>
     </div>
-@endif
 
-<script>
-    var timerCountdown = {};
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var els = document.querySelectorAll('.timerCountdown');
+            if (!els.length) return;
 
-    function startClockTimer(element)
-    {
-        clockTimer(element);
-        window.setInterval( 'clockTimer("'+element+'")', 999 );
-    }
+            var events = {};
+            els.forEach(function(el) {
+                events[el.id] = Number(el.dataset.time);
+            });
 
-    function clockTimer(element)
-    {
-        if (!document.all && !document.getElementById) {
-            return;
-        }
-        var Stunden = ServerTime.getHours();
-        var Minuten = ServerTime.getMinutes();
-        var Sekunden = ServerTime.getSeconds();
-        ServerTime.setSeconds(Sekunden + 1);
-        if (Stunden <= 9) {
-            Stunden = "0" + Stunden;
-        }
+            function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
-        if (Minuten <= 9) {
-            Minuten = "0" + Minuten;
-        }
-        if (Sekunden <= 9) {
-            Sekunden = "0" + Sekunden;
-        }
-        jQuery(element).text(Stunden.toString()+':'+Minuten.toString()+':'+Sekunden.toString());
-    }
-
-
-    function tTimer(iEndTimeStamp, iTimeStamp, sElement)
-    {
-        iTimeStamp = iTimeStamp - Math.round(+new Date() / 1000) - iEndTimeStamp;
-        oElement = jQuery('#'+sElement);
-        if (iTimeStamp < 0) {
-            oElement.html('00:00:00');
-            return false;
-        }
-        diffDay = iTimeStamp / (3600 * 24 );
-        diffDay = diffDay.toString();
-        diffDay = diffDay.split(".");
-        diffHour = iTimeStamp / 3600 % 24;
-        diffHour = diffHour.toString();
-        diffHour = diffHour.split(".");
-        diffMin = iTimeStamp / 60 % 60;
-        diffMin = diffMin.toString();
-        diffMin = diffMin.split(".");
-        diffSek = iTimeStamp % 60;
-        diffSek = diffSek.toString();
-        diffSek = diffSek.split(".");
-        if(diffDay[0] != 0){
-            oElement.html(diffDay[0] + 'd ' + checkLength(diffHour[0]) + ':' + checkLength(diffMin[0]) + ':' + checkLength(diffSek[0]));
-            return true;
-        }
-        oElement.text(checkLength(diffHour[0]) + ':' + checkLength(diffMin[0]) + ':' + checkLength(diffSek[0]));
-        return true;
-    }
-
-    function checkLength(sString)
-    {
-        sString = sString.toString();
-        if (sString.length === 1) {
-            sString = '0' + sString;
-        }
-        return sString;
-    }
-
-    function loadCheck()
-    {
-        jQuery.each(timerCountdown, function(sKey, iEntTime){
-            if(!tTimer( iTimeStamp, iEntTime, sKey)){
-                clearInterval(timerCountdown[sKey]);
+            function tick() {
+                var now = Math.round(Date.now() / 1000);
+                Object.keys(events).forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (!el) return;
+                    var left = events[id] - now;
+                    if (left <= 0) { el.textContent = '00:00:00'; return; }
+                    var d = Math.floor(left / 86400);
+                    var h = Math.floor((left % 86400) / 3600);
+                    var m = Math.floor((left % 3600) / 60);
+                    var s = left % 60;
+                    el.textContent = d > 0 ? d + 'd ' + pad(h) + ':' + pad(m) + ':' + pad(s) : pad(h) + ':' + pad(m) + ':' + pad(s);
+                });
             }
+
+            tick();
+            setInterval(tick, 1000);
         });
-    }
-</script>
+    </script>
+@endif

@@ -37,7 +37,7 @@
             ?>
             <?= $i == 0 ? '<tr>' : '' ?>
             <?php if ($inventorySlot) { ?>
-        <td>@include('ranking.character.partials.inventory.item-details', ['item' => $inventorySlot])</td>
+        <td>@include('pages.ranking.character.partials.inventory.item-details', ['item' => $inventorySlot])</td>
         <?php } else { ?>
         <td>
             <div class="sro-item-detail">

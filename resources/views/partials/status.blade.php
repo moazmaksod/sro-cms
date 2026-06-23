@@ -9,3 +9,22 @@
         </div>
     </div>
 </div>
+
+<script>
+(function() {
+    var el = document.getElementById('idTimerClock');
+    if (!el) return;
+
+    var serverTime = new Date({{ now()->format('Y, n, j, G, i, s') }});
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function tick() {
+        serverTime.setSeconds(serverTime.getSeconds() + 1);
+        el.textContent = pad(serverTime.getHours()) + ':' + pad(serverTime.getMinutes()) + ':' + pad(serverTime.getSeconds());
+    }
+
+    tick();
+    setInterval(tick, 1000);
+})();
+</script>

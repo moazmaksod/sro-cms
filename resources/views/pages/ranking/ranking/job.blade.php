@@ -18,21 +18,29 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $('[data-link-job]').on('click', function (e) {
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-link-job]').forEach(function(btn) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
-            const link = $(this).data('link-job');
+            var link = this.dataset.linkJob;
 
-            $('[data-link-job]').removeClass('selected');
-            $(this).addClass('selected');
+            document.querySelectorAll('[data-link-job]').forEach(function(b) { b.classList.remove('selected'); });
+            this.classList.add('selected');
 
-            $('#content-ranking-job').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+            document.getElementById('content-ranking-job').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
-            $.get(`${link}`, function (res) {
-                $('#content-ranking-job').html(res);
-            }).fail(function () {
-                $('#content-ranking-job').html('<div class="alert alert-danger">Failed to load Job Ranking.</div>');
-            });
+            fetch(link)
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Failed');
+                    return res.text();
+                })
+                .then(function(html) {
+                    document.getElementById('content-ranking-job').innerHTML = html;
+                })
+                .catch(function() {
+                    document.getElementById('content-ranking-job').innerHTML = '<div class="alert alert-danger">Failed to load Job Ranking.</div>';
+                });
         });
     });
+});
 </script>

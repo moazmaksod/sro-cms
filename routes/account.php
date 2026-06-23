@@ -22,9 +22,9 @@ Route::middleware(array_filter(['auth', config('global.register_confirm') ? 'ver
         Route::post('/edit/reset-secondary-password', [ProfileController::class, 'secondaryPasswordReset'])->name('reset.secondary.password');
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
+        Route::get('/donate/history', [DonateController::class, 'history'])->name('donate.history');
         Route::get('/donate/{method}', [DonateController::class, 'show'])->name('donate.show');
         Route::post('/donate/{method}/process', [DonateController::class, 'process'])->middleware('throttle:5,1')->name('donate.process');
-        Route::get('/donate/history', [DonateController::class, 'history'])->name('donate.history');
 
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
         Route::get('/tickets/create', [TicketController::class, 'create'])->name('ticket.create');

@@ -15,7 +15,7 @@ class HomeController extends Controller
         return view('pages.home.index', compact('data'));
     }
 
-    public function page($slug)
+    public function show($slug)
     {
         $data = Pages::getPage($slug);
 

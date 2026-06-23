@@ -6,7 +6,7 @@ return [
         'name' => 'Paypal',
         'route' => 'paypal',
         'currency' => 'USD',
-        'image' => 'images/donate/paypal.png',
+        'image' => 'images/paypal.png',
         //'endpoint' => 'https://api-m.paypal.com', // for production
         'endpoint' => 'https://api-m.sandbox.paypal.com', // for sandbox
         'client_id' => 'PAYPAL_CLIENT_ID',
@@ -50,7 +50,7 @@ return [
         'name' => 'Stripe',
         'route' => 'stripe',
         'currency' => 'USD',
-        'image' => 'images/donate/stripe.png',
+        'image' => 'images/stripe.png',
         'endpoint' => 'https://api.stripe.com',
         'secret_key' => 'STRIPE_SECRET_KEY',
         'publishable_key' => 'STRIPE_PUBLISHABLE_KEY',
@@ -92,7 +92,7 @@ return [
         'name' => 'Paymentwall',
         'route' => 'paymentwall',
         'currency' => 'USD',
-        'image' => 'images/donate/paymentwall.png',
+        'image' => 'images/paymentwall.png',
         'public_key' => 'YOUR_PROJECT_KEY',
         'private_key' => 'YOUR_SECRET_KEY',
         'widget_code' => 'p1_1',
@@ -120,7 +120,7 @@ return [
         'name' => 'CoinPayments',
         'route' => 'coinpayments',
         'currency' => 'USD',
-        'image' => 'images/donate/coinpayments.png',
+        'image' => 'images/coinpayments.png',
         'endpoint' => 'https://api.coinpayments.com',
         'merchant_id' => 'COINPAYMENTS_MERCHANT_ID',
         'client_id' => 'COINPAYMENTS_CLIENT_ID',
@@ -173,7 +173,7 @@ return [
         'name' => 'Fawaterk',
         'route' => 'fawaterk',
         'currency' => 'EGP',
-        'image' => 'images/donate/fawaterk.png',
+        'image' => 'images/fawaterk.png',
         //'endpoint' => 'https://app.fawaterk.com', // for production //webhook url: http://localhost/webhook/fawaterk
         'endpoint' => 'https://staging.fawaterk.com', // for sandbox //webhook url: http://localhost/webhook/fawaterk
         'api_key' => 'FAWATERK_API_KEY',
@@ -221,7 +221,7 @@ return [
         'name' => 'MaxiCard',
         'route' => 'maxicard',
         'currency' => 'TL',
-        'image' => 'images/donate/maxicard.png',
+        'image' => 'images/maxicard.png',
         'endpoint' => 'https://www.maxigame.org/epin/yukle.php',
         'api_key' => 'MAXICARD_API_KEY',
         'api_password' => 'MAXICARD_API_PASSWORD',
@@ -273,7 +273,7 @@ return [
         'name' => 'HipoCard',
         'route' => 'hipocard',
         'currency' => 'TL',
-        'image' => 'images/donate/hipocard.png',
+        'image' => 'images/hipocard.png',
         //'endpoint' => 'https://www.hipopotamya.com/api/v1/hipocard/epins', // for production
         'endpoint' => 'https://www.hipopotamya.com/api/sandbox/v1/hipocard/epins', // for sandbox
         'api_key' => 'HIPOCARD_API_KEY',
@@ -326,7 +326,7 @@ return [
         'name' => 'HipoPay',
         'route' => 'hipopay',
         'currency' => 'TL',
-        'image' => 'images/donate/hipopay.png',
+        'image' => 'images/hipopay.png',
         'endpoint' => 'https://www.hipopotamya.com/api/v1/merchants/payment/token', //webhook url: http://localhost/webhook/hipopay
         'api_key' => 'HIPOPAY_API_KEY',
         'api_password' => 'HIPOPAY_API_PASSWORD',
@@ -387,7 +387,7 @@ return [
         'name' => 'Custom Donate',
         'route' => 'custom',
         'currency' => 'USD',
-        'image' => 'images/donate/custom.png',
+        'image' => 'images/custom.png',
         'html' => '',
         'package' => [],
     ],

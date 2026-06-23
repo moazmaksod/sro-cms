@@ -2,63 +2,69 @@
 @section('title', __('Ranking'))
 
 @section('content')
-    <div class="container">
-        <div class="card border-0">
-            <div class="card-body p-0">
-                <div class="d-block text-center my-4">
-                    @foreach($config as $item)
-                        @if($item->enabled)
-                            <button class="btn btn-primary btn-lg border-0 me-1 mb-2 {{ $loop->first ? 'active' : '' }}" data-link="{{ is_array($item->route)? route($item->route['name'], $item->route['params'] ?? []): route($item->route) }}">
-                                {{ __($item->name) }}
-                            </button>
-                        @endif
-                    @endforeach
-                </div>
-                <div id="content-ranking">
-                    @if(request()->filled('search') || request()->filled('type'))
-                        @if($type == 'guild')
-                            @include('ranking.ranking.guild')
-                        @else
-                            @include('ranking.ranking.player')
-                        @endif
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                        </div>
+    <section class="card">
+        <div class="card-body">
+            <div class="d-block text-center my-4">
+                @foreach($config as $item)
+                    @if($item->enabled)
+                        <button class="btn btn-primary mb-1 {{ $loop->first ? 'active' : '' }}" data-link="{{ is_array($item->route)? route($item->route['name'], $item->route['params'] ?? []): route($item->route) }}">
+                            {{ __($item->name) }}
+                        </button>
                     @endif
-                </div>
+                @endforeach
+            </div>
+            <div id="content-ranking">
+                @if(request()->filled('search') || request()->filled('type'))
+                    @if($type == 'guild')
+                        @include('pages.ranking.ranking.guild')
+                    @else
+                        @include('pages.ranking.ranking.player')
+                    @endif
+                @else
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
+    </section>
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('[data-link]').on('click', function (e) {
-                e.preventDefault();
-                let link = $(this).data('link');
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('[data-link]').forEach(function(btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var link = this.dataset.link;
 
-                $('[data-link]').removeClass('active');
-                $(this).addClass('active');
+                    document.querySelectorAll('[data-link]').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
 
-                $('#content-ranking').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+                    document.getElementById('content-ranking').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
-                $.get(link, function(res){
-                    $('#content-ranking').html(res);
-                }).fail(() => {
-                    $('#content-ranking').html('<div class="alert alert-danger text-center">Failed to load ranking.</div>');
+                    fetch(link)
+                        .then(function(res) {
+                            if (!res.ok) throw new Error('Failed');
+                            return res.text();
+                        })
+                        .then(function(html) {
+                            document.getElementById('content-ranking').innerHTML = html;
+                        })
+                        .catch(function() {
+                            document.getElementById('content-ranking').innerHTML = '<div class="alert alert-danger text-center">Failed to load ranking.</div>';
+                        });
                 });
             });
 
-            const params = new URLSearchParams(window.location.search);
-            const hasRankingQuery = params.has('type') || params.has('search');
+            var params = new URLSearchParams(window.location.search);
+            var hasRankingQuery = params.has('type') || params.has('search');
 
             if (!hasRankingQuery) {
-                const $defaultButton = $('[data-link]').first();
-                if ($defaultButton.length) {
-                    $defaultButton.trigger('click');
+                var defaultButton = document.querySelector('[data-link]');
+                if (defaultButton) {
+                    defaultButton.click();
                 } else {
-                    $('#content-ranking').html('<div class="alert alert-warning text-center">No ranking is enabled.</div>');
+                    document.getElementById('content-ranking').innerHTML = '<div class="alert alert-warning text-center">No ranking is enabled.</div>';
                 }
             }
         });

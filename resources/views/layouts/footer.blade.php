@@ -1,6 +1,6 @@
-<footer>
+<footer class="mt-5 border-top">
     <div class="container">
-        <div class="row py-5 mt-5 border-top">
+        <div class="row py-5">
             <div class="col-lg-6 mb-3">
                 <a href="{{ url('/') }}" class="d-flex align-items-center mb-3 text-decoration-none" aria-label="Bootstrap">
                     <img src="{{ asset(config('global.site_logo')) }}" alt="" width="" height="64">

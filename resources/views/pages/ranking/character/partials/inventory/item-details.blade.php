@@ -10,7 +10,7 @@
     </div>
     <?php if ($item) : ?>
     <div class="info">
-        @include('ranking.character.partials.inventory.item-blues-whites', ['item' => $item->ItemInfo])
+        @include('pages.ranking.character.partials.inventory.item-blues-whites', ['item' => $item->ItemInfo])
     </div>
     <?php endif; ?>
     <div class="clearfix"></div>

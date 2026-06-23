@@ -6,157 +6,168 @@
 @stop
 
 @section('content')
-    <div class="container">
-        <div class="card border-0">
-            <div class="card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+    <section class="card">
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-                <div class="row justify-content-center">
-                    @if(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled']))->isNotEmpty())
-                        <div class="col-12 mb-4 text-center">
-                            <p>Select Payment Method</p>
-                            <div class="d-flex justify-content-center flex-wrap">
-                                @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                                    <div class="card m-2 d-flex {{ $loop->first ? 'selected' : '' }}" role="button" data-method="{{ $key }}" style="width: 120px;">
-                                        <img src="{{ asset(!empty($row['image']) ? $row['image'] : config('donate.'.$key.'.image', '')) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $row['name'] }}">
+            @if(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled']))->isNotEmpty())
+                <div class="row g-4">
+                    <div class="col-12">
+                        <p>Select Payment Method</p>
+                        <div class="row g-2 justify-content-center">
+                            @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
+                                <div class="col">
+                                    <div class="card h-100 {{ $loop->first ? 'selected' : '' }}" role="button" data-method="{{ $key }}">
+                                        <img src="{{ asset($row['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $row['name'] }}">
                                         <div class="card-body text-center p-2">
                                             <strong>{{ $row['name'] }}</strong>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="col-12 mb-4">
-                            <p>Select Package</p>
-                            <div id="content-donate">
-                                @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                                    @include('pages.donate.' . $key, ['data' => $data[$key]])
-                                    @break
-                                @endforeach
-                            </div>
+                    </div>
+
+                    <div class="col-12">
+                        <p>Select Package</p>
+                        <div id="content-donate">
+                            @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
+                                @include('pages.donate.' . $key, ['data' => $data[$key]])
+                                @break
+                            @endforeach
                         </div>
-                        <div class="col-12 mb-4">
-                            <p>Order Details</p>
-                            <div id="content-donate-details">
-                                @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                                    <form action="{{ route('account.donate.process', ['method' => $key]) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="price" value="0">
-                                        <hr>
-                                        <p class="package-name text-muted mb-0 mt-2">Select a package</p>
-                                        <p class="package-price mb-0">Total amount: 0 USD</p>
-                                        <hr>
-                                        <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
-                                    </form>
-                                    @break
-                                @endforeach
-                            </div>
+                    </div>
+
+                    <div class="col-12" id="details-section">
+                        <p>Order Details</p>
+                        <div id="content-donate-details">
+                            <form id="donate-form" method="POST">
+                                @csrf
+                                <input type="hidden" name="price" value="0">
+                                <hr>
+                                <p class="package-name text-muted mb-0 mt-2">Select a package</p>
+                                <p class="package-price mb-0">Total amount: 0 USD</p>
+                                <hr>
+                                <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
+                            </form>
                         </div>
-                    @else
-                        <div class="col-12">
-                            <div class="alert alert-info mb-0 text-center">
-                                {{ __('All donation methods are currently disabled.') }}
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="alert alert-info mb-0 text-center">
+                    {{ __('All donation methods are currently disabled.') }}
+                </div>
+            @endif
         </div>
-    </div>
+    </section>
 @endsection
 @push('styles')
     <style>
         .card[data-method].selected, .card[data-price].selected {
             border: 1px solid #0d6efd;
-            box-shadow: 0 0 10px rgba(13, 110, 253, 0.4);
         }
         .card[data-method]:hover, #content-donate .card:hover {
             border: 1px solid #0d6efd;
-            box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
             cursor: pointer;
         }
     </style>
 @endpush
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('[data-method]').on('click', function (e) {
-                //e.preventDefault();
-                let method = $(this).data('method');
-                if (location.protocol === 'https:' && method.startsWith('http:')) {
-                    method = method.replace(/^http:/, 'https:');
-                }
+        var FORM_ACTION = "{{ route('account.donate.process', ['method' => '_METHOD_']) }}";
 
-                $('[data-method]').removeClass('selected');
-                $(this).addClass('selected');
+        document.addEventListener('DOMContentLoaded', function () {
+            var donate = document.getElementById('content-donate');
+            var details = document.getElementById('content-donate-details');
+            var detailsSection = document.getElementById('details-section');
 
-                $('#content-donate-details form').attr('action', `/profile/donate/${method}/process`);
+            function showDetails(show) {
+                detailsSection.classList.toggle('d-none', !show);
+            }
 
-                $('#content-donate').html(`
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                </div>
-                `);
+            function q(sel, ctx) { return (ctx || document).querySelector(sel); }
+            function qa(sel, ctx) { return (ctx || document).querySelectorAll(sel); }
 
-                $.get(`/profile/donate/${method}`, function (res) {
-                    $('#content-donate').html(res);
+            function setBtn(disabled, text) {
+                var btn = q('button[type=submit]', details);
+                if (!btn) return;
+                btn.disabled = disabled;
+                if (text) btn.textContent = text;
+            }
 
-                    $('input[name=price]').val(0);
-                    $('#content-donate-details button[type=submit]').prop('disabled', true);
-                    $('#content-donate-details .package-name').text('Select a package');
-                    $('#content-donate-details .package-price').text('Total amount: 0 USD');
-                }).fail(function () {
-                    $('#content-donate').html('<div class="alert alert-danger">Failed to load package options.</div>');
+            function loadPackages(method) {
+                donate.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+                fetch(FORM_ACTION.replace('_METHOD_', method).replace('/process', ''), {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'same-origin'
+                    })
+                    .then(function (r) { if (!r.ok) throw new Error(); return r.text(); })
+                    .then(function (html) {
+                        donate.innerHTML = html;
+                        q('input[name=price]', details).value = 0;
+                        q('.package-name', details).textContent = 'Select a package';
+                        q('.package-price', details).textContent = 'Total amount: 0 USD';
+
+                        if (['maxicard', 'hipocard', 'custom'].includes(method)) {
+                            setBtn(true, 'Not Available');
+                        } else {
+                            setBtn(true, 'Buy Now');
+                        }
+                    })
+                    .catch(function () {
+                        donate.innerHTML = '<div class="alert alert-danger">Failed to load package options.</div>';
+                    });
+            }
+
+            qa('[data-method]').forEach(function (card) {
+                card.addEventListener('click', function () {
+                    var method = this.dataset.method;
+                    if (location.protocol === 'https:' && method.startsWith('http:')) {
+                        method = method.replace(/^http:/, 'https:');
+                    }
+
+                    qa('[data-method]').forEach(function (c) { c.classList.remove('selected'); });
+                    this.classList.add('selected');
+
+                    showDetails(!['maxicard', 'hipocard', 'custom'].includes(method));
+                    q('form', details).action = FORM_ACTION.replace('_METHOD_', method);
+                    loadPackages(method);
                 });
-
-                if (['maxicard', 'hipocard', 'custom'].includes(method)) {
-                    $('#content-donate-details button[type=submit]').prop('disabled', true).text('Not Available');
-                } else {
-                    $('#content-donate-details button[type=submit]').prop('disabled', false).text('Buy Now');
-                }
-
-                if (method === 'custom') {
-                    const customTitle = $(this).find('strong').text() || 'Custom Donate';
-                    $('#content-donate-details .package-name').text(`Method: ${customTitle}`);
-                    $('#content-donate-details .package-price').text('Total amount: --');
-                }
             });
 
-            $(document).on('click', '#content-donate .card', function (e) {
-                //e.preventDefault();
+            donate.addEventListener('click', function (e) {
+                var card = e.target.closest('.card');
+                if (!card) return;
 
-                const method = $('[data-method].selected').data('method');
-                const price = $(this).data('price');
-                const name = $(this).data('name');
-                const currency = $(this).data('currency');
+                var method = q('[data-method].selected');
+                method = method ? method.dataset.method : null;
 
-                $('#content-donate .card').removeClass('selected');
-                $(this).addClass('selected');
+                qa('#content-donate .card').forEach(function (c) { c.classList.remove('selected'); });
+                card.classList.add('selected');
 
-                $('input[name=price]').val(price);
+                q('input[name=price]', details).value = card.dataset.price;
 
                 if (['maxicard', 'hipocard'].includes(method)) {
-                    $('#content-donate-details button[type=submit]').prop('disabled', true).text('Not Available');
+                    setBtn(true, 'Not Available');
                 } else {
-                    $('#content-donate-details button[type=submit]').prop('disabled', false);
+                    setBtn(false, 'Buy Now');
                 }
 
-                $('#content-donate-details .package-name').text(`Package: ${name}`);
-                $('#content-donate-details .package-price').text(`Total amount: ${price} ${currency}`);
+                q('.package-name', details).textContent = 'Package: ' + card.dataset.name;
+                q('.package-price', details).textContent = 'Total amount: ' + card.dataset.price + ' ' + card.dataset.currency;
             });
         });
     </script>

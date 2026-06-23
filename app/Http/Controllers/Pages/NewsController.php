@@ -7,13 +7,13 @@ use App\Models\News;
 
 class NewsController extends Controller
 {
-    public function news()
+    public function index()
     {
         $data = News::getPosts();
         return view('pages.news.index', compact('data'));
     }
 
-    public function post($slug)
+    public function show($slug)
     {
         $data = News::getPost($slug);
 
