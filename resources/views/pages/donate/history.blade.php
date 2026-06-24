@@ -2,7 +2,7 @@
 @section('title', __('Silk History'))
 
 @section('sidebar')
-    @include('partials.logged-in')
+    @include('account.sidebar')
 @stop
 
 @section('content')

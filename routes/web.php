@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Account\PanelController as AccountPanelController;
-use App\Http\Controllers\Pages\DonateController as PagesDonateController;
+use App\Http\Controllers\Account\DonateController as PagesDonateController;
 
 Route::prefix('{locale}')->where(['locale' => implode('|', array_keys(config('global.languages')))])->group(function () {
     require __DIR__.'/pages.php';
     require __DIR__.'/logs.php';
     require __DIR__.'/ranking.php';
-    require __DIR__.'/game.php';
+    require __DIR__.'/ingame.php';
     require __DIR__.'/auth.php';
     require __DIR__.'/account.php';
 });

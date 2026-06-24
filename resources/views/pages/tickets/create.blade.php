@@ -2,7 +2,7 @@
 @section('title', __('New Ticket'))
 
 @section('sidebar')
-    @include('partials.logged-in')
+    @include('account.sidebar')
 @stop
 
 @section('content')

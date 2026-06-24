@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pages;
+namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use App\Models\SRO\Account\SkSilkBuyList;
@@ -11,65 +11,67 @@ use Illuminate\View\View;
 
 class DonateController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $data = config('donate');
-        return view('pages.donate.index', compact('data'));
+        return view('pages.donate.index', ['data' => config('donate')]);
     }
 
-    public function show($method)
+    public function show(string $method): mixed
     {
         $config = config("donate.{$method}");
 
         if (!$config || !$config['enabled']) {
-            return redirect()->back()->withErrors('Payment method not found or disabled.');
+            return back()->withErrors(['error' => 'Payment method not found or disabled.']);
         }
 
         if (!view()->exists("pages.donate.{$method}")) {
-            return redirect()->back()->withErrors(['error' => 'View file for the payment method is missing.']);
+            return back()->withErrors(['error' => 'View file for the payment method is missing.']);
         }
 
         return view("pages.donate.{$method}", ['data' => $config]);
     }
 
-    public function process($method, Request $request, DonateService $donateService)
+    public function process(string $method, Request $request, DonateService $donateService): mixed
     {
         $config = config("donate.{$method}");
+
         if (!$config || !$config['enabled']) {
-            return redirect()->back()->withErrors('Payment method not found or disabled.');
+            return back()->withErrors(['error' => 'Payment method not found or disabled.']);
         }
 
-        $methodName = "process" . ucfirst($method);
+        $methodName = 'process' . ucfirst($method);
         if (!method_exists($donateService, $methodName)) {
-            return redirect()->back()->withErrors('Invalid payment method.');
+            return back()->withErrors(['error' => 'Invalid payment method.']);
         }
 
         return $donateService->$methodName($request);
     }
 
-    public function callback($method, Request $request, DonateService $donateService)
+    public function callback(string $method, Request $request, DonateService $donateService): mixed
     {
         $config = config("donate.{$method}");
+
         if (!$config || !$config['enabled']) {
-            return redirect()->back()->withErrors('Payment method not found or disabled.');
+            return back()->withErrors(['error' => 'Payment method not found or disabled.']);
         }
 
-        $methodName = "callback" . ucfirst($method);
+        $methodName = 'callback' . ucfirst($method);
         if (!method_exists($donateService, $methodName)) {
-            return redirect()->back()->withErrors('Invalid payment method.');
+            return back()->withErrors(['error' => 'Invalid payment method.']);
         }
 
         return $donateService->$methodName($request);
     }
 
-    public function webhook($method, Request $request, DonateService $donateService)
+    public function webhook(string $method, Request $request, DonateService $donateService): mixed
     {
         $config = config("donate.{$method}");
+
         if (!$config || !$config['enabled']) {
             return response('Payment method not found or disabled.', 403);
         }
 
-        $methodName = "webhook" . ucfirst($method);
+        $methodName = 'webhook' . ucfirst($method);
         if (!method_exists($donateService, $methodName)) {
             return response('Invalid payment method.', 403);
         }
@@ -79,11 +81,10 @@ class DonateController extends Controller
 
     public function history(Request $request): View
     {
-        $page = $request->get('page', 1);
         if (config('global.server.version') === 'vSRO') {
-            $data = SkSilkBuyList::getSilkBuyList($request->user()->jid, 25, $page);
-        } else {
-            $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $page);
+            $data = SkSilkBuyList::getSilkHistory($request->user()->jid, 25, $request->get('page', 1));
+        }else {
+            $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $request->get('page', 1));
         }
 
         return view('pages.donate.history', [

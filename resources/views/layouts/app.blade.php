@@ -46,7 +46,9 @@
                 @yield('content')
             </div>
             <div class="col-lg-4">
-                @include('layouts.sidebar')
+                @section('sidebar')
+                    @include('layouts.sidebar')
+                @show
             </div>
         </div>
     </div>

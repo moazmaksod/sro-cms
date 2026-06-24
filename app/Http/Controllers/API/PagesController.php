@@ -9,7 +9,7 @@ use App\Models\SRO\Account\ShardCurrentUser;
 use App\Models\SRO\Log\LogInstanceWorldInfo;
 use App\Services\ScheduleService;
 
-class PageController extends Controller
+class PagesController extends Controller
 {
     public function news()
     {

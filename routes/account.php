@@ -6,7 +6,7 @@ use App\Http\Controllers\Account\ReferralController;
 use App\Http\Controllers\Account\TicketController;
 use App\Http\Controllers\Account\VoteController;
 use App\Http\Controllers\Account\VoucherController;
-use App\Http\Controllers\Pages\DonateController;
+use App\Http\Controllers\Account\DonateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(array_filter(['auth', config('global.register_confirm') ? 'verified' : null]))->group(function () {

@@ -2,7 +2,7 @@
 @section('title', __('Donate'))
 
 @section('sidebar')
-    @include('partials.logged-in')
+    @include('account.sidebar')
 @stop
 
 @section('content')
