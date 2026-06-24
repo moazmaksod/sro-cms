@@ -38,7 +38,7 @@
                     <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
                          id="gw-{{ $key }}" role="tabpanel">
 
-                        @if(in_array($key, ['paymentwall', 'fawaterk', 'hipopay']))
+                        @if(in_array($key, ['fawaterk', 'hipopay', 'nowpayments']))
                             <div class="alert alert-info mb-3">
                                 {{ __('Webhook URL:') }} <code>{{ config('app.url') }}/webhook/{{ $key }}</code>
                             </div>
@@ -149,62 +149,23 @@
                                            value="{{ $gateway['publishable_key'] ?? '' }}" placeholder="STRIPE_PUBLISHABLE_KEY">
                                 </div>
 
-                            @elseif($key === 'paymentwall')
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Public Key') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_public_key"
-                                           value="{{ $gateway['public_key'] ?? '' }}" placeholder="YOUR_PROJECT_KEY">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Private Key') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_private_key"
-                                           value="{{ $gateway['private_key'] ?? '' }}" placeholder="YOUR_SECRET_KEY">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Widget Code') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_widget_code"
-                                           value="{{ $gateway['widget_code'] ?? '' }}" placeholder="p1_1">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('API Type') }}</label>
-                                    <select class="form-select" id="{{ $key }}_api_type">
-                                        <option value="vc"     {{ ($gateway['api_type'] ?? 'vc') === 'vc'     ? 'selected' : '' }}>VC</option>
-                                        <option value="direct" {{ ($gateway['api_type'] ?? 'vc') === 'direct' ? 'selected' : '' }}>Direct</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Authorized IPs') }}</label>
-                                    <textarea class="form-control" id="{{ $key }}_authorized_ips" rows="4"
-                                              placeholder="174.36.92.186">{{ implode("\n", $gateway['authorized_ips'] ?? []) }}</textarea>
-                                    <div class="form-text">{{ __('One IP per line') }}</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Authorized Ranges') }}</label>
-                                    <textarea class="form-control" id="{{ $key }}_authorized_ranges" rows="4"
-                                              placeholder="216.127.71.0/24">{{ implode("\n", $gateway['authorized_ranges'] ?? []) }}</textarea>
-                                    <div class="form-text">{{ __('One CIDR range per line') }}</div>
-                                </div>
 
-                            @elseif($key === 'coinpayments')
+
+                            @elseif($key === 'nowpayments')
                                 <div class="mb-3">
                                     <label class="form-label">{{ __('Endpoint') }}</label>
                                     <input type="text" class="form-control" id="{{ $key }}_endpoint"
-                                           value="{{ $gateway['endpoint'] ?? '' }}" placeholder="https://api.coinpayments.com">
+                                           value="{{ $gateway['endpoint'] ?? '' }}" placeholder="https://api.nowpayments.io/v1">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{{ __('Merchant ID') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_merchant_id"
-                                           value="{{ $gateway['merchant_id'] ?? '' }}" placeholder="COINPAYMENTS_MERCHANT_ID">
+                                    <label class="form-label">{{ __('API Key') }}</label>
+                                    <input type="text" class="form-control" id="{{ $key }}_api_key"
+                                           value="{{ $gateway['api_key'] ?? '' }}" placeholder="NOWPAYMENTS_API_KEY">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{{ __('Client ID') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_client_id"
-                                           value="{{ $gateway['client_id'] ?? '' }}" placeholder="COINPAYMENTS_CLIENT_ID">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">{{ __('Client Secret') }}</label>
-                                    <input type="text" class="form-control" id="{{ $key }}_client_secret"
-                                           value="{{ $gateway['client_secret'] ?? '' }}" placeholder="COINPAYMENTS_CLIENT_SECRET">
+                                    <label class="form-label">{{ __('IPN Secret') }}</label>
+                                    <input type="text" class="form-control" id="{{ $key }}_ipn_secret"
+                                           value="{{ $gateway['ipn_secret'] ?? '' }}" placeholder="NOWPAYMENTS_IPN_SECRET">
                                 </div>
 
                             @elseif($key === 'fawaterk')

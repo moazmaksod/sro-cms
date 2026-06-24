@@ -134,8 +134,10 @@ class TbUser extends Model
     public static function updateSilk($jid, $type, $amount)
     {
         if (config('global.server.version') === 'vSRO') {
+            $type = in_array($type, [0, 1, 2]) ? $type : 0;
             SkSilk::updateSkSilk($jid, $type, $amount);
         } else {
+            $type = in_array($type, [1, 3]) ? $type : 3;
             AphChangedSilk::updateChangedSilk($jid, $type, $amount);
         }
     }

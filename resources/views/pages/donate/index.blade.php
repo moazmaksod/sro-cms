@@ -137,7 +137,7 @@
                         q('.package-type', details).textContent = 'Type: Premium Silk';
                         q('.package-price', details).textContent = 'Total amount: 0 USD';
 
-                        if (['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method)) {
+                        if (['maxicard', 'hipocard', 'custom'].includes(method)) {
                             setBtn(true, 'Not Available');
                         } else {
                             setBtn(true, 'Buy Now');
@@ -158,7 +158,7 @@
                     qa('[data-method]').forEach(function (c) { c.classList.remove('selected'); });
                     this.classList.add('selected');
 
-                    showDetails(!['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method));
+                    showDetails(!['maxicard', 'hipocard', 'custom'].includes(method));
                     q('form', details).action = FORM_ACTION.replace('_METHOD_', method);
                     loadPackages(method);
                 });
@@ -176,7 +176,7 @@
 
                 q('input[name=price]', details).value = card.dataset.price;
 
-                if (['maxicard', 'hipocard', 'paymentwall', 'custom'].includes(method)) {
+                if (['maxicard', 'hipocard', 'custom'].includes(method)) {
                     setBtn(true, 'Not Available');
                 } else {
                     setBtn(false, 'Buy Now');
