@@ -8,6 +8,14 @@
 @section('content')
     <section class="card">
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -18,56 +26,46 @@
                 </div>
             @endif
 
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
             @if(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled']))->isNotEmpty())
-                <div class="row g-4">
-                    <div class="col-12">
-                        <p>Select Payment Method</p>
-                        <div class="row g-2 justify-content-center">
-                            @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                                <div class="col">
-                                    <div class="card h-100 {{ $loop->first ? 'selected' : '' }}" role="button" data-method="{{ $key }}">
-                                        <img src="{{ asset($row['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $row['name'] }}">
-                                        <div class="card-body text-center p-2">
-                                            <strong>{{ $row['name'] }}</strong>
-                                        </div>
-                                    </div>
+                <h5 class="mt-0">Choose Payment Method</h5>
+                <div class="row">
+                    @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
+                        <div class="col">
+                            <div class="card h-100 {{ $loop->first ? 'selected' : '' }}" role="button" data-method="{{ $key }}">
+                                <img src="{{ asset($row['image']) }}" class="card-img-top object-fit-contain p-2" height="50" alt="{{ $row['name'] }}">
+                                <div class="card-body text-center p-2">
+                                    <strong>{{ $row['name'] }}</strong>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
 
-                    <div class="col-12">
-                        <p>Select Package</p>
-                        <div id="content-donate">
-                            @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                                @include('pages.donate.' . $key, ['data' => $data[$key]])
-                                @break
-                            @endforeach
-                        </div>
-                    </div>
+                <h5 class="mt-5">Select Package</h5>
+                <div id="content-donate">
+                    @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
+                        @include('pages.donate.' . $key, ['data' => $data[$key]])
+                        @break
+                    @endforeach
+                </div>
 
-                    <div class="col-12" id="details-section">
-                        <p>Order Details</p>
-                        <div id="content-donate-details">
-                            <form id="donate-form" method="POST">
-                                @csrf
-                                <input type="hidden" name="price" value="0">
-                                <hr>
-                                <p class="package-name text-muted mb-0 mt-2">Select a package</p>
-                                <p class="package-type mb-0 small">Type: Premium Silk</p>
-                                <p class="package-price mb-0">Total amount: 0 USD</p>
-                                <hr>
-                                <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
-                            </form>
-                        </div>
+                <div id="details-section">
+                    <h5 class="mt-5">Order Details</h5>
+                    <div id="content-donate-details">
+                        <form id="donate-form" method="POST">
+                            @csrf
+                            <input type="hidden" name="price" value="0">
+                            <hr>
+                            <p class="package-name text-muted mb-0 mt-2">Select a package</p>
+                            <p class="package-type mb-0 small">Type: Premium Silk</p>
+                            <p class="package-price mb-0">Total amount: 0 USD</p>
+                            <hr>
+                            <button type="submit" class="btn w-100 btn-primary" disabled>{{ __('Buy Now') }}</button>
+                        </form>
                     </div>
                 </div>
             @else
-                <div class="alert alert-info mb-0 text-center">
+                <div class="alert alert-danger mb-0">
                     {{ __('All donation methods are currently disabled.') }}
                 </div>
             @endif

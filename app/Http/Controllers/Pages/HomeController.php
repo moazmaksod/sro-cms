@@ -29,4 +29,12 @@ class HomeController extends Controller
         $data = Download::getDownloads();
         return view('pages.download.index', compact('data'));
     }
+
+    public function locale($locale)
+    {
+        if (isset(config('global.languages')[$locale])) {
+            session(['locale' => $locale]);
+        }
+        return back();
+    }
 }

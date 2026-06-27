@@ -2,11 +2,9 @@
 @section('title', $data->title)
 
 @section('content')
-    <div class="container">
-        <div class="card border-0">
-            <div class="card-body">
-                {!! $data->content !!}
-            </div>
+    <section class="card">
+        <div class="card-body">
+            {!! $data->content !!}
         </div>
-    </div>
+    </section>
 @endsection

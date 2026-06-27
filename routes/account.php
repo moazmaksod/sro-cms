@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Account\PanelController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Account\ReferralController;
 use App\Http\Controllers\Account\TicketController;

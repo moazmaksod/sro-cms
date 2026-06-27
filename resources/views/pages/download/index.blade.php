@@ -2,48 +2,44 @@
 @section('title', __('Downloads'))
 
 @section('content')
-    <div class="container">
-        <div class="card border-0">
-            <div class="card-body p-0">
-                <h2 class="mb-4">{{ __('Downloads') }}</h2>
-
-                <div class="row">
-                    @forelse($data as $row)
-                        <div class="col-lg-6 col-sm-12">
-                            <a href="{{ $row->url }}" target="_blank" class="text-decoration-none">
-                                <div class="card mb-3">
-                                    <div class="card-body p-4 d-flex flex-row align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            @if ($row->image)
-                                                <img class="d-block mx-auto me-2" src="{{ $row->image }}" alt="" width="60">
-                                            @endif
-                                            <div>
-                                                <h4 class="mb-0">{{ $row->name }}</h4>
-                                                <p class="mb-0">{{ $row->desc }}</p>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-primary btn-lg">{{ __('Download') }}</button>
+    <section class="card">
+        <div class="card-body">
+            <h2 class="mt-0">{{ __('Downloads') }}</h2>
+            <div class="row">
+                @forelse($data as $row)
+                    <div class="col-lg-12">
+                        <div class="card mb-3">
+                            <div class="card-body d-flex flex-row align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    @if ($row->image)
+                                        <img class="d-block mx-auto me-2" src="{{ $row->image }}" alt="" width="60">
+                                    @endif
+                                    <div>
+                                        <h4 class="mb-0">{{ $row->name }}</h4>
+                                        <p class="mb-0">{{ $row->desc }}</p>
                                     </div>
                                 </div>
-                            </a>
+                                <a href="{{ $row->url }}" target="_blank" class="btn btn-primary">{{ __('Download') }}</a>
+                            </div>
                         </div>
-                    @empty
-                        <div class="alert alert-danger text-center" role="alert">
-                            {{ __('No Downloads Available!') }}
-                        </div>
-                    @endforelse
-                </div>
+                    </div>
+                @empty
+                    <div class="alert alert-danger text-center" role="alert">
+                        {{ __('No Downloads Available!') }}
+                    </div>
+                @endforelse
+            </div>
 
-                <h2 class="mb-4 mt-5">{{ __('System Requirements') }}</h2>
-
-                <div class="row">
+            <h2 class="mt-5">{{ __('System Requirements') }}</h2>
+            <div class="card">
+                <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-                            <thead class="table-dark">
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <th scope="col">{{ __('Category') }}</th>
-                                <th scope="col">{{ __('Minimum Requirements') }}</th>
-                                <th scope="col">{{ __('Recommended Requirements') }}</th>
+                                <th>{{ __('Category') }}</th>
+                                <th>{{ __('Minimum Requirements') }}</th>
+                                <th>{{ __('Recommended Requirements') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -83,5 +79,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

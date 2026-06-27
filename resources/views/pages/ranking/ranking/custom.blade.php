@@ -1,8 +1,8 @@
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
         <tr>
-            <th scope="col">{{ __('#') }}</th>
+            <th>{{ __('#') }}</th>
             @foreach(array_filter(array_keys((array) $data->first()), fn($col) => !in_array($col, ['ID', 'CharID', 'GuildID', 'RefObjID'])) as $col)
                 <th>{{ ucfirst($col) }}</th>
             @endforeach

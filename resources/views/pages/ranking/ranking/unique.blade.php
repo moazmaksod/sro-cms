@@ -1,12 +1,20 @@
+<div class="card mb-4">
+    <div class="card-body text-center">
+        @foreach(config('ranking.uniques') as $row)
+            <span>{{ $row['name'] }} [{{ $row['points'] }} {{ __('points') }}]</span>,
+        @endforeach
+    </div>
+</div>
+
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Rank') }}</th>
-                <th scope="col">{{ __('Name') }}</th>
-                <th scope="col">{{ __('Guild') }}</th>
-                <th scope="col">{{ __('Level') }}</th>
-                <th scope="col">{{ __('Points') }}</th>
+                <th>{{ __('Rank') }}</th>
+                <th>{{ __('Name') }}</th>
+                <th>{{ __('Guild') }}</th>
+                <th>{{ __('Level') }}</th>
+                <th>{{ __('Points') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -45,10 +53,3 @@
         </tbody>
     </table>
 </div>
-
-<p class="mb-2 text-center">
-    @forelse(config('ranking.uniques') as $row)
-        <span>{{ $row['name'] }} [{{ $row['points'] }} {{ __('points') }}]</span>,
-    @empty
-    @endforelse
-</p>

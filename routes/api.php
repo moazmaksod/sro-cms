@@ -17,7 +17,7 @@ Route::get('/download', [PagesController::class, 'download']);
 Route::get('/timers', [PagesController::class, 'timers']);
 Route::get('/uniques', [PagesController::class, 'uniques']);
 
-Route::get('/online-counter', [PagesController::class, 'online_counter']);
+Route::get('/online-counter', [PagesController::class, 'onlineCounter']);
 
 Route::middleware('web')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);

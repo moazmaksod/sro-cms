@@ -1,20 +1,20 @@
-<div class="mt-1">
-    <form method="GET" action="{{ route('ranking') }}" class="mb-4">
-        <input type="hidden" name="type" value="guild">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search guild...') }}" class="form-control d-inline w-auto">
-        <button type="submit" class="btn btn-sm btn-outline-secondary">{{ __('Search') }}</button>
-    </form>
-</div>
+<form method="GET" action="{{ route('ranking') }}" class="my-4">
+    <input type="hidden" name="type" value="guild">
+    <div class="input-group d-inline-flex w-auto">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search guild...') }}" class="form-control" required>
+        <button type="submit" class="btn btn-sm btn-secondary">{{ __('Search') }}</button>
+    </div>
+</form>
 
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
         <tr>
-            <th scope="col">{{ __('Rank') }}</th>
-            <th scope="col">{{ __('Name') }}</th>
-            <th scope="col">{{ __('Level') }}</th>
-            <th scope="col">{{ __('Members') }}</th>
-            <th scope="col">{{ __('Total Item Points') }}</th>
+            <th>{{ __('Rank') }}</th>
+            <th>{{ __('Name') }}</th>
+            <th>{{ __('Level') }}</th>
+            <th>{{ __('Members') }}</th>
+            <th>{{ __('Total Item Points') }}</th>
         </tr>
         </thead>
         <tbody>

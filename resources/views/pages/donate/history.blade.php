@@ -1,23 +1,23 @@
 @extends('layouts.app')
-@section('title', __('Silk History'))
+@section('title', __('Donate History'))
 
 @section('sidebar')
     @include('account.sidebar')
 @stop
 
 @section('content')
-    <div class="card border-0">
+    <section class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped mb-0">
-                    <thead class="table-dark">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <th scope="col">{{ __('ItemName') }}</th>
-                        <th scope="col">{{ __('Remained Silk') }}</th>
-                        <th scope="col">{{ __('Changed Silk') }}</th>
-                        <th scope="col">{{ __('Silk Type') }}</th>
-                        <th scope="col">{{ __('Date') }}</th>
-                        <th scope="col">{{ __('Status') }}</th>
+                        <th>{{ __('ItemName') }}</th>
+                        <th>{{ __('Remained Silk') }}</th>
+                        <th>{{ __('Changed Silk') }}</th>
+                        <th>{{ __('Silk Type') }}</th>
+                        <th>{{ __('Date') }}</th>
+                        <th>{{ __('Status') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,10 +28,10 @@
                                     <span class="">{{ $row->OrderNumber }}</span>
                                 @else
                                     @if($row->PTInvoiceID)
-                                        <img src="{{ asset('images/webmall/'.$row->CPItemCode.'.jpg') }}" alt="" width="32" height="32" class="">
+                                        <img src="{{ asset('in-game/webmall/images/'.$row->CPItemCode.'.jpg') }}" alt="" width="32" height="32" class="">
                                         {{ $row->CPItemName }}
                                     @elseif($row->ChangedSilk == 0 && $row->RemainedSilk > 0)
-                                        <span class="text-success">{{ __('Add Silk') }}</span>
+                                        <span class="">{{ __('Website') }}</span>
                                     @else
                                         <span class="">{{ __('NoName') }}</span>
                                     @endif
@@ -60,5 +60,5 @@
                 {{ $data->links('pagination::bootstrap-5') }}
             </div>
         </div>
-    </div>
+    </section>
 @endsection

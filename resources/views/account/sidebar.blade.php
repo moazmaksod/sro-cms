@@ -29,11 +29,11 @@
             </ul>
 
             <div class="d-grid gap-2">
-                <a href="{{ route('account') }}" class="btn btn-outline-secondary {{ request()->routeIs('account') ? 'active' : '' }}">{{ __('Account Panel') }}</a>
-                <a href="{{ route('account.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.edit') ? 'active' : '' }}">{{ __('Account Settings') }}</a>
+                <a href="{{ route('account') }}" class="btn btn-outline-secondary {{ request()->routeIs('account') ? 'active' : '' }}">{{ __('Account Info') }}</a>
+                <a href="{{ route('account.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.edit') ? 'active' : '' }}">{{ __('Settings') }}</a>
                 <a href="{{ route('account.donate') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.donate') ? 'active' : '' }}">{{ __('Donate') }}</a>
-                <a href="{{ route('account.voucher') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.voucher') ? 'active' : '' }}">{{ __('Voucher') }}</a>
                 <a href="{{ route('account.donate.history') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.donate.history') ? 'active' : '' }}">{{ __('Donate History') }}</a>
+                <a href="{{ route('account.voucher') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.voucher') ? 'active' : '' }}">{{ __('Voucher') }}</a>
                 @if(config('global.vote.enabled', false))
                 <a href="{{ route('account.vote') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.vote') ? 'active' : '' }}">{{ __('Vote4Silk') }}</a>
                 @endif

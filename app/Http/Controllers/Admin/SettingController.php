@@ -78,7 +78,7 @@ class SettingController extends Controller
         // Load existing blobs so partial saves don't wipe other sub-keys
         $donate  = $this->getJsonSetting('donate',  config('donate',  []));
         $widgets = $this->getJsonSetting('widgets', config('widgets', []));
-        $history = $this->getJsonSetting('history', config('global.history', []));
+        $history = $this->getJsonSetting('history', config('global.logs', []));
 
         $toSave = [];
 
@@ -160,7 +160,7 @@ class SettingController extends Controller
             'vote'     => $this->mergeJsonSetting($data, 'vote',     config('vote',             [])),
             'widgets'  => $this->mergeJsonSetting($data, 'widgets',  config('widgets',          [])),
             'ranking'  => $this->mergeJsonSetting($data, 'ranking',  config('ranking',          [])),
-            'history'  => $this->mergeJsonSetting($data, 'history',  config('global.history',   [])),
+            'history'  => $this->mergeJsonSetting($data, 'history',  config('global.logs',   [])),
             'cache'    => $this->mergeJsonSetting($data, 'cache',    config('global.cache',     [])),
         ];
     }

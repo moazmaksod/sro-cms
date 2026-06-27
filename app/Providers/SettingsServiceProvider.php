@@ -165,7 +165,7 @@ class SettingsServiceProvider extends ServiceProvider
     private function applyHistorySettings(array $settings): void
     {
         $history = $this->decodeJson($settings['history'] ?? null);
-        $defaults = config('global.history', []);
+        $defaults = config('global.logs', []);
 
         $merged = !empty($history) ? array_replace_recursive($defaults, $history) : $defaults;
         $hasEnabledFeature = false;
@@ -177,8 +177,8 @@ class SettingsServiceProvider extends ServiceProvider
             }
         }
 
-        Config::set('global.history', $merged);
-        Config::set('global.history.enabled', $hasEnabledFeature);
+        Config::set('global.logs', $merged);
+        Config::set('global.logs.enabled', $hasEnabledFeature);
     }
 
     /*

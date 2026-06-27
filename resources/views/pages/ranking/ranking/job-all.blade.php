@@ -1,13 +1,13 @@
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Rank') }}</th>
-                <th scope="col">{{ __('NickName') }}</th>
-                <th scope="col">{{ __('Job') }}</th>
-                <th scope="col">{{ __('JobLevel') }}</th>
-                <th scope="col">{{ __('Kills') }}</th>
-                <th scope="col">{{ __('Points') }}</th>
+                <th>{{ __('Rank') }}</th>
+                <th>{{ __('NickName') }}</th>
+                <th>{{ __('Job') }}</th>
+                <th>{{ __('JobLevel') }}</th>
+                <th>{{ __('Kills') }}</th>
+                <th>{{ __('Points') }}</th>
             </tr>
         </thead>
         <tbody>

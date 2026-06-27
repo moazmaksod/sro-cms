@@ -51,6 +51,9 @@
                             @if(config("global.logs.job"))
                                 <li><a class="dropdown-item" href="{{ route('logs.job') }}">{{ __('Job Kills') }}</a></li>
                             @endif
+                            @if(!config("global.logs.enabled"))
+                                <li><a class="dropdown-item" href="#">{{ __('None') }}</a></li>
+                            @endif
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -132,10 +135,10 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ asset(config('global.languages')[App::getLocale()]['image']) }}" alt="" style="width: 1em; height: 1em;">
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             @foreach(config('global.languages') as $key => $row)
                             <li>
-                                <a class="dropdown-item" href="{{ !empty(request()->segments()) ? url($key . '/' . implode('/', array_slice(request()->segments(), 1))) : url($key) }}">
+                                <a class="dropdown-item" href="{{ route('locale', $key) }}">
                                     <img src="{{ asset($row['image']) }}" alt="" style="width: 1em; height: 1em;"> {{ $row['name'] }}
                                 </a>
                             </li>
@@ -149,7 +152,7 @@
                             <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(auth()->user()->email))) }}?s=60&d=identicon" alt="mdo" width="32" height="32" class="rounded-circle">
                             {{ auth()->user()->username }}
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ route('account') }}">{{ __('Account Info') }}</a></li>
                             <li><a class="dropdown-item" href="{{ route('account.edit') }}">{{ __('Settings') }}</a></li>
                             <li><a class="dropdown-item" href="{{ route('account.donate') }}">{{ __('Donate') }}</a></li>

@@ -1,12 +1,12 @@
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Rank') }}</th>
-                <th scope="col">{{ __('Character Name') }}</th>
-                <th scope="col">{{ __('Join Date') }}</th>
-                <th scope="col">{{ __('Title') }}</th>
-                <th scope="col">{{ __('Donation (GB)') }}</th>
+                <th>{{ __('Rank') }}</th>
+                <th>{{ __('Character Name') }}</th>
+                <th>{{ __('Join Date') }}</th>
+                <th>{{ __('Title') }}</th>
+                <th>{{ __('Donation (GB)') }}</th>
             </tr>
         </thead>
         <tbody>

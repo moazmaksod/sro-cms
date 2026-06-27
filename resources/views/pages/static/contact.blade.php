@@ -2,11 +2,9 @@
 @section('title', __('Contact Us'))
 
 @section('content')
-    <div class="container">
-        <div class="card border-0">
-            <div class="card-body">
-                Test
-            </div>
+    <section class="card">
+        <div class="card-body">
+            Test
         </div>
-    </div>
+    </section>
 @endsection

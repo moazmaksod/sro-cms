@@ -1,8 +1,8 @@
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr class="text-center">
-                <th scope="col">{{ __('Alliances') }}</th>
+                <th>{{ __('Alliances') }}</th>
             </tr>
         </thead>
         <tbody>

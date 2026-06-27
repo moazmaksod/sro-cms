@@ -6,40 +6,40 @@
 @stop
 
 @section('content')
-    <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+    <section class="card">
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
+            @if(session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
 
-        <div class="row">
-            @foreach($data as $key => $row)
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <div class="d-flex overflow-hidden align-items-center justify-content-center mb-2">
-                                <img class="object-fit-cover rounded border" src="{{ $row->image }}" alt="" style="min-width: 90px; min-height: 50px;"/>
+            <div class="row">
+                @foreach($data as $key => $row)
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <img class="d-block m-auto object-fit-cover rounded border mb-2" src="{{ $row->image }}" alt="" style="min-width: 90px; min-height: 50px;"/>
+                                <p class="mb-0">{{ $row->name }}</p>
+                                <p class="text-muted mb-0">{{ __('Reward:') }} {{ $row->reward }} Silk</p>
+                                <p class="text-muted mb-2">{{ __('Timeout:') }} {{ $row->timeout }} Hours</p>
+
+                                @if(!$row->enabled)
+                                    {{ __('Disabled') }}
+                                @elseif($row->expire)
+                                    {{ __('Wait until') }} {{ $row->expire?->format('Y-m-d H:i') }}
+                                @else
+                                    <a href="#" target="_blank" class="btn btn-primary vote-btn" data-site="{{ $key }}" data-url="{{ route('account.vote.voting', $key) }}">Vote Now</a>
+                                @endif
                             </div>
-                            <p class="mb-0">{{ $row->name }}</p>
-                            <p class="text-muted mb-0">{{ __('Reward:') }} {{ $row->reward }} Silk</p>
-                            <p class="text-muted mb-2">{{ __('Timeout:') }} {{ $row->timeout }} Hours</p>
-
-                            @if(!$row->enabled)
-                                {{ __('Disabled') }}
-                            @elseif($row->expire)
-                                {{ __('Wait until') }} {{ $row->expire?->format('Y-m-d H:i') }}
-                            @else
-                                <a href="#" target="_blank" class="btn btn-primary vote-btn" data-site="{{ $key }}" data-url="{{ route('account.vote.voting', $key) }}">Vote Now</a>
-                            @endif
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
-    </div>
+    </section>
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>

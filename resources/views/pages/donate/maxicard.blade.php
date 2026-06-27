@@ -1,44 +1,34 @@
 @section('title', __('MaxiCard'))
 
-<div class="card p-3 mb-4">
+<div class="card mb-4">
     <div class="card-body">
-        <p class="text-center">Enter your e-pin card</p>
+        <p class="text-center mb-0">Enter your e-pin card</p>
         <form method="post" action="{{ route('account.donate.process', ['method' => $data['route']]) }}">
             @csrf
 
-            <div class="row mb-3">
-                <label for="code" class="col-md-12 col-form-label text-md-left">{{ __('E-Pin Code') }}</label>
+            <div class="mb-3">
+                <label for="code" class="form-label">{{ __('E-Pin Code') }}</label>
+                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" required>
 
-                <div class="col-md-12">
-                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" required>
-
-                    @error('code')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
+                @error('code')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
 
-            <div class="row mb-3">
-                <label for="password" class="col-md-12 col-form-label text-md-left">{{ __('E-Pin Password') }}</label>
+            <div class="mb-3">
+                <label for="password" class="form-label">{{ __('E-Pin Password') }}</label>
+                <input id="password" type="text" class="form-control @error('password') is-invalid @enderror" name="password" required>
 
-                <div class="col-md-12">
-                    <input id="password" type="text" class="form-control @error('password') is-invalid @enderror" name="password" required>
-
-                    @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
+                @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
 
-            <div class="row mb-0">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary w-100">{{ __('Submit') }}</button>
-                </div>
-            </div>
+            <button type="submit" class="btn btn-primary w-100">{{ __('Submit') }}</button>
         </form>
     </div>
 </div>

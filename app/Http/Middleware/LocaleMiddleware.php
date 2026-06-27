@@ -12,19 +12,14 @@ class LocaleMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $locale = $request->segment(1);
-
-        if ($locale && array_key_exists($locale, config('global.languages', []))) {
-            App::setLocale($locale);
-            Session::put('locale', $locale);
-        } else {
+        if (config('settings.default_locale', 'switch') === 'switch') {
             $locale = Session::get('locale', config('app.locale'));
-            App::setLocale($locale);
+        } else {
+            $locale = config('settings.default_locale');
+            Session::put('locale', $locale);
         }
 
-        URL::defaults(['locale' => App::getLocale()]);
-
-        $request->route()?->forgetParameter('locale');
+        App::setLocale($locale);
 
         return $next($request);
     }

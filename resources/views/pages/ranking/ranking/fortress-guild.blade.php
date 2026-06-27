@@ -1,10 +1,10 @@
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Rank') }}</th>
-                <th scope="col">{{ __('Name') }}</th>
-                <th scope="col">{{ __('Kills/Death') }}</th>
+                <th>{{ __('Rank') }}</th>
+                <th>{{ __('Name') }}</th>
+                <th>{{ __('Kills/Death') }}</th>
             </tr>
         </thead>
         <tbody>

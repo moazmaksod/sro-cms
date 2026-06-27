@@ -25,7 +25,7 @@ class TicketController extends Controller
         $replies = Ticket::getReplies($ticket->id);
 
         return view('pages.tickets.show', [
-            'data'    => $ticket,
+            'data' => $ticket,
             'replies' => $replies,
         ]);
     }
