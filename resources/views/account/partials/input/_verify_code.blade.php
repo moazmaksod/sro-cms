@@ -1,9 +1,9 @@
 <div class="row mb-3">
-    <label for="{{ $name }}" class="col-md-4 col-form-label text-md-end">
+    <label for="{{ $name }}" class="col-lg-4 col-form-label text-md-end">
         {{ __('Verification Code') }}
     </label>
 
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <input id="{{ $name }}" type="text" class="form-control @error($name) is-invalid @enderror" name="{{ $name }}" value="{{ old($name) }}" required>
 
         @error($name)

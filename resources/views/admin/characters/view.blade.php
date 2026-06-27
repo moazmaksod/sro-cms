@@ -19,7 +19,7 @@
         @endif
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <div class="card p-0">
                     <div class="card-header">
                         <h4 class="text-center">Character Details</h4>
@@ -191,7 +191,7 @@
 
                                         <form method="GET" action="">
                                             <div class="row mb-3">
-                                                <div class="col-md-12">
+                                                <div class="col-lg-12">
                                                     <select class="form-select" name="pet" aria-label="Default select example" onchange="this.form.submit()">
                                                         @foreach($data->CharPets as $row)
                                                             <option value="{{ $row->ID }}">{{ $row->CharName ?? $row->ID }}</option>
@@ -277,7 +277,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card p-0 mb-4">
                     <div class="card-header">
                         <h4 class="text-center">Unstuck</h4>
@@ -308,7 +308,7 @@
                             @method('PUT')
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-danger w-100">{{ __('Unstuck') }}</button>
                                 </div>
                             </div>
@@ -324,9 +324,9 @@
                         <form method="POST" action="{{ route('admin.characters.add-item', $data) }}">
                             @csrf
                             <div class="row mb-3">
-                                <label for="code" class="col-md-12 col-form-label text-md-start">{{ __('Item Code') }}</label>
+                                <label for="code" class="col-lg-12 col-form-label text-md-start">{{ __('Item Code') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required>
 
                                     @error('code')
@@ -338,9 +338,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="quantity" class="col-md-12 col-form-label text-md-start">{{ __('Quantity') }}</label>
+                                <label for="quantity" class="col-lg-12 col-form-label text-md-start">{{ __('Quantity') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity', 1) }}" min="1" max="999">
 
                                     @error('quantity')
@@ -352,7 +352,7 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-primary w-100">{{ __('Add Item') }}</button>
                                 </div>
                             </div>

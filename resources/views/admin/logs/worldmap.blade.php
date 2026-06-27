@@ -8,7 +8,7 @@
 
     <div class="col-12 my-5">
         <div class="row">
-            <div class="col-md-3 sidebar-wrapper" style="position: initial; left: auto">
+            <div class="col-lg-3 sidebar-wrapper" style="position: initial; left: auto">
                 <div id="search" class="sidebar-search">
                     <div>
                         <div class="input-group">
@@ -193,7 +193,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-lg-9">
                 <div style="min-height: 600px;position: relative;">
                     <div id="map" class="my-5"></div>
                 </div>

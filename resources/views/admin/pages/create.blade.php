@@ -20,9 +20,9 @@
         <form method="POST" action="{{ route('admin.pages.store') }}">
             @csrf
             <div class="row mb-3">
-                <label for="title" class="col-md-2 col-form-label text-md-end">{{ __('Title') }}</label>
+                <label for="title" class="col-lg-2 col-form-label text-md-end">{{ __('Title') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required>
 
                     @error('title')
@@ -34,9 +34,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="active" class="col-md-2 col-form-label text-md-end">{{ __('Active') }}</label>
+                <label for="active" class="col-lg-2 col-form-label text-md-end">{{ __('Active') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="active" value="1" id="active" checked>
                         <label class="form-check-label" for="active">
@@ -53,9 +53,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="content" class="col-md-2 col-form-label text-md-end">{{ __('Content') }}</label>
+                <label for="content" class="col-lg-2 col-form-label text-md-end">{{ __('Content') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <textarea id="summernote" rows="10" class="form-control" name="content"></textarea>
 
                     @error('content')
@@ -67,7 +67,7 @@
             </div>
 
             <div class="row mb-0">
-                <div class="col-md-10 offset-md-2">
+                <div class="col-lg-10 offset-md-2">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Create Page') }}
                     </button>

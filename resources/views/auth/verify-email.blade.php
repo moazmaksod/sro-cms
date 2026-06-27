@@ -4,7 +4,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <h2 class="mt-5">{{ __('Verify Email') }}</h2>
 
                 @if (session('status') == 'verification-link-sent')

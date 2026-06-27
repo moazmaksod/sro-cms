@@ -16,7 +16,7 @@
                     </div>
                 @else
                     @foreach(auth()->user()->tbUser->shardUser as $row)
-                        <div class="col-md-3">
+                        <div class="col-lg-3">
                             <div class="card">
                                 <div class="card-body text-center">
                                     @if(config('global.server.version') === 'vSRO')

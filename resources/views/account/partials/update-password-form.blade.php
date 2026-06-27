@@ -24,11 +24,11 @@
             @endif
 
             <div class="row mb-3">
-                <label for="password" class="col-md-4 col-form-label text-md-end">
+                <label for="password" class="col-lg-4 col-form-label text-md-end">
                     {{ __('New Password') }}
                 </label>
 
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <input id="password" type="password" class="form-control @error('password', 'updatePassword') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                     @error('password', 'updatePassword')
@@ -40,11 +40,11 @@
             </div>
 
             <div class="row mb-3">
-                <label for="password_confirmation" class="col-md-4 col-form-label text-md-end">
+                <label for="password_confirmation" class="col-lg-4 col-form-label text-md-end">
                     {{ __('Confirm Password') }}
                 </label>
 
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <input id="password_confirmation" type="password" class="form-control @error('password_confirmation', 'updatePassword') is-invalid @enderror" name="password_confirmation" required>
 
                     @error('password_confirmation', 'updatePassword')
@@ -56,7 +56,7 @@
             </div>
 
             <div class="row mb-0">
-                <div class="col-md-6 offset-md-4">
+                <div class="col-lg-6 offset-md-4">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Save') }}
                     </button>

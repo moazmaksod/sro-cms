@@ -4,7 +4,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <h2 class="mt-5">{{ __('Forgot Password') }}</h2>
 
                 @if (session('status'))
@@ -14,7 +14,7 @@
                 @endif
 
                 <div class="mb-3">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
                     </div>
                 </div>
@@ -23,9 +23,9 @@
                     @csrf
 
                     <div class="form-group row mb-3">
-                        <label for="email" class="col-md-12 col-form-label text-md-left">{{ __('Email') }}</label>
+                        <label for="email" class="col-lg-12 col-form-label text-md-left">{{ __('Email') }}</label>
 
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                             @error('email')
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Email Password Reset Link') }}
                             </button>

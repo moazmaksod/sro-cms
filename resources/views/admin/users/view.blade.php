@@ -19,10 +19,10 @@
         @endif
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <div class="row">
                     @forelse($data->shardUser as $char)
-                        <div class="col-md-3">
+                        <div class="col-lg-3">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="d-flex overflow-hidden align-items-center justify-content-center mb-2">
@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card p-0 mb-4">
                     <div class="card-header">
                         <h4 class="text-center">Change Password</h4>
@@ -191,9 +191,9 @@
                         <form method="POST" action="{{ route('admin.users.change-password', $data->JID) }}">
                             @csrf
                             <div class="row mb-3">
-                                <label for="password" class="col-md-12 col-form-label text-md-start">{{ __('New Password') }}</label>
+                                <label for="password" class="col-lg-12 col-form-label text-md-start">{{ __('New Password') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" placeholder="{{ __('******') }}" required>
 
                                     @error('password')
@@ -205,7 +205,7 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-primary w-100">{{ __('Change') }}</button>
                                 </div>
                             </div>
@@ -221,9 +221,9 @@
                         <form method="POST" action="{{ route('admin.users.change-email', $data->JID) }}">
                             @csrf
                             <div class="row mb-3">
-                                <label for="email" class="col-md-12 col-form-label text-md-start">{{ __('New Email') }}</label>
+                                <label for="email" class="col-lg-12 col-form-label text-md-start">{{ __('New Email') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="{{ __('john@example.com') }}" required>
 
                                     @error('email')
@@ -235,7 +235,7 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-primary w-100">{{ __('Change') }}</button>
                                 </div>
                             </div>
@@ -251,9 +251,9 @@
                         <form method="POST" action="{{ route('admin.users.add-silk', $data->JID) }}">
                             @csrf
                             <div class="row mb-3">
-                                <label for="amount" class="col-md-12 col-form-label text-md-start">{{ __('Silk Amount') }}</label>
+                                <label for="amount" class="col-lg-12 col-form-label text-md-start">{{ __('Silk Amount') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" placeholder="{{ __('Negative values accepted, e.g. -100') }}" required>
 
                                     @error('amount')
@@ -265,9 +265,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="type" class="col-md-12 col-form-label text-md-start">{{ __('Type') }}</label>
+                                <label for="type" class="col-lg-12 col-form-label text-md-start">{{ __('Type') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     @if(config('global.server.version') === 'vSRO')
                                         <select class="form-select @error('type') is-invalid @enderror" name="type" aria-label="Default select example">
                                             <option value="0">Normal</option>
@@ -290,7 +290,7 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-primary w-100">{{ __('Update') }}</button>
                                 </div>
                             </div>
@@ -322,9 +322,9 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="reason" class="col-md-12 col-form-label text-md-start">{{ __('Reason') }}</label>
+                                <label for="reason" class="col-lg-12 col-form-label text-md-start">{{ __('Reason') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <select class="form-select @error('reason') is-invalid @enderror" name="reason" aria-label="Default select example" onchange="toggleCustomReason(this)" required>
                                         <option value="Botting">Botting</option>
                                         <option value="Insults">Insults</option>
@@ -341,9 +341,9 @@
                             </div>
 
                             <div class="row mb-3" id="custom-reason-field" style="display: none;">
-                                <label for="custom_reason" class="col-md-12 col-form-label text-md-start">{{ __('Custom Reason') }}</label>
+                                <label for="custom_reason" class="col-lg-12 col-form-label text-md-start">{{ __('Custom Reason') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="custom_reason" type="text" class="form-control @error('custom_reason') is-invalid @enderror" name="custom_reason" value="{{ old('custom_reason') }}">
 
                                     @error('custom_reason')
@@ -355,9 +355,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="duration" class="col-md-12 col-form-label text-md-start">{{ __('Duration (Hour)') }}</label>
+                                <label for="duration" class="col-lg-12 col-form-label text-md-start">{{ __('Duration (Hour)') }}</label>
 
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <input id="duration" type="number" class="form-control @error('duration') is-invalid @enderror" name="duration" min="1" value="24" required>
 
                                     @error('duration')
@@ -369,7 +369,7 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-danger w-100">{{ __('Block') }}</button>
                                 </div>
                             </div>
@@ -377,7 +377,7 @@
                             @if($data->blockedUser && \Carbon\Carbon::parse($data->blockedUser->timeEnd)->isFuture())
                                 <hr class="my-2">
                                 <div class="row mb-0">
-                                    <div class="col-md-12">
+                                    <div class="col-lg-12">
                                         <button type="submit" form="unblock" class="btn btn-success w-100" onclick="return confirm('Really unblock?');">{{ __('UnBlock') }}</button>
                                     </div>
                                 </div>

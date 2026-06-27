@@ -4,7 +4,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <h2 class="mt-5">{{ __('Verification Code') }}</h2>
 
                 @if(session('status'))
@@ -21,8 +21,8 @@
                     @csrf
 
                     <div class="form-group row mb-3">
-                        <label for="code" class="col-md-12 col-form-label text-md-left">{{ __('Verification Code') }}</label>
-                        <div class="col-md-12">
+                        <label for="code" class="col-lg-12 col-form-label text-md-left">{{ __('Verification Code') }}</label>
+                        <div class="col-lg-12">
                             <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required autofocus placeholder="Enter 6-digit code">
 
                             @error('code')
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-12 d-flex justify-content-between align-items-center">
+                        <div class="col-lg-12 d-flex justify-content-between align-items-center">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Verify') }}
                             </button>

@@ -4,7 +4,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <h2 class="mt-5">{{ __('Reset Password') }}</h2>
 
                 <form method="POST" action="{{ route('password.store') }}">
@@ -13,9 +13,9 @@
                     <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
                     <div class="form-group row mb-3">
-                        <label for="email" class="col-md-12 col-form-label text-md-left">{{ __('Email') }}</label>
+                        <label for="email" class="col-lg-12 col-form-label text-md-left">{{ __('Email') }}</label>
 
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $request->email) }}" required autocomplete="email" autofocus>
 
                             @error('email')
@@ -27,9 +27,9 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="password" class="col-md-12 col-form-label text-md-left">{{ __('Password') }}</label>
+                        <label for="password" class="col-lg-12 col-form-label text-md-left">{{ __('Password') }}</label>
 
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                             @error('password')
@@ -41,15 +41,15 @@
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="password-confirm" class="col-md-12 col-form-label text-md-left">{{ __('Confirm Password') }}</label>
+                        <label for="password-confirm" class="col-lg-12 col-form-label text-md-left">{{ __('Confirm Password') }}</label>
 
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                         </div>
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Reset Password') }}
                             </button>

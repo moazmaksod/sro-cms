@@ -18,7 +18,7 @@
 
             <div class="row">
                 @foreach($data as $key => $row)
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <div class="card">
                             <div class="card-body text-center">
                                 <img class="d-block m-auto object-fit-cover rounded border mb-2" src="{{ $row->image }}" alt="" style="min-width: 90px; min-height: 50px;"/>

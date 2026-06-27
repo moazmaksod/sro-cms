@@ -6,7 +6,7 @@
         <div class="card-body">
             <div class="row">
                 @foreach($data as $key => $row)
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h3>

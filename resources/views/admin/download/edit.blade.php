@@ -22,9 +22,9 @@
             @method('PUT')
 
             <div class="row mb-3">
-                <label for="name" class="col-md-2 col-form-label text-md-end">{{ __('Name') }}</label>
+                <label for="name" class="col-lg-2 col-form-label text-md-end">{{ __('Name') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $data->name) }}" required>
 
                     @error('name')
@@ -36,9 +36,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="desc" class="col-md-2 col-form-label text-md-end">{{ __('Description') }}</label>
+                <label for="desc" class="col-lg-2 col-form-label text-md-end">{{ __('Description') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="desc" type="text" class="form-control @error('desc') is-invalid @enderror" name="desc" value="{{ old('desc', $data->desc) }}" required>
 
                     @error('desc')
@@ -50,9 +50,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="url" class="col-md-2 col-form-label text-md-end">{{ __('Link') }}</label>
+                <label for="url" class="col-lg-2 col-form-label text-md-end">{{ __('Link') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url', $data->url) }}" required>
 
                     @error('url')
@@ -64,9 +64,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="image" class="col-md-2 col-form-label text-md-end">{{ __('Image') }}</label>
+                <label for="image" class="col-lg-2 col-form-label text-md-end">{{ __('Image') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="image" type="text" class="form-control @error('image') is-invalid @enderror" name="image" value="{{ old('image', $data->image) }}">
 
                     @error('image')
@@ -78,7 +78,7 @@
             </div>
 
             <div class="row mb-0">
-                <div class="col-md-10 offset-md-2">
+                <div class="col-lg-10 offset-md-2">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Update Download') }}
                     </button>

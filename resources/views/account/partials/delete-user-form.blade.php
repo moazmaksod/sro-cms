@@ -7,7 +7,7 @@
         </div>
 
         <div class="row mb-0">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                     {{ __('Delete Account') }}
                 </button>

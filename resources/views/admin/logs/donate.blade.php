@@ -8,10 +8,10 @@
         </div>
 
         <form method="GET" action="{{ route('admin.logs.donate') }}" class="mb-4 row g-3">
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <input type="text" name="transaction_id" class="form-control" placeholder="Transaction ID" value="{{ request('transaction_id') }}">
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <select name="method_type" class="form-select">
                     <option value="">All Methods</option>
                     <option value="AdminPanel" {{ request('method') == 'AdminPanel' ? 'selected' : '' }}>AdminPanel</option>
@@ -24,7 +24,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <select name="status" class="form-select">
                     <option value="">All Statuses</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -32,13 +32,13 @@
                     <option value="false" {{ request('status') == 'false' ? 'selected' : '' }}>Failed</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <input type="number" name="jid" class="form-control" placeholder="JID" value="{{ request('jid') }}">
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <input type="text" name="ip" class="form-control" placeholder="IP Address" value="{{ request('ip') }}">
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2">
                 <button type="submit" class="btn btn-primary w-100">Filter</button>
             </div>
         </form>

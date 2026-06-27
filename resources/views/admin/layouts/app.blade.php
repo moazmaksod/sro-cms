@@ -20,11 +20,11 @@
 
 <div class="container-fluid">
     <div class="row min-vh-100">
-        <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+        <div class="sidebar border border-right col-lg-3 col-lg-2 p-0 bg-body-tertiary">
             @include('admin.layouts.sidebar')
         </div>
 
-        <main class="content col-md-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
+        <main class="content col-lg-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
             @yield('content')
         </main>
     </div>
