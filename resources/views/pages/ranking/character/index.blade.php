@@ -6,109 +6,97 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="d-flex">
-                        <div class="d-flex me-3 overflow-hidden align-items-center">
-                            @if(config('global.server.version') === 'vSRO')
-                                <img class="object-fit-cover rounded border" src="{{ asset('images/character/'.config('ranking.character_image_vsro')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
-                            @else
-                                <img class="object-fit-cover rounded border" src="{{ asset('images/character/'.config('ranking.character_image')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
-                            @endif
-                        </div>
+                    @if(config('global.server.version') === 'vSRO')
+                        <img class="d-inline-block align-middle object-fit-cover rounded border" src="{{ asset('images/character/'.config('ranking.character_image_vsro')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
+                    @else
+                        <img class="d-inline-block align-middle object-fit-cover rounded border" src="{{ asset('images/character/'.config('ranking.character_image')[$data->RefObjID]) }}" width="100" height="100" alt=""/>
+                    @endif
 
-                        <div class="mt-3">
-                            <h2>{{ $data->CharName16 }}</h2>
-                            <p class="m-0">{{ __('Item Points:') }} <span class="">{{ $data->ItemPoint }}</span></p>
+                    <div class="d-inline-block align-middle">
+                        <h3 class="m-0">{{ $data->CharName16 }}</h3>
+                        <p class="m-0">{{ __('Item Points:') }} <span>{{ $data->ItemPoint }}</span></p>
 
-                            @if(config('ranking.extra.character_build', false) && $data->buildInfo)
-                            <p class="mb-0">
-                                @foreach($data->buildInfo as $key => $row)
+                        @if(config('ranking.extra.character_build', false) && $data->buildInfo)
+                        <ul class="list-unstyled d-flex mb-0">
+                            @foreach($data->buildInfo as $key => $row)
+                                <li class="me-1">
                                     @if(isset(config('ranking.skill_mastery')[$row->MasteryID]))
                                         <span>{{ config('ranking.skill_mastery')[$row->MasteryID]['name'] }}</span> @if($key < count($data->buildInfo) - 1) / @endif
                                     @endif
-                                @endforeach
-                            </p>
-                            @endif
-                            @if(config('ranking.extra.character_buff', false) && $data->buffInfo)
-                            <ul class="list-unstyled d-flex">
-                                @foreach($data->buffInfo as $row)
-                                    <li class="me-1">
-                                        <img src="{{ asset('images/sro/'.$row->UI_IconFile_PNG) }}" title="{{ $row->UI_SkillName }}" alt="" width="24" height="24">
-                                    </li>
-                                @endforeach
-                            </ul>
-                            @endif
-                        </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
+                        @if(config('ranking.extra.character_buff', false) && $data->buffInfo)
+                        <ul class="list-unstyled d-flex mb-0">
+                            @foreach($data->buffInfo as $row)
+                                <li class="me-1">
+                                    <img src="{{ asset('images/sro/'.$row->UI_IconFile_PNG) }}" title="{{ $row->UI_SkillName }}" alt="" width="24" height="24">
+                                </li>
+                            @endforeach
+                        </ul>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="row mt-3 justify-content-end">
+                    <div class="row mt-5">
                         @if(config('ranking.extra.character_job', false) && $data->charJob->JobType)
-                            <div class="col-lg-4">
-                                <div class="d-flex">
-                                    <div class="d-flex align-items-center">
-                                        @if(config('global.server.version') === 'vSRO')
-                                            <img src="{{ asset(config('ranking.job_type_vsro')[$data->charJob->JobType]['image']) }}" width="50" height="" alt=""/>
-                                        @else
-                                            <img src="{{ asset(config('ranking.job_type')[$data->charJob->JobType]['image']) }}" width="50" height="" alt=""/>
-                                        @endif
-                                    </div>
+                            <div class="col">
+                                @if(config('global.server.version') === 'vSRO')
+                                    <img class="d-inline-block align-middle" src="{{ asset(config('ranking.job_type_vsro')[$data->charJob->JobType]['image']) }}" width="50" height="" alt=""/>
+                                @else
+                                    <img class="d-inline-block align-middle" src="{{ asset(config('ranking.job_type')[$data->charJob->JobType]['image']) }}" width="50" height="" alt=""/>
+                                @endif
 
-                                    <ul class="list-unstyled mt-3">
-                                        <li class="mb-0">
-                                            @if(config('global.server.version') === 'vSRO')
-                                                <span>{{ config('ranking.job_type_vsro')[$data->charJob->JobType]['name'] }}</span>
-                                            @else
-                                                <span>{{ config('ranking.job_type')[$data->charJob->JobType]['name'] }}</span>
-                                            @endif
-                                        </li>
-                                        <li class="mb-0">{{ __('Job Level:') }} <span class="">{{ $data->charJob->JobLevel ?? $data->charJob->Level }}</span></li>
-                                    </ul>
+                                <div class="d-inline-block align-middle">
+                                    @if(config('global.server.version') === 'vSRO')
+                                        <p class="mb-0">{{ config('ranking.job_type_vsro')[$data->charJob->JobType]['name'] }}</p>
+                                    @else
+                                        <p class="mb-0">{{ config('ranking.job_type')[$data->charJob->JobType]['name'] }}</p>
+                                    @endif
+                                    <p class="mb-0">{{ __('Job Level:') }} <span>{{ $data->charJob->JobLevel ?? $data->charJob->Level }}</span></p>
                                 </div>
                             </div>
                         @endif
-                        <div class="col-lg-4">
-                            <ul class="list-unstyled mt-3">
-                                <li class="mb-2"><i class="fa-solid fa-heart text-danger"></i> {{ __('Health:') }} <span>{{ $data->HP }}</span></li>
-                                <li class="mb-2"><i class="fa-solid fa-star-of-life text-primary"></i> {{ __('Mana:') }} <span>{{ $data->MP }}</span></li>
-                            </ul>
+                        <div class="col">
+                            <p class="mb-0">{{ __('Health:') }} <span>{{ $data->HP }}</span></p>
+                            <p class="mb-0">{{ __('Mana:') }} <span>{{ $data->MP }}</span></p>
                         </div>
-                        <div class="col-lg-4">
-                            <ul class="list-unstyled mt-3">
-                                <li class="mb-2"><i class="fa-solid fa-hand-fist text-warning"></i> {{ __('Strength:') }} <span>{{ $data->Strength }}</span></li>
-                                <li class="mb-2"><i class="fa-solid fa-brain text-warning"></i> {{ __('Intellect:') }} <span>{{ $data->Intellect }}</span></li>
-                            </ul>
+                        <div class="col">
+                            <p class="mb-0">{{ __('Strength:') }} <span>{{ $data->Strength }}</span></p>
+                            <p class="mb-0">{{ __('Intellect:') }} <span>{{ $data->Intellect }}</span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-6">
+            <div class="row mt-3">
+                <div class="col-lg-6 d-flex flex-column">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true">{{ __('Information') }}</button>
                         </li>
-                        @if(config('ranking.extra.character_global_history', false))
+                        @if(config('ranking.extra.character_global_history'))
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="globals-tab" data-bs-toggle="tab" data-bs-target="#globals-tab-pane" type="button" role="tab" aria-controls="globals-tab-pane" aria-selected="false">{{ __('Global Chat') }}</button>
+                            <button class="nav-link" id="global-tab" data-bs-toggle="tab" data-bs-target="#global-tab-pane" type="button" role="tab" aria-controls="global-tab-pane" aria-selected="false">{{ __('Global Chat') }}</button>
                         </li>
                         @endif
-                        @if(config('ranking.extra.character_unique_history', false))
+                        @if(config('ranking.extra.character_unique_history'))
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="uniques-tab" data-bs-toggle="tab" data-bs-target="#uniques-tab-pane" type="button" role="tab" aria-controls="uniques-tab-pane" aria-selected="false">{{ __('Unique Kills') }}</button>
+                            <button class="nav-link" id="unique-tab" data-bs-toggle="tab" data-bs-target="#unique-tab-pane" type="button" role="tab" aria-controls="unique-tab-pane" aria-selected="false">{{ __('Unique Kills') }}</button>
                         </li>
                         @endif
-                        @if(config('ranking.extra.character_job_kill', false))
+                        @if(config('ranking.extra.character_job_kill'))
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="job-tab" data-bs-toggle="tab" data-bs-target="#job-tab-pane" type="button" role="tab" aria-controls="job-tab-pane" aria-selected="false">{{ __('Job Kills') }}</button>
                         </li>
                         @endif
-                        @if(config('ranking.extra.character_pvp_kill', false))
+                        @if(config('ranking.extra.character_pvp_kill'))
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pvp-tab" data-bs-toggle="tab" data-bs-target="#pvp-tab-pane" type="button" role="tab" aria-controls="pvp-tab-pane" aria-selected="false">{{ __('Pvp Kills') }}</button>
                         </li>
                         @endif
-                        @if(config('widgets.custom.owned_titles.enabled', false))
+                        @if(config('widgets.custom.owned_titles.enabled'))
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="titles-tab" data-bs-toggle="tab" data-bs-target="#titles-tab-pane" type="button" role="tab" aria-controls="titles-tab-pane" aria-selected="false">{{ __('Owned Titles') }}</button>
                         </li>
@@ -118,10 +106,10 @@
                         <div class="tab-pane fade show active" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
                             @include('pages.ranking.character.partials.character-information')
                         </div>
-                        <div class="tab-pane fade" id="globals-tab-pane" role="tabpanel" aria-labelledby="globals-tab" tabindex="0">
+                        <div class="tab-pane fade" id="global-tab-pane" role="tabpanel" aria-labelledby="global-tab" tabindex="0">
                             @include('pages.ranking.character.partials.character-global-history')
                         </div>
-                        <div class="tab-pane fade" id="uniques-tab-pane" role="tabpanel" aria-labelledby="uniques-tab" tabindex="0">
+                        <div class="tab-pane fade" id="unique-tab-pane" role="tabpanel" aria-labelledby="unique-tab" tabindex="0">
                             @include('pages.ranking.character.partials.character-unique-history')
                         </div>
                         <div class="tab-pane fade" id="job-tab-pane" role="tabpanel" aria-labelledby="job-tab" tabindex="0">
@@ -135,28 +123,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="card" style="height: 345px">
-                        <div class="card-body d-flex flex-column position-relative h-100" id="display-inventory">
-                            <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-block" id="display-inventory-set">
-                                @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet(12, 0, 8)])
-                            </div>
-                            @if(config('global.server.version') !== 'vSRO')
-                                <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-none" id="display-inventory-job">
-                                    @include('pages.ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $data->charInventoryJob])
+                <div class="col-lg-6 d-flex">
+                    <div class="card mt-3 w-100">
+                        <div class="card-body position-relative d-flex flex-column" id="display-inventory">
+                            <div class="position-relative z-2 flex-grow-1">
+                                <div class="d-block" id="display-inventory-set">
+                                    @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet()])
                                 </div>
-                            @endif
-                            <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-none" id="display-inventory-avatar">
-                                @include('pages.ranking.character.partials.inventory.inventory-avatar-view', ['inventoryAvatarList' => $data->charInventoryAvatar])
+                                @if(config('global.server.version') !== 'vSRO')
+                                    <div class="d-none" id="display-inventory-job">
+                                        @include('pages.ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $data->charInventoryJob])
+                                    </div>
+                                @endif
+                                <div class="d-none" id="display-inventory-avatar">
+                                    @include('pages.ranking.character.partials.inventory.inventory-avatar-view', ['inventoryAvatarList' => $data->charInventoryAvatar])
+                                </div>
                             </div>
 
                             @if(config('global.server.version') === 'vSRO')
-                                <img class="position-absolute top-50 start-50 translate-middle h-100 w-auto object-fit-cover z-0 pt-4" src="{{ asset('images/character_full/'.config('ranking.character_image_vsro')[$data->RefObjID]) }}" alt=""/>
+                                <img class="position-absolute top-0 start-0 w-100 h-100 object-fit-contain opacity-100 p-2" src="{{ asset('images/character_full/'.config('ranking.character_image_vsro')[$data->RefObjID]) }}" alt=""/>
                             @else
-                                <img class="position-absolute top-50 start-50 translate-middle h-100 w-auto object-fit-cover z-0 pt-4" src="{{ asset('images/character_full/'.config('ranking.character_image')[$data->RefObjID]) }}" alt=""/>
+                                <img class="position-absolute top-0 start-0 w-100 h-100 object-fit-contain opacity-100 p-2" src="{{ asset('images/character_full/'.config('ranking.character_image')[$data->RefObjID]) }}" alt=""/>
                             @endif
 
-                            <button id="display-inventory-switch" data-type="set" class="btn btn-secondary mt-auto w-auto align-self-center position-relative z-1">{{ __('Switch') }}</button>
+                            <button id="display-inventory-switch" data-type="set" class="btn btn-secondary d-block mx-auto mt-auto position-relative z-1">{{ __('Switch') }}</button>
                         </div>
                     </div>
                 </div>
@@ -275,51 +265,46 @@
 
 @push('scripts')
 <script>
-    function itemInfo()
-    {
-        Array.from(document.querySelectorAll('[data-iteminfo]')).forEach(el => {
-            let tip = document.createElement('div');
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-iteminfo]').forEach(el => {
+            const info = el.parentElement.querySelector('.info');
+
+            if (info.innerHTML === '') return;
+
+            const tip = document.createElement('div');
             tip.classList.add('tooltip');
+            tip.innerHTML = info.innerHTML;
+            tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${el.hasAttribute('tip-top') ? '-100%' : '0'})`;
 
-            if (el.parentElement.querySelector('.info').innerHTML === '') {
-                return;
-            }
-
-            tip.innerHTML = el.parentElement.querySelector('.info').innerHTML;
-            tip.style.transform =
-                'translate(' +
-                (el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px') + ', ' +
-                (el.hasAttribute('tip-top') ? '-100%' : '0') +
-                ')';
             el.appendChild(tip);
-            el.onmousemove = e => {
-                tip.style.left = e.clientX + 'px'
+
+            el.addEventListener('mousemove', e => {
+                tip.style.left = e.clientX + 'px';
                 tip.style.top = e.clientY + 'px';
-            };
+            });
         });
-    }
 
-    document.addEventListener('DOMContentLoaded', function(){
-        itemInfo();
+        const switchBtn = document.getElementById('display-inventory-switch');
+        if (switchBtn) {
+            switchBtn.addEventListener('click', function () {
+                const current = this.dataset.type;
+                const stages = ['set'];
 
-        document.getElementById('display-inventory-switch').addEventListener('click', function() {
-            var current = this.dataset.type;
-            var stages = ['set'];
+                @if(config('global.server.version') !== 'vSRO')
+                stages.push('job');
+                @endif
+                stages.push('avatar');
 
-            @if(config('global.server.version') !== 'vSRO')
-            stages.push('job');
-            @endif
-            stages.push('avatar');
+                const currentIndex = stages.indexOf(current);
+                const nextIndex = (currentIndex + 1) % stages.length;
+                const change = stages[nextIndex];
 
-            var currentIndex = stages.indexOf(current);
-            var nextIndex = (currentIndex + 1) % stages.length;
-            var change = stages[nextIndex];
+                document.getElementById('display-inventory-' + current).classList.add('d-none');
+                document.getElementById('display-inventory-' + change).classList.remove('d-none');
 
-            document.getElementById('display-inventory-' + current).classList.add('d-none');
-            document.getElementById('display-inventory-' + change).classList.remove('d-none');
-
-            this.dataset.type = change;
-        });
+                this.dataset.type = change;
+            });
+        }
     });
 </script>
 @endpush

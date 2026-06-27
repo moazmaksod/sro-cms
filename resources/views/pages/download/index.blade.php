@@ -24,8 +24,10 @@
                         </div>
                     </div>
                 @empty
-                    <div class="alert alert-danger text-center" role="alert">
-                        {{ __('No Downloads Available!') }}
+                    <div class="col-lg-12">
+                        <div class="alert alert-danger text-center" role="alert">
+                            {{ __('No Downloads Available!') }}
+                        </div>
                     </div>
                 @endforelse
             </div>

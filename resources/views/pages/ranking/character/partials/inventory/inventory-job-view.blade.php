@@ -1,5 +1,4 @@
 @php
-    /** @var $inventoryList */
     $inventoryList = [
         6 => null,
         11 => null,
@@ -15,8 +14,7 @@
         10 => null,
     ];
 
-    /** @var $inventoryJobList */
-    foreach ($inventoryJobList as $key => $inventorySlot) {
+    foreach ($inventoryJobList as $inventorySlot) {
         $inventoryList[$inventorySlot->Slot] = $inventorySlot;
     }
 @endphp
@@ -24,30 +22,27 @@
 <h2 style="display: none">InventoryJob</h2>
 <div class="table-responsive">
     <table class="table table-borderless table-inventory table-inventory-job mx-auto">
-        <?php
-        $i = 0;
-        foreach ($inventoryList as $inventorySlot) :
-            ?>
-            <?= $i == 0 ? '<tr>' : '' ?>
-            <?php if ($inventorySlot) { ?>
-        <td>@include('pages.ranking.character.partials.inventory.item-details', ['item' => $inventorySlot])</td>
-        <?php } else { ?>
-        <td>
-            <div class="sro-item-detail">
-                <div class="item"></div>
-                <div class="clearfix"></div>
-            </div>
-        </td>
-        <?php } ?>
-            <?= $i == 1 ? '</tr>' : '' ?>
-            <?php
-            $i++;
+        @php $i = 0; @endphp
+        @foreach ($inventoryList as $inventorySlot)
+            @if ($i === 0) <tr> @endif
 
-            if ($i >= 2) {
-                $i = 0;
-            }
+            @if ($inventorySlot)
+                <td>@include('pages.ranking.character.partials.inventory.item-details', ['item' => $inventorySlot])</td>
+            @else
+                <td>
+                    <div class="sro-item-detail">
+                        <div class="item"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                </td>
+            @endif
 
-        endforeach;
-        ?>
+            @if ($i === 1) </tr> @endif
+
+            @php
+                $i++;
+                if ($i >= 2) $i = 0;
+            @endphp
+        @endforeach
     </table>
 </div>

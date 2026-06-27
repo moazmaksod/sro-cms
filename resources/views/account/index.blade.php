@@ -11,8 +11,10 @@
             <h3 class="mt-0">{{ __('Characters') }}</h3>
             <div class="row">
                 @if(!auth()->user()->tbUser || auth()->user()->tbUser->shardUser->isEmpty())
-                    <div class="alert alert-danger text-center" role="alert">
-                        {{ __('No Characters Found!') }}
+                    <div class="col-lg-12">
+                        <div class="alert alert-danger text-center" role="alert">
+                            {{ __('No Characters Found!') }}
+                        </div>s
                     </div>
                 @else
                     @foreach(auth()->user()->tbUser->shardUser as $row)
@@ -42,13 +44,13 @@
             <h3 class="mt-4">{{ __('Information') }}</h3>
             <div class="table-responsive">
                 <table class="table">
+                    <tbody>
                     @if(!auth()->user()->tbUser)
                         <tr>
                             <td class="text-center">{{ __('Cannot load your account information!') }}</td>
                         </tr>
                     @else
                         @if(config('global.server.version') === 'vSRO')
-                            <tbody>
                             <tr>
                                 <th scope="row">{{ __('Username') }}</th>
                                 <td>{{ auth()->user()->tbUser->StrUserID }}</td>
@@ -59,19 +61,17 @@
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
-                                <td>{{ auth()->user()->tbUser->getSilk->silk_own ?? 0 }}</td>
+                                <td>{{ auth()->user()->tbUser->getSilk->silk_own }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Gift Silk') }}</th>
-                                <td>{{ auth()->user()->tbUser->getSilk->silk_gift ?? 0 }}</td>
+                                <td>{{ auth()->user()->tbUser->getSilk->silk_gift }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Point Silk') }}</th>
-                                <td>{{ auth()->user()->tbUser->getSilk->silk_point ?? 0 }}</td>
+                                <td>{{ auth()->user()->tbUser->getSilk->silk_point }}</td>
                             </tr>
-                            </tbody>
                         @else
-                            <tbody>
                             <tr>
                                 <th scope="row">{{ __('Username') }}</th>
                                 <td>{{ auth()->user()->tbUser->StrUserID }}</td>
@@ -82,19 +82,19 @@
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Premium Silk') }}</th>
-                                <td>{{ auth()->user()->muUser->getSilk->PremiumSilk ?? 0 }}</td>
+                                <td>{{ auth()->user()->muUser->getSilk->PremiumSilk }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Month Usage') }}</th>
-                                <td>{{ auth()->user()->muUser->getSilkUsage->MonthUsage ?? 0 }}</td>
+                                <td>{{ auth()->user()->muUser->getSilkUsage->MonthUsage }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('3Month Usage') }}</th>
-                                <td>{{ auth()->user()->muUser->getSilkUsage->ThreeMonthUsage ?? 0 }}</td>
+                                <td>{{ auth()->user()->muUser->getSilkUsage->ThreeMonthUsage }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('Silk') }}</th>
-                                <td>{{ auth()->user()->muUser->getSilk->Silk ?? 0 }}</td>
+                                <td>{{ auth()->user()->muUser->getSilk->Silk }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{ __('VIP') }}</th>
@@ -107,9 +107,9 @@
                                     @endisset
                                 </td>
                             </tr>
-                            </tbody>
                         @endif
                     @endif
+                    </tbody>
                 </table>
             </div>
         </div>

@@ -18,7 +18,7 @@
                 <div class="col-lg-6">
                     <div class="form-check">
                         <input type="hidden" name="item_stats_jid_{{ $user->tbUser->JID }}" value="0">
-                        <input class="form-check-input" type="checkbox" name="item_stats_jid_{{ $user->tbUser->JID }}" value="1" id="item_stats_jid_{{ $user->tbUser->JID }}" {{ config("settings.item_stats_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" name="item_stats_jid_{{ $user->tbUser->JID }}" value="1" id="item_stats_jid_{{ $user->tbUser->JID }}" {{ config("global.item_stats_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="col-lg-6">
                     <div class="form-check">
                         <input type="hidden" name="job_name_jid_{{ $user->tbUser->JID }}" value="0">
-                        <input class="form-check-input" type="checkbox" name="job_name_jid_{{ $user->tbUser->JID }}" value="1" id="job_name_jid_{{ $user->tbUser->JID }}" {{ config("settings.job_name_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" name="job_name_jid_{{ $user->tbUser->JID }}" value="1" id="job_name_jid_{{ $user->tbUser->JID }}" {{ config("global.job_name_jid_{$user->tbUser->JID}") ? 'checked' : '' }}>
                     </div>
                 </div>
             </div>

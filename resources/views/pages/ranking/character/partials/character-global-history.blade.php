@@ -1,10 +1,10 @@
 @if(config('ranking.extra.character_global_history', false))
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Message') }}</th>
-                <th scope="col">{{ __('Time') }}</th>
+                <th>{{ __('Message') }}</th>
+                <th>{{ __('Time') }}</th>
             </tr>
         </thead>
         <tbody>

@@ -42,8 +42,10 @@
                                     </div>
                                 @endif
                             @empty
-                                <div class="alert alert-danger text-center" role="alert">
-                                    {{ __('No Posts Available!') }}
+                                <div class="col-lg-12">
+                                    <div class="alert alert-danger text-center" role="alert">
+                                        {{ __('No Posts Available!') }}
+                                    </div>
                                 </div>
                             @endforelse
                         </div>

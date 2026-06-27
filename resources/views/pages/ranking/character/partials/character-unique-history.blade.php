@@ -1,11 +1,11 @@
 @if(config('ranking.extra.character_unique_history', false))
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Unique Name') }}</th>
-                <th scope="col">{{ __('Points') }}</th>
-                <th scope="col">{{ __('Time') }}</th>
+                <th>{{ __('Unique Name') }}</th>
+                <th>{{ __('Points') }}</th>
+                <th>{{ __('Time') }}</th>
             </tr>
         </thead>
         <tbody>

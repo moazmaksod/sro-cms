@@ -1,11 +1,11 @@
 @if(config('ranking.extra.character_job_kill', false))
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="col">{{ __('Killer') }}</th>
-                <th scope="col">{{ __('Dead') }}</th>
-                <th scope="col">{{ __('Time') }}</th>
+                <th>{{ __('Killer') }}</th>
+                <th>{{ __('Dead') }}</th>
+                <th>{{ __('Time') }}</th>
             </tr>
         </thead>
         <tbody>

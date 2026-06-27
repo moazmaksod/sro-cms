@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table">
         <tbody>
         <tr>
             <td>{{ __('Character Name:') }}</td>
@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>{{ __('JobName:') }}</td>
-            @if(!config("settings.job_name_jid_{$data->jid}") || auth()->user()?->role?->is_admin)
+            @if(!config("global.job_name_jid_{$data->jid}") || auth()->user()?->role?->is_admin)
                 @if(!empty($data->NickName16))
                     <td>{{ $data->NickName16 }}</td>
                 @else
@@ -61,15 +61,15 @@
         @endif
         <tr>
             <td>{{ __('Title:') }}</td>
-            <td style="color: #ffc345">
+            <td>
                 @if($data->HwanLevel > 0)
                     @if($data->RefObjID > 2000)
-                        [{{ config('ranking.hwan_level')[1][$data->HwanLevel] ?? '' }}]
+                        [{{ config('ranking.hwan_level')[1][$data->HwanLevel] ?? ' - ' }}]
                     @else
-                        [{{ config('ranking.hwan_level')[2][$data->HwanLevel] ?? '' }}]
+                        [{{ config('ranking.hwan_level')[2][$data->HwanLevel] ?? ' - ' }}]
                     @endif
                 @else
-                    []
+                    <span>{{ __('None') }}</span>
                 @endif
             </td>
         </tr>
@@ -78,11 +78,9 @@
             <td>{{ __('Status:') }}</td>
             <td>
                 @if($data->isOnline)
-                    <img src="{{ asset('images/login_window_eu_located_green.png') }}" width="16" height="16" alt=""/>
-                    <span class="text-muted">{{ __('Online') }}</span>
+                    <span>{{ __('Online') }}</span>
                 @else
-                    <img src="{{ asset('images/login_window_eu_located_red.png') }}" width="16" height="16" alt=""/>
-                    <span class="text-muted">{{ __('Offline') }}</span>
+                    <span>{{ __('Offline') }}</span>
                 @endif
             </td>
         </tr>

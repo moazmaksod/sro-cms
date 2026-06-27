@@ -1,18 +1,18 @@
 @auth
-    <div class="card shadow-sm mb-4">
+    <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">{{ __('Welcome') }}, {{ auth()->user()->username }}</h5>
 
-            <ul class="list-group list-group-flush mb-3">
+            <ul class="list-group mb-3">
                 @if(config('global.server.version') === 'vSRO')
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Silk') }}</strong>
-                        <span class="">{{ number_format(auth()->user()->tbUser->getSilk->silk_own ?? 0) }}</span>
+                        <span class="">{{ number_format(auth()->user()->tbUser->getSilk->silk_own) }}</span>
                     </li>
                 @else
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('Premium Silk') }}</strong>
-                        <span class="">{{ number_format(auth()->user()->muUser->getSilk->PremiumSilk ?? 0) }}</span>
+                        <span class="">{{ number_format(auth()->user()->muUser->getSilk->PremiumSilk) }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>{{ __('VIP') }}</strong>
@@ -28,23 +28,60 @@
                 @endif
             </ul>
 
-            <div class="d-grid gap-2">
-                <a href="{{ route('account') }}" class="btn btn-outline-secondary {{ request()->routeIs('account') ? 'active' : '' }}">{{ __('Account Info') }}</a>
-                <a href="{{ route('account.edit') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.edit') ? 'active' : '' }}">{{ __('Settings') }}</a>
-                <a href="{{ route('account.donate') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.donate') ? 'active' : '' }}">{{ __('Donate') }}</a>
-                <a href="{{ route('account.donate.history') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.donate.history') ? 'active' : '' }}">{{ __('Donate History') }}</a>
-                <a href="{{ route('account.voucher') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.voucher') ? 'active' : '' }}">{{ __('Voucher') }}</a>
+            <p class="mb-0">{{ __('Account Panel') }}</p>
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('account') }}" class="nav-link {{ request()->routeIs('account') ? 'active' : '' }}">
+                        {{ __('Account Info') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('account.edit') }}" class="nav-link {{ request()->routeIs('account.edit') ? 'active' : '' }}">
+                        {{ __('Settings') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('account.donate') }}" class="nav-link {{ request()->routeIs('account.donate') ? 'active' : '' }}">
+                        {{ __('Donate') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('account.donate.history') }}" class="nav-link {{ request()->routeIs('account.donate.history') ? 'active' : '' }}">
+                        {{ __('Donate History') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('account.voucher') }}" class="nav-link {{ request()->routeIs('account.voucher') ? 'active' : '' }}">
+                        {{ __('Voucher') }}
+                    </a>
+                </li>
                 @if(config('global.vote.enabled', false))
-                <a href="{{ route('account.vote') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.vote') ? 'active' : '' }}">{{ __('Vote4Silk') }}</a>
+                <li class="nav-item">
+                    <a href="{{ route('account.vote') }}" class="nav-link {{ request()->routeIs('account.vote') ? 'active' : '' }}">
+                        {{ __('Vote4Silk') }}
+                    </a>
+                </li>
                 @endif
                 @if(config('global.referral.enabled', false))
-                <a href="{{ route('account.referral') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.referral') ? 'active' : '' }}">{{ __('Referral') }}</a>
+                <li class="nav-item">
+                    <a href="{{ route('account.referral') }}" class="nav-link {{ request()->routeIs('account.referral') ? 'active' : '' }}">
+                        {{ __('Referral') }}
+                    </a>
+                </li>
                 @endif
                 @if(config('global.tickets.enabled', false))
-                <a href="{{ route('account.tickets') }}" class="btn btn-outline-secondary {{ request()->routeIs('account.tickets') ? 'active' : '' }}">{{ __('Tickets') }}</a>
+                <li class="nav-item">
+                    <a href="{{ route('account.tickets') }}" class="nav-link {{ request()->routeIs('account.tickets') ? 'active' : '' }}">
+                        {{ __('Tickets') }}
+                    </a>
+                </li>
                 @endif
-                <a href="{{ route('logout') }}" class="btn btn-outline-secondary" onclick="event.preventDefault(); fetch('{{ route('logout') }}', {method:'POST', headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}'}}).then(()=>window.location.href='{{ url('/') }}')">{{ __('Logout') }}</a>
-            </div>
+                <li class="nav-item">
+                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); fetch('{{ route('logout') }}', {method:'POST', headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}'}}).then(() => window.location.href = '/')">
+                        {{ __('Logout') }}
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 @endauth

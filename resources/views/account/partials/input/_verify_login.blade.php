@@ -3,10 +3,10 @@
 
     <div class="col-lg-6">
         <select class="form-select @error('verify_login') is-invalid @enderror" name="verify_login" aria-label="Default select example">
-            <option value="0" {{ !config("settings.verify_jid_{$user->tbUser->JID}") ? 'selected' : '' }}>
+            <option value="0" {{ !config("global.verify_jid_{$user->tbUser->JID}") ? 'selected' : '' }}>
                 Disabled
             </option>
-            <option value="1" {{ config("settings.verify_jid_{$user->tbUser->JID}") ? 'selected' : '' }}>
+            <option value="1" {{ config("global.verify_jid_{$user->tbUser->JID}") ? 'selected' : '' }}>
                 Enabled
             </option>
         </select>
