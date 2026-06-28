@@ -466,7 +466,7 @@ class DonateService
             return response('Invalid payload', 400);
         }
 
-        $hash = hash_hmac('sha256', 'InvoiceId=' . $data['invoice_id'] . '&InvoiceKey=' . $data['invoice_key'] . '&PaymentMethod=' . $data['payment_method'], $config['vendor_key']);
+        $hash = hash_hmac('sha256', 'InvoiceId=' . $data['invoice_id'] . '&InvoiceKey=' . $data['invoice_key'] . '&PaymentMethod=' . $data['payment_method'], $config['provider_key']);
         if (!hash_equals($hash, $data['hashKey'])) {
             return response('Invalid Hash', 400);
         }

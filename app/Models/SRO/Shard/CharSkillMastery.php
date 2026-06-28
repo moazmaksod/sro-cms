@@ -31,6 +31,13 @@ class CharSkillMastery extends Model
      */
     protected $table = 'dbo._CharSkillMastery';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getCharBuildInfo($CharID)
     {
         return Cache::remember("char_build_{$CharID}", config('global.cache.character_info', 86400), function () use ($CharID) {

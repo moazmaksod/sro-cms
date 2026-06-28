@@ -33,6 +33,13 @@ class LogChatMessage extends Model
      */
     protected $table = 'dbo._LogChatMessage';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getGlobalsHistory($limit = 25, $CharName = null)
     {
         $data = Cache::remember("globals_history_{$limit}_{$CharName}", config('global.cache.globals_history', 600), function () use ($CharName, $limit) {

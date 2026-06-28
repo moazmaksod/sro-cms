@@ -131,6 +131,10 @@
                     @endif
 
                     @if(config('global.default_locale') == 'switch')
+                    @push('scripts')
+                        <script src="https://getbootstrap.com/docs/5.3/assets/js/color-modes.js"></script>
+                    @endpush
+
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ asset(config('global.languages')[App::getLocale()]['image']) }}" alt="" style="width: 1em; height: 1em;">

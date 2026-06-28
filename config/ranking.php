@@ -131,6 +131,8 @@ return [
         'character_build' => false,
         'character_buff' => false,
         'character_job' => false,
+        'character_pvp_kd' => false,
+        'character_job_kd' => false,
         'character_unique_history' => false,
         'character_global_history' => false,
         'character_pvp_kill' => false,

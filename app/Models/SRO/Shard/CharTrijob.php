@@ -31,6 +31,13 @@ class CharTrijob extends Model
      */
     protected $table = 'dbo._CharTrijob';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getJobRanking($limit = 25, $type = 0)
     {
         return Cache::remember("ranking_job_vsro_{$limit}_{$type}", config('global.cache.ranking_job', 3600), function () use ($type, $limit) {

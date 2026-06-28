@@ -30,4 +30,11 @@ class RefRegion extends Model
      */
     protected $table = 'dbo._RefRegion';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
 }

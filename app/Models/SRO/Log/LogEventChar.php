@@ -32,6 +32,13 @@ class LogEventChar extends Model
      */
     protected $table = 'dbo._LogEventChar';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getKillLogs($type = 'pvp', $limit = 100)
     {
         return Cache::remember("kill_logs_{$type}_{$limit}", 3600, function () use ($type, $limit) {

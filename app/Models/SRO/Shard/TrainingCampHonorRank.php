@@ -31,6 +31,13 @@ class TrainingCampHonorRank extends Model
      */
     protected $table = 'dbo._TrainingCampHonorRank';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getHonorRanking($limit = 25)
     {
         return Cache::remember("ranking_honor_{$limit}", config('global.cache.ranking_honor', 3600), function () use ($limit) {

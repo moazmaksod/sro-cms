@@ -31,6 +31,13 @@ class TimedJob extends Model
      */
     protected $table = 'dbo._TimedJob';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getCharBuffInfo($CharID)
     {
         return Cache::remember("char_buff_{$CharID}", config('global.cache.character_info', 86400), function () use ($CharID) {

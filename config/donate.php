@@ -13,42 +13,12 @@ return [
         'client_secret' => 'PAYPAL_CLIENT_SECRET',
         'mode' => 'sandbox', //live, sandbox
         'package' => [
-            [
-                'name' => '500 Silk',
-                'price' => 5,
-                'type' => 0,
-                'value' => 500,
-            ],
-            [
-                'name' => '1000 Silk',
-                'price' => 10,
-                'type' => 0,
-                'value' => 1000,
-            ],
-            [
-                'name' => '2500 Silk',
-                'price' => 25,
-                'type' => 0,
-                'value' => 2500,
-            ],
-            [
-                'name' => '5000 Silk',
-                'price' => 50,
-                'type' => 0,
-                'value' => 5000,
-            ],
-            [
-                'name' => '7500 Silk',
-                'price' => 75,
-                'type' => 0,
-                'value' => 7500,
-            ],
-            [
-                'name' => '10000 Silk',
-                'price' => 100,
-                'type' => 0,
-                'value' => 10000,
-            ],
+            ['name' => '500 Silk', 'price' => 5, 'type' => 0, 'value' => 500,],
+            ['name' => '1000 Silk', 'price' => 10, 'type' => 0, 'value' => 1000,],
+            ['name' => '2500 Silk', 'price' => 25, 'type' => 0, 'value' => 2500,],
+            ['name' => '5000 Silk', 'price' => 50, 'type' => 0, 'value' => 5000,],
+            ['name' => '7500 Silk', 'price' => 75, 'type' => 0, 'value' => 7500,],
+            ['name' => '10000 Silk', 'price' => 100, 'type' => 0, 'value' => 10000,],
         ],
     ],
     'stripe' => [

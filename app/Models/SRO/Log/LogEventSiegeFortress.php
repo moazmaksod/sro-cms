@@ -31,6 +31,13 @@ class LogEventSiegeFortress extends Model
      */
     protected $table = 'dbo._LogEventSiegeFortress';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getFortressHistory($limit = 25)
     {
         return Cache::remember("fortress_history_{$limit}", config('global.cache.fortress_history', 604800), function () use ($limit) {

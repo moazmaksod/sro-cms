@@ -31,6 +31,13 @@ class ContentConfig extends Model
      */
     protected $table = 'dbo._ContentConfig';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getContentConfig()
     {
         return Cache::remember("content_config", 3600, function () {

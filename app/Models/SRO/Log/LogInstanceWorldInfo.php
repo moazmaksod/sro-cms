@@ -33,6 +33,13 @@ class LogInstanceWorldInfo extends Model
      */
     protected $table = 'dbo._LogInstanceWorldInfo';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getUniqueRanking($limit = 25, $month = 0)
     {
         $uniqueList = config('ranking.uniques');

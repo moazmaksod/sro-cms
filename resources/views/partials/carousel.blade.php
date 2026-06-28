@@ -1,4 +1,4 @@
-<div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel" style="margin-bottom: 4rem;">
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     @if (count(config('global.slider')) > 0)
         <div class="carousel-indicators">
             @foreach(config('global.slider') as $key => $row)
@@ -12,8 +12,8 @@
                 <img class="object-fit-cover" src="{{ $row['image'] }}" alt="" width="100%" height="100%">
                 <div class="container">
                     <div class="carousel-caption">
-                        <h1>{{ $row['title'] }}</h1>
-                        <p>{{ $row['desc'] }}</p>
+                        <h1 class="text-white">{{ $row['title'] }}</h1>
+                        <p class="text-white">{{ $row['desc'] }}</p>
                         <p><a class="btn btn-lg btn-primary" href="{{ $row['btn_url'] }}">{{ $row['btn_label'] }}</a></p>
                     </div>
                 </div>

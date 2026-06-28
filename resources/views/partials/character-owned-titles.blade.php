@@ -1,16 +1,16 @@
 @if(isset($config) && $config['enabled'])
     <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="table-dark">
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="col">{{ __('Title Name') }}</th>
-                    <th scope="col">{{ __('Enable') }}</th>
+                    <th>{{ __('Title Name') }}</th>
+                    <th>{{ __('Enable') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($data as $row)
                     <tr>
-                        <th scope="row">{{ $row->TitleName ?? $row->TitleString }}</th>
+                        <th>{{ $row->TitleName ?? $row->TitleString }}</th>
                         <td>{{ $row->Enable }}</td>
                     </tr>
                 @empty
