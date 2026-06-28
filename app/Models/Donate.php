@@ -8,12 +8,32 @@ use Illuminate\Support\Str;
 
 class Donate extends Model
 {
+    /**
+     * The database connection for the model.
+     *
+     * @var string
+     */
     protected $connection = 'sqlsrv';
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'donates';
 
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'method',
         'transaction_id',

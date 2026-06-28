@@ -50,16 +50,25 @@ class TbUser extends Model
      */
     protected $fillable = [];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password'
     ];
 
+    /**
+     * The fillable attributes for vSRO.
+     *
+     * @var array<int, string>
+     */
     protected array $fillable_vsro = [
         'StrUserID',
         'Name',
         'password',
         'Status',
-        'GMrank',
         'Email',
         'regtime',
         'reg_ip',
@@ -69,6 +78,11 @@ class TbUser extends Model
         'LatestUpdateTime_ToPlayTime',
     ];
 
+    /**
+     * The fillable attributes for iSRO.
+     *
+     * @var array<int, string>
+     */
     protected array $fillable_isro = [
         'PortalJID',
         'StrUserID',

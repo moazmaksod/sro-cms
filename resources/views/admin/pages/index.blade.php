@@ -2,7 +2,7 @@
 @section('title', __('Pages'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Pages</h1>
 
@@ -50,7 +50,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center">No Records Found!</td>
+                            <td colspan="5" class="text-center">No Records Found!</td>
                         </tr>
                     @endforelse
                 </tbody>

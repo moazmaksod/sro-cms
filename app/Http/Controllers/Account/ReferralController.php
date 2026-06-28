@@ -30,7 +30,7 @@ class ReferralController extends Controller
         $usedInvites = $user->getInvitesCreated()->whereNotNull('invited_jid')->load('invitedUser');
         $minimumRedeem = config('global.referral.minimum_redeem', 25);
 
-        return view('pages.referral.index', [
+        return view('account.referral.index', [
             'invite' => $invite,
             'usedInvites' => $usedInvites,
             'totalPoints' => $totalPoints,

@@ -16,6 +16,11 @@ class UserRole extends Model
      */
     protected $guarded = ['*'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'is_admin' => 'boolean',
     ];

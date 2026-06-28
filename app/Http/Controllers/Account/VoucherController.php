@@ -16,7 +16,7 @@ class VoucherController extends Controller
     {
         $data = Voucher::getUserVoucher($request->user()->jid);
 
-        return view('pages.voucher.index', [
+        return view('account.voucher.index', [
             'data' => $data,
         ]);
     }

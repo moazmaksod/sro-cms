@@ -72,6 +72,6 @@ class LogController extends Controller
     {
         $data = Char::getCharLocations();
 
-        return view('admin.logs.worldmap', compact('data'));
+        return view('admin.worldmap', compact('data'));
     }
 }

@@ -223,7 +223,7 @@
     <script type="text/javascript">
         jQuery(function() {
             @forelse($data as $row)
-                xSROMap.AddPlayer("{{ $row->CharName16 }}",'<a href="{{ route('admin.characters.view', $row->CharID) }}" target="_blank"><b>{{ $row->CharName16 }}</b></a><br>', {{ $row->PosX }}, {{ $row->PosZ }}, {{ $row->PosY }}, {{ $row->LatestRegion }});
+                xSROMap.AddPlayer(@json($row->CharName16),'<a href="{{ route('admin.characters.view', $row->CharID) }}" target="_blank"><b>' + @json($row->CharName16) + '</b></a><br>', {{ (int) $row->PosX }}, {{ (int) $row->PosZ }}, {{ (int) $row->PosY }}, {{ (int) $row->LatestRegion }});
             @empty
             @endforelse
         });

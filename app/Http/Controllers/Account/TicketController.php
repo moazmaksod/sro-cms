@@ -13,7 +13,7 @@ class TicketController extends Controller
         abort_if(!config('global.tickets.enabled', false), 404);
         $data = Ticket::getUserTickets(auth()->id(), 20);
 
-        return view('pages.tickets.index', compact('data'));
+        return view('account.tickets.index', compact('data'));
     }
 
     public function show(int $id)
@@ -24,7 +24,7 @@ class TicketController extends Controller
 
         $replies = Ticket::getReplies($ticket->id);
 
-        return view('pages.tickets.show', [
+        return view('account.tickets.show', [
             'data' => $ticket,
             'replies' => $replies,
         ]);
@@ -34,7 +34,7 @@ class TicketController extends Controller
     {
         $data = config('global.tickets.categories');
 
-        return view('pages.tickets.create', compact('data'));
+        return view('account.tickets.create', compact('data'));
     }
 
     public function send(Request $request)

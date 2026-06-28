@@ -153,7 +153,7 @@ class SettingController extends Controller
 
             'referral' => $this->mergeJsonSetting($data, 'referral', config('global.referral', [])),
             'tickets'  => $this->mergeJsonSetting($data, 'tickets',  config('global.tickets',  [])),
-            'sliders'  => $this->mergeJsonSetting($data, 'sliders',  config('global.sliders',  [])),
+            'sliders'  => $this->mergeJsonSetting($data, 'sliders',  config('global.slider',  [])),
             'footer'   => $this->mergeJsonSetting($data, 'footer',   config('global.footer',   [])),
             'mail'     => $this->mergeJsonSetting($data, 'mail',     []),
             'captcha'  => $this->mergeJsonSetting($data, 'captcha',  config('captcha',          [])),

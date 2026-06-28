@@ -18,10 +18,25 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * The database connection for the model.
+     *
+     * @var string
+     */
     protected $connection = 'sqlsrv';
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'users';
 
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**

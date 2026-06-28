@@ -2,7 +2,7 @@
 @section('title', __('Ranking Settings'))
 
 @section('content')
-    <div class="container">
+    <div>
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">{{ __('Ranking Settings') }}</h1>
@@ -31,10 +31,10 @@
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-hwan" type="button" role="tab">{{ __('Hwan Level') }}</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-custom" type="button" role="tab">{{ __('Custom Ranking') }}</button>
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-character" type="button" role="tab">{{ __('Character') }}</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-character" type="button" role="tab">{{ __('Character') }}</button>
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-custom" type="button" role="tab">{{ __('Custom Ranking') }}</button>
             </li>
         </ul>
 
@@ -99,7 +99,7 @@
                             onclick="addHiddenRow('hiddenCharactersTable', 'hidden_character')">{{ __('+ Add Character') }}</button>
 
                     <table class="table table-bordered align-middle mb-4" id="hiddenCharactersTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Character Name') }}</th>
                             <th style="width: 80px;">{{ __('Action') }}</th>
@@ -122,7 +122,7 @@
                             onclick="addHiddenRow('hiddenGuildsTable', 'hidden_guild')">{{ __('+ Add Guild') }}</button>
 
                     <table class="table table-bordered align-middle" id="hiddenGuildsTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Guild Name') }}</th>
                             <th style="width: 80px;">{{ __('Action') }}</th>
@@ -148,7 +148,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addUniqueRow()">{{ __('+ Add Unique') }}</button>
 
                     <table class="table table-bordered align-middle" id="uniquesTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Key') }}</th>
                             <th>{{ __('ID') }}</th>
@@ -182,7 +182,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addHwanLevelRow()">{{ __('+ Add Hwan Level') }}</button>
 
                     <table class="table table-bordered align-middle" id="hwanLevelTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th style="width: 140px;">{{ __('Race') }}</th>
                             <th style="width: 100px;">{{ __('Level') }}</th>
@@ -208,6 +208,36 @@
                         @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                {{-- ===================== CHARACTER ===================== --}}
+                <div class="tab-pane fade" id="tab-character" role="tabpanel">
+
+                    <h5 class="fw-semibold mb-3">{{ __('Character Ranking Extras') }}</h5>
+                    <p class="text-muted small mb-3">{{ __('Choose which extra sections to show on the character ranking page.') }}</p>
+
+                    <div class="d-flex flex-column gap-2">
+                        @foreach([
+                            'character_status'         => __('Character Status'),
+                            'character_build'          => __('Character Build'),
+                            'character_buff'           => __('Character Buff'),
+                            'character_job'            => __('Character Job'),
+                            'character_pvp_kd'         => __('Character PvP K/D'),
+                            'character_job_kd'         => __('Character Job K/D'),
+                            'character_unique_history' => __('Character Unique History'),
+                            'character_global_history' => __('Character Global History'),
+                            'character_pvp_kill'       => __('Character PvP Kill'),
+                            'character_job_kill'       => __('Character Job Kill'),
+                        ] as $key => $label)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       id="char_extra_{{ $key }}"
+                                       data-rk="extra" data-key="{{ $key }}"
+                                    {{ !empty($ranking['extra'][$key]) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="char_extra_{{ $key }}">{{ $label }}</label>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 {{-- ===================== CUSTOM RANKING ===================== --}}
@@ -250,34 +280,6 @@
                                     <button type="button" class="btn btn-sm btn-danger"
                                             onclick="this.closest('.custom-ranking-item').remove()">{{ __('Remove') }}</button>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- ===================== CHARACTER ===================== --}}
-                <div class="tab-pane fade" id="tab-character" role="tabpanel">
-
-                    <h5 class="fw-semibold mb-3">{{ __('Character Ranking Extras') }}</h5>
-                    <p class="text-muted small mb-3">{{ __('Choose which extra sections to show on the character ranking page.') }}</p>
-
-                    <div class="d-flex flex-column gap-2">
-                        @foreach([
-                            'character_status'         => __('Character Status'),
-                            'character_build'          => __('Character Build'),
-                            'character_buff'           => __('Character Buff'),
-                            'character_job'            => __('Character Job'),
-                            'character_unique_history' => __('Character Unique History'),
-                            'character_global_history' => __('Character Global History'),
-                            'character_pvp_kill'       => __('Character PvP Kill'),
-                            'character_job_kill'       => __('Character Job Kill'),
-                        ] as $key => $label)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox"
-                                       id="char_extra_{{ $key }}"
-                                       data-rk="extra" data-key="{{ $key }}"
-                                    {{ !empty($ranking['extra'][$key]) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="char_extra_{{ $key }}">{{ $label }}</label>
                             </div>
                         @endforeach
                     </div>

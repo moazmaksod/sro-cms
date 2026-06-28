@@ -8,12 +8,39 @@ use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
     public $timestamps  = false;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'key';
+
+    /**
+     * The data type of the primary key.
+     *
+     * @var string
+     */
     protected $keyType    = 'string';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = ['key', 'value'];
 
     /*

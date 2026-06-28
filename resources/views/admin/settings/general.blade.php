@@ -2,7 +2,7 @@
 @section('title', __('Settings'))
 
 @section('content')
-    <div class="container">
+    <div>
 
         {{-- Page Header --}}
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -318,32 +318,8 @@
                                         <input type="text" class="form-control" data-sl="title" value="{{ $slide['title'] ?? '' }}">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">{{ __('Title Color') }}</label>
-                                        <div class="input-group" style="max-width: 260px;">
-                                            <input type="color" class="form-control form-control-color"
-                                                   data-sl="title_color_picker"
-                                                   value="{{ $slide['title_color'] ?? '#ffffff' }}"
-                                                   oninput="syncColor(this, 'title_color')">
-                                            <input type="text" class="form-control" data-sl="title_color"
-                                                   value="{{ $slide['title_color'] ?? '#ffffff' }}"
-                                                   oninput="syncColorText(this, 'title_color_picker')">
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
                                         <label class="form-label">{{ __('Description') }}</label>
                                         <textarea class="form-control" data-sl="desc" rows="2">{{ $slide['desc'] ?? '' }}</textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">{{ __('Description Color') }}</label>
-                                        <div class="input-group" style="max-width: 260px;">
-                                            <input type="color" class="form-control form-control-color"
-                                                   data-sl="desc_color_picker"
-                                                   value="{{ $slide['desc_color'] ?? '#ffffff' }}"
-                                                   oninput="syncColor(this, 'desc_color')">
-                                            <input type="text" class="form-control" data-sl="desc_color"
-                                                   value="{{ $slide['desc_color'] ?? '#ffffff' }}"
-                                                   oninput="syncColorText(this, 'desc_color_picker')">
-                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">{{ __('Image URL') }}</label>
@@ -378,7 +354,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addFooterGeneralRow()">{{ __('+ Add Row') }}</button>
 
                     <table class="table table-bordered align-middle mb-4" id="footer-general">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('URL') }}</th>
@@ -408,7 +384,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addFooterSocialRow()">{{ __('+ Add Row') }}</button>
 
                     <table class="table table-bordered align-middle mb-4" id="footer-social">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('URL') }}</th>
@@ -441,7 +417,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addFooterBacklinkRow()">{{ __('+ Add Row') }}</button>
 
                     <table class="table table-bordered align-middle" id="footer-backlink">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('URL') }}</th>
@@ -548,7 +524,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addTicketCategory()">{{ __('+ Add Category') }}</button>
 
                     <table class="table table-bordered align-middle" id="ticketCategoriesTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Label') }}</th>
                             <th style="width: 80px;">{{ __('Action') }}</th>
@@ -685,17 +661,6 @@
             });
         }
 
-        function syncColor(picker, targetKey) {
-            picker.closest('.slider-body').querySelector(`[data-sl="${targetKey}"]`).value = picker.value;
-        }
-
-        function syncColorText(input, pickerKey) {
-            const picker = input.closest('.input-group').querySelector(`[data-sl="${pickerKey}"]`);
-            if (picker && /^#[0-9a-fA-F]{6}$/.test(input.value)) {
-                picker.value = input.value;
-            }
-        }
-
         function addSlide() {
             const container = document.getElementById('slidersContainer');
             const index     = container.querySelectorAll('.slider-item').length + 1;
@@ -711,22 +676,8 @@
                     <input type="text" class="form-control" data-sl="title">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">{{ __('Title Color') }}</label>
-                    <div class="input-group" style="max-width: 260px;">
-                        <input type="color" class="form-control form-control-color" data-sl="title_color_picker" value="#ffffff" oninput="syncColor(this, 'title_color')">
-                        <input type="text" class="form-control" data-sl="title_color" value="#ffffff" oninput="syncColorText(this, 'title_color_picker')">
-                    </div>
-                </div>
-                <div class="mb-3">
                     <label class="form-label">{{ __('Description') }}</label>
                     <textarea class="form-control" data-sl="desc" rows="2"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">{{ __('Description Color') }}</label>
-                    <div class="input-group" style="max-width: 260px;">
-                        <input type="color" class="form-control form-control-color" data-sl="desc_color_picker" value="#ffffff" oninput="syncColor(this, 'desc_color')">
-                        <input type="text" class="form-control" data-sl="desc_color" value="#ffffff" oninput="syncColorText(this, 'desc_color_picker')">
-                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ __('Image URL') }}</label>
@@ -749,10 +700,8 @@
 
         function serializeSliders() {
             const slides = Array.from(document.querySelectorAll('#slidersContainer .slider-item')).map(card => ({
-                title:       card.querySelector('[data-sl="title"]').value,
-                title_color: card.querySelector('[data-sl="title_color"]').value,
-                desc:        card.querySelector('[data-sl="desc"]').value,
-                desc_color:  card.querySelector('[data-sl="desc_color"]').value,
+                title: card.querySelector('[data-sl="title"]').value,
+                desc:  card.querySelector('[data-sl="desc"]').value,
                 image:       card.querySelector('[data-sl="image"]').value,
                 btn_label:   card.querySelector('[data-sl="btn_label"]').value,
                 btn_url:     card.querySelector('[data-sl="btn_url"]').value,

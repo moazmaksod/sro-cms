@@ -2,7 +2,7 @@
 @section('title', __('Vouchers'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Vouchers</h1>
 

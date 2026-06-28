@@ -19,7 +19,7 @@ Route::get('/uniques', [PagesController::class, 'uniques']);
 
 Route::get('/online-counter', [PagesController::class, 'onlineCounter']);
 
-Route::middleware('web')->group(function () {
+Route::middleware(['web', 'throttle:5,1'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/forgot-password', [AuthController::class, 'forgot_password']);

@@ -44,7 +44,7 @@
                 <h5 class="mt-5">Select Package</h5>
                 <div id="content-donate">
                     @foreach(collect($data)->filter(fn ($row) => is_array($row) && !empty($row['enabled'])) as $key => $row)
-                        @include('pages.donate.' . $key, ['data' => $data[$key]])
+                        @include('account.donate.' . $key, ['data' => $data[$key]])
                         @break
                     @endforeach
                 </div>

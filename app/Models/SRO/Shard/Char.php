@@ -50,18 +50,26 @@ class Char extends Model
      */
     protected $fillable = [
         'CharID',
-        'Deleted',
         'RefObjID',
         'CharName16',
         'NickName16',
         'LastLogout',
-        'RemainGold'
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<int, string>
+     */
     protected $dates = [
         'LastLogout'
     ];
 
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')

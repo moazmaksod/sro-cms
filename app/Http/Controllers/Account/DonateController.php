@@ -13,7 +13,7 @@ class DonateController extends Controller
 {
     public function index(): View
     {
-        return view('pages.donate.index', ['data' => config('donate')]);
+        return view('account.donate.index', ['data' => config('donate')]);
     }
 
     public function show(string $method): mixed
@@ -24,11 +24,11 @@ class DonateController extends Controller
             return back()->withErrors(['error' => 'Payment method not found or disabled.']);
         }
 
-        if (!view()->exists("pages.donate.{$method}")) {
+        if (!view()->exists("account.donate.{$method}")) {
             return back()->withErrors(['error' => 'View file for the payment method is missing.']);
         }
 
-        return view("pages.donate.{$method}", ['data' => $config]);
+        return view("account.donate.{$method}", ['data' => $config]);
     }
 
     public function process(string $method, Request $request, DonateService $donateService): mixed
@@ -87,7 +87,7 @@ class DonateController extends Controller
             $data = AphChangedSilk::getSilkHistory($request->user()->jid, 25, $request->get('page', 1));
         }
 
-        return view('pages.donate.history', [
+        return view('account.donate.history', [
             'user' => $request->user(),
             'data' => $data,
         ]);

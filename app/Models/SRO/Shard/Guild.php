@@ -46,10 +46,20 @@ class Guild extends Model
      */
     protected $fillable = [];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<int, string>
+     */
     protected $dates = [
         'FoundationDate'
     ];
 
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public static function getGuildRanking(int $limit = 25, int $GuildID = 0, string $Name = '')

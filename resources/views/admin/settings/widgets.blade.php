@@ -2,7 +2,7 @@
 @section('title', __('Widgets Settings'))
 
 @section('content')
-    <div class="container">
+    <div>
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">{{ __('Widgets Settings') }}</h1>
@@ -124,7 +124,7 @@
                     <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="addServerInfoRow()">{{ __('+ Add Row') }}</button>
 
                     <table class="table table-bordered align-middle" id="serverInfoTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th>{{ __('Icon (HTML)') }}</th>
                             <th>{{ __('Name') }}</th>
@@ -166,7 +166,6 @@
                         @foreach($eventSchedule['names'] ?? [] as $id => $name)
                             <div class="card mb-3 event-item event-original">
                                 <div class="card-header">
-                                    <span class="badge bg-primary me-2">{{ __('Original') }}</span>
                                     <span class="fw-semibold event-card-title">{{ $name }}</span>
                                 </div>
                                 <div class="card-body">
@@ -189,7 +188,6 @@
                         @foreach($eventSchedule['custom'] ?? [] as $key => $event)
                             <div class="card mb-3 event-item event-custom">
                                 <div class="card-header">
-                                    <span class="badge bg-success me-2">{{ __('Custom') }}</span>
                                     <span class="fw-semibold event-card-title">{{ $event['name'] ?? __('Unnamed') }}</span>
                                 </div>
                                 <div class="card-body">
@@ -212,7 +210,7 @@
                                         <div class="form-text mb-2">{{ __('Add one or more start times for this event.') }}</div>
                                         <button type="button" class="btn btn-secondary btn-sm mb-2" onclick="addTimeRow(this)">{{ __('+ Add Time') }}</button>
                                         <table class="table table-bordered align-middle table-sm times-table">
-                                            <thead class="table-light">
+                                            <thead >
                                             <tr>
                                                 <th style="width: 120px;">{{ __('Hour (0-23)') }}</th>
                                                 <th style="width: 120px;">{{ __('Minute (0-59)') }}</th>
@@ -302,7 +300,7 @@
                                     <div class="form-text mb-2">{{ __('Add one or more start times.') }}</div>
                                     <button type="button" class="btn btn-secondary btn-sm mb-2" onclick="addNewFormTimeRow()">{{ __('+ Add Time') }}</button>
                                     <table class="table table-bordered align-middle table-sm" id="newCeTimesTable">
-                                        <thead class="table-light">
+                                        <thead >
                                         <tr>
                                             <th style="width: 120px;">{{ __('Hour (0-23)') }}</th>
                                             <th style="width: 120px;">{{ __('Minute (0-59)') }}</th>
@@ -360,7 +358,7 @@
                     </div>
 
                     <table class="table table-bordered align-middle" id="fortressTable">
-                        <thead class="table-light">
+                        <thead >
                         <tr>
                             <th style="width: 80px;" class="text-center">{{ __('ID') }}</th>
                             <th>{{ __('Display Name') }}</th>
@@ -371,7 +369,7 @@
                         @foreach($fortressWar['names'] ?? [] as $id => $fort)
                             <tr>
                                 <td class="text-center">
-                                    <span class="badge bg-secondary fs-6">{{ $id }}</span>
+                                    <span class="">{{ $id }}</span>
                                     <input type="hidden" data-fw="id" value="{{ $id }}">
                                 </td>
                                 <td><input type="text" class="form-control form-control-sm" data-fw="name"  value="{{ $fort['name']  ?? '' }}"></td>
@@ -521,7 +519,6 @@
 
             return `
             <div class="card-header">
-                <span class="badge bg-success me-2">{{ __('Custom') }}</span>
                 <span class="fw-semibold event-card-title">${name || '{{ __("Unnamed") }}'}</span>
             </div>
             <div class="card-body">
@@ -540,7 +537,7 @@
                     <div class="form-text mb-2">{{ __('Add one or more start times for this event.') }}</div>
                     <button type="button" class="btn btn-secondary btn-sm mb-2" onclick="addTimeRow(this)">{{ __('+ Add Time') }}</button>
                     <table class="table table-bordered align-middle table-sm times-table">
-                        <thead class="table-light">
+                        <thead >
                             <tr>
                                 <th style="width: 120px;">{{ __('Hour (0-23)') }}</th>
                                 <th style="width: 120px;">{{ __('Minute (0-59)') }}</th>
@@ -574,7 +571,6 @@
                 card.className = 'card mb-3 event-item event-original';
                 card.innerHTML = `
                 <div class="card-header">
-                    <span class="badge bg-primary me-2">{{ __('Original') }}</span>
                     <span class="fw-semibold event-card-title">${name || 'ID: ' + id}</span>
                 </div>
                 <div class="card-body">

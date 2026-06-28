@@ -49,9 +49,26 @@
 </svg>
 
 <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-    <a class="navbar-brand col-lg-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">SRO CMS v2.5 - <small>by:m1xawy</small></a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">SRO CMS v3 - <small>by:m1xawy</small></a>
 
-    <ul class="navbar-nav flex-row">
+    <ul class="navbar-nav flex-row d-md-none">
+        <li class="nav-item text-nowrap">
+            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
+                <svg class="bi" aria-hidden="true"><use xlink:href="#search"/></svg>
+            </button>
+        </li>
+        <li class="nav-item text-nowrap">
+            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <svg class="bi" aria-hidden="true"><use xlink:href="#list"/></svg>
+            </button>
+        </li>
+    </ul>
+
+    <div id="navbarSearch" class="navbar-search w-100 collapse">
+        <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
+    </div>
+
+    <ul class="navbar-nav flex-row px-3">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle px-3 text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(auth()->user()->email))) }}?s=60&d=identicon" class="rounded-circle me-2" width="30" height="30" alt="User">
@@ -72,19 +89,5 @@
                 </li>
             </ul>
         </li>
-        <li class="nav-item text-nowrap d-md-none">
-            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
-                <svg class="bi" aria-hidden="true"><use xlink:href="#search"/></svg>
-            </button>
-        </li>
-        <li class="nav-item text-nowrap d-md-none">
-            <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <svg class="bi" aria-hidden="true"><use xlink:href="#list"/></svg>
-            </button>
-        </li>
     </ul>
-
-    <div id="navbarSearch" class="navbar-search w-100 collapse">
-        <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
-    </div>
 </header>

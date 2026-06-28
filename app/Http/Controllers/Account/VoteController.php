@@ -14,7 +14,7 @@ class VoteController extends Controller
         abort_if(!config('global.vote.enabled', false), 404);
         $data = Vote::getVotes($request, session('fingerprint'));
 
-        return view('pages.vote.index', compact('data'));
+        return view('account.vote.index', compact('data'));
     }
 
     public function voting(string $site, Request $request)

@@ -9,10 +9,12 @@
  */
 
 @media (min-width: 768px) {
-  .sidebar .offcanvas-lg {
+  .sidebar .offcanvas-md {
     position: -webkit-sticky;
     position: sticky;
     top: 48px;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
   }
   .navbar-search {
     display: block;

@@ -33,7 +33,7 @@ class SettingsServiceProvider extends ServiceProvider
             $this->applyRankingSettings();
             $this->applyJsonConfig($settings, 'referral', 'global.referral');
             $this->applyJsonConfig($settings, 'tickets',  'global.tickets');
-            $this->applyJsonConfig($settings, 'sliders',  'global.sliders');
+            $this->applyJsonConfig($settings, 'sliders',  'global.slider');
             $this->applyJsonConfig($settings, 'footer',   'global.footer');
             $this->applyJsonConfig($settings, 'cache',    'global.cache');
         } catch (\Throwable) {

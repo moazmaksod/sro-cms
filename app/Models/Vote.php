@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Cache;
 
 class Vote extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'jid',
         'site',
@@ -16,6 +21,11 @@ class Vote extends Model
         'expire',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'expire' => 'datetime',
     ];
