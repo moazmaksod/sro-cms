@@ -1,4 +1,4 @@
-@if(config('widgets.pvp_kills.enabled'))
+@if(config('widgets.pvp_kill.enabled'))
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Pvp Kills') }}

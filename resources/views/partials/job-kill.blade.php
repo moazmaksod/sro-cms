@@ -1,4 +1,4 @@
-@if(config('widgets.job_kills.enabled'))
+@if(config('widgets.job_kill.enabled'))
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Job Kills') }}

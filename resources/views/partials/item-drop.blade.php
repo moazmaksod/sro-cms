@@ -1,4 +1,4 @@
-@if(config('widgets.sox_drop.enabled'))
+@if(config('widgets.item_drop.enabled'))
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Sox Drop') }}

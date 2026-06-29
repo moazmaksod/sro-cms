@@ -20,7 +20,7 @@
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="card p-0 mt-4">
+                <div class="card p-0 mb-4">
                     <div class="card-header">
                         <h4 class="text-center">Character Items</h4>
                     </div>

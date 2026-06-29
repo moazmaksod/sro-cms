@@ -1,4 +1,4 @@
-@if(config('widgets.sox_plus.enabled'))
+@if(config('widgets.item_plus.enabled'))
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Sox Plus') }}

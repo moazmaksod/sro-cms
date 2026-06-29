@@ -1,4 +1,4 @@
-@if(config('widgets.globals_history.enabled'))
+@if(config('widgets.global_history.enabled'))
     <div class="card mb-4">
         <div class="card-header">
             {{ __('Global History') }}
