@@ -75,7 +75,7 @@ class VoteService
             return response('Missing user ID', 400);
         }
 
-        if((int)$request->input('Successful') == 1) {
+        if((int)$request->input('Successful') !== 1) {
             return response($request->input('Reason') ?? 'Vote not successful', 200);
         }
 

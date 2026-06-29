@@ -438,7 +438,6 @@
                     placeholder: 'Add your custom donate HTML content...',
                     tabsize: 2,
                     height: 320,
-                    codeviewFilter: false,
                     codeviewIframeFilter: true,
                     callbacks: {
                         onInit: function () { summernoteReady = true; }

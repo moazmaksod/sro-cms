@@ -54,6 +54,7 @@ class DonateService
             'purchase_units' => [
                 [
                     'invoice_id' => (string) Str::uuid(),
+                    'custom_id' => (string) auth()->id(),
                     'amount' => [
                         'currency_code' => strtoupper($config['currency']),
                         'value' => number_format($package['price'], 2, '.', ''),
@@ -137,7 +138,15 @@ class DonateService
             return back()->withErrors(['paypal' => 'Invalid package amount: $' . $paidAmount])->withInput();
         }
 
-        $user = Auth::user();
+        $customId = $order['purchase_units'][0]['custom_id'] ?? null;
+        if (!$customId) {
+            return back()->withErrors(['paypal' => 'Unable to identify user.'])->withInput();
+        }
+
+        $user = User::find($customId);
+        if (!$user) {
+            return back()->withErrors(['paypal' => 'User not found.'])->withInput();
+        }
 
         DB::transaction(function () use ($user, $package, $order) {
             TbUser::updateSilk($user->jid, $package['type'], $package['value']);
@@ -520,7 +529,7 @@ class DonateService
             </params>
         </APIRequest>');
 
-        $response = Http::asForm()->withoutVerifying()->timeout(20)->post($config['endpoint'], [
+        $response = Http::asForm()->timeout(20)->post($config['endpoint'], [
             'data' => urlencode($xml),
         ]);
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 
 class PagesController extends Controller
 {
@@ -29,6 +30,7 @@ class PagesController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         Pages::create($validated);
 
@@ -50,6 +52,8 @@ class PagesController extends Controller
         if ($validated['title'] !== $pages->title) {
             $validated['slug'] = Str::slug($validated['title']);
         }
+
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         $pages->update($validated);
 

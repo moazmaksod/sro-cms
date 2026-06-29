@@ -132,8 +132,8 @@ class ProfileController extends Controller
             'password' => 'required|string',
         ]);
 
-        $tbUser = TbUser::where('password', md5($request->password))->first();
-        if (!$tbUser) {
+        $tbUser = $request->user()->tbUser;
+        if (!$tbUser || md5($request->password) !== $tbUser->password) {
             return back()->with('passcode_error', 'Invalid password provided. Please try again.');
         }
 

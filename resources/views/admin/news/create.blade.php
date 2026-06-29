@@ -138,7 +138,6 @@
             placeholder: 'Hello iSRO-CMS v2',
             tabsize: 2,
             height: 400,
-            codeviewFilter: false, // allows raw HTML
             codeviewIframeFilter: true
         });
     </script>

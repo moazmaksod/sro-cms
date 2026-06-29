@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\News;
 use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 
 class NewsController extends Controller
 {
@@ -33,6 +34,7 @@ class NewsController extends Controller
 
         $validated['author_id'] = auth()->id();
         $validated['slug'] = Str::slug($validated['title']);
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         News::create($validated);
 
@@ -57,6 +59,8 @@ class NewsController extends Controller
         if ($validated['title'] !== $news->title) {
             $validated['slug'] = Str::slug($validated['title']);
         }
+
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         $news->update($validated);
 

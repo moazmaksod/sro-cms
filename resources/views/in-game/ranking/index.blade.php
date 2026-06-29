@@ -72,6 +72,12 @@
         loadRanking('player'); // default
     });
 
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     async function loadRanking(type) {
         const thead = document.getElementById("ranking-thead");
         const tbody = document.getElementById("ranking-body");
@@ -104,7 +110,7 @@
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
                             <td class="td3">${row.RefObjID > 2000 ? '<img src="/webapps/ranking/images/european.png" />' : '<img src="/webapps/ranking/images/chinese.png" />'}</td>
-                            <td class="td4">${row.CharName16}</td>
+                            <td class="td4">${escapeHtml(row.CharName16)}</td>
                             <td class="td5">${row.ItemPoints ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
@@ -115,7 +121,7 @@
                         <tr onmouseover="this.style.background='#2e261e'" onmouseout="this.style.background='none'">
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
-                            <td class="td4">${row.Name}</td>
+                            <td class="td4">${escapeHtml(row.Name)}</td>
                             <td class="td5">${row.ItemPoints ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
@@ -127,7 +133,7 @@
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
                             <td class="td3">${row.RefObjID > 2000 ? '<img src="/webapps/ranking/images/european.png" />' : '<img src="/webapps/ranking/images/chinese.png" />'}</td>
-                            <td class="td4">${row.CharName16}</td>
+                            <td class="td4">${escapeHtml(row.CharName16)}</td>
                             <td class="td5">${row.Points ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
@@ -139,7 +145,7 @@
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
                             <td class="td3">${row.RefObjID > 2000 ? '<img src="/webapps/ranking/images/european.png" />' : '<img src="/webapps/ranking/images/chinese.png" />'}</td>
-                            <td class="td4">${row.CharName16}</td>
+                            <td class="td4">${escapeHtml(row.CharName16)}</td>
                             <td class="td5">${row.CurLevel ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
@@ -151,7 +157,7 @@
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
                             <td class="td3">${row.RefObjID > 2000 ? '<img src="/webapps/ranking/images/european.png" />' : '<img src="/webapps/ranking/images/chinese.png" />'}</td>
-                            <td class="td4">${row.CharName16 ?? '-'}</td>
+                            <td class="td4">${escapeHtml(row.CharName16 ?? '-')}</td>
                             <td class="td5">${row.GuildWarKill ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
@@ -162,7 +168,7 @@
                         <tr onmouseover="this.style.background='#2e261e'" onmouseout="this.style.background='none'">
                             <td class="td1">${topImage}</td>
                             <td class="td2">${index+1}</td>
-                            <td class="td4">${row.Name}</td>
+                            <td class="td4">${escapeHtml(row.Name)}</td>
                             <td class="td5">${row.TotalKills ?? 0}</td>
                             <td class="td6"><center><img style="width:16px;height:16px" src="/webapps/ranking/images/nochange.png"></center></td>
                         </tr>`;
