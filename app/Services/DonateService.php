@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -537,7 +536,10 @@ class DonateService
             return back()->withErrors(['maxicard' => 'Payment Failed: An error occurred'])->withInput();
         }
 
-        $xml= simplexml_load_string($response->body());
+        $xml = simplexml_load_string($response->body());
+        if ($xml === false) {
+            return back()->withErrors(['maxicard' => 'Invalid response from payment provider.'])->withInput();
+        }
 
         if (trim($xml->params->durum) !== 'ok' || intval(trim($xml->params->siparis_no)) <= 0) {
             return back()->withErrors(['maxicard' => 'Payment Failed: ' . trim($xml->params->aciklama)])->withInput();

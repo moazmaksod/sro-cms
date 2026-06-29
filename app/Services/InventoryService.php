@@ -140,7 +140,7 @@ class InventoryService
         $info->nOptValue = $item->nOptValue ?? 0;
         $info->Country = $item->Country == 0 ? 'Chinese' : 'European';
         $info->Gender = $item->ReqGender == 0 ? 'Female' : 'Male';
-        $info->Degree = (int)ceil($item->ItemClass / 3) ?? null;
+        $info->Degree = (int)ceil($item->ItemClass / 3);
         $info->JobDegree = config('item.job_degree')[$item->ItemClass] ?? null;
         $info->Type = config('item.types')[$item->TypeID1][$item->TypeID2][$item->TypeID3][$item->TypeID4] ?? null;
         $info->Detail = config('item.detail')[$item->Slot] ?? null;

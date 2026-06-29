@@ -81,7 +81,7 @@ return [
         'reward_points' => 5,
         'minimum_redeem' => 25,
     ],
-    'ticket' => [
+    'tickets' => [
         'enabled' => false,
         'categories' => [
             'sales' => 'Sales',

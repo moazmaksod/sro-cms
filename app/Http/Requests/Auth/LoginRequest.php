@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -60,7 +59,7 @@ class LoginRequest extends FormRequest
                 $email = $tbUser->Email ?? "{$jid}@mail.com";
             } else {
                 $jid = $tbUser->PortalJID;
-                $email = optional($tbUser->muUser->muEmail)->EmailAddr ?? "{$jid}@mail.com";
+                $email = $tbUser->muUser?->muEmail?->EmailAddr ?? "{$jid}@mail.com";
             }
 
             $user = User::firstOrCreate(
@@ -68,7 +67,7 @@ class LoginRequest extends FormRequest
                 [
                     'jid' => $jid,
                     'email' => $email,
-                    'password' => Hash::make($this->get('password')),
+                    'password' => $this->get('password'),
                 ]
             );
 

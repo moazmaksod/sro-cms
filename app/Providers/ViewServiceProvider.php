@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            View::composer(['layouts.header', 'layouts.header'], function ($view) {
+            View::composer('layouts.header', function ($view) {
                 $view->with('pages', Pages::getPageNames());
             });
 

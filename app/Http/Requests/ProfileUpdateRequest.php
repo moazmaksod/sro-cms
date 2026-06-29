@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\SRO\Account\TbUser;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -40,7 +38,7 @@ class ProfileUpdateRequest extends FormRequest
 
                 function ($attribute, $value, $fail) {
                     if (config('global.server.version') === 'vSRO' && !config('global.duplicate_email', 1)) {
-                        $exists = $this->user()->tbUser()->where('Email', $value)->where('JID', '!=', $this->user()->jid)->exists();
+                        $exists = TbUser::where('Email', $value)->where('JID', '!=', $this->user()->jid)->exists();
                         if ($exists) {
                             $fail('The email has already been taken in another account.');
                         }
