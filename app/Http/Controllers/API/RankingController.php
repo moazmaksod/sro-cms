@@ -104,4 +104,36 @@ class RankingController extends Controller
             'config' => $config,
         ]);
     }
+
+    public function characterView($name)
+    {
+        $char = Char::getCharByName($name);
+
+        $config = (object) [
+            'topImage' => config('ranking.top_image'),
+            'characterRace' => config('ranking.character_race'),
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $char,
+            'inventory' => [
+                'equipment' => $char->getCharInventorySet(),
+                'avatar' => $char->charInventoryAvatar,
+                'job' => $char->charInventoryJob,
+            ],
+            'config' => $config,
+        ]);
+    }
+
+    public function guildView($name)
+    {
+        $guild = Guild::getGuildByName($name);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $guild,
+            'members' => $guild->members,
+        ]);
+    }
 }

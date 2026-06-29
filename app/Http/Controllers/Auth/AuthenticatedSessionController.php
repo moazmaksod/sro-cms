@@ -67,14 +67,14 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.login-verify');
+        return view('auth.verify-login');
     }
 
     protected function sendVerify(): ?RedirectResponse
     {
         $user = Auth::user();
 
-        if (! config("settings.verify_jid_{$user->tbUser?->JID}")) {
+        if (! config("global.verify_jid_{$user->tbUser?->JID}")) {
             return null;
         }
 

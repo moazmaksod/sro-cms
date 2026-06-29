@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('type')->default(0);
             $table->datetime('valid_date')->nullable();
             $table->unsignedBigInteger('jid')->nullable();
-            $table->string('status')->default('False');
+            $table->string('status')->default('Unused');
             $table->timestamps();
         });
     }

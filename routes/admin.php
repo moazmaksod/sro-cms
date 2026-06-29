@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin');
+    Route::get('/admin/worldmap', [DashboardController::class, 'worldmap'])->name('admin.worldmap');
 
     Route::prefix('admin')->name('admin.')->group(function() {
         Route::get('/logs/donate', [LogController::class, 'donate'])->name('logs.donate');
         Route::get('/logs/referral', [LogController::class, 'referral'])->name('logs.referral');
         Route::get('/logs/vote', [LogController::class, 'vote'])->name('logs.vote');
         Route::get('/logs/smc', [LogController::class, 'smc'])->name('logs.smc');
-        Route::get('/logs/worldmap', [LogController::class, 'worldmap'])->name('logs.worldmap');
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::get('/general', [SettingController::class, 'general'])->name('settings.general');

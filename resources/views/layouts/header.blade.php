@@ -39,17 +39,17 @@
                             @if(config("global.logs.global"))
                                 <li><a class="dropdown-item" href="{{ route('logs.global') }}">{{ __('Global History') }}</a></li>
                             @endif
-                            @if(config("global.logs.plus"))
-                                <li><a class="dropdown-item" href="{{ route('logs.plus') }}">{{ __('Item Plus') }}</a></li>
+                            @if(config("global.logs.item_plus"))
+                                <li><a class="dropdown-item" href="{{ route('logs.item-plus') }}">{{ __('Item Plus') }}</a></li>
                             @endif
-                            @if(config("global.logs.drop"))
-                                <li><a class="dropdown-item" href="{{ route('logs.drop') }}">{{ __('Item Drop') }}</a></li>
+                            @if(config("global.logs.item_drop"))
+                                <li><a class="dropdown-item" href="{{ route('logs.item-drop') }}">{{ __('Item Drop') }}</a></li>
                             @endif
-                            @if(config("global.logs.pvp"))
-                                <li><a class="dropdown-item" href="{{ route('logs.pvp') }}">{{ __('Pvp Kills') }}</a></li>
+                            @if(config("global.logs.pvp_kill"))
+                                <li><a class="dropdown-item" href="{{ route('logs.pvp-kill') }}">{{ __('Pvp Kills') }}</a></li>
                             @endif
-                            @if(config("global.logs.job"))
-                                <li><a class="dropdown-item" href="{{ route('logs.job') }}">{{ __('Job Kills') }}</a></li>
+                            @if(config("global.logs.job_kill"))
+                                <li><a class="dropdown-item" href="{{ route('logs.job-kill') }}">{{ __('Job Kills') }}</a></li>
                             @endif
                             @if(!config("global.logs.enabled"))
                                 <li><a class="dropdown-item" href="#">{{ __('None') }}</a></li>

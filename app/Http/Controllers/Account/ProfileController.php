@@ -67,11 +67,12 @@ class ProfileController extends Controller
     {
         $request->validate([
             'verify_code_email' => 'required|string',
-            'new_email' => 'nullable|email',
+            'new_email' => 'nullable|email|unique:users,email,' . $request->user()->id,
             'verify_login' => 'nullable|in:0,1',
         ]);
 
-        $user  = $request->user();
+        $user = $request->user();
+        $originalEmail = $user->email;
         $token = Cache::get('verify_code_'.$user->email);
 
         if (!$token || $request->verify_code_email !== $token) {
@@ -88,10 +89,10 @@ class ProfileController extends Controller
 
         if ($request->has('verify_login')) {
             $verifyLogin = $request->input('verify_login');
-            Setting::set("verify_jid_{$user->tbUser->JID}", $verifyLogin);
+            Setting::set("verify_jid_{$user->tbUser?->JID}", $verifyLogin);
         }
 
-        Cache::forget('verify_code_'.$user->email);
+        Cache::forget('verify_code_'.$originalEmail);
 
         return Redirect::route('account.edit')->with('status', 'profile-updated');
     }
@@ -159,14 +160,14 @@ class ProfileController extends Controller
 
         Cache::forget('verify_code_'.$user->email);
 
-        if (SecondaryPassword::where('UserJID', $user->tbUser->JID)->delete()) {
+        if (SecondaryPassword::where('UserJID', $user->tbUser?->JID)->delete()) {
             return back()->with('passcode_success', 'Your secondary password has been reset successfully!');
         }
 
         return back()->with('passcode_error', 'No secondary password was found for your account.');
     }
 
-    public function sendVerifyCode(Request $request)
+    public function sendVerifyCode(Request $request) : RedirectResponse
     {
         $request->validate([
             'context' => 'required|string',
@@ -184,10 +185,12 @@ class ProfileController extends Controller
 
     public function updateSettings(Request $request)
     {
+        $jid = auth()->user()->tbUser?->JID;
+
         $allowedKeys = [
-            'item_stats_jid_' . auth()->user()->tbUser->JID,
-            'job_name_jid_' . auth()->user()->tbUser->JID,
-            'verify_jid_' . auth()->user()->tbUser->JID,
+            "item_stats_jid_{$jid}",
+            "job_name_jid_{$jid}",
+            "verify_jid_{$jid}",
         ];
 
         foreach ($request->except(['_token']) as $key => $value) {

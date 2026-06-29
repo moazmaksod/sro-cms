@@ -29,7 +29,7 @@ class PagesController extends Controller
             'content' => 'required|string',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = ($base = Str::slug($validated['title'])) . (Pages::where('slug', $base)->exists() ? '-' . (Pages::where('slug', 'like', $base . '-%')->count() + 1) : '');
         $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         Pages::create($validated);
@@ -50,7 +50,7 @@ class PagesController extends Controller
         ]);
 
         if ($validated['title'] !== $pages->title) {
-            $validated['slug'] = Str::slug($validated['title']);
+            $validated['slug'] = ($base = Str::slug($validated['title'])) . (Pages::where('slug', $base)->where('id', '!=', $pages->id)->exists() ? '-' . (Pages::where('slug', 'like', $base . '-%')->where('id', '!=', $pages->id)->count() + 1) : '');
         }
 
         $validated['content'] = Purifier::clean($validated['content'], 'full');

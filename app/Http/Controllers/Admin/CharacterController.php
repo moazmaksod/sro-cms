@@ -12,7 +12,8 @@ class CharacterController extends Controller
     {
         $data = Char::query()
             ->when($request->filled('search'), function ($q) use ($request) {
-                $q->where('CharName16', 'like', "%{$request->search}%");
+                $search = substr($request->search, 0, 64);
+                $q->where('CharName16', 'like', "%{$search}%");
             })
             ->paginate(20);
 
@@ -26,7 +27,7 @@ class CharacterController extends Controller
 
     public function update()
     {
-        return back()->with('success', 'Test!');
+        abort(501, 'Not implemented yet.');
     }
 
     public function unstuck(Char $char)
@@ -43,7 +44,9 @@ class CharacterController extends Controller
             return back()->with('error', 'This char is wearing a Job Suit.');
         }
 
-        $char->setCharUnstuckPosition();
+        if (!$char->setCharUnstuckPosition()) {
+            return back()->with('error', 'Failed to unstuck character.');
+        }
 
         return back()->with('success', 'Your action was successful.');
     }
@@ -51,7 +54,7 @@ class CharacterController extends Controller
     public function addItem(Request $request, Char $char)
     {
         $validated = $request->validate([
-            'code' => 'required|string',
+            'code' => 'required|string|exists:shard.dbo._RefObjCommon,CodeName128',
             'quantity' => 'nullable|integer|min:1|max:999',
         ]);
 

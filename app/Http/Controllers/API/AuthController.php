@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Notifications\SendVerifyCode;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +39,7 @@ class AuthController extends Controller
                 'jid' => $jid,
                 'username' => $request->username,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => $request->password,
             ]);
 
             $this->handleReferral($user, $request);
@@ -51,7 +50,6 @@ class AuthController extends Controller
                 event(new Registered($user));
             }
 
-            Auth::login($user);
             $token = $user->createToken('api-token')->plainTextToken;
 
             return response()->json([
@@ -76,7 +74,7 @@ class AuthController extends Controller
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
             'email' => ['required', 'email', 'max:70', 'unique:' . User::class],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
-            'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
+            'g-recaptcha-response' => config('captcha.enabled', false) ? ['required', 'captcha'] : ['nullable'],
             'terms' => config('global.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
             'invite' => ['nullable', 'string'],
             'fingerprint' => ['nullable', 'string'],
@@ -161,20 +159,19 @@ class AuthController extends Controller
                 [
                     'jid' => $jid,
                     'email' => $email,
-                    'password' => Hash::make($request->password),
+                    'password' => $request->password,
                 ]
             );
         }
 
-        Auth::login($user);
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
         $result = $this->sendVerifyCode($user);
 
         if ($result) {
+            $result['token'] = $user->createToken('api-token')->plainTextToken;
             return response()->json($result);
         }
+
+        $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
@@ -185,7 +182,7 @@ class AuthController extends Controller
 
     protected function sendVerifyCode(User $user): array
     {
-        if (! config("settings.verify_jid_{$user->jid}")) {
+        if (! config("global.verify_jid_{$user->jid}")) {
             return [];
         }
 
@@ -200,6 +197,42 @@ class AuthController extends Controller
             'verify_required' => true,
             'user' => $user,
         ];
+    }
+
+    public function verify(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $user = $request->user();
+
+        $cached = Cache::get('verify_code_'.$user->email);
+
+        if (!$cached || $cached !== $request->code) {
+            return response()->json(['message' => 'Invalid or expired verification code'], 422);
+        }
+
+        Cache::forget('verify_code_'.$user->email);
+
+        return response()->json(['message' => 'Verification successful']);
+    }
+
+    public function resendVerify(Request $request)
+    {
+        $user = $request->user();
+
+        if (Cache::has('verify_code_'.$user->email)) {
+            return response()->json(['message' => 'Please wait before requesting a new code.'], 429);
+        }
+
+        $code = random_int(100000, 999999);
+
+        Cache::put('verify_code_'.$user->email, $code, now()->addMinutes(30));
+
+        $user->notify(new SendVerifyCode($code));
+
+        return response()->json(['message' => 'Verification code sent']);
     }
 
     public function forgot_password(Request $request)

@@ -187,8 +187,9 @@ class RankingController extends Controller
             abort(404, "Ranking type [$type] not found or disabled.");
         }
 
-        $query = $ranking['query'];
-        $data = Cache::remember("{$type}", 600, function () use ($query) {
+        $query = $ranking['query'] ?? null;
+        abort_if(empty($query), 404, "Ranking type [$type] has no query configured.");
+        $data = Cache::remember("custom_ranking_{$type}", 600, function () use ($query) {
             return collect(
                 DB::connection('shard')->select($query)
             );

@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.worldmap') ? 'active' : '' }}" href="{{ route('admin.logs.worldmap') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.worldmap') ? 'active' : '' }}" href="{{ route('admin.worldmap') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#house-fill"></use></svg>
                     {{ __('World Map') }}
                 </a>

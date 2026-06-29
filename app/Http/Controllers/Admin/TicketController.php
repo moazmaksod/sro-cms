@@ -19,7 +19,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        $replies = Ticket::getReplies($ticket->id);
+        $replies = Ticket::getReplies($ticket);
         $replies = collect([$ticket])->merge($replies);
 
         return view('admin.tickets.show', [
@@ -30,8 +30,6 @@ class TicketController extends Controller
 
     public function reply(Request $request, Ticket $ticket)
     {
-        abort_if(!$ticket->status, 403, 'Ticket closed');
-
         $request->validate([
             'message' => 'required|string',
         ]);
@@ -47,7 +45,7 @@ class TicketController extends Controller
 
     public function close(Ticket $ticket)
     {
-        Ticket::close($ticket->id);
+        Ticket::close($ticket);
 
         return back()->with('success', 'Ticket closed!');
     }

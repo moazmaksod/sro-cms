@@ -460,10 +460,10 @@
                             'unique_advanced' => __('Advanced Unique Tracker'),
                             'fortress'        => __('Fortress History'),
                             'global'          => __('Global History'),
-                            'pvp'             => __('PvP Kill Logs'),
-                            'job'             => __('Job Kill Logs'),
-                            'plus'            => __('Item Plus Logs'),
-                            'drop'            => __('Item Drop Logs'),
+                            'pvp_kill'        => __('PvP Kill Logs'),
+                            'job_kill'        => __('Job Kill Logs'),
+                            'item_plus'       => __('Item Plus Logs'),
+                            'item_drop'       => __('Item Drop Logs'),
                         ] as $key => $label)
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox"

@@ -327,7 +327,7 @@
                                 <label for="code" class="col-lg-12 col-form-label text-md-start">{{ __('Item Code') }}</label>
 
                                 <div class="col-lg-12">
-                                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" placeholder="ITEM_" value="{{ old('code') }}" required>
+                                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" placeholder="ITEM_ETC_ARENA_COIN" value="{{ old('code') }}" required>
 
                                     @error('code')
                                     <span class="invalid-feedback" role="alert">
@@ -365,13 +365,86 @@
 @endsection
 
 @push('styles')
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
     <style>
+        .sro-item-detail {
+            background: #808080;
+            width: 38px;
+            margin: 0 auto;
+        }
+
+        .sro-item-detail.sro-item-special {
+            background: #FF8C00;
+        }
+
+        .sro-item-detail.sro-item-special .sro-item-special-seal {
+            z-index: 4;
+        }
+
+        .sro-item-detail .item {
+            width: 32px;
+            height: 32px;
+            float: left;
+            margin: 3px;
+            padding: 0 !important;
+            color: #fff;
+            background: #5f5f5f;
+            position: relative;
+        }
+        .sro-item-detail .item img {
+            position: absolute;
+        }
+
+        .sro-item-detail .item .amount {
+            background: rgba(50, 50, 50, 0.5);
+            padding: 1px 2px;
+            float: left;
+            font-size: 11px;
+        }
+
+        .sro-item-detail .info {
+            color: #fff;
+            z-index: 80;
+            position: absolute;
+            left: 34px;
+            top: 3px;
+            width: 180px;
+            background: rgba(88, 98, 170, 0.85);
+            border: 2px solid #303d4d;
+            padding: 5px;
+            display: none;
+            line-height: 18px;
+            font-size: 10px;
+        }
+
+        .table.table-inventory td, .table.table-inventory th {
+            padding: 4px;
+        }
+
+        .sro-item-detail .tooltip {
+            font-size: 10px;
+            line-height: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            position: fixed;
+            padding: 5px;
+            border: 1px solid #ccc;
+            visibility: hidden;
+            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition:
+                opacity 0.3s,
+                visiblity 0s;
+        }
+        .sro-item-detail:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /********/
         .sro-item-detail .tooltip {
             text-align: left !important;
             font-size: 12px;
-            width: 250px;
+            width: 300px;
             min-height: 200px;
             background-color: rgba(28, 30, 52, .8);
             color: #fff;
@@ -473,8 +546,6 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('js/function.js') }}"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('display-inventory');

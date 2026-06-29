@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Referral;
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\AuhAgreedService;
 use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
@@ -18,7 +17,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -44,20 +42,29 @@ class RegisteredUserController extends Controller
 
         $request->validate($this->getValidationRules($request));
 
-        if (config('global.server.version') === 'vSRO') {
-            $jid = $this->createAccountVSRO($request);
-        } else {
-            $jid = $this->createAccountISRO($request);
+        try {
+            DB::beginTransaction();
+
+            if (config('global.server.version') === 'vSRO') {
+                $jid = $this->createAccountVSRO($request);
+            } else {
+                $jid = $this->createAccountISRO($request);
+            }
+
+            $user = User::create([
+                'jid' => $jid,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+
+            $this->handleReferral($user, $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Registration failed. Please try again.']);
         }
-
-        $user = User::create([
-            'jid' => $jid,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $this->handleReferral($user, $request);
 
         if (config('global.register_confirm')) {
             event(new Registered($user));

@@ -20,63 +20,63 @@ class LogsController extends Controller
 
     public function schedule(ScheduleService $scheduleService)
     {
-        abort_if(!config('global.logs.schedule', true), 404);
+        abort_if(!config('global.logs.schedule', true), 403);
         $data = $scheduleService->getEventSchedules();
         return view('pages.logs.schedule', compact('data'));
     }
 
     public function unique()
     {
-        abort_if(!config('global.logs.unique', true), 404);
+        abort_if(!config('global.logs.unique', true), 403);
         $data = LogInstanceWorldInfo::getUniquesKill();
         return view('pages.logs.unique', compact('data'));
     }
 
     public function uniqueAdvanced()
     {
-        abort_if(!config('global.logs.unique_advanced', false), 404);
+        abort_if(!config('global.logs.unique_advanced', false), 403);
         $data = LogInstanceWorldInfo::getUniquesAdvanced(5);
         return view('pages.logs.unique-advanced', compact('data'));
     }
 
     public function fortress()
     {
-        abort_if(!config('global.logs.fortress', true), 404);
+        abort_if(!config('global.logs.fortress', true), 403);
         $data = LogEventSiegeFortress::getFortressHistory(25);
         return view('pages.logs.fortress', compact('data'));
     }
 
     public function global()
     {
-        abort_if(!config('global.logs.global', true), 404);
+        abort_if(!config('global.logs.global', true), 403);
         $data = LogChatMessage::getGlobalsHistory(25);
         return view('pages.logs.global', compact('data'));
     }
 
     public function plus()
     {
-        abort_if(!config('global.logs.plus', false), 404);
+        abort_if(!config('global.logs.item_plus', false), 403);
         $data = LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 25);
         return view('pages.logs.item-plus', compact('data'));
     }
 
     public function drop()
     {
-        abort_if(!config('global.logs.drop', false), 404);
+        abort_if(!config('global.logs.item_drop', false), 403);
         $data = LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 25);
         return view('pages.logs.item-drop', compact('data'));
     }
 
     public function pvp()
     {
-        abort_if(!config('global.logs.pvp', false), 404);
+        abort_if(!config('global.logs.pvp_kill', false), 403);
         $data = LogEventChar::getKillLogs('pvp', 25);
         return view('pages.logs.pvp-kill', compact('data'));
     }
 
     public function job()
     {
-        abort_if(!config('global.logs.job', false), 404);
+        abort_if(!config('global.logs.job_kill', false), 403);
         $data = LogEventChar::getKillLogs('job', 25);
         return view('pages.logs.job-kill', compact('data'));
     }

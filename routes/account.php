@@ -17,7 +17,7 @@ Route::middleware(array_filter(['auth', config('global.register_confirm') ? 'ver
         Route::delete('/edit', [ProfileController::class, 'destroy'])->name('destroy');
 
         Route::post('/edit/settings', [ProfileController::class, 'updateSettings'])->name('settings.update');
-        Route::post('/edit/send-verify-code', [ProfileController::class, 'sendVerifyCode'])->name('resend.verify.code');
+        Route::post('/edit/send-verify-code', [ProfileController::class, 'sendVerifyCode'])->middleware('throttle:5,1')->name('resend.verify.code');
         Route::post('/edit/reset-secondary-password', [ProfileController::class, 'secondaryPasswordReset'])->name('reset.secondary.password');
 
         Route::get('/donate', [DonateController::class, 'index'])->name('donate');
@@ -28,13 +28,13 @@ Route::middleware(array_filter(['auth', config('global.register_confirm') ? 'ver
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
         Route::get('/tickets/create', [TicketController::class, 'create'])->name('ticket.create');
         Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('ticket.show');
-        Route::post('/tickets/send', [TicketController::class, 'send'])->name('ticket.send');
+        Route::post('/tickets/send', [TicketController::class, 'send'])->middleware('throttle:10,1')->name('ticket.send');
 
         Route::get('/voucher', [VoucherController::class, 'index'])->name('voucher');
-        Route::post('/voucher/redeem', [VoucherController::class, 'redeem'])->name('voucher.redeem');
+        Route::post('/voucher/redeem', [VoucherController::class, 'redeem'])->middleware('throttle:10,1')->name('voucher.redeem');
 
         Route::get('/referral', [ReferralController::class, 'index'])->name('referral');
-        Route::post('/referral-redeem', [ReferralController::class, 'redeem'])->name('referral.redeem');
+        Route::post('/referral-redeem', [ReferralController::class, 'redeem'])->middleware('throttle:10,1')->name('referral.redeem');
 
         Route::get('/vote', [VoteController::class, 'index'])->name('vote');
         Route::get('/vote/{id}', [VoteController::class, 'voting'])->name('vote.voting');

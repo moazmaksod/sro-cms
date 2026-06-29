@@ -89,7 +89,7 @@ class AphChangedSilk extends Model
 
             self::setChangedSilk($jid, $type, $newAmount);
 
-            SkSilkChangeByWeb::setSilkChange($jid, $amount, $amount, $type, 4);
+            SkSilkChangeByWeb::setSilkChange($jid, $newAmount, $amount, $type, 4);
 
             Cache::forget("mu_user_silk_{$jid}");
 
@@ -97,9 +97,9 @@ class AphChangedSilk extends Model
         });
     }
 
-    public static function getSilkSum()
+    public static function sumChangedSilk()
     {
-        return Cache::remember('isro_silk_sum', 86400, function () {
+        return Cache::remember('isro_silk_sum', 600, function () {
             try {
                 return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->where('SilkType', 3)->where('AvailableStatus', 'Y')->value('total');
             } catch (\Exception $e) {

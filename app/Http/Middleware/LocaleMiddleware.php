@@ -12,10 +12,10 @@ class LocaleMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (config('settings.default_locale', 'switch') === 'switch') {
+        if (config('global.default_locale', 'switch') === 'switch') {
             $locale = Session::get('locale', config('app.locale'));
         } else {
-            $locale = config('settings.default_locale');
+            $locale = config('global.default_locale');
             Session::put('locale', $locale);
         }
 

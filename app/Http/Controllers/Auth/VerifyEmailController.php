@@ -20,7 +20,7 @@ class VerifyEmailController extends Controller
 
         if ($request->user()->markEmailAsVerified()) {
             if (config('global.server.version') !== 'vSRO') {
-                $request->user()->muUser?->muAlteredInfo->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
+                $request->user()->muUser?->muAlteredInfo?->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
             }
 
             event(new Verified($request->user()));

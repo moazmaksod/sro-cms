@@ -30,10 +30,9 @@ class Vote extends Model
         'expire' => 'datetime',
     ];
 
-    public static function getVotes($request, ?string $fingerprint): Collection
+    public static function getVotes(?string $ip, ?string $fingerprint): Collection
     {
         $voteSites = collect(config('vote'));
-        $ip = $request->ip();
 
         if (!$ip || !$fingerprint) {
             return $voteSites->map(fn($site) => (object) [

@@ -11,17 +11,18 @@ class VoteController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if(!config('global.vote.enabled', false), 404);
-        $data = Vote::getVotes($request, session('fingerprint'));
+        abort_if(!config('global.vote.enabled', false), 403);
+        $data = Vote::getVotes($request->ip(), session('fingerprint'));
 
         return view('account.vote.index', compact('data'));
     }
 
     public function voting(string $site, Request $request)
     {
-        $config = config("vote.$site");
-        abort_if(!$config || !$config['enabled'], 404);
+        $voteSites = config('vote');
+        abort_if(!isset($voteSites[$site]) || !$voteSites[$site]['enabled'], 404);
 
+        $config = $voteSites[$site];
         $user = $request->user();
 
         $fingerprint = $request->input('fingerprint') ?? session('fingerprint');
@@ -38,18 +39,22 @@ class VoteController extends Controller
 
         Vote::updateOrCreate(
             ['jid' => $user->jid, 'site' => $config['route']],
-            ['ip' => $request->ip(), 'fingerprint' => $fingerprint]
+            [
+                'ip' => $request->ip(),
+                'fingerprint' => $fingerprint,
+                //'expire' => now()->addHours($config['timeout']),
+            ]
         );
 
-        $url = str_replace('{JID}', $user->jid, $config['url']);
+        $url = str_replace('{JID}', urlencode($user->jid), $config['url']);
         return redirect()->away($url);
     }
 
     public function postback($site, Request $request, VoteService $voteService)
     {
-        $config = config("vote.{$site}");
+        $voteSites = config('vote');
 
-        if (!$config || !$config['enabled']) {
+        if (!isset($voteSites[$site]) || !$voteSites[$site]['enabled']) {
             return response('Vote Site not found or disabled.', 403);
         }
 

@@ -31,7 +31,7 @@ class PagesController extends Controller
         ]);
     }
 
-    public function timers(ScheduleService $scheduleService)
+    public function schedule(ScheduleService $scheduleService)
     {
         $data = $scheduleService->getEventSchedules();
 

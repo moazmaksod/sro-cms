@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 
 class PasswordController extends Controller
 {
@@ -33,7 +32,7 @@ class PasswordController extends Controller
 
         $user->updateGamePassword($validated['password']);
 
-        $user->update(['password' => Hash::make($validated['password'])]);
+        $user->update(['password' => $validated['password']]);
 
         return back()->with('status', 'password-updated');
     }
@@ -56,7 +55,7 @@ class PasswordController extends Controller
 
         $user->updateGamePassword($validated['password']);
 
-        $user->update(['password' => Hash::make($validated['password'])]);
+        $user->update(['password' => $validated['password']]);
 
         Cache::forget('verify_code_'.$user->email);
 

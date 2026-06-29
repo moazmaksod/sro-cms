@@ -7,7 +7,6 @@ use App\Models\Donate;
 use App\Models\SRO\Account\TbUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -15,7 +14,8 @@ class UserController extends Controller
     {
         $data = TbUser::query()
             ->when($request->filled('search'), function ($q) use ($request) {
-                $q->where('StrUserID', 'like', "%{$request->search}%");
+                $search = substr($request->search, 0, 25);
+                $q->where('StrUserID', 'like', "%{$search}%");
             })
             ->paginate(20);
 
@@ -29,7 +29,7 @@ class UserController extends Controller
 
     public function update()
     {
-        return back()->with('success', 'Test!');
+        abort(501, 'Not implemented yet.');
     }
 
     public function addSilk(Request $request, TbUser $user)
@@ -83,8 +83,11 @@ class UserController extends Controller
         ]);
 
         $userModel = $user->user()->first();
+        if (!$userModel) {
+            return back()->with('error', 'User account not found.');
+        }
 
-        $userModel->update(['password' => Hash::make($validated['password'])]);
+        $userModel->update(['password' => $validated['password']]);
 
         $userModel->updateGamePassword($validated['password']);
 
@@ -94,6 +97,9 @@ class UserController extends Controller
     public function changeEmail(Request $request, TbUser $user)
     {
         $userModel = $user->user()->first();
+        if (!$userModel) {
+            return back()->with('error', 'User account not found.');
+        }
 
         $validated = $request->validate([
             'email' => 'required|email|unique:users,email,' . $userModel->id,

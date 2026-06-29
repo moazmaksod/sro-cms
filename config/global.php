@@ -95,10 +95,10 @@ return [
         'unique_advanced' => false,
         'fortress' => true,
         'global' => true,
-        'pvp' => false,
-        'job' => false,
-        'plus' => false,
-        'drop' => false,
+        'pvp_kill' => false,
+        'job_kill' => false,
+        'item_plus' => false,
+        'item_drop' => false,
     ],
     'slider' => [
         0 => [

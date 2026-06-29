@@ -79,6 +79,8 @@ class User extends Authenticatable implements MustVerifyEmail
         DB::transaction(function () use ($email) {
             if (config('global.server.version') === 'vSRO') {
                 $this->tbUser?->update(['Email' => $email,]);
+
+                Cache::forget("tb_user_email_{$this->tbUser->JID}");
             } else {
                 $this->muUser?->muEmail?->update(['EmailAddr' => $email,]);
 
@@ -87,6 +89,8 @@ class User extends Authenticatable implements MustVerifyEmail
                     'EmailReceptionStatus' => config('global.register_confirm') ? 'N' : 'Y',
                     'EmailCertificationStatus' => config('global.register_confirm') ? 'N' : 'Y',
                 ]);
+
+                Cache::forget("mu_user_email_{$this->tbUser->JID}");
             }
         });
     }

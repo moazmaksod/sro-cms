@@ -39,7 +39,7 @@
                 <label for="desc" class="col-lg-2 col-form-label text-md-end">{{ __('Description') }}</label>
 
                 <div class="col-lg-10">
-                    <input id="desc" type="text" class="form-control @error('desc') is-invalid @enderror" name="desc" value="{{ old('desc', $data->desc) }}" required>
+                    <input id="desc" type="text" class="form-control @error('desc') is-invalid @enderror" name="desc" value="{{ old('desc', $data->desc) }}">
 
                     @error('desc')
                     <span class="invalid-feedback" role="alert">

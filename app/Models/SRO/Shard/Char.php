@@ -277,14 +277,14 @@ class Char extends Model
 
     public static function getCharCount()
     {
-        return Cache::remember('char_count', 86400, function () {
+        return Cache::remember('char_count', 600, function () {
             return self::count();
         });
     }
 
     public static function getGoldSum()
     {
-        return Cache::remember('gold_sum', 86400, function () {
+        return Cache::remember('gold_sum', 600, function () {
             return self::query()->sum('RemainGold');
         });
     }

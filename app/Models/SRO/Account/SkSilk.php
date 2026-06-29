@@ -37,6 +37,13 @@ class SkSilk extends Model
     protected $primaryKey = 'JID';
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -98,12 +105,12 @@ class SkSilk extends Model
             '2' => 'silk_point'
         ];
 
-        return (int) self::where('JID', $jid)->value($silkTypes[$type]) ?? 0;
+        return (int) self::where('JID', $jid)->value($silkTypes[$type]);
     }
 
     public static function updateSkSilk($jid, $type, $amount)
     {
-        return DB::transaction(function () use ($jid, $type, $amount) {
+        return DB::connection('account')->transaction(function () use ($jid, $type, $amount) {
             $oldAmount = self::getSkSilk($jid, $type);
 
             self::setSkSilk($jid, $type, $amount);
@@ -119,9 +126,9 @@ class SkSilk extends Model
         });
     }
 
-    public static function getSilkSum()
+    public static function sumSkSilk()
     {
-        return Cache::remember('vsro_silk_sum', 86400, function () {
+        return Cache::remember('vsro_silk_sum', 600, function () {
             try {
                 return self::selectRaw('SUM(CAST(silk_own AS BIGINT)) as total')->value('total');
             } catch (\Exception $e) {

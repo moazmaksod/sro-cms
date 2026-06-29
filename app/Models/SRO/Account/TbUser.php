@@ -250,7 +250,7 @@ class TbUser extends Model
 
     public static function getTbUserCount()
     {
-        return Cache::remember('tb_user_count', 86400, function () {
+        return Cache::remember('tb_user_count', 600, function () {
             return self::count();
         });
     }

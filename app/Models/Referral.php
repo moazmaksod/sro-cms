@@ -58,7 +58,7 @@ class Referral extends Model
             $code = strtoupper(Str::random(8));
         } while (self::where('code', $code)->exists());
 
-        $invite =  $user->InvitesCreated()->create([
+        $invite =  $user->invitesCreated()->create([
             'code' => $code,
             'name' => $user->username,
             'jid' => $user->jid,

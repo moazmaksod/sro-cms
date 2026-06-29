@@ -28,19 +28,19 @@ class SettingController extends Controller
         $context['limitWidgets'] = [
             ['id' => 'global_history', 'label' => 'Global History'],
             ['id' => 'unique_history', 'label' => 'Unique History'],
-            ['id' => 'top_player',     'label' => 'Top Player'],
-            ['id' => 'top_guild',      'label' => 'Top Guild'],
-            ['id' => 'item_plus',      'label' => 'Item Plus'],
-            ['id' => 'item_drop',      'label' => 'Item Drop'],
-            ['id' => 'pvp_kill',       'label' => 'PvP Kill'],
-            ['id' => 'job_kill',       'label' => 'Job Kill'],
+            ['id' => 'top_player', 'label' => 'Top Player'],
+            ['id' => 'top_guild', 'label' => 'Top Guild'],
+            ['id' => 'item_plus', 'label' => 'Item Plus'],
+            ['id' => 'item_drop', 'label' => 'Item Drop'],
+            ['id' => 'pvp_kill', 'label' => 'PvP Kill'],
+            ['id' => 'job_kill', 'label' => 'Job Kill'],
         ];
 
-        $context['discord']       = $widgets['discord']        ?? ['enabled' => false, 'server_id' => '', 'channel_id' => '', 'theme' => 'dark'];
+        $context['discord'] = $widgets['discord'] ?? ['enabled' => false, 'server_id' => '', 'channel_id' => '', 'theme' => 'dark'];
         $context['eventSchedule'] = $widgets['event_schedule'] ?? ['enabled' => false, 'names' => [], 'custom' => []];
-        $context['fortressWar']   = $widgets['fortress_war']   ?? ['enabled' => false, 'names' => []];
-        $context['serverInfo']    = $widgets['server_info']    ?? ['enabled' => false, 'data' => []];
-        $context['customWidgets'] = $widgets['custom']         ?? [];
+        $context['fortressWar'] = $widgets['fortress_war'] ?? ['enabled' => false, 'names' => []];
+        $context['serverInfo'] = $widgets['server_info'] ?? ['enabled' => false, 'data' => []];
+        $context['customWidgets'] = $widgets['custom'] ?? [];
 
         return view('admin.settings.widgets', $context);
     }
@@ -49,6 +49,13 @@ class SettingController extends Controller
     {
         $context = $this->viewContext();
         $context['gateways'] = config('donate', []);
+
+        $custom = config('donate.custom', []);
+        $context['donateCustomDefaults'] = [
+            'name' => $custom['name'] ?? 'Custom Donate',
+            'currency' => $custom['currency'] ?? 'USD',
+            'image' => $custom['image'] ?? 'images/custom.png',
+        ];
 
         return view('admin.settings.donate', $context);
     }
@@ -73,7 +80,6 @@ class SettingController extends Controller
         ];
 
         $donateKeys = array_keys(config('donate', []));   // includes 'custom' (gateway)
-        $jsonKeys = ['donate', 'widgets', 'ranking', 'history', 'referral', 'tickets', 'sliders', 'footer', 'mail', 'captcha', 'vote', 'cache'];
 
         // Load existing blobs so partial saves don't wipe other sub-keys
         $donate  = $this->getJsonSetting('donate',  config('donate',  []));
@@ -144,24 +150,24 @@ class SettingController extends Controller
         $data = Setting::cached()->toArray();
 
         return [
-            'settings'  => $this->mergeScalarSettings($data, config('global', [])),
-            'themes'    => $this->loadThemes(),
+            'settings' => $this->mergeScalarSettings($data, config('global', [])),
+            'themes' => $this->loadThemes(),
             'languages' => config('global.languages', []),
             'timezones' => \DateTimeZone::listIdentifiers(),
-            'appUrl'    => config('app.url'),
-            'appName'   => config('app.name'),
+            'appUrl' => config('app.url'),
+            'appName' => config('app.name'),
 
             'referral' => $this->mergeJsonSetting($data, 'referral', config('global.referral', [])),
-            'tickets'  => $this->mergeJsonSetting($data, 'tickets',  config('global.tickets',  [])),
-            'sliders'  => $this->mergeJsonSetting($data, 'sliders',  config('global.slider',  [])),
-            'footer'   => $this->mergeJsonSetting($data, 'footer',   config('global.footer',   [])),
-            'mail'     => $this->mergeJsonSetting($data, 'mail',     []),
-            'captcha'  => $this->mergeJsonSetting($data, 'captcha',  config('captcha',          [])),
-            'vote'     => $this->mergeJsonSetting($data, 'vote',     config('vote',             [])),
-            'widgets'  => $this->mergeJsonSetting($data, 'widgets',  config('widgets',          [])),
-            'ranking'  => $this->mergeJsonSetting($data, 'ranking',  config('ranking',          [])),
-            'history'  => $this->mergeJsonSetting($data, 'history',  config('global.logs',   [])),
-            'cache'    => $this->mergeJsonSetting($data, 'cache',    config('global.cache',     [])),
+            'tickets' => $this->mergeJsonSetting($data, 'tickets',  config('global.ticket', [])),
+            'sliders' => $this->mergeJsonSetting($data, 'sliders',  config('global.slider', [])),
+            'footer' => $this->mergeJsonSetting($data, 'footer',   config('global.footer', [])),
+            'mail' => $this->mergeJsonSetting($data, 'mail', []),
+            'captcha' => $this->mergeJsonSetting($data, 'captcha', config('captcha', [])),
+            'vote' => $this->mergeJsonSetting($data, 'vote', config('vote', [])),
+            'widgets' => $this->mergeJsonSetting($data, 'widgets', config('widgets', [])),
+            'ranking' => $this->mergeJsonSetting($data, 'ranking', config('ranking', [])),
+            'history' => $this->mergeJsonSetting($data, 'history', config('global.logs', [])),
+            'cache' => $this->mergeJsonSetting($data, 'cache', config('global.cache', [])),
         ];
     }
 
