@@ -1,5 +1,5 @@
 @if(config('widgets.event_schedule.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Event Schedule') }}
         </div>
@@ -19,7 +19,7 @@
                 @endforeach
             </ul>
         </div>
-    </div>
+    </aside>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

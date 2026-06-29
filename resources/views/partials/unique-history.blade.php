@@ -1,5 +1,5 @@
 @if(config('widgets.unique_history.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Unique History') }}
         </div>
@@ -23,5 +23,5 @@
                 @endforelse
             </ul>
         </div>
-    </div>
+    </aside>
 @endif

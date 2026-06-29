@@ -1,5 +1,5 @@
 @if(config('widgets.job_kill.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Job Kills') }}
         </div>
@@ -24,5 +24,5 @@
                 @endforelse
             </ul>
         </div>
-    </div>
+    </aside>
 @endif

@@ -1,5 +1,5 @@
 @if(config('widgets.pvp_kill.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Pvp Kills') }}
         </div>
@@ -24,5 +24,5 @@
                 @endforelse
             </ul>
         </div>
-    </div>
+    </aside>
 @endif

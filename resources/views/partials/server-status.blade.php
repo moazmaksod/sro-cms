@@ -1,4 +1,4 @@
-<div class="card mb-4">
+<aside class="card mb-4">
     <div class="card-body text-center">
         <p class="mb-0">{{ __('Server Time:') }} <span id="idTimerClock">{{ date('H:i:s') }}</span></p>
         <p>{{ __('Online Players:') }} {{ $onlineCounter->onlinePlayer+$onlineCounter->fakePlayer }} / {{ $onlineCounter->maxPlayer }}</p>
@@ -8,7 +8,7 @@
             <div class="progress-bar w-{{ $progress }}"></div>
         </div>
     </div>
-</div>
+</aside>
 
 <script>
 (function() {

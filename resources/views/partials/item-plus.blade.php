@@ -1,5 +1,5 @@
 @if(config('widgets.item_plus.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Sox Plus') }}
         </div>
@@ -27,5 +27,5 @@
                 @endforelse
             </ul>
         </div>
-    </div>
+    </aside>
 @endif

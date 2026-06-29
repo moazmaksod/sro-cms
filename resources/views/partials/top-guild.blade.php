@@ -1,5 +1,5 @@
 @if(config('widgets.top_guild.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Top Guild') }}
         </div>
@@ -39,5 +39,5 @@
                 </table>
             </div>
         </div>
-    </div>
+    </aside>
 @endif

@@ -26,14 +26,14 @@ class SettingController extends Controller
         $widgets = $context['widgets'];
 
         $context['limitWidgets'] = [
-            ['id' => 'globals_history', 'label' => 'Globals History'],
-            ['id' => 'unique_history',  'label' => 'Unique History'],
-            ['id' => 'top_player',      'label' => 'Top Player'],
-            ['id' => 'top_guild',       'label' => 'Top Guild'],
-            ['id' => 'sox_plus',        'label' => 'SoX Plus'],
-            ['id' => 'sox_drop',        'label' => 'SoX Drop'],
-            ['id' => 'pvp_kills',       'label' => 'PvP Kills'],
-            ['id' => 'job_kills',       'label' => 'Job Kills'],
+            ['id' => 'global_history', 'label' => 'Global History'],
+            ['id' => 'unique_history', 'label' => 'Unique History'],
+            ['id' => 'top_player',     'label' => 'Top Player'],
+            ['id' => 'top_guild',      'label' => 'Top Guild'],
+            ['id' => 'item_plus',      'label' => 'Item Plus'],
+            ['id' => 'item_drop',      'label' => 'Item Drop'],
+            ['id' => 'pvp_kill',       'label' => 'PvP Kill'],
+            ['id' => 'job_kill',       'label' => 'Job Kill'],
         ];
 
         $context['discord']       = $widgets['discord']        ?? ['enabled' => false, 'server_id' => '', 'channel_id' => '', 'theme' => 'dark'];
@@ -66,8 +66,8 @@ class SettingController extends Controller
         // POST field name "custom". To eliminate the collision permanently, the widgets
         // form submits it as "widgets_custom" (see blade) and we map it back here.
         $widgetKeys = [
-            'discord', 'globals_history', 'unique_history', 'top_player', 'top_guild',
-            'sox_plus', 'sox_drop', 'pvp_kills', 'job_kills',
+            'discord', 'global_history', 'unique_history', 'top_player', 'top_guild',
+            'item_plus', 'item_drop', 'pvp_kill', 'job_kill',
             'server_info', 'event_schedule', 'fortress_war',
             'widgets_custom',   // renamed from 'custom' to avoid donate key collision
         ];

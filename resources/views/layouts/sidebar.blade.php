@@ -1,3 +1,3 @@
-@include('partials.status')
-@include('partials.info')
-@include('partials.schedule')
+@include('partials.server-status')
+@include('partials.server-info')
+@include('partials.event-schedule')
