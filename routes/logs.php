@@ -10,8 +10,8 @@ Route::prefix('logs')->name('logs.')->group(function() {
     Route::get('/unique-advanced', [LogsController::class, 'uniqueAdvanced'])->name('unique-advanced');
     Route::get('/fortress', [LogsController::class, 'fortress'])->name('fortress');
     Route::get('/global', [LogsController::class, 'global'])->name('global');
-    Route::get('/plus', [LogsController::class, 'plus'])->name('plus');
-    Route::get('/drop', [LogsController::class, 'drop'])->name('drop');
-    Route::get('/pvp', [LogsController::class, 'pvp'])->name('pvp');
-    Route::get('/job', [LogsController::class, 'job'])->name('job');
+    Route::get('/item-plus', [LogsController::class, 'plus'])->name('item-plus');
+    Route::get('/item-drop', [LogsController::class, 'drop'])->name('item-drop');
+    Route::get('/pvp-kill', [LogsController::class, 'pvp'])->name('pvp-kill');
+    Route::get('/job-kill', [LogsController::class, 'job'])->name('job-kill');
 });
