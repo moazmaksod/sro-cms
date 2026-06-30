@@ -46,6 +46,12 @@ class Donate extends Model
         'ip',
     ];
 
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('donate_sum'));
+        static::deleted(fn () => Cache::forget('donate_sum'));
+    }
+
     public static function log(array $data)
     {
         return self::create([
@@ -57,7 +63,7 @@ class Donate extends Model
             'value' => $data['value'] ?? 0,
             'desc' => $data['desc'] ?? '',
             'jid' => $data['jid'] ?? 0,
-            'ip' => $data['ip'] ?? request()->ip(),
+            'ip' => $data['ip'] ?? request()->ip() ?? null,
         ]);
     }
 

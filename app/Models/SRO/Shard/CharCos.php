@@ -72,9 +72,9 @@ class CharCos extends Model
                 $join->where('TimedJob.Category', '=', 5);
                 $join->where('TimedJob.JobID', '=', 22926);
             })
-            ->join('_Items as Items', 'Items.Serial64', 'TimedJob.Serial64')
-            ->join('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
-            ->join('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
+            ->leftJoin('_Items as Items', 'Items.Serial64', 'TimedJob.Serial64')
+            ->leftJoin('_RefObjCommon as Common', 'Items.RefItemId', 'Common.ID')
+            ->leftJoin('_RefObjItem as ObjItem', 'Common.Link', 'ObjItem.ID')
             ->where('_CharCOS.ID', '=', $iPetId)
             ->first();
         });

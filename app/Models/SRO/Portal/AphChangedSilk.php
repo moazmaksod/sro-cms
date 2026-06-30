@@ -108,6 +108,12 @@ class AphChangedSilk extends Model
         });
     }
 
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('isro_silk_sum'));
+        static::deleted(fn () => Cache::forget('isro_silk_sum'));
+    }
+
     public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
     {
         $data = Cache::remember("account_info_donate_history_{$jid}_{$paginate}_{$page}", config('global.cache.account_info', 600), function () use ($paginate, $page, $jid) {

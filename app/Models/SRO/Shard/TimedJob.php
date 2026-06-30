@@ -54,6 +54,9 @@ class TimedJob extends Model
                 ->orderByDesc('_TimedJob.Category')
                 ->get()
                 ->map(function ($row) {
+                    if ($row->UI_IconFile === null) {
+                        return $row;
+                    }
                     $iconPath = str_replace('\\', '/', trim($row->UI_IconFile));
                     $iconPath = preg_replace('/\.ddj$/i', '', $iconPath);
                     $iconPath = strtolower($iconPath . '.png');

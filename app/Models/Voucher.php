@@ -33,6 +33,12 @@ class Voucher extends Model
         'valid_date' => 'datetime',
     ];
 
+    protected static function booted()
+    {
+        static::saved(fn (self $voucher) => Cache::forget("vouchers_user_{$voucher->jid}"));
+        static::deleted(fn (self $voucher) => Cache::forget("vouchers_user_{$voucher->jid}"));
+    }
+
     public static function getUserVoucher(int $jid)
     {
         return Cache::remember("vouchers_user_{$jid}", config('global.cache.account_info', 600), function () use ($jid) {

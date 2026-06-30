@@ -54,6 +54,7 @@ class TradeEquipInventory extends Model
             ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
             ->leftJoin('_BindingOptionWithItem', static function ($join) {
                 $join->on('_BindingOptionWithItem.nItemDBID', '_Items.ID64');
+                $join->where('_BindingOptionWithItem.bOptType', '=', '2');
             })
             ->where('CharID', '=', $CharID)
             ->where('Slot', '<=', 12)
@@ -64,11 +65,11 @@ class TradeEquipInventory extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function getChar()
     {
-        return $this->hasMany(Char::class, 'CharID');
+        return $this->belongsTo(Char::class, 'CharID');
     }
 
     /**

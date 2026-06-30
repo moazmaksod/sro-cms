@@ -250,9 +250,13 @@ class TbUser extends Model
 
     public static function getTbUserCount()
     {
-        return Cache::remember('tb_user_count', 600, function () {
-            return self::count();
-        });
+        return Cache::remember('tb_user_count', 600, fn () => self::count());
+    }
+
+    protected static function booted()
+    {
+        static::created(fn () => Cache::forget('tb_user_count'));
+        static::deleted(fn () => Cache::forget('tb_user_count'));
     }
 
     public function secondaryPassword()

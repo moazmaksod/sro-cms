@@ -74,15 +74,21 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted()
+    {
+        static::created(fn () => Cache::forget('user_count'));
+        static::deleted(fn () => Cache::forget('user_count'));
+    }
+
     public function updateGameEmail($email): void
     {
         DB::transaction(function () use ($email) {
             if (config('global.server.version') === 'vSRO') {
-                $this->tbUser?->update(['Email' => $email,]);
+                $this->tbUser?->update(['Email' => $email]);
 
-                Cache::forget("tb_user_email_{$this->tbUser->JID}");
+                Cache::forget("tb_user_email_{$this->jid}");
             } else {
-                $this->muUser?->muEmail?->update(['EmailAddr' => $email,]);
+                $this->muUser?->muEmail?->update(['EmailAddr' => $email]);
 
                 $this->muUser?->muAlteredInfo?->update([
                     'EmailAddr' => $email,
@@ -90,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     'EmailCertificationStatus' => config('global.register_confirm') ? 'N' : 'Y',
                 ]);
 
-                Cache::forget("mu_user_email_{$this->tbUser->JID}");
+                Cache::forget("mu_user_email_{$this->jid}");
             }
         });
     }
@@ -133,17 +139,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getTbUserAttribute()
     {
-        return cache()->remember( "user_tbUser_{$this->jid}", 600, fn () => $this->tbUser()->first());
+        return cache()->remember("user_tbUser_{$this->jid}", 600, fn () => $this->tbUser()->first());
     }
 
     public function getMuUserAttribute()
     {
-        return cache()->remember( "user_muUser_{$this->jid}", 600, fn () => $this->muUser()->first());
+        return cache()->remember("user_muUser_{$this->jid}", 600, fn () => $this->muUser()->first());
     }
 
     public function getRoleAttribute()
     {
-        return cache()->remember( "user_role_{$this->jid}", 600, fn () => $this->role()->first());
+        return cache()->remember("user_role_{$this->jid}", 600, fn () => $this->role()->first());
     }
 
     public static function getUserCount()

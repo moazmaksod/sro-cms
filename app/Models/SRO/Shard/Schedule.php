@@ -47,7 +47,13 @@ class Schedule extends Model
 
     public static function getSchedules($Idx = [])
     {
-        return Cache::remember("event_schedule_{$Idx[0]}", config('global.cache.event_schedule', 604800), function () use ($Idx) {
+        if (empty($Idx)) {
+            return collect();
+        }
+
+        $cacheKey = 'event_schedule_' . md5(implode(',', $Idx));
+
+        return Cache::remember($cacheKey, config('global.cache.event_schedule', 604800), function () use ($Idx) {
             return self::whereIn("ScheduleDefineIdx", $Idx)->get();
         });
     }

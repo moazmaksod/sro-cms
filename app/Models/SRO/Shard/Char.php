@@ -277,16 +277,18 @@ class Char extends Model
 
     public static function getCharCount()
     {
-        return Cache::remember('char_count', 600, function () {
-            return self::count();
-        });
+        return Cache::remember('char_count', 600, fn () => self::count());
     }
 
     public static function getGoldSum()
     {
-        return Cache::remember('gold_sum', 600, function () {
-            return self::query()->sum('RemainGold');
-        });
+        return Cache::remember('gold_sum', 600, fn () => self::query()->sum('RemainGold'));
+    }
+
+    protected static function booted()
+    {
+        static::saved(function () {Cache::forget('char_count');Cache::forget('gold_sum');});
+        static::deleted(function () {Cache::forget('char_count');Cache::forget('gold_sum');});
     }
 
     public function getCharInventorySet(int $max = 12, int $min = 0, int $not = 8)

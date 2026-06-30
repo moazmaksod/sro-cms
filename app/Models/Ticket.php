@@ -45,13 +45,16 @@ class Ticket extends Model
 
         Cache::forget("user:{$ticket->user_id}:tickets:page:1");
         Cache::forget("admin:tickets:page:1");
+        Cache::forget('tickets:count');
 
         return $ticket;
     }
 
     public static function replyTo(self $parent, array $data): self
     {
-        abort_if(!$parent->status, 403, 'Ticket closed');
+        if (!$parent->status) {
+            throw new \RuntimeException('Ticket closed');
+        }
 
         $reply = self::create([
             'parent_id' => $parent->id,
@@ -132,13 +135,14 @@ class Ticket extends Model
         Cache::forget("admin:tickets:page:1");
         Cache::forget("user:{$ticket->user_id}:tickets:page:1");
         Cache::forget("ticket:{$ticket->id}:user:{$ticket->user_id}");
+        Cache::forget('tickets:count');
     }
 
     public static function getTicketsCount()
     {
-        return Cache::remember('tickets:count', 60, function () {
-            return self::whereNull('parent_id')->count();
-        });
+        return Cache::remember('tickets:count', 60, fn () =>
+            self::whereNull('parent_id')->count()
+        );
     }
 
     public function user()

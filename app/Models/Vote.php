@@ -30,6 +30,12 @@ class Vote extends Model
         'expire' => 'datetime',
     ];
 
+    protected static function booted()
+    {
+        static::created(fn () => Cache::forget('votes_count'));
+        static::deleted(fn () => Cache::forget('votes_count'));
+    }
+
     public static function getVotes(?string $ip, ?string $fingerprint): Collection
     {
         $voteSites = collect(config('vote'));

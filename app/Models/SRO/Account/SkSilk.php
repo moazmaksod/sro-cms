@@ -136,4 +136,10 @@ class SkSilk extends Model
             }
         });
     }
+
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('vsro_silk_sum'));
+        static::deleted(fn () => Cache::forget('vsro_silk_sum'));
+    }
 }

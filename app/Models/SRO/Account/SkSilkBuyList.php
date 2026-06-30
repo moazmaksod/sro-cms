@@ -64,6 +64,11 @@ class SkSilkBuyList extends Model
         'RegDate'
     ];
 
+    protected static function booted()
+    {
+        static::saved(fn (self $model) => Cache::forget("account_info_vsro_donate_history_{$model->UserJID}_10_1"));
+    }
+
     public static function setSilkBuyList($userJID, $numSilk, $silkRemain = null, $silkType = 0, $pkgId = 0, $orderId = 'Website')
     {
         return self::create([
