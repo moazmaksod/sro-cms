@@ -2,7 +2,7 @@
 @section('title', __('Tickets'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Tickets</h1>
         </div>
@@ -16,6 +16,7 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
+                    <th scope="col">Subject</th>
                     <th scope="col">User</th>
                     <th scope="col">Category</th>
                     <th scope="col">Status</th>
@@ -27,6 +28,7 @@
                 @forelse($data as $row)
                     <tr>
                         <td>#{{ $row->id }}</td>
+                        <td>{{ $row->subject }}</td>
                         <td>{{ $row->user->username }}</td>
                         <td>{{ config('global.tickets.categories')[$row->category] ?? $row->category }}</td>
                         <td>

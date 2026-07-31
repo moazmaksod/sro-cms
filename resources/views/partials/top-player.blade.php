@@ -1,16 +1,16 @@
 @if(config('widgets.top_player.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Top Players') }}
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead class="table-dark">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="col">{{ __('Rank') }}</th>
-                            <th scope="col">{{ __('Name') }}</th>
-                            <th scope="col">{{ __('Points') }}</th>
+                            <th>{{ __('Rank') }}</th>
+                            <th>{{ __('Name') }}</th>
+                            <th>{{ __('Points') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,5 +39,5 @@
                 </table>
             </div>
         </div>
-    </div>
+    </aside>
 @endif

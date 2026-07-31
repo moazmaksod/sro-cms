@@ -67,11 +67,4 @@ class LogController extends Controller
 
         return view('admin.logs.smc', compact('data'));
     }
-
-    public function worldmap()
-    {
-        $data = Char::getCharLocations();
-
-        return view('admin.logs.worldmap', compact('data'));
-    }
 }

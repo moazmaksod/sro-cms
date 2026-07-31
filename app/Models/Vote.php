@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Cache;
 
 class Vote extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'jid',
         'site',
@@ -16,14 +21,24 @@ class Vote extends Model
         'expire',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'expire' => 'datetime',
     ];
 
-    public static function getVotes($request, ?string $fingerprint): Collection
+    protected static function booted()
+    {
+        static::created(fn () => Cache::forget('votes_count'));
+        static::deleted(fn () => Cache::forget('votes_count'));
+    }
+
+    public static function getVotes(?string $ip, ?string $fingerprint): Collection
     {
         $voteSites = collect(config('vote'));
-        $ip = $request->ip();
 
         if (!$ip || !$fingerprint) {
             return $voteSites->map(fn($site) => (object) [

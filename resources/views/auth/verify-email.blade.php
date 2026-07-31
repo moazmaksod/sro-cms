@@ -2,28 +2,32 @@
 @section('title', __('Verify Email'))
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2 class="mt-5">{{ __('Verify Email') }}</h2>
+    <section class="card">
+        <div class="card-body">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <h2 class="mt-5">{{ __('Verify Email') }}</h2>
 
-                @if (session('status') == 'verification-link-sent')
-                    <div class="alert alert-success" role="alert">
-                        {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                        @if (session('status') == 'verification-link-sent')
+                            <div class="alert alert-success" role="alert">
+                                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                            </div>
+                        @endif
+
+                        <div class="mb-3">
+                            {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+                        </div>
+
+                        <form class="d-inline" method="POST" action="{{ route('verification.send') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                                {{ __('Resend Verification Email') }}
+                            </button>
+                        </form>
                     </div>
-                @endif
-
-                <div class="mb-3">
-                    {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
                 </div>
-
-                <form class="d-inline" method="POST" action="{{ route('verification.send') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
-                        {{ __('Resend Verification Email') }}
-                    </button>
-                </form>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class TrustProxies extends Middleware
 {
     /**
-     * Trust all proxies (Cloudflare IPs rotate)
+     * Trust all proxies (Cloudflare IPs are dynamic and can change).
      */
     protected $proxies = '*';
 

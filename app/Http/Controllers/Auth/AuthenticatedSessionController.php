@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\PasswordResetToken;
 use App\Models\User;
 use App\Notifications\SendVerifyCode;
 use App\Http\Controllers\Controller;
@@ -10,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         $request->validate([
             'username' => ['required'],
             'password' => ['required'],
-            'g-recaptcha-response' => [Rule::requiredIf(function () {return env('NOCAPTCHA_ENABLE', false);}), 'captcha'],
+            'g-recaptcha-response' => [Rule::requiredIf(function () {return config('captcha.enabled', false);}), 'captcha'],
         ]);
 
         $request->authenticate();
@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('profile', absolute: false));
+        return redirect()->intended(route('account', absolute: false));
     }
 
     /**
@@ -67,20 +67,20 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.login-verify');
+        return view('auth.verify-login');
     }
 
     protected function sendVerify(): ?RedirectResponse
     {
         $user = Auth::user();
 
-        if (! config("settings.verify_jid_{$user->tbUser?->JID}")) {
+        if (! config("global.verify_jid_{$user->tbUser?->JID}")) {
             return null;
         }
 
         $code = random_int(100000, 999999);
 
-        PasswordResetToken::setToken($user->email, $code);
+        Cache::put('verify_code_'.$user->email, $code, now()->addMinutes(30));
 
         $user->notify(new SendVerifyCode($code));
 
@@ -102,15 +102,15 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::findOrFail($userId);
 
-        $token = PasswordResetToken::getToken($user->email);
+        $token = Cache::get('verify_code_'.$user->email);
 
-        if ($token && !$token->isExpired(1)) {
+        if ($token) {
             return back()->withErrors(['code' => 'Please wait before requesting a new code.']);
         }
 
         $code = random_int(100000, 999999);
 
-        PasswordResetToken::setToken($user->email, $code);
+        Cache::put('verify_code_'.$user->email, $code, now()->addMinutes(30));
 
         $user->notify(new SendVerifyCode($code));
 
@@ -126,18 +126,18 @@ class AuthenticatedSessionController extends Controller
         $userId = session('login_verify_user');
         $user = User::findOrFail($userId);
 
-        $token = PasswordResetToken::getToken($user->email);
+        $token = Cache::get('verify_code_'.$user->email);
 
-        if (!$token || $token->isExpired() || $token->token !== $request->code) {
+        if (!$token || $token !== $request->code) {
             return back()->withErrors(['code' => 'Invalid or expired verification code']);
         }
 
-        $token->deleteToken();
+        Cache::forget('verify_code_'.$user->email);
 
         Auth::login($user);
 
         session()->forget(['login_verify_user', 'login_verify_time']);
 
-        return redirect()->intended(route('profile', absolute: false));
+        return redirect()->intended(route('account', absolute: false));
     }
 }

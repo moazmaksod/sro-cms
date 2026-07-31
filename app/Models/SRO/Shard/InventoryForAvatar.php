@@ -61,11 +61,11 @@ class InventoryForAvatar extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function getChar()
     {
-        return $this->hasMany(Char::class, 'CharID');
+        return $this->belongsTo(Char::class, 'CharID');
     }
 
     /**

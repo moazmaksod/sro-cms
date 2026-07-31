@@ -37,6 +37,13 @@ class SkSilk extends Model
     protected $primaryKey = 'JID';
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -50,7 +57,7 @@ class SkSilk extends Model
 
     public static function setSkSilk($jid, $type, $amount)
     {
-        $types = [
+        $silkTypes = [
             '0' => 'silk_own',
             '1' => 'silk_gift',
             '2' => 'silk_point'
@@ -65,12 +72,12 @@ class SkSilk extends Model
             ]
         );
 
-        return self::where('JID', $jid)->increment($types[$type], $amount);
+        return self::where('JID', $jid)->increment($silkTypes[$type] ?? 'silk_own', $amount);
     }
 
     public static function setSkSilkLive($username, $amount, $pkgId = 0, $price = 0, $orderId = 'Website')
     {
-        return DB::statement("
+        $result = DB::select("
             EXEC [" . DB::connection('account')->getDatabaseName() . "].[CGI].[CGI_WebPurchaseSilk]
                 @OrderID = :orderID,
                 @UserID = :userID,
@@ -84,16 +91,55 @@ class SkSilk extends Model
             'numSilk' => $amount,
             'price'   => $price,
         ]);
+
+        $status = $result[0]->Result ?? null;
+
+        return $status === 'SUCCESS' ? true : $status;
     }
 
-    public static function getSilkSum()
+    public static function getSkSilk($jid, $type)
     {
-        return Cache::remember('vsro_silk_sum', 86400, function () {
+        $silkTypes = [
+            '0' => 'silk_own',
+            '1' => 'silk_gift',
+            '2' => 'silk_point'
+        ];
+
+        return (int) self::where('JID', $jid)->value($silkTypes[$type]);
+    }
+
+    public static function updateSkSilk($jid, $type, $amount)
+    {
+        return DB::connection('account')->transaction(function () use ($jid, $type, $amount) {
+            $oldAmount = self::getSkSilk($jid, $type);
+
+            self::setSkSilk($jid, $type, $amount);
+
+            $newAmount = $oldAmount + $amount;
+
+            SkSilkBuyList::setSilkBuyList($jid, $amount, $newAmount, $type);
+            SkSilkChangeByWeb::setSilkChange($jid, $newAmount, $amount, $type);
+
+            Cache::forget("tb_user_silk_{$jid}");
+
+            return $oldAmount + $amount;
+        });
+    }
+
+    public static function sumSkSilk()
+    {
+        return Cache::remember('vsro_silk_sum', 600, function () {
             try {
                 return self::selectRaw('SUM(CAST(silk_own AS BIGINT)) as total')->value('total');
             } catch (\Exception $e) {
                 return 0;
             }
         });
+    }
+
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('vsro_silk_sum'));
+        static::deleted(fn () => Cache::forget('vsro_silk_sum'));
     }
 }

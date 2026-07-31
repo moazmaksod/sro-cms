@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 
 class PagesController extends Controller
 {
@@ -28,7 +29,8 @@ class PagesController extends Controller
             'content' => 'required|string',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']) . '-' . time();
+        $validated['slug'] = ($base = Str::slug($validated['title'])) . (Pages::where('slug', $base)->exists() ? '-' . (Pages::where('slug', 'like', $base . '-%')->count() + 1) : '');
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         Pages::create($validated);
 
@@ -48,8 +50,10 @@ class PagesController extends Controller
         ]);
 
         if ($validated['title'] !== $pages->title) {
-            $validated['slug'] = Str::slug($validated['title']) . '-' . time();
+            $validated['slug'] = ($base = Str::slug($validated['title'])) . (Pages::where('slug', $base)->where('id', '!=', $pages->id)->exists() ? '-' . (Pages::where('slug', 'like', $base . '-%')->where('id', '!=', $pages->id)->count() + 1) : '');
         }
+
+        $validated['content'] = Purifier::clean($validated['content'], 'full');
 
         $pages->update($validated);
 

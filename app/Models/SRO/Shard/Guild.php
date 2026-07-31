@@ -46,16 +46,24 @@ class Guild extends Model
      */
     protected $fillable = [];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<int, string>
+     */
     protected $dates = [
         'FoundationDate'
     ];
 
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public static function getGuildRanking(int $limit = 25, int $GuildID = 0, string $Name = '')
     {
-        $Name = substr(preg_replace('/[^a-zA-Z0-9_]/', '', $Name), 0, 50);
-
         return Cache::remember("ranking_guild_{$limit}_{$GuildID}_{$Name}", config('global.cache.ranking_guild', 3600), function () use ($limit, $GuildID, $Name) {
             $query = self::from(DB::raw('_Guild WITH (NOLOCK)'))
             ->select(
@@ -166,7 +174,7 @@ class Guild extends Model
         });
     }
 
-    public function getTotalMemberAttribute()
+    public function getTotalMembersAttribute()
     {
         return Cache::remember("guild_total_member_{$this->ID}", config('global.cache.guild_info', 86400), function () {
             return DB::connection($this->getConnectionName())
@@ -176,7 +184,7 @@ class Guild extends Model
         });
     }
 
-    public function getItemPointsAttribute()
+    public function getItemPointAttribute()
     {
         return Cache::remember("guild_item_points_{$this->ID}", config('global.cache.guild_info', 86400), function () {
             return DB::connection($this->getConnectionName())

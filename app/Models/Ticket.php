@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Cache;
 
 class Ticket extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'parent_id',
         'user_id',
@@ -18,26 +23,38 @@ class Ticket extends Model
         'status',
     ];
 
-    public static function open(array $data): self
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
+    public static function open(array $data, $user_id): self
     {
         $ticket = self::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id,
             'subject' => $data['subject'],
             'category' => $data['category'],
-            'message' => self::sanitizeHtml($data['message']),
+            'message' => $data['message'],
             'type' => 'player',
             'status' => true,
         ]);
 
         Cache::forget("user:{$ticket->user_id}:tickets:page:1");
         Cache::forget("admin:tickets:page:1");
+        Cache::forget('tickets:count');
 
         return $ticket;
     }
 
     public static function replyTo(self $parent, array $data): self
     {
-        abort_if(!$parent->status, 403, 'Ticket closed');
+        if (!$parent->status) {
+            throw new \RuntimeException('Ticket closed');
+        }
 
         $reply = self::create([
             'parent_id' => $parent->id,
@@ -45,7 +62,7 @@ class Ticket extends Model
             'admin_id' => $data['admin_id'] ?? null,
             'subject' => $parent->subject,
             'category' => $parent->category,
-            'message' => self::sanitizeHtml($data['message']),
+            'message' => $data['message'],
             'type' => $data['type'],
             'status' => true,
         ]);
@@ -55,17 +72,6 @@ class Ticket extends Model
         Cache::forget("admin:tickets:page:1");
 
         return $reply;
-    }
-
-    private static function sanitizeHtml(string $html): string
-    {
-        $html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $html);
-        $html = preg_replace('/on\w+="[^"]*"/i', '', $html);
-        $html = preg_replace('/javascript:/i', '', $html);
-
-        $allowed = '<p><br><b><strong><i><em><u><ul><ol><li><a><span>';
-
-        return strip_tags($html, $allowed);
     }
 
     public static function getUserTickets(int $userId, int $perPage = 20)
@@ -90,11 +96,10 @@ class Ticket extends Model
         );
     }
 
-    public static function getReplies(int $ticketId)
+    public static function getReplies(self $ticket)
     {
-        return Cache::remember("ticket:{$ticketId}:replies", 600, fn () =>
-            self::findOrFail($ticketId)
-                ->replies()
+        return Cache::remember("ticket:{$ticket->id}:replies", 600, fn () =>
+            $ticket->replies()
                 ->with('user')
                 ->get()
         );
@@ -121,20 +126,23 @@ class Ticket extends Model
         );
     }
 
-    public static function close(int $ticketId): void
+    public static function close(self $ticket): void
     {
-        self::where('id', $ticketId)->orWhere('parent_id', $ticketId)->update(['status' => false]);
+        self::where('id', $ticket->id)->orWhere('parent_id', $ticket->id)->update(['status' => false]);
 
-        Cache::forget("ticket:{$ticketId}:replies");
-        Cache::forget("ticket:{$ticketId}:last_reply");
+        Cache::forget("ticket:{$ticket->id}:replies");
+        Cache::forget("ticket:{$ticket->id}:last_reply");
         Cache::forget("admin:tickets:page:1");
+        Cache::forget("user:{$ticket->user_id}:tickets:page:1");
+        Cache::forget("ticket:{$ticket->id}:user:{$ticket->user_id}");
+        Cache::forget('tickets:count');
     }
 
     public static function getTicketsCount()
     {
-        return Cache::remember('tickets:count', 60, function () {
-            return self::whereNull('parent_id')->count();
-        });
+        return Cache::remember('tickets:count', 60, fn () =>
+            self::whereNull('parent_id')->count()
+        );
     }
 
     public function user()

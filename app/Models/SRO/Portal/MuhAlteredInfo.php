@@ -57,11 +57,16 @@ class MuhAlteredInfo extends Model
         'CountryCodeChangingStatus',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [];
 
     public static function setAlteredInfo($jid, $username, $email, $bip)
     {
-        if(config('settings.register_confirm')) {
+        if(config('global.register_confirm')) {
             $EmailReceptionStatus = 'N';
             $EmailCertificationStatus = 'N';
 

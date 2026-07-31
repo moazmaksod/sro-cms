@@ -2,13 +2,13 @@
 @section('title', __('Dashboard'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Dashboard</h1>
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Total Accounts Registered</p>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Total In-game Characters</p>
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Total Amount of Gold</p>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Total Amount of Silk</p>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="row my-4">
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Online Players</p>
@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Support tickets</p>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Votes</p>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Donate</p>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="row my-4">
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>PHP Memory used</p>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Disk Space</p>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Laravel</p>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <p>Admins</p>

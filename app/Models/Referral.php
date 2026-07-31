@@ -30,6 +30,7 @@ class Referral extends Model
         $latestReferrals = self::whereIn('jid', $jids)
             ->latest('created_at')
             ->get()
+            ->load('creator')
             ->groupBy('jid');
 
         $logs->getCollection()->transform(function ($ref) use ($latestReferrals) {
@@ -58,7 +59,7 @@ class Referral extends Model
             $code = strtoupper(Str::random(8));
         } while (self::where('code', $code)->exists());
 
-        $invite =  $user->InvitesCreated()->create([
+        $invite =  $user->invitesCreated()->create([
             'code' => $code,
             'name' => $user->username,
             'jid' => $user->jid,

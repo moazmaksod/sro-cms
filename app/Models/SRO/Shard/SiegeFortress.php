@@ -49,6 +49,13 @@ class SiegeFortress extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getFortressWar()
     {
         return Cache::remember('fortress_war', config('global.cache.fortress_war', 604800), function () {

@@ -45,11 +45,11 @@ class BuyCashItemListByWeb extends Model
 
     ];
 
-    public static function getWebChest($JID)
+    public static function getWebChest($JID, $page = null)
     {
-        $page = request()->get('page', 1);
+        $page ??= request()->get('page', 1);
 
-        return Cache::remember("character_info_web_chest_{$JID}_page_{$page}", config('global.cache.character_info', 86400), function () use ($JID) {
+        return Cache::remember("character_info_web_chest_{$JID}_page_{$page}", config('global.cache.character_info', 86400), function () use ($JID, $page) {
                 return self::select(
                     '_BuyCashItemList_By_Web.*',
                     '_Rigid_ItemNameDesc.ENG as ItemName',

@@ -14,30 +14,36 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin');
+    Route::get('/admin/worldmap', [DashboardController::class, 'worldmap'])->name('admin.worldmap');
 
     Route::prefix('admin')->name('admin.')->group(function() {
         Route::get('/logs/donate', [LogController::class, 'donate'])->name('logs.donate');
         Route::get('/logs/referral', [LogController::class, 'referral'])->name('logs.referral');
         Route::get('/logs/vote', [LogController::class, 'vote'])->name('logs.vote');
         Route::get('/logs/smc', [LogController::class, 'smc'])->name('logs.smc');
-        Route::get('/logs/worldmap', [LogController::class, 'worldmap'])->name('logs.worldmap');
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::get('/general', [SettingController::class, 'general'])->name('settings.general');
+        Route::get('/widgets', [SettingController::class, 'widgets'])->name('settings.widgets');
+        Route::get('/donate', [SettingController::class, 'donate'])->name('settings.donate');
+        Route::get('/ranking', [SettingController::class, 'ranking'])->name('settings.ranking');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::post('/settings/clear-cache', [SettingController::class, 'clearCache'])->name('settings.clear-cache');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::get('/users/{user}/view', [UserController::class, 'view'])->name('users.view');
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-
-        Route::post('/users/{user}/silk', [UserController::class, 'silk'])->name('users.silk');
+        Route::post('/users/{user}/silk', [UserController::class, 'addSilk'])->name('users.add-silk');
         Route::post('/users/{user}/block', [UserController::class, 'block'])->name('users.block');
         Route::post('/users/{user}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
+        Route::post('/users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+        Route::post('/users/{user}/change-email', [UserController::class, 'changeEmail'])->name('users.change-email');
 
         Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');
         Route::get('/characters/{char}/view', [CharacterController::class, 'view'])->name('characters.view');
         Route::put('/characters/{char}', [CharacterController::class, 'update'])->name('characters.update');
         Route::put('/characters/{char}/unstuck', [CharacterController::class, 'unstuck'])->name('characters.unstuck');
+        Route::post('/characters/{char}/add-item', [CharacterController::class, 'addItem'])->name('characters.add-item');
 
         Route::get('/news', [NewsController::class, 'index'])->name('news.index');
         Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');

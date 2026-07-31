@@ -2,7 +2,7 @@
 @section('title', __('Delete News'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Delete News</h1>
         </div>
@@ -22,7 +22,7 @@
             @method('DELETE')
 
             <div class="row mb-0">
-                <div class="col-md-10 offset-md-2">
+                <div class="col-lg-10 offset-md-2">
                     <button type="submit" class="btn btn-danger">{{ __('Yes, Delete') }}</button>
                     <a href="{{ route('admin.news.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
                 </div>

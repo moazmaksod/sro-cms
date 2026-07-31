@@ -7,7 +7,7 @@ return [
         'channel_id' => '1374482240427528254',
         'theme' => 'dark', //dark, light
     ],
-    'globals_history' => [
+    'global_history' => [
         'enabled' => false,
         'limit' => 5,
     ],
@@ -23,19 +23,19 @@ return [
         'enabled' => false,
         'limit' => 5,
     ],
-    'sox_plus' => [
+    'item_plus' => [
         'enabled' => false,
         'limit' => 5,
     ],
-    'sox_drop' => [
+    'item_drop' => [
         'enabled' => false,
         'limit' => 5,
     ],
-    'pvp_kills' => [
+    'pvp_kill' => [
         'enabled' => false,
         'limit' => 5,
     ],
-    'job_kills' => [
+    'job_kill' => [
         'enabled' => false,
         'limit' => 5,
     ],

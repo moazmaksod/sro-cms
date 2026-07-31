@@ -56,6 +56,6 @@ class WebItemCertifyKey extends Model
 
     public function tbUser()
     {
-        return $this->belongsTo(TbUser::class, 'JID', 'UserJID');
+        return $this->belongsTo(TbUser::class, 'UserJID', 'JID');
     }
 }

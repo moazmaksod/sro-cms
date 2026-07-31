@@ -5,44 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('settings.site_title', 'iSRO CMS v2') }} - @yield('title')</title>
-    <meta name="description" content="{{ config('settings.site_desc', 'Description') }}">
-    <link rel="shortcut icon" href="{{ asset(config('settings.site_favicon', 'images/favicon.ico')) }}">
+    <title>{{ config('global.site_name', 'iSRO CMS v2') }} - @yield('title')</title>
+    <meta name="description" content="{{ config('global.site_desc', 'Description') }}">
+    <link rel="shortcut icon" href="{{ asset(config('global.site_favicon', 'images/favicon.ico')) }}">
 
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/css/dashboard.css') }}" rel="stylesheet">
-    <!-- Inline Styles -->
-    @stack('styles')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.3/examples/dashboard/dashboard.css" rel="stylesheet">
     <style>
-        svg {width: 1rem; height: 1rem;}
-        .content>.container {min-height: 100vh;}
-        .table-responsive {min-height: 100vh;}
-        nav[role=navigation] > div:first-child {margin-bottom: 1rem}
+        svg { width: 1em; height: 1em; }
+        .bi { fill: currentColor; }
+        @media (min-width: 768px) {
+            .sidebar .offcanvas-md {
+                height: calc(100vh - 48px);
+                overflow-y: auto;
+            }
+        }
     </style>
+    @stack('styles')
 </head>
-<body data-bs-theme="{{ config('settings.dark_mode', 'dark') }}">
+<body data-bs-theme="{{ config('global.dark_mode', 'dark') }}">
 
 @include('admin.layouts.header')
 
 <div class="container-fluid">
-    <div class="row min-vh-100">
+    <div class="row">
         <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
             @include('admin.layouts.sidebar')
         </div>
 
-        <main class="content col-md-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             @yield('content')
         </main>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script defer src="{{ asset('js/bootstrap.bundle.min.js') }}" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"></script>
-<script src="{{ asset('js/color-modes.js') }}"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
-<link href="{{ asset('admin/js/dashboard.js') }}" rel="stylesheet">
-<!-- Inline Scripts -->
-@stack('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://getbootstrap.com/docs/5.3/assets/js/color-modes.js"></script>
 
+@stack('scripts')
 </body>
 </html>

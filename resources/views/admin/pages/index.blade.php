@@ -2,7 +2,7 @@
 @section('title', __('Pages'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Pages</h1>
 
@@ -35,7 +35,7 @@
                         <tr>
                             <td>{{ $row->id }}</td>
                             <td>{{ $row->title }}</td>
-                            <td><a href="{{ route('page.show', ['slug' => $row->slug]) }}" target="_blank">{{ route('page.show', ['slug' => $row->slug]) }}</a></td>
+                            <td><a href="{{ route('pages.show', ['slug' => $row->slug]) }}" target="_blank">{{ route('pages.show', ['slug' => $row->slug]) }}</a></td>
                             <td>
                                 @if($row->active == 1)
                                     <span class="text-success">Active</span>
@@ -50,7 +50,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center">No Records Found!</td>
+                            <td colspan="5" class="text-center">No Records Found!</td>
                         </tr>
                     @endforelse
                 </tbody>

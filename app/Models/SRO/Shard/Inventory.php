@@ -57,7 +57,7 @@ class Inventory extends Model
 
     public static function getInventory($CharID, $max = 12, $min = 0, $not = 8)
     {
-        return Cache::remember("character_info_inventory_{$CharID}_{$max}_{$min}", config('global.cache.character_info', 86400), static function () use ($CharID, $max, $min, $not) {
+        return Cache::remember("character_info_inventory_{$CharID}_{$max}_{$min}_{$not}", config('global.cache.character_info', 86400), static function () use ($CharID, $max, $min, $not) {
             return self::join('_Items', '_Items.ID64', '_Inventory.ItemID')
             ->join('_RefObjCommon', '_Items.RefItemId', '_RefObjCommon.ID')
             ->join('_RefObjItem', '_RefObjCommon.Link', '_RefObjItem.ID')
@@ -83,11 +83,11 @@ class Inventory extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function getChar()
     {
-        return $this->hasMany(Char::class, 'CharID');
+        return $this->belongsTo(Char::class, 'CharID');
     }
 
     /**
@@ -96,13 +96,5 @@ class Inventory extends Model
     public function getItem()
     {
         return $this->belongsTo(Items::class, 'ItemID', 'ID64');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function getSerial64()
-    {
-        return $this->belongsto(Items::class, 'ItemID', 'ID64');
     }
 }

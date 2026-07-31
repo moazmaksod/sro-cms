@@ -2,9 +2,11 @@
 
 namespace App\Models\SRO\Portal;
 
+use App\Models\SRO\Account\SkSilkChangeByWeb;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class AphChangedSilk extends Model
@@ -57,19 +59,59 @@ class AphChangedSilk extends Model
         'AvailableStatus',
     ];
 
+    public static function getChangedSilk($jid, $type = 1)
+    {
+        return (int) self::where('JID', $jid)->where('AvailableStatus', 'Y')->where('SilkType', $type)->sum('RemainedSilk');
+    }
+
     public static function setChangedSilk($jid, $type, $amount)
     {
         return self::create([
             'JID' => $jid,
             'PTInvoiceID' => null,
-            'RemainedSilk' => abs($amount),
-            'ChangedSilk' => $amount < 0 ? $amount : 0,
+            'RemainedSilk' => $amount,
+            'ChangedSilk' => 0,
             'SilkType' => $type,
             'SellingTypeID' => 2,
             'ChangeDate' => now(),
-            'AvailableDate' => now()->addYears(1),
-            'AvailableStatus' => $amount < 0 ? 'N' : 'Y',
+            'AvailableDate' => now()->addYears(10),
+            'AvailableStatus' => 'Y',
         ]);
+    }
+
+    public static function updateChangedSilk($jid, $type, $amount)
+    {
+        return DB::transaction(function () use ($jid, $type, $amount) {
+            $oldAmount = self::getChangedSilk($jid, $type);
+            $newAmount = max(0, $oldAmount + $amount);
+
+            self::where('JID', $jid)->where('SilkType', $type)->update(['AvailableStatus' => 'N']);
+
+            self::setChangedSilk($jid, $type, $newAmount);
+
+            SkSilkChangeByWeb::setSilkChange($jid, $newAmount, $amount, $type, 4);
+
+            Cache::forget("mu_user_silk_{$jid}");
+
+            return $newAmount;
+        });
+    }
+
+    public static function sumChangedSilk()
+    {
+        return Cache::remember('isro_silk_sum', 600, function () {
+            try {
+                return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->where('SilkType', 3)->where('AvailableStatus', 'Y')->value('total');
+            } catch (\Exception $e) {
+                return 0;
+            }
+        });
+    }
+
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('isro_silk_sum'));
+        static::deleted(fn () => Cache::forget('isro_silk_sum'));
     }
 
     public static function getSilkHistory($jid, $paginate = 10, $page = 1): LengthAwarePaginator
@@ -102,17 +144,6 @@ class AphChangedSilk extends Model
                 'query' => request()->query(),
             ]
         );
-    }
-
-    public static function getSilkSum()
-    {
-        return Cache::remember('isro_silk_sum', 86400, function () {
-            try {
-                return self::selectRaw('SUM(CAST(RemainedSilk AS BIGINT)) as total')->where('SilkType', 3)->where('AvailableStatus', 'Y')->value('total');
-            } catch (\Exception $e) {
-                return 0;
-            }
-        });
     }
 
     public function muUser()

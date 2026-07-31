@@ -55,6 +55,11 @@ class GuildMember extends Model
         'JoinDate'
     ];
 
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public static function getFortressPlayerRanking($limit = 25)

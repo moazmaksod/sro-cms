@@ -27,7 +27,9 @@ class VoucherController extends Controller
             'valid_date' => 'nullable|date',
         ]);
 
-        $code = strtoupper(implode('-', str_split(bin2hex(random_bytes(10)), 5)));
+        do {
+            $code = strtoupper(implode('-', str_split(bin2hex(random_bytes(10)), 5)));
+        } while (Voucher::where('code', $code)->exists());
 
         Voucher::create([
             'code' => $code,
@@ -42,6 +44,10 @@ class VoucherController extends Controller
 
     public function toggle(Voucher $voucher)
     {
+        if ($voucher->status === 'Used') {
+            return redirect()->back()->with('error', 'Cannot toggle a used voucher.');
+        }
+
         $voucher->update(['status' => $voucher->status === 'Unused' ? 'Disabled' : 'Unused']);
 
         $action = $voucher->status === 'Unused' ? 'enabled' : 'disabled';

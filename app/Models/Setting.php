@@ -2,46 +2,126 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
-    public $timestamps = false;
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps  = false;
 
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'key';
 
-    protected $keyType = 'string';
+    /**
+     * The data type of the primary key.
+     *
+     * @var string
+     */
+    protected $keyType    = 'string';
 
-    protected $fillable = [
-        'key',
-        'value'
-    ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = ['key', 'value'];
 
-    public static function get($key, $default = null)
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Keys
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function itemCacheKey(string $key): string
     {
-        return Cache::rememberForever("setting_{$key}", function () use ($key, $default) {
-            return optional(self::where('key', $key)->first())->value ?? $default;
-        });
+        return "setting_{$key}";
     }
 
-    public static function set($key, $value)
+    protected static function allCacheKey(): string
     {
-        $setting = self::updateOrCreate(['key' => $key], ['value' => $value]);
+        return 'settings_all';
+    }
 
-        Cache::forget("setting_{$key}");
-        Cache::forget("settings_all");
+    /*
+    |--------------------------------------------------------------------------
+    | Getters
+    |--------------------------------------------------------------------------
+    */
+
+    public static function get(string $key, mixed $default = null): mixed
+    {
+        return Cache::rememberForever(
+            static::itemCacheKey($key),
+            fn () => optional(static::where('key', $key)->first())->value ?? $default
+        );
+    }
+
+    public static function cached(): Collection
+    {
+        return Cache::rememberForever(
+            static::allCacheKey(),
+            fn () => static::pluck('value', 'key')
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Setters
+    |--------------------------------------------------------------------------
+    */
+
+    public static function set(string $key, mixed $value): self
+    {
+        $setting = static::updateOrCreate(
+            ['key' => $key],
+            ['value' => is_array($value) ? json_encode($value) : $value]
+        );
+
+        Cache::forget(static::itemCacheKey($key));
+        Cache::forget(static::allCacheKey());
 
         return $setting;
     }
 
-    public static function cached()
+    public static function saveMany(array $items): void
     {
-        return cache()->rememberForever('settings_all', function () {
-            return self::pluck('value', 'key');
-        });
+        foreach ($items as $key => $value) {
+            static::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value]
+            );
+
+            Cache::forget(static::itemCacheKey($key));
+        }
+
+        Cache::forget(static::allCacheKey());
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    public static function flushCache(): void
+    {
+        Cache::forget(static::allCacheKey());
     }
 }

@@ -32,6 +32,13 @@ class LogEventItem extends Model
      */
     protected $table = 'dbo._LogEventItem';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getLogEventItem($mode = 'plus', $plus = null, $degree = null, $type = null, $CharID = null, $limit = null)
     {
         $cacheKey = 'log_event_items_' . $mode .

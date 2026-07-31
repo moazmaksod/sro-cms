@@ -50,24 +50,30 @@ class Char extends Model
      */
     protected $fillable = [
         'CharID',
-        'Deleted',
         'RefObjID',
         'CharName16',
         'NickName16',
         'LastLogout',
-        'RemainGold'
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<int, string>
+     */
     protected $dates = [
         'LastLogout'
     ];
 
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public static function getPlayerRanking($limit = 25, $CharID = 0, $CharName = '')
     {
-        $CharName = substr(preg_replace('/[^a-zA-Z0-9_]/', '', $CharName), 0, 50);
-
         return Cache::remember("ranking_player_fast_{$limit}_{$CharID}_{$CharName}", config('global.cache.ranking_player', 3600), function () use ($limit, $CharID, $CharName) {
             $query = self::from(DB::raw('_Char WITH (NOLOCK)'))
             ->select(
@@ -152,7 +158,7 @@ class Char extends Model
         });
     }
 
-    public function getItemPointsAttribute()
+    public function getItemPointAttribute()
     {
         return cache()->remember("char_item_points_{$this->CharID}", config('global.cache.character_info', 86400), function () {
             return DB::connection($this->getConnectionName())
@@ -271,16 +277,18 @@ class Char extends Model
 
     public static function getCharCount()
     {
-        return Cache::remember('char_count', 86400, function () {
-            return self::count();
-        });
+        return Cache::remember('char_count', 600, fn () => self::count());
     }
 
     public static function getGoldSum()
     {
-        return Cache::remember('gold_sum', 86400, function () {
-            return self::query()->sum('RemainGold');
-        });
+        return Cache::remember('gold_sum', 600, fn () => self::query()->sum('RemainGold'));
+    }
+
+    protected static function booted()
+    {
+        static::saved(function () {Cache::forget('char_count');Cache::forget('gold_sum');});
+        static::deleted(function () {Cache::forget('char_count');Cache::forget('gold_sum');});
     }
 
     public function getCharInventorySet(int $max = 12, int $min = 0, int $not = 8)
@@ -382,5 +390,23 @@ class Char extends Model
     public function guild()
     {
         return $this->belongsTo(Guild::class, 'GuildID', 'ID');
+    }
+
+    public function addItem(string $itemCode, int $quantity = 1, int $type = 1): int
+    {
+        try {
+            $result = DB::connection($this->getConnectionName())->selectOne(
+                'DECLARE @return_code int; EXEC @return_code = _ADD_ITEM_EXTERN @charname = ?, @codename = ?, @data = ?, @opt_level = ?, @variance = NULL; SELECT @return_code AS return_code;',
+                [$this->CharName16, $itemCode, $quantity, $type]
+            );
+
+            if (is_object($result) && property_exists($result, 'return_code')) {
+                return (int) $result->return_code;
+            }
+
+            return -1;
+        } catch (\Exception $e) {
+            return -1;
+        }
     }
 }

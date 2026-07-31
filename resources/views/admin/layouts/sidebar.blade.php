@@ -1,6 +1,6 @@
 <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="sidebarMenuLabel">{{ config('settings.site_title') }}</h5>
+        <h5 class="offcanvas-title" id="sidebarMenuLabel">{{ config('global.site_name') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.logs.worldmap') ? 'active' : '' }}" href="{{ route('admin.logs.worldmap') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.worldmap') ? 'active' : '' }}" href="{{ route('admin.worldmap') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#house-fill"></use></svg>
                     {{ __('World Map') }}
                 </a>
@@ -102,19 +102,30 @@
         </h6>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.general') ? 'active' : '' }}" href="{{ route('admin.settings.general') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#gear-wide-connected"/></svg>
                     {{ __('General') }}
                 </a>
             </li>
-            <!--
+
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.widgets') ? 'active' : '' }}" href="{{ route('admin.settings.widgets') }}">
                     <svg class="bi" aria-hidden="true"><use xlink:href="#gear-wide-connected"/></svg>
                     {{ __('Widgets') }}
                 </a>
             </li>
-            -->
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.donate') ? 'active' : '' }}" href="{{ route('admin.settings.donate') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#gear-wide-connected"/></svg>
+                    {{ __('Donate') }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 {{ request()->routeIs('admin.settings.ranking') ? 'active' : '' }}" href="{{ route('admin.settings.ranking') }}">
+                    <svg class="bi" aria-hidden="true"><use xlink:href="#gear-wide-connected"/></svg>
+                    {{ __('Ranking') }}
+                </a>
+            </li>
         </ul>
     </div>
 </div>

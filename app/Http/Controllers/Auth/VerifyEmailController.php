@@ -15,17 +15,17 @@ class VerifyEmailController extends Controller
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('profile', absolute: false).'?verified=1');
+            return redirect()->intended(route('account', absolute: false).'?verified=1');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             if (config('global.server.version') !== 'vSRO') {
-                $request->user()->muUser?->muAlteredInfo->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
+                $request->user()->muUser?->muAlteredInfo?->update(['EmailReceptionStatus' => 'Y', 'EmailCertificationStatus' => 'Y']);
             }
 
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(route('profile', absolute: false).'?verified=1');
+        return redirect()->intended(route('account', absolute: false).'?verified=1');
     }
 }

@@ -11,6 +11,7 @@ use App\Models\SRO\Shard\Char;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vote;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -24,7 +25,7 @@ class DashboardController extends Controller
             'diskTotal' => is_readable(base_path()) ? disk_total_space(base_path()) : 0,
             'diskFree'  => is_readable(base_path()) ? disk_free_space(base_path()) : 0,
             'appDebug' => config('app.debug'),
-            'adminCount' => User::whereHas('role', fn($q) => $q->where('is_admin', 1))->count(),
+            'adminCount' => Cache::remember('admin_count', 3600, fn() => User::whereHas('role', fn($q) => $q->where('is_admin', 1))->count()),
         ];
 
         return view('admin.index', [
@@ -34,8 +35,15 @@ class DashboardController extends Controller
             'voteCount' => Vote::getVotesCount(),
             'totalDonate' => Donate::getDonateSum(),
             'totalGold' => Char::getGoldSum(),
-            'totalSilk' => config('global.server.version') === 'vSRO' ? SkSilk::getSilkSum() : AphChangedSilk::getSilkSum(),
+            'totalSilk' => config('global.server.version') === 'vSRO' ? SkSilk::sumSkSilk() : AphChangedSilk::sumChangedSilk(),
             'systemInfo' => $systemInfo,
         ]);
+    }
+
+    public function worldmap()
+    {
+        $data = Char::getCharLocations();
+
+        return view('admin.worldmap', compact('data'));
     }
 }

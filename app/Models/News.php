@@ -11,6 +11,11 @@ class News extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'author_id',
         'title',
@@ -19,24 +24,26 @@ class News extends Model
         'category',
         'content',
         'published_at',
+        'active',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'published_at' => 'datetime',
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
         static::creating(function ($post) {
-            if ( !$post->author_id ) {
+            if (!$post->author_id) {
                 $post->author_id = Auth::id();
             }
         });
-    }
 
-    protected static function booted()
-    {
         static::created(fn ($news) => self::clearCache($news));
         static::updated(fn ($news) => self::clearCache($news));
         static::deleted(fn ($news) => self::clearCache($news));
@@ -52,7 +59,7 @@ class News extends Model
     public static function getPost($slug)
     {
         return Cache::rememberForever("news_view_{$slug}", function () use ($slug) {
-            return self::where('slug', $slug)->first();
+            return self::where('active', 1)->where('published_at', '<=', now())->where('slug', $slug)->first();
         });
     }
 

@@ -10,6 +10,11 @@ class Voucher extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'code',
         'amount',
@@ -19,9 +24,20 @@ class Voucher extends Model
         'status'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'valid_date' => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::saved(fn (self $voucher) => Cache::forget("vouchers_user_{$voucher->jid}"));
+        static::deleted(fn (self $voucher) => Cache::forget("vouchers_user_{$voucher->jid}"));
+    }
 
     public static function getUserVoucher(int $jid)
     {

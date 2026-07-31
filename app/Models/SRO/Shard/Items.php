@@ -54,7 +54,13 @@ class Items extends Model
 
     public static function getItemNameBySerial($serials): array
     {
-        return Cache::remember("globals_history_serial_{$serials[0]}", config('global.cache.character_info', 86400), static function () use ($serials) {
+        if (empty($serials)) {
+            return [];
+        }
+
+        $cacheKey = 'globals_history_serial_' . md5(implode(',', $serials));
+
+        return Cache::remember($cacheKey, config('global.cache.character_info', 86400), static function () use ($serials) {
             return self::select(
                 '_Items.Serial64',
                 '_Items.OptLevel',

@@ -33,27 +33,36 @@ class LogInstanceWorldInfo extends Model
      */
     protected $table = 'dbo._LogInstanceWorldInfo';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getUniqueRanking($limit = 25, $month = 0)
     {
         $uniqueList = config('ranking.uniques');
 
-        $case = 'SUM(CASE ';
+        $bindings = [];
+        $whenClauses = [];
         foreach ($uniqueList as $uniqueCode => $points) {
-            $points = $points['points'];
-            $case .= "WHEN _LogInstanceWorldInfo.Value = '$uniqueCode' THEN $points ";
+            $whenClauses[] = "WHEN _LogInstanceWorldInfo.Value = ? THEN ?";
+            $bindings[] = $uniqueCode;
+            $bindings[] = $points['points'];
         }
-        $case .= 'ELSE 0 END) AS Points';
+        $case = 'SUM(CASE ' . implode(' ', $whenClauses) . ' ELSE 0 END) AS Points';
         $startOfMonth = Carbon::now()->startOfMonth();
 
-        return Cache::remember("ranking_unique_{$limit}_{$month}", config('global.cache.ranking_unique', 600), function () use ($month, $startOfMonth, $uniqueList, $case, $limit) {
+        return Cache::remember("ranking_unique_{$limit}_{$month}", config('global.cache.ranking_unique', 600), function () use ($month, $startOfMonth, $uniqueList, $case, $bindings, $limit) {
             return self::select(
                     '_Char.CharName16',
                     '_Char.RefObjID',
                     '_Char.CurLevel',
                     '_Guild.ID',
-                    '_Guild.Name',
-                    DB::raw($case)
+                    '_Guild.Name'
                 )
+                ->selectRaw($case, $bindings)
                 ->join(DB::connection('shard')->getDatabaseName().'.dbo._Char', '_Char.CharID', '=', '_LogInstanceWorldInfo.CharID')
                 ->join(DB::connection('shard')->getDatabaseName().'.dbo._Guild', '_Char.GuildID', '=', '_Guild.ID')
                 ->whereIn('_LogInstanceWorldInfo.Value', array_keys($uniqueList))

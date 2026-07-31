@@ -2,7 +2,7 @@
 @section('title', __('Edit Page'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Edit Page</h1>
         </div>
@@ -22,9 +22,9 @@
             @method('PUT')
 
             <div class="row mb-3">
-                <label for="title" class="col-md-2 col-form-label text-md-end">{{ __('Title') }}</label>
+                <label for="title" class="col-lg-2 col-form-label text-md-end">{{ __('Title') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', $data->title) }}" required>
 
                     @error('title')
@@ -36,9 +36,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="active" class="col-md-2 col-form-label text-md-end">{{ __('Active') }}</label>
+                <label for="active" class="col-lg-2 col-form-label text-md-end">{{ __('Active') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="active" value="{{ old('active', $data->active ?? 0) ? '1' : '0' }}" id="active" {{ old('active', $data->active ?? 0) ? 'checked' : '' }}>
                         <label class="form-check-label" for="active">
@@ -55,9 +55,9 @@
             </div>
 
             <div class="row mb-3">
-                <label for="content" class="col-md-2 col-form-label text-md-end">{{ __('Content') }}</label>
+                <label for="content" class="col-lg-2 col-form-label text-md-end">{{ __('Content') }}</label>
 
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <textarea id="summernote" rows="10" class="form-control" name="content">{{ old('content', $data->content) }}</textarea>
 
                     @error('content')
@@ -69,7 +69,7 @@
             </div>
 
             <div class="row mb-0">
-                <div class="col-md-10 offset-md-2">
+                <div class="col-lg-10 offset-md-2">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Update Page') }}
                     </button>
@@ -94,7 +94,6 @@
             placeholder: 'Hello iSRO-CMS v2',
             tabsize: 2,
             height: 400,
-            codeviewFilter: false, // allows raw HTML
             codeviewIframeFilter: true
         });
     </script>

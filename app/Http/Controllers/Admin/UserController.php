@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Donate;
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -15,7 +14,8 @@ class UserController extends Controller
     {
         $data = TbUser::query()
             ->when($request->filled('search'), function ($q) use ($request) {
-                $q->where('StrUserID', 'like', "%{$request->search}%");
+                $search = substr($request->search, 0, 25);
+                $q->where('StrUserID', 'like', "%{$search}%");
             })
             ->paginate(20);
 
@@ -29,27 +29,27 @@ class UserController extends Controller
 
     public function update()
     {
-        return back()->with('success', 'Test!');
+        abort(501, 'Not implemented yet.');
     }
 
-    public function silk(Request $request, TbUser $user)
+    public function addSilk(Request $request, TbUser $user)
     {
         $validated = $request->validate([
             'type' => 'required',
             'amount' => 'required|numeric',
         ]);
 
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($user->JID, $validated['type'], $validated['amount']);
-        } else {
-            AphChangedSilk::setChangedSilk($user->PortalJID, $validated['type'], $validated['amount']);
-        }
+        $JID = config('global.server.version') === 'vSRO' ? $user->JID : $user->PortalJID;
+        DB::transaction(function () use ($JID, $validated, $user) {
+            TbUser::updateSilk($JID, $validated['type'], $validated['amount']);
 
-        Donate::DonateLog([
-            'method' => 'AdminPanel',
-            'value' => $validated['amount'],
-            'jid' => $user->JID,
-        ]);
+            Donate::log([
+                'method' => 'AdminPanel',
+                'type' => $validated['type'],
+                'value' => $validated['amount'],
+                'jid' => $user->JID,
+            ]);
+        });
 
         return back()->with('success', 'Silk have been Sent!');
     }
@@ -74,5 +74,43 @@ class UserController extends Controller
         }
 
         return back()->with('error', 'No active block found.');
+    }
+
+    public function changePassword(Request $request, TbUser $user)
+    {
+        $validated = $request->validate([
+            'password' => 'required|min:6',
+        ]);
+
+        $userModel = $user->user()->first();
+        if (!$userModel) {
+            return back()->with('error', 'User account not found.');
+        }
+
+        $userModel->update(['password' => $validated['password']]);
+
+        $userModel->updateGamePassword($validated['password']);
+
+        return back()->with('success', 'Password has been changed successfully.');
+    }
+
+    public function changeEmail(Request $request, TbUser $user)
+    {
+        $userModel = $user->user()->first();
+        if (!$userModel) {
+            return back()->with('error', 'User account not found.');
+        }
+
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email,' . $userModel->id,
+        ]);
+
+        $userModel->email = $validated['email'];
+        $userModel->email_verified_at = null;
+        $userModel->save();
+
+        $userModel->updateGameEmail($validated['email']);
+
+        return back()->with('success', 'Email has been changed successfully.');
     }
 }

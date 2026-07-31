@@ -23,16 +23,16 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            View::composer(['layouts.header', 'layouts.navigation'], function ($view) {
-                $view->with('pageNames', Pages::getPageNames());
+            View::composer('layouts.header', function ($view) {
+                $view->with('pages', Pages::getPageNames());
             });
 
             View::composer(['*'], function ($view) {
                 $view->with([
                     'onlineCounter' => (object) [
                         'onlinePlayer' => ShardCurrentUser::getOnlineCounter(),
-                        'maxPlayer' => config('settings.max_player', 1000),
-                        'fakePlayer' => config('settings.fake_player', 0)
+                        'maxPlayer' => config('global.max_player', 1000),
+                        'fakePlayer' => config('global.fake_player', 0)
                     ]
                 ]);
             });
@@ -53,8 +53,8 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            if(config('widgets.globals_history.enabled', false)) {
-                View::composer(['partials.globals-history'], function ($view) {
+            if(config('widgets.global_history.enabled', false)) {
+                View::composer(['partials.global-history'], function ($view) {
                     $view->with([
                         'globalsHistory' => LogChatMessage::getGlobalsHistory(5),
                     ]);
@@ -85,32 +85,32 @@ class ViewServiceProvider extends ServiceProvider
                 });
             }
 
-            if(config('widgets.sox_plus.enabled', false)) {
-                View::composer(['partials.sox-plus'], function ($view) {
+            if(config('widgets.item_plus.enabled', false)) {
+                View::composer(['partials.item-plus'], function ($view) {
                     $view->with([
                         'soxPlus' => LogEventItem::getLogEventItem('plus', 8, 8, 'Seal of Sun', null, 5),
                     ]);
                 });
             }
 
-            if(config('widgets.sox_drop.enabled', false)) {
-                View::composer(['partials.sox-drop'], function ($view) {
+            if(config('widgets.item_drop.enabled', false)) {
+                View::composer(['partials.item-drop'], function ($view) {
                     $view->with([
                         'soxDrop' => LogEventItem::getLogEventItem('drop', null, 8, 'Seal of Sun', null, 5),
                     ]);
                 });
             }
 
-            if(config('widgets.pvp_kills.enabled', false)) {
-                View::composer(['partials.pvp-kills'], function ($view) {
+            if(config('widgets.pvp_kill.enabled', false)) {
+                View::composer(['partials.pvp-kill'], function ($view) {
                     $view->with([
                         'pvpKills' => LogEventChar::getKillLogs('pvp', 5),
                     ]);
                 });
             }
 
-            if(config('widgets.job_kills.enabled', false)) {
-                View::composer(['partials.job-kills'], function ($view) {
+            if(config('widgets.job_kill.enabled', false)) {
+                View::composer(['partials.job-kill'], function ($view) {
                     $view->with([
                         'jobKills' => LogEventChar::getKillLogs('job', 5),
                     ]);

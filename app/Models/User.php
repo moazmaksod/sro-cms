@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
+use App\Models\SRO\Account\BlockedUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\SRO\Portal\MuUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +17,27 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The database connection for the model.
+     *
+     * @var string
+     */
+    protected $connection = 'sqlsrv';
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -54,24 +74,34 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function updateGameEmail(): void
+    protected static function booted()
     {
-        DB::transaction(function () {
+        static::created(fn () => Cache::forget('user_count'));
+        static::deleted(fn () => Cache::forget('user_count'));
+    }
+
+    public function updateGameEmail($email): void
+    {
+        DB::transaction(function () use ($email) {
             if (config('global.server.version') === 'vSRO') {
-                $this->tbUser?->update(['Email' => $this->email,]);
+                $this->tbUser?->update(['Email' => $email]);
+
+                Cache::forget("tb_user_email_{$this->jid}");
             } else {
-                $this->muUser?->muEmail?->update(['EmailAddr' => $this->email,]);
+                $this->muUser?->muEmail?->update(['EmailAddr' => $email]);
 
                 $this->muUser?->muAlteredInfo?->update([
-                    'EmailAddr' => $this->email,
-                    'EmailReceptionStatus' => config('settings.register_confirm') ? 'N' : 'Y',
-                    'EmailCertificationStatus' => config('settings.register_confirm') ? 'N' : 'Y',
+                    'EmailAddr' => $email,
+                    'EmailReceptionStatus' => config('global.register_confirm') ? 'N' : 'Y',
+                    'EmailCertificationStatus' => config('global.register_confirm') ? 'N' : 'Y',
                 ]);
+
+                Cache::forget("mu_user_email_{$this->jid}");
             }
         });
     }
 
-    public function updateGamePassword(string $password): void
+    public function updateGamePassword($password): void
     {
         DB::transaction(function () use ($password) {
             if (config('global.server.version') === 'vSRO') {
@@ -85,11 +115,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function giveSilk(string $type, float $amount)
     {
-        if (config('global.server.version') === 'vSRO') {
-            SkSilk::setSkSilk($this->jid, $type, $amount);
-        } else {
-            AphChangedSilk::setChangedSilk($this->tbUser?->PortalJID, $type, $amount);
-        }
+        TbUser::updateSilk($this->jid, $type, $amount);
     }
 
     public function tbUser()
@@ -113,17 +139,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getTbUserAttribute()
     {
-        return cache()->remember( "user_tbUser_{$this->jid}", 600, fn () => $this->tbUser()->first());
+        return cache()->remember("user_tbUser_{$this->jid}", 600, fn () => $this->tbUser()->first());
     }
 
     public function getMuUserAttribute()
     {
-        return cache()->remember( "user_muUser_{$this->jid}", 600, fn () => $this->muUser()->first());
+        return cache()->remember("user_muUser_{$this->jid}", 600, fn () => $this->muUser()->first());
     }
 
     public function getRoleAttribute()
     {
-        return cache()->remember( "user_role_{$this->jid}", 600, fn () => $this->role()->first());
+        return cache()->remember("user_role_{$this->jid}", 600, fn () => $this->role()->first());
     }
 
     public static function getUserCount()

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\PasswordResetToken;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class PasswordController extends Controller
 {
@@ -15,7 +14,7 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        if (config('settings.update_type') === 'verify_code') {
+        if (config('global.account_verify')) {
             return $this->updatePasswordByCode($request);
         }
 
@@ -33,7 +32,7 @@ class PasswordController extends Controller
 
         $user->updateGamePassword($validated['password']);
 
-        $user->update(['password' => Hash::make($validated['password'])]);
+        $user->update(['password' => $validated['password']]);
 
         return back()->with('status', 'password-updated');
     }
@@ -46,9 +45,9 @@ class PasswordController extends Controller
         ]);
 
         $user = $request->user();
-        $token = PasswordResetToken::getToken($user->email);
+        $token = Cache::get('verify_code_'.$user->email);
 
-        if (!$token || $request->verify_code_password !== $token->token || $token->isExpired()) {
+        if (!$token || $request->verify_code_password !== $token) {
             return back()->withErrors([
                 'verify_code_password' => 'The provided verification code is invalid or expired.',
             ]);
@@ -56,9 +55,9 @@ class PasswordController extends Controller
 
         $user->updateGamePassword($validated['password']);
 
-        $user->update(['password' => Hash::make($validated['password'])]);
+        $user->update(['password' => $validated['password']]);
 
-        $token->deleteToken();
+        Cache::forget('verify_code_'.$user->email);
 
         return back()->with('status', 'password-updated');
     }

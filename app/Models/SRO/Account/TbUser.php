@@ -50,16 +50,25 @@ class TbUser extends Model
      */
     protected $fillable = [];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password'
     ];
 
+    /**
+     * The fillable attributes for vSRO.
+     *
+     * @var array<int, string>
+     */
     protected array $fillable_vsro = [
         'StrUserID',
         'Name',
         'password',
         'Status',
-        'GMrank',
         'Email',
         'regtime',
         'reg_ip',
@@ -69,6 +78,11 @@ class TbUser extends Model
         'LatestUpdateTime_ToPlayTime',
     ];
 
+    /**
+     * The fillable attributes for iSRO.
+     *
+     * @var array<int, string>
+     */
     protected array $fillable_isro = [
         'PortalJID',
         'StrUserID',
@@ -131,6 +145,17 @@ class TbUser extends Model
         ]);
     }
 
+    public static function updateSilk($jid, $type, $amount)
+    {
+        if (config('global.server.version') === 'vSRO') {
+            $type = in_array($type, [0, 1, 2]) ? $type : 0;
+            SkSilk::updateSkSilk($jid, $type, $amount);
+        } else {
+            $type = in_array($type, [1, 3]) ? $type : 3;
+            AphChangedSilk::updateChangedSilk($jid, $type, $amount);
+        }
+    }
+
     public function blockAccount(string $reason, int $durationHours, ?string $customReason = null)
     {
         $finalReason = $reason === 'Custom' ? $customReason : $reason;
@@ -173,9 +198,9 @@ class TbUser extends Model
     public function user()
     {
         if (config('global.server.version') === 'vSRO') {
-            return $this->belongsTo(User::class, 'jid', 'JID');
+            return $this->belongsTo(User::class, 'JID', 'jid');
         } else{
-            return $this->belongsTo(User::class, 'jid', 'PortalJID');
+            return $this->belongsTo(User::class, 'PortalJID', 'jid');
         }
     }
 
@@ -191,12 +216,16 @@ class TbUser extends Model
 
     public function getShardUserAttribute()
     {
-        return cache()->remember( "shard_user_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->shardUser()->get() ?? collect());
+        return Cache::remember("shard_user_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->shardUser()->get() ?? collect();
+        });
     }
 
-    public function getGetSkSilkAttribute()
+    public function getGetSilkAttribute()
     {
-        return cache()->remember( "user_silk_{$this->JID}", config('global.cache.account_info', 600), fn () => $this->getSkSilk()->first());
+        return Cache::remember("tb_user_silk_{$this->JID}", config('global.cache.account_info', 600), function () {
+            return $this->SkSilk()->first();
+        });
     }
 
     public function shardUser()
@@ -204,7 +233,7 @@ class TbUser extends Model
         return $this->belongsToMany(Char::class, '_User', 'UserJID', 'CharID');
     }
 
-    public function getSkSilk()
+    public function SkSilk()
     {
         return $this->hasOne(SkSilk::class, 'JID', 'JID');
     }
@@ -221,9 +250,13 @@ class TbUser extends Model
 
     public static function getTbUserCount()
     {
-        return Cache::remember('tb_user_count', 86400, function () {
-            return self::count();
-        });
+        return Cache::remember('tb_user_count', 600, fn () => self::count());
+    }
+
+    protected static function booted()
+    {
+        static::created(fn () => Cache::forget('tb_user_count'));
+        static::deleted(fn () => Cache::forget('tb_user_count'));
     }
 
     public function secondaryPassword()

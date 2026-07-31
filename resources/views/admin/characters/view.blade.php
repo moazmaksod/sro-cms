@@ -2,7 +2,7 @@
 @section('title', __('View Character'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">View Character</h1>
         </div>
@@ -19,7 +19,149 @@
         @endif
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
+                <div class="card p-0 mb-4">
+                    <div class="card-header">
+                        <h4 class="text-center">Character Items</h4>
+                    </div>
+
+                    <ul class="nav nav-tabs justify-content-center mt-3" id="characterItemsTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="equipment-tab" data-bs-toggle="tab" data-bs-target="#equipment" type="button" role="tab">
+                                Equipment
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button" role="tab">
+                                Inventory
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab">
+                                Storage
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pet-tab" data-bs-toggle="tab" data-bs-target="#pet" type="button" role="tab">
+                                Pet
+                            </button>
+                        </li>
+                        @if(config('global.server.version') !== 'vSRO')
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="chest-tab" data-bs-toggle="tab" data-bs-target="#chest" type="button" role="tab">
+                                    Chest
+                                </button>
+                            </li>
+                        @endif
+                    </ul>
+
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="equipment" role="tabpanel">
+                                <div class="card" style="height: 345px">
+                                    <div class="card-body d-flex flex-column position-relative h-100" id="display-inventory-equipment">
+                                        <h2 class="text-center">Equipment</h2>
+
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-block" id="display-inventory-set">
+                                            @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet(12, 0, 0)])
+                                        </div>
+                                        @if(config('global.server.version') !== 'vSRO')
+                                            <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-none" id="display-inventory-job">
+                                                @include('pages.ranking.character.partials.inventory.inventory-job-view', ['inventoryJobList' => $data->charInventoryJob])
+                                            </div>
+                                        @endif
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 p-4 d-none" id="display-inventory-avatar">
+                                            @include('pages.ranking.character.partials.inventory.inventory-avatar-view', ['inventoryAvatarList' => $data->charInventoryAvatar])
+                                        </div>
+
+                                        @if(config('global.server.version') === 'vSRO')
+                                            <img class="position-absolute top-50 start-50 translate-middle h-100 w-auto object-fit-cover z-0 pt-4" src="{{ asset('images/character_full/'.config('ranking.character_image_vsro')[$data->RefObjID]) }}" alt=""/>
+                                        @else
+                                            <img class="position-absolute top-50 start-50 translate-middle h-100 w-auto object-fit-cover z-0 pt-4" src="{{ asset('images/character_full/'.config('ranking.character_image')[$data->RefObjID]) }}" alt=""/>
+                                        @endif
+
+                                        <button id="display-inventory-switch-isro" data-type="set" class="btn btn-secondary mt-auto w-auto align-self-center position-relative z-1">{{ __('Switch') }}</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="inventory" role="tabpanel">
+                                <div class="card">
+                                    <div id="display-inventory" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Inventory</h2>
+                                        @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet(108, 13, 0), 'min' => 13, 'max' => 108])
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="storage" role="tabpanel">
+                                <div class="card">
+                                    <div id="display-storage" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Storage</h2>
+                                        @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->charStorageItems, 'min' => 0, 'max' => 179])
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pet" role="tabpanel">
+                                <div class="card mt-3">
+                                    <div id="display-pet" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                        <h2 class="text-center">Pet</h2>
+                                        @include('pages.ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharPetItems(request()->input('pet') ?? ($data->CharPets->first()->ID ?? null)), 'min' => 0, 'max' => 195])
+
+                                        <form method="GET" action="">
+                                            <div class="row mb-3">
+                                                <div class="col-lg-12">
+                                                    <select class="form-select" name="pet" aria-label="Default select example" onchange="this.form.submit()">
+                                                        @foreach($data->CharPets as $row)
+                                                            <option value="{{ $row->ID }}">{{ $row->CharName ?? $row->ID }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @if(config('global.server.version') !== 'vSRO')
+                                <div class="tab-pane fade" id="chest" role="tabpanel">
+                                    <div class="card">
+                                        <div id="display-Chest" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                                            <h2 class="text-center">Chest</h2>
+                                            <div class="table-responsive_">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">No.</th>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Qty.</th>
+                                                        <th scope="col">Date Registered</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($data->charChestItems as $key => $row)
+                                                        <tr>
+                                                            <td>{{ $key + 1 }}</td>
+                                                            <td>
+                                                                <img src="{{ asset('images/sro/'.$row->IconPath.'.png') }}" alt="" width="32" height="32" class="">
+                                                                {{ $row->ItemName }}
+                                                            </td>
+                                                            <td>{{ $row->ItemCount }}</td>
+                                                            <td>{{ $row->RegDate }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {{ $data->charChestItems->links('pagination::bootstrap-5') }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card p-0">
                     <div class="card-header">
                         <h4 class="text-center">Character Details</h4>
@@ -102,115 +244,6 @@
 
                 <div class="card p-0 mt-4">
                     <div class="card-header">
-                        <h4 class="text-center">Character Items</h4>
-                    </div>
-
-                    <ul class="nav nav-tabs justify-content-center mt-3" id="characterItemsTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button" role="tab">
-                                Inventory
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="storage-tab" data-bs-toggle="tab" data-bs-target="#storage" type="button" role="tab">
-                                Storage
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pet-tab" data-bs-toggle="tab" data-bs-target="#pet" type="button" role="tab">
-                                Pet
-                            </button>
-                        </li>
-                        @if(config('global.server.version') !== 'vSRO')
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="chest-tab" data-bs-toggle="tab" data-bs-target="#chest" type="button" role="tab">
-                                Chest
-                            </button>
-                        </li>
-                        @endif
-                    </ul>
-
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="inventory" role="tabpanel">
-                                <div class="card">
-                                    <div id="display-inventory" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
-                                        <h2 class="text-center">Inventory</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharInventorySet(108, 13, 0), 'min' => 13, 'max' => 108])
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="storage" role="tabpanel">
-                                <div class="card">
-                                    <div id="display-storage" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
-                                        <h2 class="text-center">Storage</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->charStorageItems, 'min' => 0, 'max' => 179])
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="pet" role="tabpanel">
-                                <div class="card mt-3">
-                                    <div id="display-pet" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
-                                        <h2 class="text-center">Pet</h2>
-                                        @include('ranking.character.partials.inventory.inventory-view', ['inventorySetList' => $data->getCharPetItems(request()->input('pet') ?? ($data->CharPets->first()->ID ?? null)), 'min' => 0, 'max' => 195])
-
-                                        <form method="GET" action="">
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <select class="form-select" name="pet" aria-label="Default select example" onchange="this.form.submit()">
-                                                        @foreach($data->CharPets as $row)
-                                                            <option value="{{ $row->ID }}">{{ $row->CharName ?? $row->ID }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            @if(config('global.server.version') !== 'vSRO')
-                            <div class="tab-pane fade" id="chest" role="tabpanel">
-                                <div class="card">
-                                    <div id="display-Chest" class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
-                                        <h2 class="text-center">Chest</h2>
-                                        <div class="table-responsive_">
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th scope="col">No.</th>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Qty.</th>
-                                                    <th scope="col">Date Registered</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @foreach($data->charChestItems as $key => $row)
-                                                    <tr>
-                                                        <td>{{ $key + 1 }}</td>
-                                                        <td>
-                                                            <img src="{{ asset('images/sro/'.$row->IconPath.'.png') }}" alt="" width="32" height="32" class="">
-                                                            {{ $row->ItemName }}
-                                                        </td>
-                                                        <td>{{ $row->ItemCount }}</td>
-                                                        <td>{{ $row->RegDate }}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        {{ $data->charChestItems->links('pagination::bootstrap-5') }}
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-0 mt-4">
-                    <div class="card-header">
                         <h4 class="text-center">Logged in history</h4>
                     </div>
                     <div class="card-body">
@@ -244,8 +277,8 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card p-0">
+            <div class="col-lg-4">
+                <div class="card p-0 mb-4">
                     <div class="card-header">
                         <h4 class="text-center">Unstuck</h4>
                     </div>
@@ -275,8 +308,52 @@
                             @method('PUT')
 
                             <div class="row mb-0">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <button type="submit" class="btn btn-danger w-100">{{ __('Unstuck') }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card p-0 mb-4">
+                    <div class="card-header">
+                        <h4 class="text-center">Add Item</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('admin.characters.add-item', $data) }}">
+                            @csrf
+                            <div class="row mb-3">
+                                <label for="code" class="col-lg-12 col-form-label text-md-start">{{ __('Item Code') }}</label>
+
+                                <div class="col-lg-12">
+                                    <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" placeholder="ITEM_ETC_ARENA_COIN" value="{{ old('code') }}" required>
+
+                                    @error('code')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="quantity" class="col-lg-12 col-form-label text-md-start">{{ __('Quantity') }}</label>
+
+                                <div class="col-lg-12">
+                                    <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity', 1) }}" min="1" max="999">
+
+                                    @error('quantity')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-0">
+                                <div class="col-lg-12">
+                                    <button type="submit" class="btn btn-primary w-100">{{ __('Add Item') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -288,13 +365,86 @@
 @endsection
 
 @push('styles')
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
     <style>
+        .sro-item-detail {
+            background: #808080;
+            width: 38px;
+            margin: 0 auto;
+        }
+
+        .sro-item-detail.sro-item-special {
+            background: #FF8C00;
+        }
+
+        .sro-item-detail.sro-item-special .sro-item-special-seal {
+            z-index: 4;
+        }
+
+        .sro-item-detail .item {
+            width: 32px;
+            height: 32px;
+            float: left;
+            margin: 3px;
+            padding: 0 !important;
+            color: #fff;
+            background: #5f5f5f;
+            position: relative;
+        }
+        .sro-item-detail .item img {
+            position: absolute;
+        }
+
+        .sro-item-detail .item .amount {
+            background: rgba(50, 50, 50, 0.5);
+            padding: 1px 2px;
+            float: left;
+            font-size: 11px;
+        }
+
+        .sro-item-detail .info {
+            color: #fff;
+            z-index: 80;
+            position: absolute;
+            left: 34px;
+            top: 3px;
+            width: 180px;
+            background: rgba(88, 98, 170, 0.85);
+            border: 2px solid #303d4d;
+            padding: 5px;
+            display: none;
+            line-height: 18px;
+            font-size: 10px;
+        }
+
+        .table.table-inventory td, .table.table-inventory th {
+            padding: 4px;
+        }
+
+        .sro-item-detail .tooltip {
+            font-size: 10px;
+            line-height: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            position: fixed;
+            padding: 5px;
+            border: 1px solid #ccc;
+            visibility: hidden;
+            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition:
+                opacity 0.3s,
+                visiblity 0s;
+        }
+        .sro-item-detail:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /********/
         .sro-item-detail .tooltip {
             text-align: left !important;
             font-size: 12px;
-            width: 250px;
+            width: 300px;
             min-height: 200px;
             background-color: rgba(28, 30, 52, .8);
             color: #fff;
@@ -396,8 +546,6 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('js/function.js') }}"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('display-inventory');
@@ -571,10 +719,10 @@
                 'player-map',
                 206,
                 206,
-                {{ $data->PosX }},
-                {{ $data->PosZ }},
-                {{ $data->PosY }},
-                {{ $data->LatestRegion }}
+                {{ (int) $data->PosX }},
+                {{ (int) $data->PosZ }},
+                {{ (int) $data->PosY }},
+                {{ (int) $data->LatestRegion }}
             );
             addMinimapCursor(
                 'player-map',
@@ -582,6 +730,46 @@
                 6,
                 6
             );
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-iteminfo]').forEach(el => {
+                const info = el.parentElement.querySelector('.info');
+                if (!info || info.innerHTML === '') return;
+                const tip = document.createElement('div');
+                tip.classList.add('tooltip');
+                tip.innerHTML = info.innerHTML;
+                tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${el.hasAttribute('tip-top') ? '-100%' : '0'})`;
+                el.appendChild(tip);
+                el.addEventListener('mousemove', e => {
+                    tip.style.left = e.clientX + 'px';
+                    tip.style.top = e.clientY + 'px';
+                });
+            });
+
+            const switchBtn = document.getElementById('display-inventory-switch-isro');
+            if (switchBtn) {
+                switchBtn.addEventListener('click', function () {
+                    const current = this.dataset.type;
+                    const stages = ['set'];
+
+                    @if(config('global.server.version') !== 'vSRO')
+                    stages.push('job');
+                    @endif
+                    stages.push('avatar');
+
+                    const currentIndex = stages.indexOf(current);
+                    const nextIndex = (currentIndex + 1) % stages.length;
+                    const change = stages[nextIndex];
+
+                    document.getElementById('display-inventory-' + current).classList.add('d-none');
+                    document.getElementById('display-inventory-' + change).classList.remove('d-none');
+
+                    this.dataset.type = change;
+                });
+            }
         });
     </script>
 @endpush

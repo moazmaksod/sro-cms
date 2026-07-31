@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Referral;
-use App\Models\SRO\Account\SkSilk;
 use App\Models\SRO\Account\TbUser;
-use App\Models\SRO\Portal\AphChangedSilk;
 use App\Models\SRO\Portal\AuhAgreedService;
 use App\Models\SRO\Portal\MuEmail;
 use App\Models\SRO\Portal\MuhAlteredInfo;
@@ -19,7 +17,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -39,34 +36,43 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (config('settings.disable_register')) {
+        if (config('global.disable_register')) {
             return back()->withErrors(['username' => ["Register page is disabled!"]]);
         }
 
         $request->validate($this->getValidationRules($request));
 
-        if (config('global.server.version') === 'vSRO') {
-            $jid = $this->createAccountVSRO($request);
-        } else {
-            $jid = $this->createAccountISRO($request);
+        try {
+            DB::beginTransaction();
+
+            if (config('global.server.version') === 'vSRO') {
+                $jid = $this->createAccountVSRO($request);
+            } else {
+                $jid = $this->createAccountISRO($request);
+            }
+
+            $user = User::create([
+                'jid' => $jid,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+
+            $this->handleReferral($user, $request);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Registration failed. Please try again.']);
         }
 
-        $user = User::create([
-            'jid' => $jid,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $this->handleReferral($user, $request);
-
-        if (config('settings.register_confirm')) {
+        if (config('global.register_confirm')) {
             event(new Registered($user));
         }
 
         Auth::login($user);
 
-        return redirect(route('profile', absolute: false));
+        return redirect(route('account', absolute: false));
     }
 
     private function getValidationRules(Request $request): array
@@ -75,8 +81,8 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'regex:/^[A-Za-z0-9]*$/', 'min:6', 'max:16', 'unique:' . User::class],
             'email' => ['required', 'string', 'email', 'max:70', 'unique:' . User::class],
             'password' => ['required', 'min:6', 'max:32', 'confirmed'],
-            'g-recaptcha-response' => env('NOCAPTCHA_ENABLE', false) ? ['required', 'captcha'] : ['nullable'],
-            'terms' => config('settings.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
+            'g-recaptcha-response' => config('captcha.enabled', false) ? ['required', 'captcha'] : ['nullable'],
+            'terms' => config('global.agree_terms', false) ? ['required', 'accepted'] : ['nullable'],
             'invite' => ['nullable', 'string'],
             'fingerprint' => ['nullable', 'string'],
         ];
@@ -98,7 +104,7 @@ class RegisteredUserController extends Controller
             $ip = filter_var($request->ip(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ?: '0.0.0.0';
 
             $tbUser = TbUser::setVSROAccount(null, $request->username, $request->password, $request->email, $ip);
-            SkSilk::setSkSilk($tbUser->JID, 0, 0);
+            TbUser::updateSilk($tbUser->JID, 0, 0);
 
             return $tbUser->JID;
         });

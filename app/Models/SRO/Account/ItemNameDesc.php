@@ -66,10 +66,10 @@ class ItemNameDesc extends Model
     {
         return Cache::remember("character_info_ItemNameDesc_{$CodeName128}", config('global.cache.character_info', 86400), static function () use ($CodeName128) {
             if (config('global.server.version') === 'vSRO') {
-                return self::select('RealName')->where('NameStrID', $CodeName128)->first()->RealName ?? $CodeName128;
+                return self::where('NameStrID', $CodeName128)->value('RealName') ?? $CodeName128;
             }
 
-            return self::select('ENG')->where('StrID', $CodeName128)->first()->ENG ?? $CodeName128;
+            return self::where('StrID', $CodeName128)->value('ENG') ?? $CodeName128;
         });
     }
 

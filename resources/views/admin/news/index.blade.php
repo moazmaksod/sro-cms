@@ -2,7 +2,7 @@
 @section('title', __('News'))
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">News</h1>
 
@@ -36,7 +36,7 @@
                         <tr>
                             <td>{{ $row->id }}</td>
                             <td style="white-space: nowrap;max-width: 150px;overflow: hidden;text-overflow: ellipsis;">{{ $row->title }}</td>
-                            <td><a href="{{ route('post.show', ['slug' => $row->slug]) }}" target="_blank">{{ route('post.show', ['slug' => $row->slug]) }}</a></td>
+                            <td><a href="{{ route('news.show', ['slug' => $row->slug]) }}" target="_blank">{{ route('news.show', ['slug' => $row->slug]) }}</a></td>
                             <td>{{ $row->category }}</td>
                             <td>
                                 @if($row->active == 1)

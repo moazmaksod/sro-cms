@@ -1,5 +1,5 @@
 @if(config('widgets.server_info.enabled'))
-    <div class="card mb-4">
+    <aside class="card mb-4">
         <div class="card-header">
             {{ __('Server Info') }}
         </div>
@@ -16,5 +16,5 @@
                 @endforeach
             </ul>
         </div>
-    </div>
+    </aside>
 @endif

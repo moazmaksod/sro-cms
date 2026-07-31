@@ -33,6 +33,13 @@ class LogChatMessage extends Model
      */
     protected $table = 'dbo._LogChatMessage';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = ['*'];
+
     public static function getGlobalsHistory($limit = 25, $CharName = null)
     {
         $data = Cache::remember("globals_history_{$limit}_{$CharName}", config('global.cache.globals_history', 600), function () use ($CharName, $limit) {
@@ -64,10 +71,9 @@ class LogChatMessage extends Model
 
                 foreach ($serials as $serial) {
                     if (isset($items[$serial])) {
-                        //$itemName = "<img src='".asset("/images/sro/".$items[$serial]['IconPath'].".png")."' alt='' width='32' height='32'><u><span><</span>".$items[$serial]['ItemName']."<span>>[+".$items[$serial]['OptLevel']."]</span></u>";
-                        $value->Comment = str_replace($serial, '<u><span><</span>'.$items[$serial]['ItemName'].'<span>></span></u>', $value->Comment);
-                    }else {
-                        $value->Comment = str_replace($serial, '<u><span><</span>Unknown<span>></span></u>', $value->Comment);
+                        $value->Comment = str_replace($serial, '<'.$items[$serial]['ItemName'].'>', $value->Comment);
+                    } else {
+                        $value->Comment = str_replace($serial, '<Unknown>', $value->Comment);
                     }
                 }
             }
